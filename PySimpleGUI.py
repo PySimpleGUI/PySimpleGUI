@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.51.0.1 Unreleased"
+version = __version__ = "4.51.0.2 Unreleased"
 
 _change_log = """
 
@@ -12,7 +12,8 @@ _change_log = """
             The code I've been using for the file location choice is:
                 if event == 'File Location':
                     sg.popup_scrolled('This Python file is:', __file__)
-
+    4.51.0.2    
+        Fix for one_line_progress_meter with no_button=True when using a HORIZONTAL layout
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15414,8 +15415,9 @@ class QuickMeter(object):
                        key='_OPTMSG_')]]  ### convert all *args into one string that can be updated
             col += [[T('', size=(30, 10), key='_STATS_')],
                     [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size,
-                                 bar_color=self.bar_color)],
-                    [Cancel(button_color=self.button_color), Stretch()]]
+                                 bar_color=self.bar_color)]]
+            if not self.no_button:
+                col += [[Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col)]
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size,
