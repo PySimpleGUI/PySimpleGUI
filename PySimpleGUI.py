@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.4.1 Unreleased"
+version = __version__ = "4.51.4.2 Unreleased"
 
 _change_log = """
 
@@ -9,6 +9,8 @@ _change_log = """
 
     4.51.4.1
         Support for making the command-line tools available after upgrade from GitHub.
+    4.51.4.2
+        Removed popup_scrolled from the upgrade from github code.  Looks like setup.py file is fine
 
     """
 
@@ -21773,7 +21775,7 @@ def _copy_files_from_github():
             ],
                 },)
     """
-    popup_scrolled(setup_text)
+
     with open(os.path.join(temp_dir.name, 'setup.py'), 'w', encoding='utf-8') as f:
         f.write(setup_text)
 
