@@ -1,23 +1,14 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.2.2 Unreleased"
+version = __version__ = "4.51.4 Released 21-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.51.2 release to PyPI on 19-Oct-2021
+    Changelog since 4.51.4 released to PyPI on -Oct-2021
 
-    4.51.2.1
-        New Window parameter!  grab_anywhere_using_control
-            Default is TRUE
-            Feels like a risky change to have default to True, but it also means no one changes their code and gets the feature
-            If enabled, you can use the control key + Left Mouse button to move your Window, just like Grab Anywhere.
-            Enables you to move windows that you can no longer reach the titlebar for
-            Let's see if anyone notices or complains
-    4.51.2.2
-        Backed out the changes to Column element
-        Added for for control click move
-        Added main_upgrade_from_github
+    4.51.4.1
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
