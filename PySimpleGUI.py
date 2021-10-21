@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.2.1 Unreleased"
+version = __version__ = "4.51.2.2 Unreleased"
 
 _change_log = """
 
@@ -14,7 +14,8 @@ _change_log = """
             If enabled, you can use the control key + Left Mouse button to move your Window, just like Grab Anywhere.
             Enables you to move windows that you can no longer reach the titlebar for
             Let's see if anyone notices or complains
-
+    4.51.2.2
+        Fix for expand_x, expand_y on Scrollable Columns
     """
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -128,6 +129,7 @@ from tkinter.colorchooser import askcolor
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
+from uuid import uuid4
 
 # end of tkinter specific imports
 # get the tkinter detailed version
@@ -13090,6 +13092,61 @@ def _add_right_click_menu(element, toplevel_form):
             element.Widget.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
 
 
+class Stylist:
+
+    @staticmethod
+    def get_elements(layout):
+        """Return a list of elements contained in the style"""
+        elements = []
+        element = layout[0][0]
+        elements.append(element)
+        sublayout = layout[0][1]
+
+        if 'children' in sublayout:
+            child_elements = Stylist.get_elements(sublayout['children'])
+            elements.extend(child_elements)
+        return elements
+
+    @staticmethod
+    def get_options(ttkstyle, theme=None):
+        style = ttk.Style()
+        if theme is not None:
+            style.theme_use(theme)
+        layout = style.layout(ttkstyle)
+        elements = Stylist.get_elements(layout)
+        options = []
+        for e in elements:
+            _opts = style.element_options(e)
+            if _opts:
+                options.extend(list(_opts))
+        return list(set(options))
+
+    @staticmethod
+    def create_style(base_style: str, theme=None, **kwargs):
+        style = ttk.Style()
+        if theme is not None:
+            style.theme_use(theme)
+        style_id = uuid4()
+        ttkstyle = '{}.{}'.format(style_id, base_style)
+        style.configure(ttkstyle, **kwargs)
+        return ttkstyle
+
+
+# if __name__ == '__main__':
+#     root = tk.Tk()
+#
+#     # find out what options are available for the theme and widget style
+#     options = Stylist.get_options('TFrame', 'default')
+#     print('The options for this style and theme are', options)
+#
+#     # create a new style
+#     frame_style = Stylist.create_style('TFrame', 'alt', relief=tk.RAISED, borderwidth=1)
+#
+#     # apply the new style
+#     ttk.Frame(style=frame_style, width=100, height=100).pack(padx=10, pady=10)
+#
+#     root.mainloop()
+
 # @_timeit
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     """
@@ -13234,6 +13291,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             expand = False
         return expand, fill, row_should_expand, row_fill_direction
 
+    def _column_configure(event, canvas, frame_id):
+        canvas.itemconfig(frame_id, width=canvas.winfo_width())
+        canvas.itemconfig(frame_id, height=canvas.winfo_height())
+
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
 
@@ -13301,6 +13362,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  COLUMN placement element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element  # type: Column
+                # ----------------------- SCROLLABLE Column ----------------------
                 if element.Scrollable:
                     element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
@@ -13324,7 +13386,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                           highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
+                    frame_id = element.Widget.frame_id
+                    canvas = element.Widget.canvas
+                    canvas.bind("<Configure>", lambda event, canvas=element.TKColFrame.canvas, frame_id=frame_id: _column_configure(event, canvas, frame_id))
+
+                # ----------------------- PLAIN Column ----------------------
                 else:
+
                     if element.Size != (None, None):
                         element.Widget = element.TKColFrame = TkFixedFrame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
@@ -13345,6 +13413,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                       highlightthickness=0)
+
+
 
                 if element.Justification is None:
                     pass
@@ -14501,7 +14571,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu(element)
-
 
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
