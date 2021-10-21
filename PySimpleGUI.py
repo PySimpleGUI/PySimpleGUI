@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.4 Released 21-Oct-2021"
+version = __version__ = "4.51.4.1 Unreleased"
 
 _change_log = """
 
     Changelog since 4.51.4 released to PyPI on -Oct-2021
 
     4.51.4.1
+        Support for making the command-line tools available after upgrade from GitHub.
 
     """
 
@@ -21758,8 +21759,21 @@ def _copy_files_from_github():
             "description='Unreleased Development Version',",
             "url='https://github.com/PySimpleGUI/PySimpleGUI',"
             "packages=setuptools.find_packages(),",
-            "version='", package_version, "')"
+            "version='", package_version, "',"
             ])
+    setup_text += """
+        entry_points={
+            'gui_scripts': [
+                'psgissue=PySimpleGUI.PySimpleGUI:main_open_github_issue',
+                'psgmain=PySimpleGUI.PySimpleGUI:main',
+                'psgupgrade=PySimpleGUI.PySimpleGUI:main_upgrade_from_github',
+                'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',
+                'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',
+                'psgsettings=PySimpleGUI.PySimpleGUI:main_global_pysimplegui_settings',
+            ],
+                },)
+    """
+    popup_scrolled(setup_text)
     with open(os.path.join(temp_dir.name, 'setup.py'), 'w', encoding='utf-8') as f:
         f.write(setup_text)
 
