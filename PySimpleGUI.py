@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.4.3 Unreleased"
+version = __version__ = "4.51.6.1 Unreleased"
 
 _change_log = """
 
-    Changelog since 4.51.4 released to PyPI on -Oct-2021
+    Changelog since 4.51.6 released to PyPI on 21-Oct-2021
 
     4.51.4.1
         Support for making the command-line tools available after upgrade from GitHub.
@@ -13,6 +13,8 @@ _change_log = """
         Removed popup_scrolled from the upgrade from github code.  Looks like setup.py file is fine
     4.51.4.3
         Fix in the upgrade from GitHub code.
+    4.51.6.1
+        Bumped version to match the pypi release
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
