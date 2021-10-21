@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.2.2 Unreleased"
+version = __version__ = "4.51.2.3 Unreleased"
 
 _change_log = """
 
@@ -16,6 +16,8 @@ _change_log = """
             Let's see if anyone notices or complains
     4.51.2.2
         Fix for expand_x, expand_y on Scrollable Columns
+    4.51.2.3
+        Grab anywhere with control key fix for non-blocking windows
     """
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -15273,7 +15275,7 @@ def StartupTK(window):
             root.bind("<ButtonRelease-1>", window._StopMove)
             root.bind("<B1-Motion>", window._OnMotion)
     if (window.GrabAnywhereUsingControlKey is not False and not (
-            window.NonBlocking and window.GrabAnywhere is not True)):
+            window.NonBlocking and window.GrabAnywhereUsingControlKey is not True)):
         root.bind("<Control-Button-1>", window._StartMove)
         root.bind("<Control-ButtonRelease-1>", window._StopMove)
         root.bind("<Control-B1-Motion>", window._OnMotion)
