@@ -1,24 +1,15 @@
 #!/usr/bin/python3
 
-
-version = __version__ = "4.51.2.3 Unreleased"
+version = __version__ = "4.52.0 Released 21-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.51.2 release to PyPI on 19-Oct-2021
+    Changelog since 4.52.0 released to PyPI on 21-Oct-2021
 
-    4.51.2.1
-        New Window parameter!  grab_anywhere_using_control
-            Default is TRUE
-            Feels like a risky change to have default to True, but it also means no one changes their code and gets the feature
-            If enabled, you can use the control key + Left Mouse button to move your Window, just like Grab Anywhere.
-            Enables you to move windows that you can no longer reach the titlebar for
-            Let's see if anyone notices or complains
-    4.51.2.2
-        Fix for expand_x, expand_y on Scrollable Columns
-    4.51.2.3
-        Grab anywhere with control key fix for non-blocking windows
+    4.52.0.1
+
     """
+
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
 # The shortened version of version
@@ -21855,6 +21846,8 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
+
+main_upgrade_from_github = _upgrade_gui
 
 ####################################################################################################
 
