@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.4.2 Unreleased"
+version = __version__ = "4.51.4.3 Unreleased"
 
 _change_log = """
 
@@ -11,7 +11,8 @@ _change_log = """
         Support for making the command-line tools available after upgrade from GitHub.
     4.51.4.2
         Removed popup_scrolled from the upgrade from github code.  Looks like setup.py file is fine
-
+    4.51.4.3
+        Fix in the upgrade from GitHub code.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21761,20 +21762,18 @@ def _copy_files_from_github():
             "description='Unreleased Development Version',",
             "url='https://github.com/PySimpleGUI/PySimpleGUI',"
             "packages=setuptools.find_packages(),",
-            "version='", package_version, "',"
+            "version='", package_version, "',",
+            "entry_points={",
+            "'gui_scripts': [",
+            "'psgissue=PySimpleGUI.PySimpleGUI:main_open_github_issue',",
+            "'psgmain=PySimpleGUI.PySimpleGUI:main',",
+            "'psgupgrade=PySimpleGUI.PySimpleGUI:main_upgrade_from_github',",
+            "'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',",
+            "'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',",
+            "'psgsettings=PySimpleGUI.PySimpleGUI:main_global_pysimplegui_settings',",
+            "],",
+            "},)"
             ])
-    setup_text += """
-        entry_points={
-            'gui_scripts': [
-                'psgissue=PySimpleGUI.PySimpleGUI:main_open_github_issue',
-                'psgmain=PySimpleGUI.PySimpleGUI:main',
-                'psgupgrade=PySimpleGUI.PySimpleGUI:main_upgrade_from_github',
-                'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',
-                'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',
-                'psgsettings=PySimpleGUI.PySimpleGUI:main_global_pysimplegui_settings',
-            ],
-                },)
-    """
 
     with open(os.path.join(temp_dir.name, 'setup.py'), 'w', encoding='utf-8') as f:
         f.write(setup_text)
