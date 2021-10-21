@@ -1,13 +1,23 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.52.0 Released 21-Oct-2021"
+
+version = __version__ = "4.51.2.2 Unreleased"
 
 _change_log = """
 
-    Changelog since 4.52.0 released to PyPI on 21-Oct-2021
+    Changelog since 4.51.2 release to PyPI on 19-Oct-2021
 
-    4.52.0.1
-
+    4.51.2.1
+        New Window parameter!  grab_anywhere_using_control
+            Default is TRUE
+            Feels like a risky change to have default to True, but it also means no one changes their code and gets the feature
+            If enabled, you can use the control key + Left Mouse button to move your Window, just like Grab Anywhere.
+            Enables you to move windows that you can no longer reach the titlebar for
+            Let's see if anyone notices or complains
+    4.51.2.2
+        Backed out the changes to Column element
+        Added for for control click move
+        Added main_upgrade_from_github
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -13284,10 +13294,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             expand = False
         return expand, fill, row_should_expand, row_fill_direction
 
-    def _column_configure(event, canvas, frame_id):
-        canvas.itemconfig(frame_id, width=canvas.winfo_width())
-        canvas.itemconfig(frame_id, height=canvas.winfo_height())
-
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
 
@@ -13379,9 +13385,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                           highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
-                    frame_id = element.Widget.frame_id
-                    canvas = element.Widget.canvas
-                    canvas.bind("<Configure>", lambda event, canvas=element.TKColFrame.canvas, frame_id=frame_id: _column_configure(event, canvas, frame_id))
 
                 # ----------------------- PLAIN Column ----------------------
                 else:
@@ -13406,8 +13409,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                       highlightthickness=0)
-
-
 
                 if element.Justification is None:
                     pass
@@ -14564,6 +14565,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu(element)
+
 
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
@@ -21846,8 +21848,9 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
-
 main_upgrade_from_github = _upgrade_gui
+
+
 
 ####################################################################################################
 
