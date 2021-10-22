@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.6.2 Unreleased"
+version = __version__ = "4.51.6.3 Unreleased"
 
 _change_log = """
 
@@ -18,6 +18,12 @@ _change_log = """
     4.51.6.2
         Fix bug for grab anywhere enabled with grab anywhere using control key
             Wasn't ignoring the widgets that shouldn't move winow using grab anywhere
+    4.51.6.3
+        New BLANK_BASE64 definition that's shorter. Should still be 1 x 1 pixel and clear
+        New logic in the Image.update() when no paramters passed. This is how an image is "erased"
+            Now the image is rewsized to 1x1 pixel prior to deleting. 
+        Setting the border depth = 0 on the Label holding image for Image element. Leaves a lot LESS space when no image is present
+        FIXED setting a size on Frame Elements. It's not worked previously, but THINK it does now! (insert fingers crossed emoji here)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -396,6 +402,7 @@ DEFAULT_BASE64_LOADING_GIF = b'R0lGODlhQABAAKUAAAQCBJyenERCRNTS1CQiJGRmZLS2tPTy9
 PSG_DEBUGGER_LOGO = b'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'
 
 BLANK_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAANSURBVBhXY2BgYGAAAAAFAAGKM+MAAAAAAElFTkSuQmCC'
+BLANK_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
 
 
 DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
@@ -4714,8 +4721,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None,
-                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
+    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None, subsample=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
         :param source:           A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
         :type source:            str | bytes | None
@@ -4739,6 +4745,8 @@ class Image(Element):
         :type k:                 str | int | tuple | object
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
+        :param subsample:        amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type subsample:         (int)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
@@ -4773,6 +4781,7 @@ class Image(Element):
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
+        self.ImageSubsample = subsample
 
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
@@ -4785,7 +4794,7 @@ class Image(Element):
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def update(self, source=None, filename=None, data=None, size=(None, None), visible=None):
+    def update(self, source=None, filename=None, data=None, size=(None, None), subsample=None, visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
@@ -4798,6 +4807,8 @@ class Image(Element):
         :type data:      str | tkPhotoImage
         :param size:     (width, height) size of image in pixels
         :type size:      Tuple[int,int]
+        :param subsample:  amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type subsample:   (int)
         :param visible:  control visibility of element
         :type visible:   (bool)
         """
@@ -4816,10 +4827,14 @@ class Image(Element):
         image = None
         if filename is not None:
             image = tk.PhotoImage(file=filename)
+            if subsample is not None:
+                image = image.subsample(subsample)
         elif data is not None:
             # if type(data) is bytes:
             try:
                 image = tk.PhotoImage(data=data)
+                if subsample is not None:
+                    image = image.subsample(subsample)
             except Exception as e:
                 image = data
                 # return  # an error likely means the window has closed so exit
@@ -4840,7 +4855,13 @@ class Image(Element):
             self.tktext_label.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         # if everything is set to None, then delete the image
         if filename is None and image is None and visible is None and size == (None, None):
-            self.tktext_label.image = None
+            # Using a try because the image may have been previously deleted and don't want an error if that's happened
+            try:
+                self.tktext_label.configure(width=1, height=1, bd=0)
+                self.tktext_label.image = None
+            except:
+                pass
+
         if visible is not None:
             self._visible = visible
 
@@ -13413,7 +13434,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                           highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
-
                 # ----------------------- PLAIN Column ----------------------
                 else:
 
@@ -13490,6 +13510,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKColFrame.configure(background=element.BackgroundColor,
                 #                                  highlightbackground=element.BackgroundColor,
                 #                                  highlightcolor=element.BackgroundColor)
+
                 _add_right_click_menu(element)
                 if element.Grab:
                     element._grab_anywhere_on()
@@ -14435,6 +14456,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         photo = tk.PhotoImage(data=element.Data)
                     else:
                         photo = None
+
+                    if element.ImageSubsample and photo is not None:
+                        photo = photo.subsample(element.ImageSubsample)
                         # print('*ERROR laying out form.... Image Element has no image specified*')
                 except Exception as e:
                     photo = None
@@ -14448,9 +14472,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
-                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
+                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=0)
                 else:
-                    element.tktext_label = tk.Label(tk_row_frame, bd=border_depth)
+                    element.tktext_label = tk.Label(tk_row_frame, bd=0)
 
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.tktext_label.config(background=element.BackgroundColor)
@@ -14576,6 +14600,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.Size != (None, None):
                     labeled_frame.config(width=element.Size[0], height=element.Size[1])
+                    labeled_frame.pack_propagate(0)
                 if not element.visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
