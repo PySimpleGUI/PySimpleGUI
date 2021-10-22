@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.6.1 Unreleased"
+version = __version__ = "4.51.6.2 Unreleased"
 
 _change_log = """
 
@@ -15,6 +15,9 @@ _change_log = """
         Fix in the upgrade from GitHub code.
     4.51.6.1
         Bumped version to match the pypi release
+    4.51.6.2
+        Fix bug for grab anywhere enabled with grab anywhere using control key
+            Wasn't ignoring the widgets that shouldn't move winow using grab anywhere
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9618,16 +9621,34 @@ class Window:
                 self.TKroot.attributes('-fullscreen', False)
         self.maximized = False
 
-    def _StartMove(self, event):
+
+    def _StartMoveUsingControlKey(self, event):
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse-down. It marks the beginning of a drag.
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if self.GrabAnywhereUsingControlKey is False and (isinstance(event.widget,
-                       GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
+
+        self._StartMove(event)
+
+
+    def _StartMoveGrabAnywhere(self, event):
+
+
+        """
+        Used by "Grab Anywhere" style windows. This function is bound to mouse-down. It marks the beginning of a drag.
+        :param event: event information passed in by tkinter. Contains x,y position of mouse
+        :type event:  (event)
+        """
+        if (self.GrabAnywhere is True and (isinstance(event.widget,
+                       GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list):
             # print('Found widget to ignore in grab anywhere...')
             return
+
+        self._StartMove(event)
+
+
+    def _StartMove(self, event):
         try:
             geometry = self.TKroot.geometry()
             location = geometry[geometry.find('+')+1:].split('+')
@@ -9659,16 +9680,26 @@ class Window:
         return
 
 
-    def _OnMotion(self, event):
+    def _OnMotionUsingControlKey(self, event):
+        self._OnMotion(event)
+
+
+    def _OnMotionGrabAnywhere(self, event):
+
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse motion. It actually moves the window
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if self.GrabAnywhereUsingControlKey is False and (isinstance(event.widget,
+        if self.GrabAnywhere is True and (isinstance(event.widget,
                        GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
+
+        self._OnMotion(event)
+
+
+    def _OnMotion(self, event):
         try:
 
             _mousex = event.x + event.widget.winfo_rootx()
@@ -10143,9 +10174,9 @@ class Window:
         """
         if not self._is_window_created('tried Window.grab_any_where_on'):
             return
-        self.TKroot.bind("<ButtonPress-1>", self._StartMove)
+        self.TKroot.bind("<ButtonPress-1>", self._StartMoveGrabAnywhere())
         self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
-        self.TKroot.bind("<B1-Motion>", self._OnMotion)
+        self.TKroot.bind("<B1-Motion>", self._OnMotionGrabAnywhere())
 
     def grab_any_where_off(self):
         """
@@ -15261,14 +15292,14 @@ def StartupTK(window):
     if (window.GrabAnywhere is not False and not (
             window.NonBlocking and window.GrabAnywhere is not True)):
         if not (ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR and running_mac() and not window.NoTitleBar):
-            root.bind("<ButtonPress-1>", window._StartMove)
+            root.bind("<ButtonPress-1>", window._StartMoveGrabAnywhere)
             root.bind("<ButtonRelease-1>", window._StopMove)
-            root.bind("<B1-Motion>", window._OnMotion)
+            root.bind("<B1-Motion>", window._OnMotionGrabAnywhere)
     if (window.GrabAnywhereUsingControlKey is not False and not (
             window.NonBlocking and window.GrabAnywhereUsingControlKey is not True)):
-        root.bind("<Control-Button-1>", window._StartMove)
+        root.bind("<Control-Button-1>", window._StartMoveUsingControlKey)
         root.bind("<Control-ButtonRelease-1>", window._StopMove)
-        root.bind("<Control-B1-Motion>", window._OnMotion)
+        root.bind("<Control-B1-Motion>", window._OnMotionUsingControlKey)
     window.set_icon(window.WindowIcon)
 
     try:
