@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.6.3 Unreleased"
+version = __version__ = "4.51.6.4 Unreleased"
 
 _change_log = """
 
@@ -24,6 +24,9 @@ _change_log = """
             Now the image is rewsized to 1x1 pixel prior to deleting. 
         Setting the border depth = 0 on the Label holding image for Image element. Leaves a lot LESS space when no image is present
         FIXED setting a size on Frame Elements. It's not worked previously, but THINK it does now! (insert fingers crossed emoji here)
+    4.51.6.4
+        Added dpi_awareness option to set_options as an experiment
+        Added scaling parameter to Window
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -197,6 +200,8 @@ import sys
 import re
 import site
 import tempfile
+import ctypes
+import platform
 
 warnings.simplefilter('always', UserWarning)
 
@@ -8365,7 +8370,7 @@ class Window:
                  right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
-                 use_custom_titlebar=None, metadata=None):
+                 use_custom_titlebar=None, scaling=None, metadata=None):
         """
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
         :type title:                                 (str)
@@ -8469,6 +8474,8 @@ class Window:
         :type titlebar_icon:                        (bytes | str)
         :param use_custom_titlebar:                 If True, then a custom titlebar will be used instead of the normal titlebar
         :type use_custom_titlebar:                  bool
+        :param scaling:                             Apply scaling to the elements in the window. Normally not set at all.
+        :type scaling:                              float
         :param metadata:                            User metadata that can be set to ANYTHING
         :type metadata:                             (Any)
         """
@@ -8593,6 +8600,7 @@ class Window:
         self._grab_anywhere_include_these_list = []
         self._has_custom_titlebar = use_custom_titlebar
         self._mousex = self._mousey = 0
+        self.scaling = scaling
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
             self.NoTitleBar = True
@@ -15306,7 +15314,8 @@ def StartupTK(window):
     if window.TransparentColor is not None:
         window.SetTransparentColor(window.TransparentColor)
 
-
+    if window.scaling is not None:
+        root.tk.call('tk', 'scaling', window.scaling)
 
 
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
@@ -16119,7 +16128,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -16223,6 +16232,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type pysimplegui_settings_filename:    (str)
     :param keep_on_top:                     If True then all windows will automatically be set to keep_on_top=True
     :type keep_on_top:                      (bool)
+    :param dpi_awareness:                   If True then will turn on DPI awareness (Windows only at the moment)
+    :type dpi_awareness:                    (bool)
     :return:                                None
     :rtype:                                 None
     """
@@ -16441,6 +16452,14 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if keep_on_top is not None:
         DEFAULT_KEEP_ON_TOP = keep_on_top
+
+    if dpi_awareness is not None:
+        if running_windows():
+            if platform.release() == "7":
+                ctypes.windll.user32.SetProcessDPIAware()
+            elif platform.release() == "8" or platform.release() == "10":
+                ctypes.windll.shcore.SetProcessDpiAwareness(1)
+
 
     return True
 
