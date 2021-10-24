@@ -4074,9 +4074,9 @@ class Button(Element):
         :rtype:  (str, str)
         """
         highlight_color = highlight_background = COLOR_SYSTEM_DEFAULT
-        if self.ButtonColor != COLOR_SYSTEM_DEFAULT and theme_background_color() != COLOR_SYSTEM_DEFAULT:
+        if COLOR_SYSTEM_DEFAULT not in [self.ButtonColor, theme_background_color()]: 
             highlight_background = theme_background_color()
-        if self.ButtonColor != COLOR_SYSTEM_DEFAULT and self.ButtonColor[0] != COLOR_SYSTEM_DEFAULT:
+        if COLOR_SYSTEM_DEFAULT not in [self.ButtonColor, self.ButtonColor[0]]:
             if self.ButtonColor[0] != theme_background_color():
                 highlight_color = self.ButtonColor[0]
             else:
