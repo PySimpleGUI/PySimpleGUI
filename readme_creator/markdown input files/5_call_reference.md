@@ -1364,7 +1364,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ---------
 
 
-## Output Element 
+## Output Element (No longer recommended - USE `Multiline` instead)
+
+Rather than use the `Output` element, it's recommended that you use the `Multiline` element instead.  The reason for this is that more controls have been added to the Multiline and in the future you can expect more features will be added to the Multiline while the `Output` element has stopped being enhanced.
+
+You can control which Multiline Element receives your stdout output as well as use the color-print (`cprint`) with a Multiline.
+
 <!-- <+Output.doc+> -->
 <!-- <+Output.__init__+> -->
 
@@ -1603,11 +1608,27 @@ The following methods are here for backwards compatibility reference.  You will 
 
 Not a true element, but a function acting like an element.
 
+These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
+
+The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
+
+In the Sept 2021 time-frame, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
+
+The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
+
+
+### Push-style Elements Use
+
+These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
+
+
+
 A `Push` element will "push" elements on the row away from it.  If you have 1 `Push` as the start of a row, then the row will be right-justified.  If you have two `Push` elements, one as the first element and one as the last element on a row, then the row will be centered.
 
 <!-- <+func.Push+> -->
 
 ---------
+
 
 
 ## Radio Element 
@@ -2478,7 +2499,7 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 
 
 
-# Window - The `Window` Object
+## Window - The `Window` Object
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
 
@@ -2778,26 +2799,6 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### VisibilityChanged
 <!-- <+Window.VisibilityChanged+> -->
-
-
---------------------------------------
-
-## The `Push` / `Stretch` Elements
-
-These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
-
-The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
-
-In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
-
-The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
-
-
-## Push-style Elements Use
-
-These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
-
-
 
 
 ---------
