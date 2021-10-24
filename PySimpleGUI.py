@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.5 Unreleased"
+version = __version__ = "4.51.7.6 Unreleased"
 
 _change_log = """
 
@@ -31,6 +31,8 @@ _change_log = """
         Changed how the GitHub upgrades happen when using the psgupgrade.exe command.
     4.51.7.5
         Version number bump so that the pip install from github will be greater than the current pypi 4.51.7
+    4.51.7.6
+        Subprocess import changed for 3.4 compatibility... yes, PySimpleGUI is STILL 3.4 compatible
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -174,10 +176,10 @@ from math import fabs
 from functools import wraps
 
 try:  # Because Raspberry Pi is still on 3.4....
-    from subprocess import run, PIPE, Popen
+    # from subprocess import run, PIPE, Popen
     import subprocess
-except:
-    pass
+except Exception as e:
+    print('** Import error {} **'.format(e))
 
 import threading
 import itertools
@@ -222,7 +224,6 @@ def timer_start():
     """
     Time your code easily.... starts the timer.
     Uses the time.time value, a technique known to not be terribly accurage, but tis' gclose enough for our purposes
-
     """
     global g_time_start
 
@@ -19232,7 +19233,7 @@ def _process_thread(*args):
 
     # start running the command with arugments
     try:
-        __shell_process__ = run(args, shell=True, stdout=PIPE)
+        __shell_process__ = run(args, shell=True, stdout=subprocess.PIPE)
     except Exception as e:
         print('Exception running process args = {}'.format(args))
         __shell_process__ = None
