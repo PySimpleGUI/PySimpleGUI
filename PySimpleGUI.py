@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.53.0 Released 24-Oct-2021"
+version = __version__ = "4.53.0.1 Unreleased"
 
 _change_log = """
 
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
-     
+
+    4.53.0.1
+        Changed how expansion is handled by Separator elements.
+            Only the horizontal separator expands now. The vertical separator will not cause the row to expand, but it will expand with a row.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -6003,6 +6006,8 @@ class VerticalSeparator(Element):
         """
         key = key if key is not None else k
         pad = pad if pad is not None else p
+        self.expand_x = None
+        self.expand_y = None
         self.Orientation = 'vertical'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
@@ -6037,6 +6042,8 @@ class HorizontalSeparator(Element):
 
         self.Orientation = 'horizontal'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
+        self.expand_x = True
+        self.expand_y = None
         key = key if key is not None else k
         pad = pad if pad is not None else p
 
@@ -15014,12 +15021,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.color is not None:
                     style.configure(style_name, background=element.color)
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
+
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+
                 if element.Orientation.startswith('h'):
                     # row_should_expand = True
-                    row_fill_direction = tk.X
+                    # row_fill_direction = tk.X
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
                 else:
-                    row_fill_direction = tk.Y
+                    # row_fill_direction = tk.Y
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=True)
                 element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
             # -------------------------  SizeGrip placement element  ------------------------- #
