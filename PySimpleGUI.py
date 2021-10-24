@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.10 Unreleased"
+version = __version__ = "4.51.7.11 Unreleased"
 
 _change_log = """
 
@@ -41,6 +41,8 @@ _change_log = """
         MAIN instea of MEIN (oy!  When am I going to get this release out???)
     4.51.7.10
         Better description of the main restart as to not be alarming...
+    4.51.7.11
+        Refresh the PySimpleGUI settings in all exec calls in case settings changed in another program        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20305,6 +20307,7 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     if interpreter_command is not None:
         python_program = interpreter_command
     else:
+        pysimplegui_user_settings.load()        # Refresh the settings just in case they've changed via another program
         python_program = pysimplegui_user_settings.get('-python command-', '')
         if python_program == '':
             python_program = 'python' if running_windows() else 'python3'
@@ -20327,6 +20330,7 @@ def execute_py_get_interpreter():
     :return: Full path to python interpreter or '' if nothing entered
     :rtype:  (str)
     """
+    pysimplegui_user_settings.load()  # Refresh the settings just in case they've changed via another program
     interpreter = pysimplegui_user_settings.get('-python command-', '')
     return interpreter
 
@@ -20348,7 +20352,7 @@ def execute_editor(file_to_edit, line_number=None):
     """
     if file_to_edit is not None and len(file_to_edit) != 0 and file_to_edit[0] not in ('\"', "\'") and ' ' in file_to_edit:
         file_to_edit = '"' + file_to_edit + '"'
-
+    pysimplegui_user_settings.load()        # Refresh the settings just in case they've changed via another program
     editor_program = pysimplegui_user_settings.get('-editor program-', None)
     if editor_program is not None:
         format_string = pysimplegui_user_settings.get('-editor format string-', None)
@@ -20416,7 +20420,7 @@ def execute_file_explorer(folder_to_open=''):
     :return:               Popen object
     :rtype:                (subprocess.Popen) | None
     """
-
+    pysimplegui_user_settings.load()  # Refresh the settings just in case they've changed via another program
     explorer_program = pysimplegui_user_settings.get('-explorer program-', None)
     if explorer_program is not None:
         sp = execute_command_subprocess(explorer_program, folder_to_open)
