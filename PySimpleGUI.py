@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.9 Unreleased"
+version = __version__ = "4.51.7.10 Unreleased"
 
 _change_log = """
 
@@ -39,6 +39,8 @@ _change_log = """
         Version bump to get pip to install yet again from GitHub        
     4.51.7.9
         MAIN instea of MEIN (oy!  When am I going to get this release out???)
+    4.51.7.10
+        Better description of the main restart as to not be alarming...
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21962,7 +21964,7 @@ def _upgrade_entry_point():
     execute_py_file(__file__, 'upgrade')
 
 def _main_entry_point():
-    print('Restarting main in order to over-write...')
+    print('Restarting main as a new process...(needed in case you want to GitHub Upgrade)')
     execute_py_file(__file__)
 
 main_upgrade_from_github = _upgrade_entry_point
