@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.6 Unreleased"
+version = __version__ = "4.51.7.7 Unreleased"
 
 _change_log = """
 
@@ -33,6 +33,8 @@ _change_log = """
         Version number bump so that the pip install from github will be greater than the current pypi 4.51.7
     4.51.7.6
         Subprocess import changed for 3.4 compatibility... yes, PySimpleGUI is STILL 3.4 compatible
+    4.51.7.7
+        Changed "main" entry point for the psgmain command so that if an upgrade is attempted it will work correctly (the psgmain.exe will have exited)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21854,7 +21856,7 @@ def _copy_files_from_github():
             "entry_points={",
             "'gui_scripts': [",
             "'psgissue=PySimpleGUI.PySimpleGUI:main_open_github_issue',",
-            "'psgmain=PySimpleGUI.PySimpleGUI:main',",
+            "'psgmain=PySimpleGUI.PySimpleGUI:_main_entry_point',",
             "'psgupgrade=PySimpleGUI.PySimpleGUI:_upgrade_entry_point',",
             "'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',",
             "'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',",
@@ -21955,6 +21957,8 @@ def _upgrade_entry_point():
     """
     execute_py_file(__file__, 'upgrade')
 
+def _main_entry_point():
+    execute_py_file(__file__)
 
 main_upgrade_from_github = _upgrade_entry_point
 
