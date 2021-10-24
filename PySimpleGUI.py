@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.6.5 Unreleased"
+version = __version__ = "4.51.7.5 Unreleased"
 
 _change_log = """
 
@@ -29,6 +29,8 @@ _change_log = """
         Added scaling parameter to Window and to set_options for global scaling
     4.51.6.5
         Changed how the GitHub upgrades happen when using the psgupgrade.exe command.
+    4.51.7.5
+        Version number bump so that the pip install from github will be greater than the current pypi 4.51.7
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
