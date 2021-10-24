@@ -2234,6 +2234,60 @@ Column Element allow None for 1 size direction
 	* Very useful for multi-window applications
 	* Also works when you've set a default window location using the `set_options` call.
 
+## 4.51.2 - 4.41.7 
+
+A series of dot releases to make the psg commands operational for upgrading, etc.  Was a bit of a mess for a week
+
+## 4.52.0 - A deleted release that instead fell back to 4.51.* dot releases
+
+## 4.53.0 PySimpleGUI 24-Oct-2021
+
+The "Mike's really excited about this release!" release  
+
+psg commands!  
+psgmain  
+psgupgrade  
+psghelp  
+psgver  
+psgsettings  
+Control Click window movement  
+Frame Elements with `size` parameter  
+
+I really like this release.  It pulls together a ***lot*** of work over the past week. It fixes some things that have bothered me for a long time and adds support for some things that have bothered users for a long time.... so here we go....
+
+
+* Added Commands that you can type or make shortcuts to
+	* psgmain - Runs the sg.main() test harness.  Your gateway to settings, version info, etc
+	* psgupgrade - Upgrades PySimpleGUI to the latest version on ***GitHub***
+	* psghelp - view the SDK help window
+	* psgver - view the version numbers
+	* psgsettings - access the settings window (usually done via the main window)
+	* Don't forget to use `sudo` if you're upgrading on Linux!
+* Control Key Dragging - move ***any*** PySimpleGUI window by holding down control key while holding the left mouse button down. Ignores the usual Grab Anywhere restrictions and allows dragging over Multiline elements for example
+* A new, shorter, version of the 1x1 pixel BLANK_BASE64 image
+* Image Element
+	* New logic for the `Image.update()` (with no parms). This will delete an image and now will also shrink down to 1 pixel
+	* Set border width to 0 so that takes up even less space when empty
+* Frame Element
+	* Can now use the `size` parameter to create a fixed size Frame
+	* `element_justification` behaves properly - consider using a `Frame` with border width=0 and no text instead of a `Column` element if you need both a hard coded size and to justify the elements inside
+* `set_options`
+	* Added `dpi_awareness` setting to turn on DPI Awareness (currently only on Windows)
+	* Added `scaling` parameter for system-wide Window scaling
+* `Window`
+	* Added `scaling` parameter - will scale the contents of the window. Takes a float value
+	* If need scaling for **all windows** then set using the `set_options` call
+* Better 3.4 compatibility
+	* Previously has issues with subprocesses
+	* Upgrade to GitHub version now works
+	* The new psgcommands to work too so all you 3.4, 3.5 users out there aren't left behind!
+	* The PySimpleGUI Tent was built to be big and has plans on staying that way
+* Exec APIs - improved ability to modify interpreter to use in other programs so that your program will then pick up the latest changes
+* Testing more thoroughly 3.4, 3.6, 3.7, 3.8, 3.9, 3.10 and tkinter 8.6.2 through 8.6.10
+* Doc updates to the Call Reference doc - Added `Sizer` element and reorganizing a bit.
+* Special thanks to Jason for providing amazing support to the PySimpleGUI users. If you think PySimpleGUI is great... if you really want to see something impressive, try logging an issue on the GitHub and watch Jason do his thing.
+
+
 ## Code Condition
 
     Make it run

@@ -1,48 +1,12 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.11 Unreleased"
+version = __version__ = "4.53.0 Released 24-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.51.6 released to PyPI on 21-Oct-2021
-
-    4.51.4.1
-        Support for making the command-line tools available after upgrade from GitHub.
-    4.51.4.2
-        Removed popup_scrolled from the upgrade from github code.  Looks like setup.py file is fine
-    4.51.4.3
-        Fix in the upgrade from GitHub code.
-    4.51.6.1
-        Bumped version to match the pypi release
-    4.51.6.2
-        Fix bug for grab anywhere enabled with grab anywhere using control key
-            Wasn't ignoring the widgets that shouldn't move winow using grab anywhere
-    4.51.6.3
-        New BLANK_BASE64 definition that's shorter. Should still be 1 x 1 pixel and clear
-        New logic in the Image.update() when no paramters passed. This is how an image is "erased"
-            Now the image is rewsized to 1x1 pixel prior to deleting. 
-        Setting the border depth = 0 on the Label holding image for Image element. Leaves a lot LESS space when no image is present
-        FIXED setting a size on Frame Elements. It's not worked previously, but THINK it does now! (insert fingers crossed emoji here)
-    4.51.6.4
-        Added dpi_awareness option to set_options as an experiment
-        Added scaling parameter to Window and to set_options for global scaling
-    4.51.6.5
-        Changed how the GitHub upgrades happen when using the psgupgrade.exe command.
-    4.51.7.5
-        Version number bump so that the pip install from github will be greater than the current pypi 4.51.7
-    4.51.7.6
-        Subprocess import changed for 3.4 compatibility... yes, PySimpleGUI is STILL 3.4 compatible
-    4.51.7.7
-        Changed "main" entry point for the psgmain command so that if an upgrade is attempted it will work correctly (the psgmain.exe will have exited)
-    4.51.7.8
-        Version bump to get pip to install yet again from GitHub        
-    4.51.7.9
-        MAIN instea of MEIN (oy!  When am I going to get this release out???)
-    4.51.7.10
-        Better description of the main restart as to not be alarming...
-    4.51.7.11
-        Refresh the PySimpleGUI settings in all exec calls in case settings changed in another program        
+    Changelog since 4.53.0 released to PyPI on 24-Oct-2021
+     
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345

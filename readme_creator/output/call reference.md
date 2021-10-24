@@ -29,8 +29,7 @@ The PySimpleGUIQt call reference is located in another location.
 
 This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
-# Here are all of the Elements, the Window  class, and all functions
-
+# The Elements
 ---------
 
 ## Button Element 
@@ -3868,6 +3867,7 @@ Image(source = None,
     key = None,
     k = None,
     tooltip = None,
+    subsample = None,
     right_click_menu = None,
     expand_x = False,
     expand_y = False,
@@ -3891,6 +3891,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      int                                       |    subsample     | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
@@ -4092,6 +4093,7 @@ update(source = None,
     filename = None,
     data = None,
     size = (None, None),
+    subsample = None,
     visible = None)
 ```
 
@@ -4099,11 +4101,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes or None |  source  | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
-|        str         | filename | filename to the new image to display. |
-| str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
-|   Tuple[int,int]   |   size   | (width, height) size of image in pixels |
-|        bool        | visible  | control visibility of element |
+| str or bytes or None |  source   | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
+|        str         | filename  | filename to the new image to display. |
+| str or tkPhotoImage |   data    | Base64 encoded string OR a tk.PhotoImage object |
+|   Tuple[int,int]   |   size    | (width, height) size of image in pixels |
+|        int         | subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|        bool        |  visible  | control visibility of element |
 
 ### update_animation
 
@@ -4192,6 +4195,7 @@ Update(source = None,
     filename = None,
     data = None,
     size = (None, None),
+    subsample = None,
     visible = None)
 ```
 
@@ -4199,11 +4203,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes or None |  source  | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
-|        str         | filename | filename to the new image to display. |
-| str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
-|   Tuple[int,int]   |   size   | (width, height) size of image in pixels |
-|        bool        | visible  | control visibility of element |
+| str or bytes or None |  source   | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
+|        str         | filename  | filename to the new image to display. |
+| str or tkPhotoImage |   data    | Base64 encoded string OR a tk.PhotoImage object |
+|   Tuple[int,int]   |   size    | (width, height) size of image in pixels |
+|        int         | subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|        bool        |  visible  | control visibility of element |
 
 ### UpdateAnimation
 
@@ -7228,6 +7233,22 @@ Parameter Descriptions:
 | int | current_count | sets the current value |
 | int |      max      | changes the max value |
 
+------------------
+
+## Push Element (alias include `P` and `Stretch`)
+
+Not a true element, but a function acting like an element.
+
+A `Push` element will "push" elements on the row away from it.  If you have 1 `Push` as the start of a row, then the row will be right-justified.  If you have two `Push` elements, one as the first element and one as the last element on a row, then the row will be centered.
+
+Acts like a Stretch element found in the Qt port.
+Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
+Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
+
+```
+Push()
+```
+
 ---------
 
 ## Radio Element 
@@ -7605,6 +7626,28 @@ Parameter Descriptions:
 | bool |     visible      | control visibility of element |
 
 ---------
+
+## Sizer Element
+
+Note that while the Sizer is an element, it is implemented using a function and doesn't have the normal set of element methods.
+
+This element is used to add more space.... more size...to a Container Element or a Window.  They are often better to use than hard-coded sizes on the containers typically.
+
+"Pushes" out the size of whatever it is placed inside of.  This includes Columns, Frames, Tabs and Windows
+
+```
+Sizer(h_pixels = 0, v_pixels = 0)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | h_pixels | number of horizontal pixels |
+| int | v_pixels | number of vertical pixels |
+| (Column) | **RETURN** | (Column) A column element that has a pad setting set according to parameters
+
+-------
 
 ## Sizegrip Element 
 
@@ -10331,8 +10374,9 @@ Parameter Descriptions:
 ## Titlebar Element
 
 Note that while the Titlebar is an element, it is implemented using a function.
+
 It is actually a "compound element" that consists of several elements combined into a single Column element.
-See the Column element to get a list of method calls available.  The function returns a Column element.
+See the Column element to get a list of method calls available.  The function returns a Column element.  This type of construct is referred to as "User Defined Elements" in the documentation and tutorials.
 
 A custom titlebar that replaces the OS provided titlebar, thus giving you control
 the is not possible using the OS provided titlebar such as the color.
@@ -11028,32 +11072,13 @@ Returns visibility state for the element.  This is a READONLY property
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
---------------------------------------
-# The `Push` / `Stretch` Elements
-
-These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
-
-The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
-
-In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
-
-The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
-
-## Push-style Elements Use
-
-These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
-
-## Push Element (alias include `P` and `Stretch`)
-
-Acts like a Stretch element found in the Qt port.
-Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
-Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
-
-```
-Push()
-```
+------------------------------
 
 ## VPush Element (aliases include `VP` and `VStretch`)
+
+Like the `Push` element, this is not a true element but rather a function acting like an element.  It will "Push" all elements above and below away from it.
+
+Example:  If first row has a `VPush`, then your layout will be At the bottom of the container it is in.  If one is on the last row, then the layout will be at the top of the container.  If you use TWO `VPush`, one on the first row and one on the last row, then your layout will be centered vertically.
 
 Acts like a Stretch element found in the Qt port.
 Used in a Vertical fashion.
@@ -11062,296 +11087,9 @@ Used in a Vertical fashion.
 VPush()
 ```
 
-### These are non-PEP8 Compliant Methods - do NOT use
+-----------------------------------
 
-The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
----------
-
-## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
-
-User Settings
-
-```
-UserSettings(filename = None,
-    path = None,
-    silent_on_error = False,
-    autosave = True,
-    use_config_file = None,
-    convert_bools_and_none = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) |        filename        | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |          path          | The folder that the settings file will be stored in. Do not include the filename. |
-|     bool      |    silent_on_error     | If True errors will not be reported |
-|     bool      |        autosave        | If True the settings file is saved after every update |
-|     bool      |    use_config_file     | If True then the file format will be a config.ini rather than json |
-|     bool      | convert_bools_and_none | If True then "True", "False", "None" will be converted to the Python values True, False, None when using INI files. Default is TRUE |
-
-### delete_entry
-
-Deletes an individual entry.  If no filename has been specified up to this point,
-then a default filename will be used.
-After value has been deleted, the settings file is written to disk.
-
-```
-delete_entry(key, section = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any | key | Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable) |
-
-### delete_file
-
-Deltes the filename and path for your settings file.  Either paramter can be optional.
-If you don't choose a path, one is provided for you that is OS specific
-Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
-If you don't choose a filename, your application's filename + '.json' will be used
-Also sets your current dictionary to a blank one.
-
-```
-delete_file(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
-
-### delete_section
-
-Deletes a section with the name provided in the section parameter.  Your INI file will be saved afterwards if auto-save enabled (default is ON)
-
-```
-delete_section(section)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | section | Name of the section to delete |
-
-### exists
-
-Check if a particular settings file exists.  Returns True if file exists
-
-```
-exists(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
-
-### get
-
-Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
-the user specified default value will be returned.  It no default is specified and nothing is found, then
-the "default value" is returned.  This default can be specified in this call, or previously defined
-by calling set_default. If nothing specified now or previously, then None is returned as default.
-
-```
-get(key, default = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any |   key   | Key used to lookup the setting in the settings dictionary |
-| Any | default | Value to use should the key not be found in the dictionary |
-| (Any) | **RETURN** | Value of specified settings
-
-### get_dict
-
-Returns the current settings dictionary.  If you've not setup the filename for the
-settings, a default one will be used and then read.
-
-Note that you can display the dictionary in text format by printing the object itself.
-
-`get_dict()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Dict| **return** | The current settings dictionary |
-
-### get_filename
-
-Sets the filename and path for your settings file.  Either paramter can be optional.
-
-If you don't choose a path, one is provided for you that is OS specific
-Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
-
-If you don't choose a filename, your application's filename + '.json' will be used.
-
-Normally the filename and path are split in the user_settings calls. However for this call they
-can be combined so that the filename contains both the path and filename.
-
-```
-get_filename(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
-| (str) | **RETURN** | The full pathname of the settings file that has both the path and filename combined.
-
-### load
-
-Specifies the path and filename to use for the settings and reads the contents of the file.
-The filename can be a full filename including a path, or the path can be specified separately.
-If  no filename is specified, then the caller's filename will be used with the extension ".json"
-
-```
-load(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | Filename to load settings from (and save to in the future) |
-| (str or None) |   path   | Path to the file. Defaults to a specific folder depending on the operating system |
-| (dict) | **RETURN** | The settings dictionary (i.e. all settings)
-
-### read
-
-Reads settings file and returns the dictionary.
-If you have anything changed in an existing settings dictionary, you will lose your changes.
-
-`read()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(dict)| **return** | settings dictionary |
-
-### save
-
-Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
-previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
-
-```
-save(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used. |
-| (str or None) |   path   | The (optional) path to use to save the file. |
-| (str) | **RETURN** | The full path and filename used to save the settings
-
-### set
-
-Sets an individual setting to the specified value.  If no filename has been specified up to this point,
-then a default filename will be used.
-After value has been modified, the settings file is written to disk.
-Note that this call is not value for a config file normally. If it is, then the key is assumed to be the
-Section key and the value written will be the default value.
-
-```
-set(key, value)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any |  key  | Setting to be saved. Can be any valid dictionary key type |
-| Any | value | Value to save as the setting's value. Can be anything |
-| (Any) | **RETURN** | value that key was set to
-
-### set_default_value
-
-Set the value that will be returned if a requested setting is not found
-
-```
-set_default_value(default)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any | default | value to be returned if a setting is not found in the settings dictionary |
-
-### set_location
-
-Sets the location of the settings file
-
-```
-set_location(filename = None, path = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
-
-### write_new_dictionary
-
-Writes a specified dictionary to the currently defined settings filename.
-
-```
-write_new_dictionary(settings_dict)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| dict | settings_dict | The dictionary to be written to the currently defined settings file |
-
----------
-
-## Window 
+# Window - The `Window` Object
 
     Represents a single Window
 
@@ -11382,6 +11120,7 @@ Window(title,
     text_justification = None,
     no_titlebar = False,
     grab_anywhere = False,
+    grab_anywhere_using_control = True,
     keep_on_top = None,
     resizable = False,
     disable_close = False,
@@ -11406,6 +11145,7 @@ Window(title,
     titlebar_font = None,
     titlebar_icon = None,
     use_custom_titlebar = None,
+    scaling = None,
     metadata = None)
 ```
 
@@ -11439,6 +11179,7 @@ Parameter Descriptions:
 |       'left' or 'right' or 'center'       |          text_justification          | Default text justification for all Text Elements in window |
 |                   bool                    |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
 |                   bool                    |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                   bool                    |     grab_anywhere_using_control      | If True can use CONTROL key + left mouse mouse to click and drag to move the window. DEFAULT is TRUE. Unlike normal grab anywhere, it works on all elements. |
 |                   bool                    |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
 |                   bool                    |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
 |                   bool                    |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
@@ -11463,6 +11204,7 @@ Parameter Descriptions:
 |    (str or (str, int[, str]) or None)     |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |              (bytes or str)               |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                   bool                    |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
+|                   float                   |               scaling                | Apply scaling to the elements in the window. Can be set on a global basis using set_options |
 |                    Any                    |               metadata               | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -12680,9 +12422,102 @@ When making an element in a column or someplace that has a scrollbar, then you'l
 VisibilityChanged()
 ```
 
+--------------------------------------
+
+## The `Push` / `Stretch` Elements
+
+These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
+
+The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
+
+In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
+
+The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
+
+## Push-style Elements Use
+
+These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
+
 ---------
 
-## SystemTray 
+## Layout Helper Funcs
+
+Pin's an element provided into a layout so that when it's made invisible and visible again, it will
+ be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
+
+```
+pin(elem,
+    vertical_alignment = None,
+    shrink = True,
+    expand_x = None,
+    expand_y = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|  Element   |        elem        | the element to put into the layout |
+| str or None | vertical_alignment | Aligns elements vertically. 'top', 'center', 'bottom'. Can be shortened to 't', 'c', 'b' |
+|    bool    |       shrink       | If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank |
+|    bool    |      expand_x      | If True/False the value will be passed to the Column Elements used to make this feature |
+|    bool    |      expand_y      | If True/False the value will be passed to the Column Elements used to make this feature |
+| Column | **RETURN** | A column element containing the provided element
+
+Align an element or a row of elements to the bottom of the row that contains it
+
+```
+vbottom(elem_or_row,
+    expand_x = None,
+    expand_y = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
+|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the bottom or list of elements (a row)
+
+Align an element or a row of elements to the center of the row that contains it
+
+```
+vcenter(elem_or_row,
+    expand_x = None,
+    expand_y = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
+|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the center or list of elements (a row)
+
+Align an element or a row of elements to the top of the row that contains it
+
+```
+vtop(elem_or_row,
+    expand_x = None,
+    expand_y = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
+|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the top or list of elements (a row)
+
+-----------------
+
+## SystemTray  - Only for Qt and Wx ports. Use `psgtray` package for the tkinter port
 
     A "Simulated System Tray" that duplicates the API calls available to PySimpleGUIWx and PySimpleGUIQt users.
 
@@ -12926,9 +12761,7 @@ Parameter Descriptions:
 | ??? |    data     | icon raw image |
 | ??? | data_base64 | icon base 64 image |
 
-## Function Reference
-
-These are the functions available for you to call
+-----------
 
 ## Version Info
 
@@ -12969,7 +12802,7 @@ Parameter Descriptions:
 | Any | timeout_key | Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY |
 | (Window, Any, Dict or List) | **RETURN** | A tuple with the  (Window, event, values dictionary/list)
 
-## Button Related
+## Pre-Defined Buttons (use in your layout)
 
 Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -13567,34 +13400,6 @@ Parameter Descriptions:
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-
-```
-ObjToString(obj, extra = "    ")
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any |  obj  | The object to display |
-| str | extra | extra stuff (Default value = ' ') |
-| (str) | **RETURN** | Formatted output of the object's values
-
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-Returns only the top-most object's variables instead of drilling down to dispolay more
-
-```
-ObjToStringSingleObj(obj)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any | obj | The object to display |
-| (str) | **RETURN** | Formatted output of the object's values
-
 ```
 Ok(button_text = "Ok",
     size = (None, None),
@@ -14123,6 +13928,8 @@ Parameter Descriptions:
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
+-----------
+
 ## Debug Window Output
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
@@ -14498,57 +14305,11 @@ Parameter Descriptions:
 |  Any   | multiline_key | Key for the Multiline Element where output will be sent |
 | None | **RETURN** | None
 
-## OneLineProgressMeter
+-----------
 
-```
-OneLineProgressMeter(title,
-    current_value,
-    max_value,
-    args=*<1 or N object>,
-    key = "OK for 1 meter",
-    orientation = "v",
-    bar_color = (None, None),
-    button_color = None,
-    size = (20, 20),
-    border_width = None,
-    grab_anywhere = False,
-    no_titlebar = False,
-    keep_on_top = None,
-    no_button = False)
-```
+## One Line Progress Meter
 
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|            str             |     title     | text to display in eleemnt |
-|            int             | current_value | current value |
-|            int             |   max_value   | max value of QuickMeter |
-|            Any             |     *args     | stuff to output |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
-|            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
-|      Tuple(str, str)       |   bar_color   | color of a bar line |
-|     (str, str) or str      | button_color  | button color (foreground, background) |
-|         (int, int)         |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
-|            int             | border_width  | width of border around element |
-|            bool            | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
-|            bool            |  no_titlebar  | If True: no titlebar will be shown on the window |
-|            bool            |  keep_on_top  | If True the window will remain above all current windows |
-|            bool            |   no_button   | If True: window will be created without a cancel button |
-| (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
-
-Cancels and closes a previously created One Line Progress Meter window
-
-```
-OneLineProgressMeterCancel(key = "OK for 1 meter")
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any | key | Key used when meter was created |
-| None | **RETURN** | None
+Add a progress meter to your application by adding 1 line of code.
 
 ```
 one_line_progress_meter(title,
@@ -14591,6 +14352,60 @@ Cancels and closes a previously created One Line Progress Meter window
 
 ```
 one_line_progress_meter_cancel(key = "OK for 1 meter")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | key | Key used when meter was created |
+| None | **RETURN** | None
+
+### NON-PEP8 Versions
+
+Don't use these.  They are here in case you're searching for them.  Instead use the PEP8 version `one_line_progress_meter`.
+
+```
+OneLineProgressMeter(title,
+    current_value,
+    max_value,
+    args=*<1 or N object>,
+    key = "OK for 1 meter",
+    orientation = "v",
+    bar_color = (None, None),
+    button_color = None,
+    size = (20, 20),
+    border_width = None,
+    grab_anywhere = False,
+    no_titlebar = False,
+    keep_on_top = None,
+    no_button = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|            str             |     title     | text to display in eleemnt |
+|            int             | current_value | current value |
+|            int             |   max_value   | max value of QuickMeter |
+|            Any             |     *args     | stuff to output |
+| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
+|      Tuple(str, str)       |   bar_color   | color of a bar line |
+|     (str, str) or str      | button_color  | button color (foreground, background) |
+|         (int, int)         |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|            int             | border_width  | width of border around element |
+|            bool            | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
+|            bool            |  no_titlebar  | If True: no titlebar will be shown on the window |
+|            bool            |  keep_on_top  | If True the window will remain above all current windows |
+|            bool            |   no_button   | If True: window will be created without a cancel button |
+| (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
+
+Cancels and closes a previously created One Line Progress Meter window
+
+```
+OneLineProgressMeterCancel(key = "OK for 1 meter")
 ```
 
 Parameter Descriptions:
@@ -15491,7 +15306,7 @@ Parameter Descriptions:
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
 
-### Popup Alias - Same as popup_scrolled
+### `sprint` Popup Alias - Same as popup_scrolled
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -16580,9 +16395,7 @@ Parameter Descriptions:
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
 
-## PEP8 Function Bindings
-
-## Display Objects In a Friendly Way
+## Display Objects as Strings
 
 These functions will return an object as a string that shows each of the object's member variables.  They're nice to use if you want to print any Python object, not just PySimpleGUI ones.
 
@@ -16614,13 +16427,15 @@ Parameter Descriptions:
 | Any | obj | The object to display |
 | (str) | **RETURN** | Formatted output of the object's values
 
-## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
+## The Main PySimpleGUI Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
 
 A convention that PySimpleGUI uses is that standalone entry points start with "main_".  These calls are essentially a mini-program within the PySimpleGUI.py file.
 
 Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
 
 You can call main() from your code and then access these other features such as the global settings. You can also directly call these functions.
+
+You can also type `psgmain` from the command line to access it if you have pip installed your copy of PySimpleGUI.
 
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
 
@@ -16695,7 +16510,11 @@ Parameter Descriptions:
 | (int, int) | location | Locations (x,y) on the screen to place upper left corner of the window |
 | None | **RETURN** | None
 
+-------------
+
 ## Themes
+
+The way to get Windows that have elements that have matching colors.
 
 Sets / Gets the current Theme.  If none is specified then returns the current theme.
 This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
@@ -16937,6 +16756,8 @@ Parameter Descriptions:
 |--|--|--|
 | (str) | **RETURN** | (str) - color string of the text background color currently in use
 
+--------------------
+
 ## Platform Checks
 
 These are simple functions you can use that return a boolean  True if sys.platform matches the platform.  Saves you the trouble of importing sys and then looking up the values for sys.platform.
@@ -16998,11 +16819,270 @@ Parameter Descriptions:
 |--|--|--|
 | (bool) | **RETURN** | True if sys.platform indicates running Windows
 
-## User Settings
+------------------------
 
-In addition to user settings files, there is also a global PySimpleGUI settings file.
+## UserSettings API - Class Interface
 
-You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
+The User Settings API is used to store your settings information from one session to another or from one program to another.  They are stored on disk in either JSON or INI file formats.
+
+In addition to user settings files, there is also a global PySimpleGUI settings file that PySimpleGUI uses to store information about the default Python interpreter you want to use with the Exec APIs, the default theme. You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
+
+User Settings
+
+```
+UserSettings(filename = None,
+    path = None,
+    silent_on_error = False,
+    autosave = True,
+    use_config_file = None,
+    convert_bools_and_none = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) |        filename        | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |          path          | The folder that the settings file will be stored in. Do not include the filename. |
+|     bool      |    silent_on_error     | If True errors will not be reported |
+|     bool      |        autosave        | If True the settings file is saved after every update |
+|     bool      |    use_config_file     | If True then the file format will be a config.ini rather than json |
+|     bool      | convert_bools_and_none | If True then "True", "False", "None" will be converted to the Python values True, False, None when using INI files. Default is TRUE |
+
+### delete_entry
+
+Deletes an individual entry.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been deleted, the settings file is written to disk.
+
+```
+delete_entry(key, section = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | key | Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable) |
+
+### delete_file
+
+Deltes the filename and path for your settings file.  Either paramter can be optional.
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+If you don't choose a filename, your application's filename + '.json' will be used
+Also sets your current dictionary to a blank one.
+
+```
+delete_file(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### delete_section
+
+Deletes a section with the name provided in the section parameter.  Your INI file will be saved afterwards if auto-save enabled (default is ON)
+
+```
+delete_section(section)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | section | Name of the section to delete |
+
+### exists
+
+Check if a particular settings file exists.  Returns True if file exists
+
+```
+exists(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### get
+
+Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+the user specified default value will be returned.  It no default is specified and nothing is found, then
+the "default value" is returned.  This default can be specified in this call, or previously defined
+by calling set_default. If nothing specified now or previously, then None is returned as default.
+
+```
+get(key, default = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |   key   | Key used to lookup the setting in the settings dictionary |
+| Any | default | Value to use should the key not be found in the dictionary |
+| (Any) | **RETURN** | Value of specified settings
+
+### get_dict
+
+Returns the current settings dictionary.  If you've not setup the filename for the
+settings, a default one will be used and then read.
+
+Note that you can display the dictionary in text format by printing the object itself.
+
+`get_dict()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Dict| **return** | The current settings dictionary |
+
+### get_filename
+
+Sets the filename and path for your settings file.  Either paramter can be optional.
+
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+
+If you don't choose a filename, your application's filename + '.json' will be used.
+
+Normally the filename and path are split in the user_settings calls. However for this call they
+can be combined so that the filename contains both the path and filename.
+
+```
+get_filename(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+| (str) | **RETURN** | The full pathname of the settings file that has both the path and filename combined.
+
+### load
+
+Specifies the path and filename to use for the settings and reads the contents of the file.
+The filename can be a full filename including a path, or the path can be specified separately.
+If  no filename is specified, then the caller's filename will be used with the extension ".json"
+
+```
+load(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | Filename to load settings from (and save to in the future) |
+| (str or None) |   path   | Path to the file. Defaults to a specific folder depending on the operating system |
+| (dict) | **RETURN** | The settings dictionary (i.e. all settings)
+
+### read
+
+Reads settings file and returns the dictionary.
+If you have anything changed in an existing settings dictionary, you will lose your changes.
+
+`read()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(dict)| **return** | settings dictionary |
+
+### save
+
+Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
+previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
+
+```
+save(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used. |
+| (str or None) |   path   | The (optional) path to use to save the file. |
+| (str) | **RETURN** | The full path and filename used to save the settings
+
+### set
+
+Sets an individual setting to the specified value.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been modified, the settings file is written to disk.
+Note that this call is not value for a config file normally. If it is, then the key is assumed to be the
+Section key and the value written will be the default value.
+
+```
+set(key, value)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |  key  | Setting to be saved. Can be any valid dictionary key type |
+| Any | value | Value to save as the setting's value. Can be anything |
+| (Any) | **RETURN** | value that key was set to
+
+### set_default_value
+
+Set the value that will be returned if a requested setting is not found
+
+```
+set_default_value(default)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | default | value to be returned if a setting is not found in the settings dictionary |
+
+### set_location
+
+Sets the location of the settings file
+
+```
+set_location(filename = None, path = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### write_new_dictionary
+
+Writes a specified dictionary to the currently defined settings filename.
+
+```
+write_new_dictionary(settings_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| dict | settings_dict | The dictionary to be written to the currently defined settings file |
+
+## User Settings API - Function Interface
+
+You have a couple of ways to access User Settings if your information is stored in JSON format.  If you're using the INI format, then you must use the `UserSettings` object.
+
+These are particularly useful directly in layouts, allowing you to you can easily set default values.
 
 Returns the current settings dictionary.  If you've not setup the filename for the
 settings, a default one will be used and then read.
@@ -17174,9 +17254,11 @@ Parameter Descriptions:
 |--|--|--|
 | dict | settings_dict | The dictionary to be written to the currently defined settings file |
 
-## Exec APIs
+-----------------
 
-These API calls are used to launch subprocesses.
+## Exec APIs - Launching Subprocesses
+
+These API calls are used to launch subprocesses.  You can launch Python files or any type of executable file.  In these calls is where you invoke the editor and file explorer that was specified in the PySimpleGUI Global Settings.
 
 Runs the specified command as a subprocess.
 By default the call is non-blocking.
@@ -17303,6 +17385,8 @@ Parameter Descriptions:
 | (subprocess.Popen) | subprocess_id | ID previously returned from Exec API calls that indicate this value is returned |
 | bool | **RETURN** | True if the subproces is running
 
+------------
+
 ## Clipboard APIs
 
 Note that this clipboard uses tkinter's clipboard. There is a known limitation that your application needs to remain running until you've pasted the contents.  Managed to get around this limitation so that the clipboard stays set after you exit your application, but only have it working for Windows systems.
@@ -17364,82 +17448,7 @@ Parameter Descriptions:
 | (Dict[Any, Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 | None | **RETURN** | None
 
-## Layout Helper Funcs
-
-Pin's an element provided into a layout so that when it's made invisible and visible again, it will
- be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
-
-```
-pin(elem,
-    vertical_alignment = None,
-    shrink = True,
-    expand_x = None,
-    expand_y = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|  Element   |        elem        | the element to put into the layout |
-| str or None | vertical_alignment | Aligns elements vertically. 'top', 'center', 'bottom'. Can be shortened to 't', 'c', 'b' |
-|    bool    |       shrink       | If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank |
-|    bool    |      expand_x      | If True/False the value will be passed to the Column Elements used to make this feature |
-|    bool    |      expand_y      | If True/False the value will be passed to the Column Elements used to make this feature |
-| Column | **RETURN** | A column element containing the provided element
-
-Align an element or a row of elements to the bottom of the row that contains it
-
-```
-vbottom(elem_or_row,
-    expand_x = None,
-    expand_y = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
-| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the bottom or list of elements (a row)
-
-Align an element or a row of elements to the center of the row that contains it
-
-```
-vcenter(elem_or_row,
-    expand_x = None,
-    expand_y = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
-| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the center or list of elements (a row)
-
-Align an element or a row of elements to the top of the row that contains it
-
-```
-vtop(elem_or_row,
-    expand_x = None,
-    expand_y = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
-| Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the top or list of elements (a row)
-
-## Configuration / Settings / Extensions
+## Application-wide Configuration / Settings (`set_options`, etc)
 
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
@@ -17505,7 +17514,9 @@ set_options(icon = None,
     user_settings_path = None,
     pysimplegui_settings_path = None,
     pysimplegui_settings_filename = None,
-    keep_on_top = None)
+    keep_on_top = None,
+    dpi_awareness = None,
+    scaling = None)
 ```
 
 Parameter Descriptions:
@@ -17563,6 +17574,8 @@ Parameter Descriptions:
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
 |                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
+|                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
+|                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -17631,7 +17644,9 @@ SetOptions(icon = None,
     user_settings_path = None,
     pysimplegui_settings_path = None,
     pysimplegui_settings_filename = None,
-    keep_on_top = None)
+    keep_on_top = None,
+    dpi_awareness = None,
+    scaling = None)
 ```
 
 Parameter Descriptions:
@@ -17689,6 +17704,8 @@ Parameter Descriptions:
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
 |                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
+|                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
+|                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
@@ -17792,8 +17809,10 @@ Parameter Descriptions:
 
 -------------
 
-This documentation is copyright 2021 by PySimpleGUI Inc
+This documentation is copyright 2021 by PySimpleGUI(tm)
 
-Republishing the copyrighted PySimpleGUI documentation and selling it are not allowed.
+The PySimpleGUI name and logo are trademarked.  Use without permission is prohibited.
 
-When in doubt, ask.
+Republishing the copyrighted PySimpleGUI documentation and selling it ***IS PROHIBITED***.
+
+***When in doubt, ask.***

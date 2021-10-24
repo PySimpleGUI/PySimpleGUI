@@ -32,8 +32,7 @@ The PySimpleGUIQt call reference is located in another location.
 
 This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
-# Here are all of the Elements, the Window  class, and all functions
-
+# The Elements
 ---------
 
 ## Button Element 
@@ -1596,6 +1595,18 @@ The following methods are here for backwards compatibility reference.  You will 
 ### UpdateBar
 <!-- <+ProgressBar.UpdateBar+> -->
 
+
+
+------------------
+
+## Push Element (alias include `P` and `Stretch`)
+
+Not a true element, but a function acting like an element.
+
+A `Push` element will "push" elements on the row away from it.  If you have 1 `Push` as the start of a row, then the row will be right-justified.  If you have two `Push` elements, one as the first element and one as the last element on a row, then the row will be centered.
+
+<!-- <+func.Push+> -->
+
 ---------
 
 
@@ -1684,6 +1695,15 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ---------
 
+## Sizer Element
+
+Note that while the Sizer is an element, it is implemented using a function and doesn't have the normal set of element methods.
+
+This element is used to add more space.... more size...to a Container Element or a Window.  They are often better to use than hard-coded sizes on the containers typically.
+
+<!-- <+func.Sizer+> -->
+
+-------
 
 ## Sizegrip Element 
 <!-- <+Sizegrip.doc+> -->
@@ -2292,8 +2312,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ## Titlebar Element
 
 Note that while the Titlebar is an element, it is implemented using a function.
+
 It is actually a "compound element" that consists of several elements combined into a single Column element.
-See the Column element to get a list of method calls available.  The function returns a Column element.
+See the Column element to get a list of method calls available.  The function returns a Column element.  This type of construct is referred to as "User Defined Elements" in the documentation and tutorials.
 
 <!-- <+func.Titlebar+> -->
 
@@ -2441,99 +2462,23 @@ The following methods are here for backwards compatibility reference.  You will 
 ### visible
 <!-- <+VerticalSeparator.visible+> -->
 
-
---------------------------------------
-# The `Push` / `Stretch` Elements
-
-These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
-
-The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
-
-In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
-
-The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
-
-## Push-style Elements Use
-
-These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
-
-## Push Element (alias include `P` and `Stretch`)
-
-<!-- <+func.Push+> -->
+------------------------------
 
 ## VPush Element (aliases include `VP` and `VStretch`)
 
+Like the `Push` element, this is not a true element but rather a function acting like an element.  It will "Push" all elements above and below away from it.
+
+Example:  If first row has a `VPush`, then your layout will be At the bottom of the container it is in.  If one is on the last row, then the layout will be at the top of the container.  If you use TWO `VPush`, one on the first row and one on the last row, then your layout will be centered vertically.
+
+
 <!-- <+func.VPush+> -->
 
-### These are non-PEP8 Compliant Methods - do NOT use
 
-The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
-
-
-### SetFocus
-<!-- <+VerticalSeparator.SetFocus+> -->
-
-### SetTooltip
-<!-- <+VerticalSeparator.SetTooltip+> -->
-
-
----------
-
-
-## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
-<!-- <+UserSettings.doc+> -->
-<!-- <+UserSettings.__init__+> -->
-
-### delete_entry
-<!-- <+UserSettings.delete_entry+> -->
-
-### delete_file
-<!-- <+UserSettings.delete_file+> -->
-
-
-### delete_section
-<!-- <+UserSettings.delete_section+> -->
-
-
-### exists
-<!-- <+UserSettings.exists+> -->
-
-### get
-<!-- <+UserSettings.get+> -->
-
-### get_dict
-<!-- <+UserSettings.get_dict+> -->
-
-### get_filename
-<!-- <+UserSettings.get_filename+> -->
-
-### load
-<!-- <+UserSettings.load+> -->
-
-### read
-<!-- <+UserSettings.read+> -->
-
-### save
-<!-- <+UserSettings.save+> -->
-
-### set
-<!-- <+UserSettings.set+> -->
-
-### set_default_value
-<!-- <+UserSettings.set_default_value+> -->
-
-### set_location
-<!-- <+UserSettings.set_location+> -->
-
-### write_new_dictionary
-<!-- <+UserSettings.write_new_dictionary+> -->
-
-
----------
+-----------------------------------
 
 
 
-## Window 
+# Window - The `Window` Object
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
 
@@ -2835,10 +2780,39 @@ The following methods are here for backwards compatibility reference.  You will 
 <!-- <+Window.VisibilityChanged+> -->
 
 
+--------------------------------------
+
+## The `Push` / `Stretch` Elements
+
+These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
+
+The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
+
+In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
+
+The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
+
+
+## Push-style Elements Use
+
+These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
+
+
+
+
 ---------
 
+## Layout Helper Funcs
 
-## SystemTray 
+<!-- <+func.pin+> -->
+<!-- <+func.vbottom+> -->
+<!-- <+func.vcenter+> -->
+<!-- <+func.vtop+> -->
+
+-----------------
+
+
+## SystemTray  - Only for Qt and Wx ports. Use `psgtray` package for the tkinter port
 <!-- <+SystemTray.doc+> -->
 <!-- <+SystemTray.__init__+> -->
 
@@ -2894,10 +2868,7 @@ The following methods are here for backwards compatibility reference.  You will 
 <!-- <+SystemTray.Update+> -->
 
 
-## Function Reference
-
-These are the functions available for you to call
-
+-----------
 
 ## Version Info
 
@@ -2909,7 +2880,7 @@ These are the functions available for you to call
 <!-- <+func.read_all_windows+> -->
 
 
-## Button Related
+## Pre-Defined Buttons (use in your layout)
 
 <!-- <+func.CalendarButton+> -->
 <!-- <+func.Cancel+> -->
@@ -2924,8 +2895,6 @@ These are the functions available for you to call
 <!-- <+func.Help+> -->
 <!-- <+func.No+> -->
 <!-- <+func.OK+> -->
-<!-- <+func.ObjToString+> -->
-<!-- <+func.ObjToStringSingleObj+> -->
 <!-- <+func.Ok+> -->
 <!-- <+func.Open+> -->
 <!-- <+func.Quit+> -->
@@ -2945,6 +2914,7 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.CButton+> -->
 <!-- <+func.CloseButton+> -->
 
+-----------
 
 ## Debug Window Output
 
@@ -2964,13 +2934,22 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.cprint+> -->
 <!-- <+func.cprint_set_output_destination+> -->
 
-## OneLineProgressMeter
+-----------
 
-<!-- <+func.OneLineProgressMeter+> -->
-<!-- <+func.OneLineProgressMeterCancel+> -->
+
+## One Line Progress Meter
+
+Add a progress meter to your application by adding 1 line of code.
+
 <!-- <+func.one_line_progress_meter+> -->
 <!-- <+func.one_line_progress_meter_cancel+> -->
 
+### NON-PEP8 Versions
+
+Don't use these.  They are here in case you're searching for them.  Instead use the PEP8 version `one_line_progress_meter`.
+
+<!-- <+func.OneLineProgressMeter+> -->
+<!-- <+func.OneLineProgressMeterCancel+> -->
 
 ## Popups PEP8 Versions
 
@@ -2996,7 +2975,7 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.popup_yes_no+> -->
 
 
-### Popup Alias - Same as popup_scrolled
+### `sprint` Popup Alias - Same as popup_scrolled
 
 <!-- <+func.sprint+> -->
 <!-- <+func.ScrolledTextBox+> -->
@@ -3033,9 +3012,7 @@ These versions of the popup functions are here only for backwards compatibility.
 
 
 
-## PEP8 Function Bindings
-
-## Display Objects In a Friendly Way
+## Display Objects as Strings
 
 These functions will return an object as a string that shows each of the object's member variables.  They're nice to use if you want to print any Python object, not just PySimpleGUI ones.
 
@@ -3043,13 +3020,15 @@ These functions will return an object as a string that shows each of the object'
 <!-- <+func.obj_to_string_single_obj+> -->
 
 
-## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
+## The Main PySimpleGUI Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
 
 A convention that PySimpleGUI uses is that standalone entry points start with "main_".  These calls are essentially a mini-program within the PySimpleGUI.py file.
 
 Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
 
 You can call main() from your code and then access these other features such as the global settings. You can also directly call these functions.
+
+You can also type `psgmain` from the command line to access it if you have pip installed your copy of PySimpleGUI.
 
 <!-- <+func.main+> -->
 <!-- <+func.main_get_debug_data+> -->
@@ -3063,9 +3042,11 @@ You can call main() from your code and then access these other features such as 
 <!-- <+func.show_debugger_popout_window+> -->
 <!-- <+func.show_debugger_window+> -->
 
-
+-------------
 
 ## Themes
+
+The way to get Windows that have elements that have matching colors.
 
 <!-- <+func.theme+> -->
 <!-- <+func.theme_add_new+> -->
@@ -3087,6 +3068,7 @@ You can call main() from your code and then access these other features such as 
 <!-- <+func.theme_text_color+> -->
 <!-- <+func.theme_text_element_background_color+> -->
 
+--------------------
 
 ## Platform Checks
 
@@ -3098,12 +3080,68 @@ These are simple functions you can use that return a boolean  True if sys.platfo
 <!-- <+func.running_windows+> -->
 
 
+------------------------
 
-## User Settings
 
-In addition to user settings files, there is also a global PySimpleGUI settings file.
+## UserSettings API - Class Interface
 
-You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
+The User Settings API is used to store your settings information from one session to another or from one program to another.  They are stored on disk in either JSON or INI file formats.
+
+In addition to user settings files, there is also a global PySimpleGUI settings file that PySimpleGUI uses to store information about the default Python interpreter you want to use with the Exec APIs, the default theme. You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
+
+<!-- <+UserSettings.doc+> -->
+<!-- <+UserSettings.__init__+> -->
+
+### delete_entry
+<!-- <+UserSettings.delete_entry+> -->
+
+### delete_file
+<!-- <+UserSettings.delete_file+> -->
+
+
+### delete_section
+<!-- <+UserSettings.delete_section+> -->
+
+
+### exists
+<!-- <+UserSettings.exists+> -->
+
+### get
+<!-- <+UserSettings.get+> -->
+
+### get_dict
+<!-- <+UserSettings.get_dict+> -->
+
+### get_filename
+<!-- <+UserSettings.get_filename+> -->
+
+### load
+<!-- <+UserSettings.load+> -->
+
+### read
+<!-- <+UserSettings.read+> -->
+
+### save
+<!-- <+UserSettings.save+> -->
+
+### set
+<!-- <+UserSettings.set+> -->
+
+### set_default_value
+<!-- <+UserSettings.set_default_value+> -->
+
+### set_location
+<!-- <+UserSettings.set_location+> -->
+
+### write_new_dictionary
+<!-- <+UserSettings.write_new_dictionary+> -->
+
+
+## User Settings API - Function Interface
+
+You have a couple of ways to access User Settings if your information is stored in JSON format.  If you're using the INI format, then you must use the `UserSettings` object.
+
+These are particularly useful directly in layouts, allowing you to you can easily set default values.
 
 <!-- <+func.user_settings+> -->
 <!-- <+func.user_settings_delete_entry+> -->
@@ -3117,9 +3155,11 @@ You can directly access the global settings through the UserSettings object: `py
 <!-- <+func.user_settings_silent_on_error+> -->
 <!-- <+func.user_settings_write_new_dictionary+> -->
 
-## Exec APIs
+-----------------
 
-These API calls are used to launch subprocesses.
+## Exec APIs - Launching Subprocesses
+
+These API calls are used to launch subprocesses.  You can launch Python files or any type of executable file.  In these calls is where you invoke the editor and file explorer that was specified in the PySimpleGUI Global Settings.
 
 <!-- <+func.execute_command_subprocess+> -->
 <!-- <+func.execute_editor+> -->
@@ -3128,6 +3168,8 @@ These API calls are used to launch subprocesses.
 <!-- <+func.execute_get_results+> -->
 <!-- <+func.execute_py_file+> -->
 <!-- <+func.execute_subprocess_still_running+> -->
+
+------------
 
 ## Clipboard APIs
 
@@ -3143,15 +3185,9 @@ Note that this clipboard uses tkinter's clipboard. There is a known limitation t
 <!-- <+func.FillFormWithValues+> -->
 
 
-## Layout Helper Funcs
-
-<!-- <+func.pin+> -->
-<!-- <+func.vbottom+> -->
-<!-- <+func.vcenter+> -->
-<!-- <+func.vtop+> -->
 
 
-## Configuration / Settings / Extensions
+## Application-wide Configuration / Settings (`set_options`, etc)
 
 <!-- <+func.get_globals+> -->
 <!-- <+func.set_global_icon+> -->
@@ -3177,8 +3213,10 @@ You should NOT use these calls.  They are here for your reference should you run
 
 -------------
 
-This documentation is copyright 2021 by PySimpleGUI Inc
+This documentation is copyright 2021 by PySimpleGUI(tm)
 
-Republishing the copyrighted PySimpleGUI documentation and selling it are not allowed.
+The PySimpleGUI name and logo are trademarked.  Use without permission is prohibited.
 
-When in doubt, ask.
+Republishing the copyrighted PySimpleGUI documentation and selling it ***IS PROHIBITED***.
+
+***When in doubt, ask.***
