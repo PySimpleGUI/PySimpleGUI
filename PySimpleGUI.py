@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.6.4 Unreleased"
+version = __version__ = "4.51.6.5 Unreleased"
 
 _change_log = """
 
@@ -27,6 +27,8 @@ _change_log = """
     4.51.6.4
         Added dpi_awareness option to set_options as an experiment
         Added scaling parameter to Window and to set_options for global scaling
+    4.51.6.5
+        Changed how the GitHub upgrades happen when using the psgupgrade.exe command.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21850,7 +21852,7 @@ def _copy_files_from_github():
             "'gui_scripts': [",
             "'psgissue=PySimpleGUI.PySimpleGUI:main_open_github_issue',",
             "'psgmain=PySimpleGUI.PySimpleGUI:main',",
-            "'psgupgrade=PySimpleGUI.PySimpleGUI:main_upgrade_from_github',",
+            "'psgupgrade=PySimpleGUI.PySimpleGUI:_upgrade_entry_point',",
             "'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',",
             "'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',",
             "'psgsettings=PySimpleGUI.PySimpleGUI:main_global_pysimplegui_settings',",
@@ -21937,9 +21939,21 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
-main_upgrade_from_github = _upgrade_gui
+# main_upgrade_from_github = _upgrade_gui
+
+def _upgrade_entry_point():
+    """
+    This function is entered via the psgupgrade.exe file.
+
+    It is needed so that the exe file will exit and thus allow itself to be overwritten which
+        is what the upgrade will do.
+    It simply runs the PySimpleGUI.py file with a command line argument "upgrade" which will
+        actually do the upgrade.
+    """
+    execute_py_file(__file__, 'upgrade')
 
 
+main_upgrade_from_github = _upgrade_entry_point
 
 ####################################################################################################
 
