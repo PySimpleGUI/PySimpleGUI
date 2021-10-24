@@ -21958,6 +21958,7 @@ def _upgrade_entry_point():
     execute_py_file(__file__, 'upgrade')
 
 def _main_entry_point():
+    print('Restarted mein successfully')
     execute_py_file(__file__)
 
 main_upgrade_from_github = _upgrade_entry_point
