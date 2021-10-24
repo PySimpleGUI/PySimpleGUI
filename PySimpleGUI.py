@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.7.7 Unreleased"
+version = __version__ = "4.51.7.8 Unreleased"
 
 _change_log = """
 
@@ -35,6 +35,9 @@ _change_log = """
         Subprocess import changed for 3.4 compatibility... yes, PySimpleGUI is STILL 3.4 compatible
     4.51.7.7
         Changed "main" entry point for the psgmain command so that if an upgrade is attempted it will work correctly (the psgmain.exe will have exited)
+    4.51.7.8
+        Version bump to get pip to install yet again from GitHub        
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
