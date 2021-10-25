@@ -50,11 +50,11 @@ def main():
                 [sg.Button('Resize', bind_return_key=True), sg.Button('Exit')],
                 [sg.T('Note - on some systems, autoclose cannot be used\nbecause the clipboard is cleared by tkinter')],]
 
-    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT, enable_close_attempted_event=True, scaling=1.25)
+    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT, enable_close_attempted_event=True)
 
     while True:
         event, values = window.read()
-        print(event, values)
+        # print(event, values)
         if event in (sg.WIN_CLOSED, sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
             sg.user_settings_set_entry('-autoclose-', values['-AUTOCLOSE-'])
             break
