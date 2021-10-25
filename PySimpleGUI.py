@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.53.0.1 Unreleased"
+version = __version__ = "4.53.0.2 Unreleased"
 
 _change_log = """
 
@@ -10,6 +10,8 @@ _change_log = """
     4.53.0.1
         Changed how expansion is handled by Separator elements.
             Only the horizontal separator expands now. The vertical separator will not cause the row to expand, but it will expand with a row.
+    4.53.0.2
+        Another attempt at getting VSep right.  Thank you to Jason for pointing out expand should be False
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15025,12 +15027,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
 
                 if element.Orientation.startswith('h'):
-                    # row_should_expand = True
-                    # row_fill_direction = tk.X
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
                 else:
-                    # row_fill_direction = tk.Y
-                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=True)
+                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=False)
                 element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
             # -------------------------  SizeGrip placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SIZEGRIP:
