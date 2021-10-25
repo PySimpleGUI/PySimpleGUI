@@ -8,7 +8,12 @@ import base64
 
     A quick little utility that will resize an image and also Base64 Encode it.
 
-    Base64 is particualr good to use to make icons or other images that you include in your sourcecode.
+    Base64 is particularly good to use to make icons or other images that you include in your sourcecode.
+    
+    Use this Demo to help you code your PySimpleGUI programs.  Here's how:
+    1. Resize your image
+    2. Paste the base64 encoded byte-string into your code as a variable
+    3. Use your variable for things like an icon, an image for buttons, etc.
 
     Copyright 2021 PySimpleGUI
 """
@@ -45,11 +50,11 @@ def main():
                 [sg.Button('Resize', bind_return_key=True), sg.Button('Exit')],
                 [sg.T('Note - on some systems, autoclose cannot be used\nbecause the clipboard is cleared by tkinter')],]
 
-    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True)
+    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT, enable_close_attempted_event=True)
 
     while True:
         event, values = window.read()
-        print(event, values)
+        # print(event, values)
         if event in (sg.WIN_CLOSED, sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
             sg.user_settings_set_entry('-autoclose-', values['-AUTOCLOSE-'])
             break
@@ -80,6 +85,8 @@ def main():
             sg.popup_scrolled(sg.get_versions(), non_blocking=True)
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
+        elif event == 'File Location':
+            sg.popup_scrolled('This Python file is:', __file__)
     window.close()
 
 
