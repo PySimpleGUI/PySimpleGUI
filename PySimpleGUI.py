@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-
-
-version = __version__ = "4.53.0.2 Unreleased"
+version = __version__ = "4.53.0.3 Unreleased"
 
 _change_log = """
 
@@ -12,6 +10,12 @@ _change_log = """
             Only the horizontal separator expands now. The vertical separator will not cause the row to expand, but it will expand with a row.
     4.53.0.2
         Another attempt at getting VSep right.  Thank you to Jason for pointing out expand should be False
+    4.53.0.3
+        Lots of positive changes to the Frame and Column elements!  They both do a much better job of responding to right clicks in areas with no elements
+        Column and Frame are grabbable from areas that were not able to detect before
+        Added grab parameter to Frame element
+        Added background_color to Push & VPush elements
+        Fixed bug in grab_any_where_on
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -530,7 +534,7 @@ TEXT_LOCATION_BOTTOM_LEFT = tk.SW
 TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
-GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow)
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox)
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
@@ -5783,7 +5787,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, p=None, border_width=None, key=None, k=None,
-                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
+                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
         """
         :param title:                 text that is displayed as the Frame's "label" or title
         :type title:                  (str)
@@ -5821,6 +5825,8 @@ class Frame(Element):
         :type expand_x:               (bool)
         :param expand_y:              If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:               (bool)
+        :param grab:                  If True can grab this element and move the window around. Default is False
+        :type grab:                   (bool)
         :param visible:               set visibility state of the element
         :type visible:                (bool)
         :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
@@ -5851,6 +5857,7 @@ class Frame(Element):
         self.ElementJustification = element_justification
         self.VerticalAlignment = vertical_alignment
         self.Widget = None  # type: tk.LabelFrame
+        self.Grab = grab
         self.Layout(layout)
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -8295,25 +8302,29 @@ class ErrorElement(Element):
 #                           Stretch Element                              #
 # ---------------------------------------------------------------------- #
 # This is for source code compatibility with tkinter version. No tkinter equivalent but you can fake it using a Text element that expands in the X direction
-def Stretch():
+def Stretch(background_color=None):
     """
     Acts like a Stretch element found in the Qt port.
     Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
     Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
-    :return:            (Text)
+    :param background_color: color of background may be needed because of how this is implemented
+    :type background_color:  (str)
+    :return:                 (Text)
     """
-    return Text(font='_ 1', pad=(0,0), expand_x=True)
+    return Text(font='_ 1', background_color=background_color, pad=(0,0), expand_x=True)
 
 Push = Stretch
 P = Stretch
 
-def VStretch():
+def VStretch(background_color=None):
     """
     Acts like a Stretch element found in the Qt port.
     Used in a Vertical fashion.
-    :return:            (Text)
+    :param background_color: color of background may be needed because of how this is implemented
+    :type background_color:  (str)
+    :return:                 (Text)
     """
-    return Text(font='_ 1', pad=(0,0), expand_y=True)
+    return Text(font='_ 1', background_color=background_color, pad=(0,0), expand_y=True)
 
 
 VPush = VStretch
@@ -8514,6 +8525,7 @@ class Window:
         self.LastKeyboardEvent = None
         self.TextJustification = text_justification
         self.NoTitleBar = no_titlebar
+        self.Grab = grab_anywhere
         self.GrabAnywhere = grab_anywhere
         self.GrabAnywhereUsingControlKey = grab_anywhere_using_control
         if keep_on_top is None and DEFAULT_KEEP_ON_TOP is not None:
@@ -9658,8 +9670,7 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if (self.GrabAnywhere is True and (isinstance(event.widget,
-                       GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list):
+        if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
 
@@ -9709,8 +9720,7 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if self.GrabAnywhere is True and (isinstance(event.widget,
-                       GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
+        if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
 
@@ -10192,9 +10202,9 @@ class Window:
         """
         if not self._is_window_created('tried Window.grab_any_where_on'):
             return
-        self.TKroot.bind("<ButtonPress-1>", self._StartMoveGrabAnywhere())
+        self.TKroot.bind("<ButtonPress-1>", self._StartMoveGrabAnywhere)
         self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
-        self.TKroot.bind("<B1-Motion>", self._OnMotionGrabAnywhere())
+        self.TKroot.bind("<B1-Motion>", self._OnMotionGrabAnywhere)
 
     def grab_any_where_off(self):
         """
@@ -13288,7 +13298,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         element.ttk_style_name = style_name
         return style_name
 
-    def _add_right_click_menu(element):
+    def _add_grab(element):
+
+        try:
+            if form.Grab is True or element.Grab is True:
+                # if something already about to the button, then don't do the grab stuff
+                if '<Button-1>' not in element.Widget.bind():
+                    element.Widget.bind("<ButtonPress-1>", toplevel_form._StartMoveGrabAnywhere)
+                    element.Widget.bind("<ButtonRelease-1>", toplevel_form._StopMove)
+                    element.Widget.bind("<B1-Motion>", toplevel_form._OnMotionGrabAnywhere)
+                element.ParentRowFrame.bind("<ButtonPress-1>", toplevel_form._StartMoveGrabAnywhere)
+                element.ParentRowFrame.bind("<ButtonRelease-1>", toplevel_form._StopMove)
+                element.ParentRowFrame.bind("<B1-Motion>", toplevel_form._OnMotionGrabAnywhere)
+                if element.Type == ELEM_TYPE_COLUMN:
+                    element.TKColFrame.canvas.bind("<ButtonPress-1>", toplevel_form._StartMoveGrabAnywhere)
+                    element.TKColFrame.canvas.bind("<ButtonRelease-1>", toplevel_form._StopMove)
+                    element.TKColFrame.canvas.bind("<B1-Motion>", toplevel_form._OnMotionGrabAnywhere)
+        except Exception as e:
+            pass
+            # print(e)
+
+    def _add_right_click_menu_and_grab(element):
         if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
             return
         if element.RightClickMenu or toplevel_form.RightClickMenu:
@@ -13321,6 +13351,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.bind('<ButtonRelease-2>', element._RightClickMenuCallback)
             else:
                 element.Widget.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
+                try:
+                    if element.Type == ELEM_TYPE_COLUMN:
+                        element.TKColFrame.canvas.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
+                except:
+                    pass
+        _add_grab(element)
+
 
     def _add_expansion(element, row_should_expand, row_fill_direction):
         expand = True
@@ -13404,6 +13441,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     border_depth = element.BorderWidth
             except:
                 pass
+
             # -------------------------  COLUMN placement element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element  # type: Column
@@ -13427,8 +13465,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKColFrame.canvas.config(background=element.BackgroundColor)
-                        element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
-                                                          highlightthickness=0)
+                        element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                         element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                   highlightthickness=0)
                 # ----------------------- PLAIN Column ----------------------
@@ -13446,14 +13483,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             element.TKColFrame.canvas.config(width=element.Size[0])
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.canvas.config(background=element.BackgroundColor)
-                            element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
-                                                              highlightthickness=0)
+                            element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
                     else:
                         element.Widget = element.TKColFrame = tk.Frame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-                            element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
-                                                      highlightthickness=0)
+                            element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
 
                 if element.Justification is None:
                     pass
@@ -13508,9 +13543,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #                                  highlightbackground=element.BackgroundColor,
                 #                                  highlightcolor=element.BackgroundColor)
 
-                _add_right_click_menu(element)
-                if element.Grab:
-                    element._grab_anywhere_on()
+                _add_right_click_menu_and_grab(element)
+                # if element.Grab:
+                #     element._grab_anywhere_on()
                 # row_should_expand = True
             # -------------------------  Pane placement element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
@@ -13600,7 +13635,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
                 if element.Grab:
                     element._grab_anywhere_on()
             # -------------------------  BUTTON placement element non-ttk version  ------------------------- #
@@ -13738,7 +13773,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 'Has a bad highlight color {}'.format(element.HighlightColors),
                                                 "Parent Window's Title: {}".format(toplevel_form.Title))
                     # print('Button with text: ', btext, 'has a bad highlight color', element.HighlightColors)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
             # -------------------------  BUTTON placement element ttk version ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
@@ -13853,7 +13888,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton['state'] = 'disabled'
 
                 tkbutton.configure(style=style_name)  # IMPORTANT!  Apply the style to the button!
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
@@ -13991,7 +14026,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
 
@@ -14110,7 +14145,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
             # -------------------------  OPTIONMENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -14205,7 +14240,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 element.element_frame = element_frame
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element  # type: Multiline
@@ -14265,7 +14300,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.reroute_cprint:
                     cprint_set_output_destination(toplevel_form, element.Key)
 
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
 
@@ -14309,7 +14344,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
             # -------------------------  PROGRESS placement element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
@@ -14336,7 +14371,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 element.Widget = element.TKProgressBar.TKProgressBarForReal
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # -------------------------  RADIO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -14388,7 +14423,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # -------------------------  SPIN placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
@@ -14424,7 +14459,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
@@ -14441,7 +14476,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
                 # row_should_expand = True
                 # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -14490,7 +14525,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
                 element.Widget = element.tktext_label
 
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
@@ -14510,7 +14545,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 element.Widget = element._TKCanvas
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # -------------------------  Graph placement element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
@@ -14541,7 +14576,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if element.DragSubmits:
                     element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
             # -------------------------  MENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
@@ -14614,9 +14649,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
-
-
+                _add_right_click_menu_and_grab(element)
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -14647,7 +14680,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
                 # row_should_expand = True
             # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
@@ -14697,7 +14730,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.Size != (None, None):
                     element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 # row_should_expand = True
                 # -------------------  SLIDER placement element  ------------------------- #
@@ -14749,7 +14782,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
             # -------------------------  TABLE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
@@ -14885,7 +14918,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     # print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
@@ -15005,7 +15038,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     # print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
@@ -15106,7 +15139,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu(element)
+                _add_right_click_menu_and_grab(element)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
