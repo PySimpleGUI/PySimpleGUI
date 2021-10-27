@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.3 Unreleased"
+version = __version__ = "4.53.0.4 Unreleased"
 
 _change_log = """
 
@@ -16,6 +16,9 @@ _change_log = """
         Added grab parameter to Frame element
         Added background_color to Push & VPush elements
         Fixed bug in grab_any_where_on
+    4.53.0.4
+        The proliferation of relative_location across the popups, Print
+        Some new BASE64 images (hearts, check & x) - use image_subsample to resize to your liking
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8384,7 +8387,7 @@ class Window:
         :type auto_size_text:                        (bool)
         :param auto_size_buttons:                    True if Buttons in this Window should be sized to exactly fit the text on this.
         :type auto_size_buttons:                     (bool)
-        :param relative_location:                    (x,y) location relative to the CENTER of the window, in pixels. Normally the window centers.  This location is relative to THAT centered location. Note they can be negative.
+        :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int)
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
         :type location:                              (int, int)
@@ -15737,7 +15740,7 @@ def get_complimentary_hex(color):
 class _DebugWin():
     debug_window = None
 
-    def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
+    def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True):
         """
 
@@ -15745,6 +15748,8 @@ class _DebugWin():
         :type size:                   (int, int)
         :param location:              Location of upper left corner of the window
         :type location:               (int, int)
+        :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+        :type relative_location:      (int, int)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param no_titlebar:           If True no titlebar will be shown
@@ -15766,6 +15771,7 @@ class _DebugWin():
         # Show a form that's a running counter
         self.size = size
         self.location = location
+        self.relative_location = relative_location
         self.font = font
         self.no_titlebar = no_titlebar
         self.no_button = no_button
@@ -15785,7 +15791,7 @@ class _DebugWin():
 
         self.layout[-1] += [Sizegrip()]
 
-        self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
+        self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location, relative_location=relative_location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False, resizable=resizable)
         return
 
@@ -15794,14 +15800,14 @@ class _DebugWin():
         endchar = end if end is not None else '\n'
 
         if self.window is None:  # if window was destroyed already re-open it
-            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
+            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
 
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
-            self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
+            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
             event, values = self.window.read(timeout=0)
@@ -15831,7 +15837,7 @@ class _DebugWin():
         self.window = None
 
 
-def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
+def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), font=None, no_titlebar=False,
                no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
                erase_all=False, resizable=True):
     """
@@ -15854,6 +15860,8 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type sep:                    (str)
     :param location:              Location of upper left corner of the window
     :type location:               (int, int)
+    :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:      (int, int)
     :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                   (str or (str, int[, str]) or None)
     :param no_titlebar:           If True no titlebar will be shown
@@ -15886,7 +15894,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :rtype:
     """
     if _DebugWin.debug_window is None:
-        _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
+        _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                                            do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable)
     txt_color, bg_color = _parse_colors_parm(c or colors)
@@ -15993,10 +16001,9 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :param key:              key of multiline to output to (if you want to override the one previously set)
     :type key:               (Any)
     :param window:           Window containing the multiline to output to (if you want to override the one previously set)
-    :type window:
+    :type window:            (Window)
     :param justification:    text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
     :type justification:     (str)
-    :type window:            (Window)
     :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
     :type autoscroll:        (bool)
     """
@@ -17549,7 +17556,7 @@ def clipboard_get():
 
 def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
           auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=None, location=(None, None), any_key_closes=False, image=None, modal=True):
+          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -17590,6 +17597,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type grab_anywhere:        (bool)
     :param location:            Location on screen to display the top left corner of window. Defaults to window centered on screen
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param any_key_closes:      If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
@@ -17678,7 +17687,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
 
     window = Window(_title, layout, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, return_keyboard_events=any_key_closes,
                     modal=modal)
 
 
@@ -17710,7 +17719,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                   size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
+                   size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
                    image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -17732,6 +17741,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type size:                 (int, int)
     :param location:            Location on the screen to place the upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param non_blocking:        if True the call will immediately return rather than waiting on user input
     :type non_blocking:         (bool)
     :param background_color:    color of background
@@ -17799,7 +17810,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         layout += [[Sizegrip()]]
 
     window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                    auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
+                    auto_close_duration=auto_close_duration, location=location, relative_location=relative_location, resizable=True, font=font, background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal, icon=icon)
     if non_blocking:
         button, values = window.read(timeout=0)
@@ -17822,7 +17833,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
 # --------------------------- popup_no_buttons ---------------------------
 def popup_no_buttons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                      auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                     no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                     no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """Show a Popup but without any buttons
 
     :param *args:               Variable number of items to display
@@ -17851,6 +17862,8 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -17861,14 +17874,14 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_non_blocking ---------------------------
 def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                        text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
                        line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                       location=(None, None), image=None, modal=False):
+                       location=(None, None), relative_location=(None, None), image=None, modal=False):
     """
     Show Popup window and immediately return (does not block)
 
@@ -17902,6 +17915,8 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -17914,13 +17929,13 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_quick - a NonBlocking, Self-closing Popup  ---------------------------
 def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                 text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=False):
+                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=False):
     """
     Show Popup box that doesn't block and closes itself
 
@@ -17956,6 +17971,8 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -17968,13 +17985,13 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_quick_message - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                         text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=False):
+                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=False):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -18010,6 +18027,8 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -18021,13 +18040,13 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
 def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                       text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
-                      line_width=None, font=None, grab_anywhere=True, keep_on_top=None, location=(None, None), image=None, modal=True):
+                      line_width=None, font=None, grab_anywhere=True, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -18061,6 +18080,8 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18072,14 +18093,14 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- PopupAutoClose ---------------------------
 def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                      auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                     location=(None, None), image=None, modal=True):
+                     location=(None, None), relative_location=(None, None), image=None, modal=True):
     """Popup that closes itself after some time period
 
     :param *args:               Variable number of items to display
@@ -18114,6 +18135,8 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18126,13 +18149,13 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_error ---------------------------
 def popup_error(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Popup with colored button and 'Error' as button text
 
@@ -18166,6 +18189,8 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18178,13 +18203,13 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
                  auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_cancel ---------------------------
 def popup_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display Popup with "cancelled" button text
 
@@ -18218,6 +18243,8 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18229,13 +18256,13 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_ok ---------------------------
 def popup_ok(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
              auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-             no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+             no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display Popup with OK button only
 
@@ -18269,6 +18296,8 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18279,13 +18308,13 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     return popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_ok_cancel ---------------------------
 def popup_ok_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                     auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
-                    no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                    no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display popup with OK and Cancel buttons
 
@@ -18319,6 +18348,8 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18330,13 +18361,13 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 # --------------------------- popup_yes_no ---------------------------
 def popup_yes_no(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display Popup with Yes and No buttons
 
@@ -18370,6 +18401,8 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18381,7 +18414,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
 
 
 ##############################################################################
@@ -18393,7 +18426,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
 
 def popup_get_folder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                      background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                     grab_anywhere=False, keep_on_top=None, location=(None, None), initial_folder=None, image=None, modal=True, history=False,
+                     grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), initial_folder=None, image=None, modal=True, history=False,
                      history_setting_filename=None):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
@@ -18426,6 +18459,8 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :type keep_on_top:               (bool)
     :param location:                 Location of upper left corner of the window
     :type location:                  (int, int)
+    :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:         (int, int)
     :param initial_folder:           location in filesystem to begin browsing
     :type initial_folder:            (str)
     :param image:                    Image to include at the top of the popup window
@@ -18520,7 +18555,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location, modal=modal)
+                    location=location, relative_location=relative_location, modal=modal)
 
     while True:
         event, values = window.read()
@@ -18554,7 +18589,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                    file_types=FILE_TYPES_ALL_FILES,
                    no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                    icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                   location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
+                   location=(None, None), relative_location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
                    history_setting_filename=None):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -18595,6 +18630,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type keep_on_top:               (bool)
     :param location:                 Location of upper left corner of the window
     :type location:                  (int, int)
+    :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:         (int, int)
     :param initial_folder:           location in filesystem to begin browsing
     :type initial_folder:            (str)
     :param image:                    Image to include at the top of the popup window
@@ -18731,7 +18768,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
-                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal, finalize=True)
+                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, modal=modal, finalize=True)
 
     if running_linux() and show_hidden is True:
         window.TKroot.tk.eval('catch {tk_getOpenFile -badoption}')  # dirty hack to force autoloading of Tk's file dialog code
@@ -18768,7 +18805,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
 def popup_get_text(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
+                   grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
@@ -18800,6 +18837,8 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :type keep_on_top:       (bool)
     :param location:         (x,y) Location on screen to display the upper left corner of window
     :type location:          (int, int)
+    :param relative_location: (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location: (int, int)
     :param image:            Image to include at the top of the popup window
     :type image:             (str) or (bytes)
     :param modal:            If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -18821,7 +18860,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
                [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, finalize=True, modal=modal)
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, finalize=True, modal=modal)
 
     button, values = window.read()
     window.close()
@@ -18834,7 +18873,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
 
 
 def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True,
-                   location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, modal=True):
+                   location=(None, None), relative_location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, modal=True):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -18850,6 +18889,8 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type icon:                  (str | bytes)
     :param location:             (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
     :type location:              (int, int)
+    :param relative_location:    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:     (int, int)
     :param title:                Title that will be shown on the window
     :type title:                 (str)
     :param close_when_chosen:    If True, the window will close and function return when a day is clicked
@@ -18945,7 +18986,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
         layout += [[Button('Ok', border_width=0, font='TkFixedFont 8'), Button('Cancel', border_width=0, font='TkFixedFont 8')]]
 
     window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False,
-                    location=location, finalize=True, icon=icon)
+                    location=location, relative_location=relative_location, finalize=True, icon=icon)
 
     update_days(window, cur_month, cur_year, begin_at_sunday_plus)
 
@@ -19001,7 +19042,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
 # --------------------------- PopupAnimated ---------------------------
 
 def popup_animated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True,
-                   location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
+                   location=(None, None), relative_location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -19026,6 +19067,8 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type keep_on_top:          (bool)
     :param location:            (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
     :type location:             (int, int)
+    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:    (int, int)
     :param alpha_channel:       Window transparency 0 = invisible 1 = completely visible. Values between are see through
     :type alpha_channel:        (float)
     :param time_between_frames: Amount of time in milliseconds between each frame
@@ -19249,7 +19292,7 @@ def _process_thread(*args):
 
     # start running the command with arugments
     try:
-        __shell_process__ = run(args, shell=True, stdout=subprocess.PIPE)
+        __shell_process__ = subprocess.run(args, shell=True, stdout=subprocess.PIPE)
     except Exception as e:
         print('Exception running process args = {}'.format(args))
         __shell_process__ = None
@@ -19309,7 +19352,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     while True:
         popup_animated(image_source=image_source, message=message, time_between_frames=time_between_frames, transparent_color=transparent_color,
                        text_color=text_color, background_color=background_color, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                       keep_on_top=keep_on_top, location=location, alpha_channel=alpha_channel)
+                       keep_on_top=keep_on_top, location=location, relative_location=relative_location, alpha_channel=alpha_channel)
         thread.join(timeout=time_between_frames / 1000)
         if not thread.is_alive():
             break
@@ -19427,7 +19470,7 @@ class UserSettings:
             self.config = configparser.ConfigParser()
             self.config.optionxform = str
             # self.config_dict = {}
-            self.section_class_dict = {}        # type: dict[self._SectionDict]
+            self.section_class_dict = {}        # type: dict[_SectionDict]
         if filename is not None or path is not None:
             self.load(filename=filename, path=path)
 
@@ -20645,7 +20688,7 @@ POPOUT_WINDOW_FONT = 'Sans 8'
 DEBUGGER_VARIABLE_DETAILS_FONT = 'Courier 10'
 
 
-class _Debugger():
+class _Debugger:
     debugger = None
     '''
         #     #                    ######
@@ -21307,6 +21350,56 @@ def _random_error_emoji():
 def _random_happy_emoji():
     c = random.choice(EMOJI_BASE64_HAPPY_LIST)
     return c
+
+
+
+'''
+M"""""`'"""`YM                            
+M  mm.  mm.  M                            
+M  MMM  MMM  M .d8888b. 88d888b. .d8888b. 
+M  MMM  MMM  M 88'  `88 88'  `88 88ooood8 
+M  MMM  MMM  M 88.  .88 88       88.  ... 
+M  MMM  MMM  M `88888P' dP       `88888P' 
+MMMMMMMMMMMMMM                            
+                                          
+M#"""""""'M                             .d8888P dP   dP 
+##  mmmm. `M                            88'     88   88 
+#'        .M .d8888b. .d8888b. .d8888b. 88baaa. 88aaa88 
+M#  MMMb.'YM 88'  `88 Y8ooooo. 88ooood8 88` `88      88 
+M#  MMMM'  M 88.  .88       88 88.  ... 8b. .d8      88 
+M#       .;M `88888P8 `88888P' `88888P' `Y888P'      dP 
+M#########M                                             
+                                                        
+M""M                                                
+M  M                                                
+M  M 88d8b.d8b. .d8888b. .d8888b. .d8888b. .d8888b. 
+M  M 88'`88'`88 88'  `88 88'  `88 88ooood8 Y8ooooo. 
+M  M 88  88  88 88.  .88 88.  .88 88.  ...       88 
+M  M dP  dP  dP `88888P8 `8888P88 `88888P' `88888P' 
+MMMM                          .88                   
+                          d8888P
+'''
+
+
+
+'''
+
+90 x 90 pixel images
+
+These images are intentionally a little large so that you can use the image_subsample to reduce their size.
+
+This offers more flexibility for use in a main window (larger) or perhaps a titlebar (smaller)
+
+'''
+
+HEART_FLAT_BASE64 = b'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'
+
+
+HEART_3D_BASE64 = b'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'
+
+RED_X_BASE64 = b'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'
+
+GREEN_CHECK_BASE64 = b'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'
 
 
 # ==========================================================================#
@@ -22519,7 +22612,7 @@ def _create_main_window():
          Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
          Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
-        VerLine(ver, 'PySimpleGUI Version'),
+        VerLine(ver, 'PySimpleGUI Version') + [Image(HEART_3D_BASE64, subsample=4)],
         VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
         VerLine(tclversion_detailed, 'detailed tkinter version'),
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, 2)),
