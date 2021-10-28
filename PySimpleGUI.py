@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.4 Unreleased"
+version = __version__ = "4.53.0.5 Unreleased"
 
 _change_log = """
 
@@ -19,6 +19,14 @@ _change_log = """
     4.53.0.4
         The proliferation of relative_location across the popups, Print
         Some new BASE64 images (hearts, check & x) - use image_subsample to resize to your liking
+    4.53.0.5
+        Changed the Frame element's size description from "Do not use" to "by all means use"
+        Tab changes
+            image_source parawmter - Support for an image in the Tab (new image_source parameter of Tab Element)
+            image_subsample parameter - subsample for image (makes smaller by 1/image_subsample)
+        TabGroup changes
+            tab_border_width parameter - sets the border around the tab top portion. Now can set to 0 if you want
+        Removed the green color for the Multiple Choice Group in sg.main so that it's readable now                  
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5804,7 +5812,7 @@ class Frame(Element):
         :type title_location:         (enum)
         :param relief:                relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief:                 (enum)
-        :param size:                  (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column
+        :param size:                  (width, height) Sets an initial hard-coded size for the Frame. This used to be a problem, but was fixed in 4.53.0 and works better than Columns when using the size paramter
         :type size:                   (int, int)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int)  | (None, None) | int
@@ -5834,7 +5842,7 @@ class Frame(Element):
         :type visible:                (bool)
         :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
         :type element_justification:  (str)
-        :param vertical_alignment:    Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
+        :param vertical_alignment:    Place the Frame at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
         :type vertical_alignment:     (str)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
@@ -6100,7 +6108,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, p=None, disabled=False,
-                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', metadata=None):
+                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', image_source=None, image_subsample=None, metadata=None):
         """
         :param title:                 text to show on the tab
         :type title:                  (str)
@@ -6136,10 +6144,26 @@ class Tab(Element):
         :type visible:                (bool)
         :param element_justification: All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
         :type element_justification:  (str)
+        :param image_source:          A filename or a base64 bytes of an image to place on the Tab
+        :type image_source:            str | bytes | None
+        :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:        (int)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
 
+        filename = data = None
+        if image_source is not None:
+            if isinstance(image_source, bytes):
+                data = image_source
+            elif isinstance(image_source, str):
+                filename = image_source
+            else:
+                warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
+
+        self.Filename = filename
+        self.Data = data
+        self.ImageSubsample = image_subsample
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -6321,7 +6345,7 @@ class TabGroup(Element):
     """
 
     def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
-                 background_color=None, font=None, change_submits=False, enable_events=False, pad=None, p=None, border_width=None, theme=None, key=None, k=None,
+                 background_color=None, font=None, change_submits=False, enable_events=False, pad=None, p=None, border_width=None, tab_border_width=None, theme=None, key=None, k=None,
                  size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param layout:                    Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
@@ -6350,6 +6374,8 @@ class TabGroup(Element):
         :type p:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param border_width:              width of border around element in pixels
         :type border_width:               (int)
+        :param tab_border_width:          width of border around the tabs
+        :type tab_border_width:           (int)
         :param theme:                     DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
         :type theme:                      (enum)
         :param key:                       Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -6396,6 +6422,7 @@ class TabGroup(Element):
         self.TabLocation = tab_location
         self.ElementJustification = 'left'
         self.RightClickMenu = right_click_menu
+        self.TabBorderWidth = tab_border_width
 
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -14665,6 +14692,36 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.visible is False:
                     state = 'hidden'
                 # this code will add an image to the tab. Use it when adding the image on a tab enhancement
+                try:
+                    if element.Filename is not None:
+                        photo = tk.PhotoImage(file=element.Filename)
+                    elif element.Data is not None:
+                        photo = tk.PhotoImage(data=element.Data)
+                    else:
+                        photo = None
+
+                    if element.ImageSubsample and photo is not None:
+                        photo = photo.subsample(element.ImageSubsample)
+                        # print('*ERROR laying out form.... Image Element has no image specified*')
+                except Exception as e:
+                    photo = None
+                    _error_popup_with_traceback('Your Window has an Tab Element with an IMAGE problem',
+                                                'The traceback will show you the Window with the problem layout',
+                                                'Look in this Window\'s layout for an Image element that has a key of {}'.format(element.Key),
+                                                'The error occuring is:', e)
+
+                if photo is not None:
+                    if element_size == (None, None) or element_size is None or element_size == toplevel_form.DefaultElementSize:
+                        width, height = photo.width(), photo.height()
+                    else:
+                        width, height = element_size
+                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=0)
+                else:
+                    element.tktext_label = tk.Label(tk_row_frame, bd=0)
+                element.photo = photo
+                if photo is not None:
+                    form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image=photo)
+
                 # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
                 # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
                 form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
@@ -14703,7 +14760,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style, tabposition=tab_position)
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    style.configure(custom_style, background=element.BackgroundColor, foreground='purple')
+                    style.configure(custom_style, background=element.BackgroundColor)
 
                 # FINALLY the proper styling to get tab colors!
                 if element.SelectedTitleColor is not None and element.SelectedTitleColor != COLOR_SYSTEM_DEFAULT:
@@ -14716,10 +14773,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
                 if element.BorderWidth is not None:
                     style.configure(custom_style, borderwidth=element.BorderWidth)
-                    # style.configure(custom_style + '.Tab', borderwidth=0)       # if ever want to get rid of border around the TABS themselves
+                if element.TabBorderWidth is not None:
+                    style.configure(custom_style + '.Tab', borderwidth=element.TabBorderWidth)       # if ever want to get rid of border around the TABS themselves
 
                 style.configure(custom_style + '.Tab', font=font)
-
+                element.Style = style
+                element.StyleName = custom_style
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
@@ -22593,8 +22652,8 @@ def _create_main_window():
 
     tab1 = Tab('Graph\n', frame6, tooltip='Graph is in here', title_color='red')
     tab2 = Tab('CB, Radio\nList, Combo',
-               [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t', pad=(0, 0)),
-                 Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], pad=(0, 0))
+               [[Frame('Multiple Choice Group', frame2, title_color='#FFFFFF', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t',),
+                 Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t', ), ]])
     # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
     tab3 = Tab('Table &\nTree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', k='-TAB TABLE-')
     tab4 = Tab('Sliders\n', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', k='-TAB VAR-')
