@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.5 Unreleased"
+version = __version__ = "4.53.0.6 Unreleased"
 
 _change_log = """
-
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
 
     4.53.0.1
@@ -26,7 +25,9 @@ _change_log = """
             image_subsample parameter - subsample for image (makes smaller by 1/image_subsample)
         TabGroup changes
             tab_border_width parameter - sets the border around the tab top portion. Now can set to 0 if you want
-        Removed the green color for the Multiple Choice Group in sg.main so that it's readable now                  
+    4.53.0.6
+        Added bar_color to ProgressMeter.update            
+        Fixed a couple of typos from previous changes
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -495,11 +496,14 @@ THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnati
 
 # The theme to use by default for all windows
 DEFAULT_TTK_THEME = THEME_DEFAULT
+TTK_THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+
+
 USE_TTK_BUTTONS = None
 
-DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
+DEFAULT_PROGRESS_BAR_COLOR = ("#01826B", '#D0D0D0')  # a nice green progress bar
 DEFAULT_PROGRESS_BAR_COMPUTE = ('#000000', '#000000')  # Means that the progress bar colors should be computed from other colors
-DEFAULT_PROGRESS_BAR_COLOR_OFFICIAL = (GREENS[0], '#D0D0D0')  # a nice green progress bar
+DEFAULT_PROGRESS_BAR_COLOR_OFFICIAL = ("#01826B", '#D0D0D0')  # a nice green progress bar
 DEFAULT_PROGRESS_BAR_SIZE = (20, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
@@ -3542,7 +3546,7 @@ SBar = StatusBar
 class TKProgressBar():
     uniqueness_counter = 0
 
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_TTK_THEME,
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], ttk_theme=DEFAULT_TTK_THEME, style_name='',
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
         """
@@ -3554,8 +3558,10 @@ class TKProgressBar():
         :type length:        (int)
         :param width:        width in pixels of the bar
         :type width:         (int)
-        :param style:        Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
-        :type style:         (str)
+        :param style_name:   Progress bar style to use.  Set in the packer function
+        :type style_name:    (str)
+        :param ttk_theme:    Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+        :type ttk_theme:     (str)
         :param relief:       relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
         :type relief:        (str)
         :param border_width: The amount of pixels that go around the outside of the bar
@@ -3574,39 +3580,34 @@ class TKProgressBar():
         self.Orientation = orientation
         self.Count = None
         self.PriorCount = 0
-        self.StyleName = ''
+        self.style_name = style_name
 
         TKProgressBar.uniqueness_counter += 1
 
         if orientation.lower().startswith('h'):
             s = ttk.Style()
-            s.theme_use(style)
+            s.theme_use(ttk_theme)
 
-            self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Horizontal.TProgressbar"
-            if BarColor != COLOR_SYSTEM_DEFAULT:
+            # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Horizontal.TProgressbar"
+            if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
                 s.configure(self.style_name, background=BarColor[0], troughcolor=BarColor[1],
                             troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(self.style_name, troughrelief=relief, borderwidth=border_width,
-                            thickness=width)
+                s.configure(self.style_name, troughrelief=relief, borderwidth=border_width, thickness=width)
 
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=self.style_name, length=length,
-                                                        orient=tk.HORIZONTAL, mode='determinate')
+            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=self.style_name, length=length, orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = ttk.Style()
-            s.theme_use(style)
-            self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Vertical.TProgressbar"
-            if BarColor != COLOR_SYSTEM_DEFAULT:
+            s.theme_use(ttk_theme)
+            # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Vertical.TProgressbar"
+            if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
 
                 s.configure(self.style_name, background=BarColor[0],
                             troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(self.style_name, troughrelief=relief,
-                            borderwidth=border_width, thickness=width)
-            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=self.style_name,
-                                                        length=length, orient=tk.VERTICAL, mode='determinate')
+                s.configure(self.style_name, troughrelief=relief, borderwidth=border_width, thickness=width)
+
+            self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=self.style_name, length=length, orient=tk.VERTICAL, mode='determinate')
 
     def Update(self, count=None, max=None):
         """
@@ -4624,16 +4625,12 @@ class ProgressBar(Element):
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
         self.RightClickMenu = right_click_menu
-
+        self.ttk_style_name = None      # set in the pack function so can use in the update
         # Progress Bar colors can be a tuple (text, background) or a string with format "bar on background" - examples "red on white" or ("red", "white")
         if bar_color is None:
             bar_color = DEFAULT_PROGRESS_BAR_COLOR
         else:
-            try:
-                if isinstance(bar_color, str):
-                    bar_color = bar_color.split(' on ')
-            except Exception as e:
-                print('* ProgressBar warning * you messed up with color formatting', e)
+            bar_color = _simplified_dual_color_to_tuple(bar_color, default=DEFAULT_PROGRESS_BAR_COLOR)
 
         self.BarColor = bar_color  # should be a tuple at this point
         self.BarStyle = style if style else DEFAULT_TTK_THEME
@@ -4673,7 +4670,7 @@ class ProgressBar(Element):
             return False
         return True
 
-    def update(self, current_count, max=None, visible=None):
+    def update(self, current_count=None, max=None, bar_color=None, visible=None):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
         Now has the ability to modify the count so that the update_bar method is not longer needed separately
@@ -4682,6 +4679,8 @@ class ProgressBar(Element):
         :type current_count:  (int)
         :param max:           changes the max value
         :type max:            (int)
+        :param bar_color:     The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :type bar_color:      (str, str) or str
         :param visible:       control visibility of element
         :type visible:        (bool)
         :return:              Returns True if update was OK.  False means something wrong with window or it was closed
@@ -4699,8 +4698,14 @@ class ProgressBar(Element):
             self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
             self._visible = visible
+        if bar_color is not None:
+            bar_color = _simplified_dual_color_to_tuple(bar_color, default=DEFAULT_PROGRESS_BAR_COLOR)
+            self.BarColor = bar_color
+            style = ttk.Style()
+            style.configure(self.ttk_style_name, background=bar_color[0], troughcolor=bar_color[1])
+        if current_count is not None:
+            self.TKProgressBar.Update(current_count, max=max)
 
-        self.TKProgressBar.Update(current_count, max=max)
         try:
             self.ParentForm.TKroot.update()
         except:
@@ -6159,7 +6164,7 @@ class Tab(Element):
             elif isinstance(image_source, str):
                 filename = image_source
             else:
-                warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
+                warnings.warn('Image element - source is not a valid type: {}'.format(type(image_source)), UserWarning)
 
         self.Filename = filename
         self.Data = data
@@ -8631,6 +8636,7 @@ class Window:
         self._grab_anywhere_include_these_list = []
         self._has_custom_titlebar = use_custom_titlebar
         self._mousex = self._mousey = 0
+        self._startx = self._starty = 0
         self.scaling = scaling if scaling is not None else DEFAULT_SCALING
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
@@ -12609,7 +12615,7 @@ def _simplified_dual_color_to_tuple(color_tuple_or_string, default=(None, None))
         return (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
     text_color = background_color = COLOR_SYSTEM_DEFAULT
     try:
-        if isinstance(color_tuple_or_string, tuple):
+        if isinstance(color_tuple_or_string, (tuple, list)):
             if len(color_tuple_or_string) >= 2:
                 text_color = color_tuple_or_string[0] or default[0]
                 background_color = color_tuple_or_string[1] or default[1]
@@ -12634,16 +12640,16 @@ def _simplified_dual_color_to_tuple(color_tuple_or_string, default=(None, None))
                 text_color, background_color = default
         else:
             if not SUPPRESS_ERROR_POPUPS:
-                _error_popup_with_traceback('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string)
+                _error_popup_with_traceback('** Badly formatted dual-color... not a tuple nor string **', color_tuple_or_string)
             else:
-                print('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string)
-            text_color = background_color = COLOR_SYSTEM_DEFAULT
+                print('** Badly formatted dual-color... not a tuple nor string **', color_tuple_or_string)
+            text_color, background_color = default
     except Exception as e:
         if not SUPPRESS_ERROR_POPUPS:
             _error_popup_with_traceback('** Badly formatted button color **', color_tuple_or_string, e)
         else:
             print('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string, e)
-        text_color = background_color = COLOR_SYSTEM_DEFAULT
+        text_color, background_color = default
     if isinstance(text_color, int):
         text_color = "#%06X" % text_color
     if isinstance(background_color, int):
@@ -14392,10 +14398,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bar_color = element.BarColor
                 else:
                     bar_color = DEFAULT_PROGRESS_BAR_COLOR
+                if element.Orientation.lower().startswith('h'):
+                    base_style_name = ".Horizontal.TProgressbar"
+                else:
+                    base_style_name = ".Vertical.TProgressbar"
+                style_name = _make_ttk_style_name(base_style_name, element)
                 element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width,
                                                       orientation=direction, BarColor=bar_color,
                                                       border_width=element.BorderWidth, relief=element.Relief,
-                                                      style=toplevel_form.TtkTheme, key=element.Key)
+                                                      ttk_theme=toplevel_form.TtkTheme, key=element.Key, style_name=style_name)
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
@@ -19159,7 +19170,7 @@ def popup_animated(image_source, message=None, background_color=None, text_color
         window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
-                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon)
+                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon, relative_location=relative_location)
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
@@ -19411,7 +19422,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     while True:
         popup_animated(image_source=image_source, message=message, time_between_frames=time_between_frames, transparent_color=transparent_color,
                        text_color=text_color, background_color=background_color, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                       keep_on_top=keep_on_top, location=location, relative_location=relative_location, alpha_channel=alpha_channel)
+                       keep_on_top=keep_on_top, location=location, alpha_channel=alpha_channel)
         thread.join(timeout=time_between_frames / 1000)
         if not thread.is_alive():
             break
