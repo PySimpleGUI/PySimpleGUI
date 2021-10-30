@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.6 Unreleased"
+version = __version__ = "4.53.0.7 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -28,6 +28,11 @@ _change_log = """
     4.53.0.6
         Added bar_color to ProgressMeter.update            
         Fixed a couple of typos from previous changes
+    4.53.0.7
+        Added constants for the tab_location parameter of the TabGroup element so that IDEs will easily find them. They start with TAB_LOCATION_
+        Added visible parameter to the pre-defined buttons
+            FileBrowse, FolderBrowse, etc.
+            Ok, Cancel, etc
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -529,6 +534,21 @@ TABLE_SELECT_MODE_NONE = tk.NONE
 TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
+
+
+TAB_LOCATION_TOP = 'top'
+TAB_LOCATION_TOP_LEFT = 'topleft'
+TAB_LOCATION_TOP_RIGHT = 'topright'
+TAB_LOCATION_LEFT = 'left'
+TAB_LOCATION_LEFT_TOP = 'lefttop'
+TAB_LOCATION_LEFT_BOTTOM = 'leftbottom'
+TAB_LOCATION_RIGHT = 'right'
+TAB_LOCATION_RIGHT_TOP = 'righttop'
+TAB_LOCATION_RIGHT_BOTTOM = 'rightbottom'
+TAB_LOCATION_BOTTOM = 'bottom'
+TAB_LOCATION_BOTTOM_LEFT = 'bottomleft'
+TAB_LOCATION_BOTTOM_RIGHT = 'bottomright'
+
 
 TITLE_LOCATION_TOP = tk.N
 TITLE_LOCATION_BOTTOM = tk.S
@@ -11347,7 +11367,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None), s=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
-                 font=None, pad=None, p=None, key=None, k=None, metadata=None):
+                 font=None, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
@@ -11381,6 +11401,8 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 The Button created
@@ -11390,14 +11412,14 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None,
                tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
-               pad=None, p=None, key=None, k=None, metadata=None):
+               pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Browse')
@@ -11434,6 +11456,8 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11442,14 +11466,14 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
-                  button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, p=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
+                font=None, pad=None, p=None, key=None, k=None, visible=True, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
     """
     Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
@@ -11487,6 +11511,8 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param files_delimiter:  String to place between files when multiple files are selected. Normally a ;
     :type files_delimiter:   str
     :param metadata:         Anything you want to store along with this button
@@ -11497,7 +11523,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                     initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                     tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
-                    disabled=disabled, button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                    disabled=disabled, button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
     button._files_delimiter = files_delimiter
     return button
 
@@ -11506,7 +11532,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None,
                default_extension='', disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
-               pad=None, p=None, key=None, k=None, metadata=None):
+               pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -11539,12 +11565,14 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                 Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:               key for uniquely identify this element (for window.find_element)
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                  str | int | tuple | object
+    :param visible:           set initial visibility state of the Button
+    :type visible:            (bool)
     :param metadata:          Anything you want to store along with this button
     :type metadata:           (Any)
     :return:                  returns a button
@@ -11553,14 +11581,14 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None, default_extension='',
            disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
-           pad=None, p=None, key=None, k=None, metadata=None):
+           pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -11598,6 +11626,8 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                  str | int | tuple | object
+    :param visible:           set initial visibility state of the Button
+    :type visible:            (bool)
     :param metadata:          Anything you want to store along with this button
     :type metadata:           (Any)
     :return:                  returns a button
@@ -11606,12 +11636,12 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
-         disabled=False, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Save')
@@ -11642,6 +11672,8 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11649,12 +11681,12 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Submit')
@@ -11685,6 +11717,8 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11692,13 +11726,13 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Open')
@@ -11729,6 +11763,8 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11736,12 +11772,12 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'OK')
@@ -11772,6 +11808,8 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11779,12 +11817,12 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Ok')
@@ -11815,6 +11853,8 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11822,12 +11862,12 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Cancel')
@@ -11858,6 +11898,8 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11865,12 +11907,12 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Quit')
@@ -11901,6 +11943,8 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11908,12 +11952,12 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Exit')
@@ -11944,6 +11988,8 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11951,12 +11997,12 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+        font=None, bind_return_key=True, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Yes')
@@ -11987,6 +12033,8 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -11994,12 +12042,12 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-       font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+       font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'No')
@@ -12030,6 +12078,8 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -12037,12 +12087,12 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-         tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+         tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Help')
@@ -12073,6 +12123,8 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -12080,12 +12132,12 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-          tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+          tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
     This Button has been changed in how it works!!
     Your button has been replaced with a normal button that has the PySimpleGUI Debugger buggon logo on it.
@@ -12119,6 +12171,8 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -12130,7 +12184,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
 
     return Button(button_text='', button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=user_key, k=k, image_data=PSG_DEBUGGER_LOGO,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=user_key, k=k, visible=visible, image_data=PSG_DEBUGGER_LOGO,
                   image_subsample=2, border_width=0, metadata=metadata)
 
 
@@ -12139,6 +12193,9 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                  border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
+    DEPIRCATED
+
+    This Button should not be used.
 
     :param button_text:      text in the button
     :type button_text:       (str)
@@ -12193,6 +12250,10 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
                 bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
+    DEPRICATED
+
+    This button should not be used.  Instead explicitly close your windows by calling window.close() or by using
+    the close parameter in window.read
 
     :param button_text:      text in the button
     :type button_text:       (str)
@@ -12308,7 +12369,7 @@ RButton = ReadFormButton
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
-                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -12321,6 +12382,8 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type image_size:        (Default = (None))
     :param image_subsample:  amount to reduce the size of the image
     :type image_subsample:   amount to reduce the size of the image
+    :param border_width:     width of border around element
+    :type border_width:      (int)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
@@ -12347,8 +12410,8 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
-    :param border_width:     width of border around element
-    :type border_width:      (int)
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 Button created
@@ -12358,14 +12421,20 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-                disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+                disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
     """
+    This is a special type of Button.
+
+    It will close the window but NOT send an event that the window has been closed.
+
+    It's used in conjunction with non-blocking windows to silently close them.  They are used to
+    implement the non-blocking popup windows. They're also found in some Demo Programs, so look there for proper use.
 
     :param button_text:      text in the button
     :type button_text:       (str)
@@ -12405,6 +12474,8 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
     :return:                 returns a button
@@ -12414,7 +12485,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
-                  pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
@@ -12422,7 +12493,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None, enable_events=None,
-                   key=None, k=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None,
+                   key=None, k=None, visible=True, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None,
                    title='Choose Date',
                    no_titlebar=True, location=(None, None), metadata=None):
     """
@@ -12486,6 +12557,8 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type no_titlebar:             bool
     :param location:               Location on the screen (x,y) to show the calendar popup window
     :type location:                (int, int)
+    :param visible:                set initial visibility state of the Button
+    :type visible:                 (bool)
     :param metadata:               Anything you want to store along with this button
     :type metadata:                (Any)
     :return:                       returns a button
@@ -12495,7 +12568,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, enable_events=enable_events,
-                    bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                    bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
     button.calendar_close_when_chosen = close_when_date_chosen
     button.calendar_default_date_M_D_Y = default_date_m_d_y
     button.calendar_locale = locale
@@ -12514,7 +12587,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None,
-                       key=None, k=None, metadata=None):
+                       key=None, k=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -12558,6 +12631,8 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param visible:          set initial visibility state of the Button
+    :type visible:           (bool)
     :param metadata:         User metadata that can be set to ANYTHING
     :type metadata:          (Any)
     :return:                 returns a button
@@ -12567,7 +12642,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
 
 
 #####################################  -----  BUTTON Functions   ------ ##################################################
