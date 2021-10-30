@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.7 Unreleased"
+version = __version__ = "4.53.0.8 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -33,6 +33,8 @@ _change_log = """
         Added visible parameter to the pre-defined buttons
             FileBrowse, FolderBrowse, etc.
             Ok, Cancel, etc
+    4.53.0.8
+        Added focus_color to TabGroup element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -6370,7 +6372,7 @@ class TabGroup(Element):
     """
 
     def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
-                 background_color=None, font=None, change_submits=False, enable_events=False, pad=None, p=None, border_width=None, tab_border_width=None, theme=None, key=None, k=None,
+                 background_color=None, focus_color=None, font=None, change_submits=False, enable_events=False, pad=None, p=None, border_width=None, tab_border_width=None, theme=None, key=None, k=None,
                  size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param layout:                    Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
@@ -6387,6 +6389,8 @@ class TabGroup(Element):
         :type selected_background_color:  (str)
         :param background_color:          color of background area that tabs are located on
         :type background_color:           (str)
+        :param focus_color:               color of focus indicator on the tabs
+        :type focus_color:                (str)
         :param font:                      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                       (str or (str, int[, str]) or None)
         :param change_submits:            * DEPRICATED DO NOT USE. Use `enable_events` instead
@@ -6448,6 +6452,7 @@ class TabGroup(Element):
         self.ElementJustification = 'left'
         self.RightClickMenu = right_click_menu
         self.TabBorderWidth = tab_border_width
+        self.FocusColor = focus_color
 
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -14861,6 +14866,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style, borderwidth=element.BorderWidth)
                 if element.TabBorderWidth is not None:
                     style.configure(custom_style + '.Tab', borderwidth=element.TabBorderWidth)       # if ever want to get rid of border around the TABS themselves
+                if element.FocusColor is not None:
+                    style.configure(custom_style + '.Tab', focuscolor=element.FocusColor)
 
                 style.configure(custom_style + '.Tab', font=font)
                 element.Style = style
