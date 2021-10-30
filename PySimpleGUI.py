@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.9 Unreleased"
+version = __version__ = "4.53.0.10 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -38,6 +38,9 @@ _change_log = """
     4.53.0.9
         Parameter merge_stderr_with_stdout added to Exec API calls execute_command_subprocess and execute_py_file
             Default is TRUE. The advantage is that all output can be received via stdout, in real time
+    4.53.0.10
+        Made right click menus propagate down container elements.  Previously only the Window's right click menu was used.
+            Now setting a right click menu on a Column, Frame, Tab will add the menu to elements inside the container element.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -13440,8 +13443,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _add_right_click_menu_and_grab(element):
         if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
             return
-        if element.RightClickMenu or toplevel_form.RightClickMenu:
-            menu = element.RightClickMenu or toplevel_form.RightClickMenu
+        if element.RightClickMenu or toplevel_form.RightClickMenu or form.RightClickMenu:
+            menu = element.RightClickMenu or form.RightClickMenu or toplevel_form.RightClickMenu
             top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
 
             if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
