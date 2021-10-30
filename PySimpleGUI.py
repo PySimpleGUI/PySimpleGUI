@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.8 Unreleased"
+version = __version__ = "4.53.0.9 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -35,6 +35,9 @@ _change_log = """
             Ok, Cancel, etc
     4.53.0.8
         Added focus_color to TabGroup element
+    4.53.0.9
+        Parameter merge_stderr_with_stdout added to Exec API calls execute_command_subprocess and execute_py_file
+            Default is TRUE. The advantage is that all output can be received via stdout, in real time
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20429,26 +20432,29 @@ These are the functions used to implement the subprocess APIs (Exec APIs) of PyS
 '''
 
 
-def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output=False):
+def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output=False, merge_stderr_with_stdout=True):
     """
     Runs the specified command as a subprocess.
     By default the call is non-blocking.
     The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
     Returns a subprocess Popen object.
 
-    :param command:     Filename to load settings from (and save to in the future)
-    :type command:      (str)
-    :param *args:       Variable number of arguments that are passed to the program being started as command line parms
-    :type *args:        (Any)
-    :param wait:        If True then wait for the subprocess to finish
-    :type wait:         (bool)
-    :param cwd:         Working directory to use when executing the subprocess
-    :type cwd:          (str))
-    :param pipe_output: If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
-    :type pipe_output:  (bool)
-    :return:            Popen object
-    :rtype:             (subprocess.Popen)
+    :param command:                  Filename to load settings from (and save to in the future)
+    :type command:                   (str)
+    :param *args:                    Variable number of arguments that are passed to the program being started as command line parms
+    :type *args:                     (Any)
+    :param wait:                     If True then wait for the subprocess to finish
+    :type wait:                      (bool)
+    :param cwd:                      Working directory to use when executing the subprocess
+    :type cwd:                       (str))
+    :param pipe_output:              If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output:               (bool)
+    :param merge_stderr_with_stdout: If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout.
+    :type merge_stderr_with_stdout:  (bool)
+    :return:                         Popen object
+    :rtype:                          (subprocess.Popen)
     """
+
     try:
         if args is not None:
             expanded_args = ' '.join(args)
@@ -20458,7 +20464,10 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
             # print('calling popen with:', command +' '+ expanded_args)
             # sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
             if pipe_output:
-                sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+                if merge_stderr_with_stdout:
+                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd)
+                else:
+                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
             else:
                 sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
         else:
@@ -20476,28 +20485,31 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
     return sp
 
 
-def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False, pipe_output=False):
+def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False, pipe_output=False, merge_stderr_with_stdout=True):
     """
     Executes a Python file.
     The interpreter to use is chosen based on this priority order:
         1. interpreter_command paramter
         2. global setting "-python command-"
         3. the interpreter running running PySimpleGUI
-    :param pyfile:              the file to run
-    :type pyfile:               (str)
-    :param parms:               parameters to pass on the command line
-    :type parms:                (str)
-    :param cwd:                 the working directory to use
-    :type cwd:                  (str)
-    :param interpreter_command: the command used to invoke the Python interpreter
-    :type interpreter_command:  (str)
-    :param wait:                the working directory to use
-    :type wait:                 (bool)
-    :param pipe_output:         If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
-    :type pipe_output:          (bool)
-    :return:                    Popen object
-    :rtype:                     (subprocess.Popen) | None
+    :param pyfile:                   the file to run
+    :type pyfile:                    (str)
+    :param parms:                    parameters to pass on the command line
+    :type parms:                     (str)
+    :param cwd:                      the working directory to use
+    :type cwd:                       (str)
+    :param interpreter_command:      the command used to invoke the Python interpreter
+    :type interpreter_command:       (str)
+    :param wait:                     the working directory to use
+    :type wait:                      (bool)
+    :param pipe_output:              If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output:               (bool)
+    :param merge_stderr_with_stdout: If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout.
+    :type merge_stderr_with_stdout:  (bool)
+    :return:                         Popen object
+    :rtype:                          (subprocess.Popen) | None
     """
+
     if cwd is None:
         # if the specific file is not found (not an absolute path) then assume it's relative to '.'
         if not os.path.exists(pyfile):
@@ -20513,9 +20525,9 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
         if python_program == '':
             python_program = 'python' if running_windows() else 'python3'
     if parms is not None and python_program:
-        sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output)
+        sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output, merge_stderr_with_stdout=merge_stderr_with_stdout)
     elif python_program:
-        sp = execute_command_subprocess(python_program, pyfile, wait=wait, cwd=cwd, pipe_output=pipe_output)
+        sp = execute_command_subprocess(python_program, pyfile, wait=wait, cwd=cwd, pipe_output=pipe_output, merge_stderr_with_stdout=merge_stderr_with_stdout)
     else:
         print('execute_py_file - No interpreter has been configured')
         sp = None
