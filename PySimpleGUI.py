@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.10 Unreleased"
+version = __version__ = "4.53.0.11 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -41,6 +41,8 @@ _change_log = """
     4.53.0.10
         Made right click menus propagate down container elements.  Previously only the Window's right click menu was used.
             Now setting a right click menu on a Column, Frame, Tab will add the menu to elements inside the container element.
+    4.53.0.11
+        Added new Window method - Window.mouse_location().  Returns the (x,y) location of the mouse pointer
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10261,6 +10263,19 @@ class Window:
             self.TransparentColor = color
         except:
             print('Transparent color not supported on this platform (windows only)')
+
+    def mouse_location(self):
+        """
+        Return the (x,y) location of the mouse relative to the entire screen.  It's the same location that
+        you would use to create a window, popup, etc.
+
+        :return:    The location of the mouse pointer
+        :rtype:     (int, int)
+        """
+        if not self._is_window_created('tried Window.mouse_location'):
+            return (0,0)
+
+        return (self.TKroot.winfo_pointerx(), self.TKroot.winfo_pointery())
 
     def grab_any_where_on(self):
         """
