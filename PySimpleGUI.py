@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.10 Unreleased"
+version = __version__ = "4.53.0.12 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -41,6 +41,10 @@ _change_log = """
     4.53.0.10
         Made right click menus propagate down container elements.  Previously only the Window's right click menu was used.
             Now setting a right click menu on a Column, Frame, Tab will add the menu to elements inside the container element.
+    4.53.0.11
+        Added new Window method - Window.mouse_location().  Returns the (x,y) location of the mouse pointer
+    4.53.0.12
+        Support for Tabs with image added to TabGroup.add_tab. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -6611,13 +6615,48 @@ class TabGroup(Element):
         form = self.ParentForm
         form._BuildKeyDictForWindow(form, tab_element, form.AllKeysDict)
         form.AllKeysDict[tab_element.Key] = tab_element
+        # Pack the tab's layout into the tab. NOTE - This does NOT pack the Tab itself... for that see below...
         PackFormIntoFrame(tab_element, tab_element.TKFrame, self.ParentForm)
+
+        # - This is below -    Perform the same operation that is performed when a Tab is packed into the window.
+        # If there's an image in the tab, then do the imagey-stuff
+        # ------------------- start of imagey-stuff -------------------
+        try:
+            if tab_element.Filename is not None:
+                photo = tk.PhotoImage(file=tab_element.Filename)
+            elif tab_element.Data is not None:
+                photo = tk.PhotoImage(data=tab_element.Data)
+            else:
+                photo = None
+
+            if tab_element.ImageSubsample and photo is not None:
+                photo = photo.subsample(tab_element.ImageSubsample)
+                # print('*ERROR laying out form.... Image Element has no image specified*')
+        except Exception as e:
+            photo = None
+            _error_popup_with_traceback('Your Window has an Tab Element with an IMAGE problem',
+                                        'The traceback will show you the Window with the problem layout',
+                                        'Look in this Window\'s layout for an Image tab_element that has a key of {}'.format(tab_element.Key),
+                                        'The error occuring is:', e)
+
+        tab_element.photo = photo
+        # add the label
+        if photo is not None:
+            width, height = photo.width(), photo.height()
+            tab_element.tktext_label = tk.Label(tab_element.ParentRowFrame, image=photo, width=width, height=height, bd=0)
+        else:
+            tab_element.tktext_label = tk.Label(tab_element.ParentRowFrame, bd=0)
+        # ------------------- end of imagey-stuff -------------------
+
         state = 'normal'
         if tab_element.Disabled:
             state = 'disabled'
         if tab_element.visible is False:
             state = 'hidden'
-        self.TKNotebook.add(tab_element.TKFrame, text=tab_element.Title, state=state)
+        if photo is not None:
+            self.TKNotebook.add(tab_element.TKFrame, text=tab_element.Title, compound=tk.LEFT, state=state, image=photo)
+        else:
+            self.TKNotebook.add(tab_element.TKFrame, text=tab_element.Title, state=state)
         tab_element.ParentNotebook = self.TKNotebook
         tab_element.TabID = self.TabCount
         self.TabCount += 1
@@ -10261,6 +10300,19 @@ class Window:
             self.TransparentColor = color
         except:
             print('Transparent color not supported on this platform (windows only)')
+
+    def mouse_location(self):
+        """
+        Return the (x,y) location of the mouse relative to the entire screen.  It's the same location that
+        you would use to create a window, popup, etc.
+
+        :return:    The location of the mouse pointer
+        :rtype:     (int, int)
+        """
+        if not self._is_window_created('tried Window.mouse_location'):
+            return (0,0)
+
+        return (self.TKroot.winfo_pointerx(), self.TKroot.winfo_pointery())
 
     def grab_any_where_on(self):
         """
@@ -14807,6 +14859,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 'Look in this Window\'s layout for an Image element that has a key of {}'.format(element.Key),
                                                 'The error occuring is:', e)
 
+                element.photo = photo
                 if photo is not None:
                     if element_size == (None, None) or element_size is None or element_size == toplevel_form.DefaultElementSize:
                         width, height = photo.width(), photo.height()
@@ -14815,7 +14868,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=0)
                 else:
                     element.tktext_label = tk.Label(tk_row_frame, bd=0)
-                element.photo = photo
                 if photo is not None:
                     form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image=photo)
 
