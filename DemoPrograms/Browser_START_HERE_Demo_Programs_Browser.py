@@ -261,26 +261,28 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                             matches = re.finditer(br'^' + bytes(".*("+re.escape(string) + ").*$", 'utf-8'), s, re.MULTILINE)
                     if matches:
                         if show_first_match:
-                            file_list.append(file)
-                            num_files += 1
+                            #file_list.append(file)
+                            #num_files += 1
                             match_array = []
 
                             matched_str = matches.group(0).decode('utf-8')
-                            if ("==" not in matched_str and "b'" not in matched_str):
+                            if not all(x in matched_str for x in ("b'", '=')) and len(matched_str) < 500:
                                 # safe to assume this is not a base64 string as it does not contain the proper ending
                                 match_array.append(matches.group(0).decode('utf-8'))
                                 matched_dict[full_filename] = match_array
+                                file_list.append(file)
+                                num_files += 1
                         else:
                             # We need to do this because strings are "falsy" in Python, but empty matches still return True...
                             append_file = False
                             match_array = []
                             for match_ in matches:
-                                match_str = match_.group(0).decode('utf-8')
-                                if match_str:
-                                    if len(match_str) < 500 and "==" not in match_str and "b'" not in match_str:
-                                        match_array.append(match_str)
-                                        if append_file is False:
-                                            append_file = True
+                                matched_str = match_.group(0).decode('utf-8')
+                                if matched_str:
+                                    if not all(x in matched_str for x in ("b'", '=')) and len(matched_str) < 500:
+                                    # if len(match_str) < 500 and "=" not in match_str and "b'" not in match_str:
+                                        match_array.append(matched_str)
+                                        append_file = True
                             if append_file:
                                 file_list.append(file)
                                 num_files += 1
