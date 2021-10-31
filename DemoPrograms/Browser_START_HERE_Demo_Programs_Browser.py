@@ -266,7 +266,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                             match_array = []
 
                             matched_str = matches.group(0).decode('utf-8')
-                            if not all(x in matched_str for x in ("b'", '==')):
+                            if not all(x in matched_str for x in ("b'", '=')) and len(matched_str) < 500:
                                 # safe to assume this is not a base64 string as it does not contain the proper ending
                                 match_array.append(matches.group(0).decode('utf-8'))
                                 matched_dict[full_filename] = match_array
@@ -277,12 +277,12 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                             append_file = False
                             match_array = []
                             for match_ in matches:
-                                match_str = match_.group(0).decode('utf-8')
-                                if match_str:
-                                    if len(match_str) < 500 and "==" not in match_str and "b'" not in match_str:
-                                        match_array.append(match_str)
-                                        if append_file is False:
-                                            append_file = True
+                                matched_str = match_.group(0).decode('utf-8')
+                                if matched_str:
+                                    if not all(x in matched_str for x in ("b'", '=')) and len(matched_str) < 500:
+                                    # if len(match_str) < 500 and "=" not in match_str and "b'" not in match_str:
+                                        match_array.append(matched_str)
+                                        append_file = True
                             if append_file:
                                 file_list.append(file)
                                 num_files += 1
