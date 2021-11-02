@@ -49,6 +49,10 @@ _change_log = """
         Made SDK Help window resizable & expands correctly. Simplified by using vertical_alignment on Column element instead of a vtop helper.
         Changed definition of MENU_RIGHT_CLICK_DISABLED so that it is in the same format as a normal menu
             Was getting an error when used in a Tab element with previous definition (index out of range due to missing list)
+    4.53.0.14
+        Changed how TabGroup and Tab Right Click Menus work!  (FOR THE BETTER)
+            Now when you right-click on a TAB, you will get the right click menu for THAT TAB rather than the TabGroup
+            HUGE thank you to Jason for helping with this!  
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1007,6 +1011,17 @@ class Element():
         :type event:
 
         """
+        if self.Type == ELEM_TYPE_TAB_GROUP:
+            try:
+                index  = self.Widget.index('@{},{}'.format(event.x,event.y))
+                tab = self.Widget.tab(index, 'text')
+                key = self.find_key_from_tab_name(tab)
+                tab_element = self.ParentForm.key_dict[key]
+                tab_element.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
+                self.TKRightClickMenu.grab_release()
+            except:
+                    pass
+            return
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
         if self.Type == ELEM_TYPE_GRAPH:
