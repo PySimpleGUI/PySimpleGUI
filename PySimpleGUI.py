@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.12 Unreleased"
+version = __version__ = "4.53.0.13 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -45,6 +45,10 @@ _change_log = """
         Added new Window method - Window.mouse_location().  Returns the (x,y) location of the mouse pointer
     4.53.0.12
         Support for Tabs with image added to TabGroup.add_tab. 
+    4.53.0.13
+        Made SDK Help window resizable & expands correctly. Simplified by using vertical_alignment on Column element instead of a vtop helper.
+        Changed definition of MENU_RIGHT_CLICK_DISABLED so that it is in the same format as a normal menu
+            Was getting an error when used in a Tab element with previous definition (index out of range due to missing list)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -613,7 +617,7 @@ MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT = ['', ['Edit Me', 'Version', 'File Location', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EXIT = ['', ['Exit']]
-MENU_RIGHT_CLICK_DISABLED = [[]]
+MENU_RIGHT_CLICK_DISABLED = ['', []]
 ENABLE_TK_WINDOWS = False
 
 USE_CUSTOM_TITLEBAR = False
@@ -5853,7 +5857,7 @@ class Frame(Element):
         :type size:                   (int, int)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int)  | (None, None) | int
-        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :param font:                  specifies the  font family, size, etc. for the TITLE. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
@@ -6155,7 +6159,7 @@ class Tab(Element):
         :type title_color:            (str)
         :param background_color:      color of background of the entire layout
         :type background_color:       (str)
-        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :param font:                  NOT USED in the tkinter port
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
@@ -6163,7 +6167,7 @@ class Tab(Element):
         :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param disabled:              If True button will be created disabled
         :type disabled:               (bool)
-        :param border_width:          width of border around element in pixels
+        :param border_width:          NOT USED in tkinter port
         :type border_width:           (int)
         :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                    str | int | tuple | object
@@ -13581,7 +13585,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             element.ParentRowFrame = tk_row_frame
             element.element_frame = None  # for elements that have a scrollbar too
             element.ParentForm = toplevel_form  # save the button's parent form object
-            if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
+            if toplevel_form.Font and (element.Font == DEFAULT_FONT or element.Font is None):
                 font = toplevel_form.Font
             elif element.Font is not None:
                 font = element.Font
@@ -14885,8 +14889,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                               highlightbackground=element.BackgroundColor,
                                               highlightcolor=element.BackgroundColor)
 
-                if element.BorderWidth is not None:
-                    element.TKFrame.configure(borderwidth=element.BorderWidth)
+                # if element.BorderWidth is not None:
+                #     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu_and_grab(element)
@@ -22578,14 +22582,14 @@ def main_sdk_help():
 
     buttons = [[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())]
     buttons += [[B('Func Search', pad=(0, 0), size=(22, 1), font='Courier 10')]]
-    button_col = Col(buttons)
-    mline_col = Column([[Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')],
-                        [T(size=(80, 1), font='Courier 10 underline', k='-DOC LINK-', enable_events=True)]], pad=(0, 0))
-    layout = [vtop([button_col, mline_col])]
+    button_col = Col(buttons, vertical_alignment='t')
+    mline_col = Column([[Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10', expand_x=True, expand_y=True)],
+                        [T(size=(80, 1), font='Courier 10 underline', k='-DOC LINK-', enable_events=True)]], pad=(0, 0), expand_x=True, expand_y=True, vertical_alignment='t')
+    layout = [[button_col, mline_col]]
     layout += [[CBox('Summary Only', enable_events=True, k='-SUMMARY-'), CBox('Display Only PEP8 Functions', default=True, k='-PEP8-')]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
-    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=EMOJI_BASE64_THINK, finalize=True, right_click_menu=MENU_RIGHT_CLICK_EDITME_EXIT)
+    window = Window('SDK API Call Reference', layout, resizable=True, use_default_focus=False, keep_on_top=True, icon=EMOJI_BASE64_THINK, finalize=True, right_click_menu=MENU_RIGHT_CLICK_EDITME_EXIT)
     window['-DOC LINK-'].set_cursor('hand1')
     online_help_link = ''
     ml = window['-ML-']
