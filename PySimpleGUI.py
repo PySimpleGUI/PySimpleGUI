@@ -53,6 +53,8 @@ _change_log = """
         Changed how TabGroup and Tab Right Click Menus work!  (FOR THE BETTER)
             Now when you right-click on a TAB, you will get the right click menu for THAT TAB rather than the TabGroup
             HUGE thank you to Jason for helping with this!  
+    4.53.0.15
+        More work on the right click menus for tabgroups. Need to always set one so that callback occurs
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -622,6 +624,7 @@ MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT = ['', ['Edit Me', 'Version', 'File Locatio
 MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EXIT = ['', ['Exit']]
 MENU_RIGHT_CLICK_DISABLED = ['', []]
+_MENU_RIGHT_CLICK_TABGROUP_DEFAULT = ['TABGROUP DEFAULT', []]
 ENABLE_TK_WINDOWS = False
 
 USE_CUSTOM_TITLEBAR = False
@@ -1017,10 +1020,12 @@ class Element():
                 tab = self.Widget.tab(index, 'text')
                 key = self.find_key_from_tab_name(tab)
                 tab_element = self.ParentForm.key_dict[key]
+                if tab_element.RightClickMenu is None:      # if this tab didn't explicitly have a menu, then don't show anything
+                    return
                 tab_element.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
                 self.TKRightClickMenu.grab_release()
             except:
-                    pass
+                pass
             return
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
@@ -6678,6 +6683,7 @@ class TabGroup(Element):
             self.TKNotebook.add(tab_element.TKFrame, text=tab_element.Title, state=state)
         tab_element.ParentNotebook = self.TKNotebook
         tab_element.TabID = self.TabCount
+        tab_element.ParentForm = self.ParentForm
         self.TabCount += 1
         if tab_element.BackgroundColor != COLOR_SYSTEM_DEFAULT and tab_element.BackgroundColor is not None:
             tab_element.TKFrame.configure(background=tab_element.BackgroundColor, highlightbackground=tab_element.BackgroundColor,
@@ -13514,8 +13520,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _add_right_click_menu_and_grab(element):
         if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
             return
-        if element.RightClickMenu or toplevel_form.RightClickMenu or form.RightClickMenu:
+        if element.Type == ELEM_TYPE_TAB_GROUP:   # unless everything disabled, then need to always set a right click menu for tabgroups
+            if toplevel_form.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
+                return
+            menu = _MENU_RIGHT_CLICK_TABGROUP_DEFAULT
+        else:
             menu = element.RightClickMenu or form.RightClickMenu or toplevel_form.RightClickMenu
+
+        if menu:
             top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
 
             if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
