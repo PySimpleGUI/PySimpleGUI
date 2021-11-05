@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.16 Unreleased"
+version = __version__ = "4.53.0.17 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -57,6 +57,9 @@ _change_log = """
         More work on the right click menus for tabgroups. Need to always set one so that callback occurs
     4.53.0.16
         Fixed crash in the github upgrade thread that was due to Exec API changing to combine stdout and stderr by default
+    4.53.0.17
+        Changed the psgmain and psgupgrade code to relaunch using the version of Python used to call those functions
+            It was using the settings file to get the Python version and should instead use whatever was used to invoke PySimpleGUI
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22317,11 +22320,14 @@ def _upgrade_entry_point():
     It simply runs the PySimpleGUI.py file with a command line argument "upgrade" which will
         actually do the upgrade.
     """
-    execute_py_file(__file__, 'upgrade')
+    execute_py_file(__file__, 'upgrade', interpreter_command=sys.executable)
+
+
 
 def _main_entry_point():
     print('Restarting main as a new process...(needed in case you want to GitHub Upgrade)')
-    execute_py_file(__file__)
+    # Relaunch using the same python interpreter that was used to run this function
+    execute_py_file(__file__, interpreter_command=sys.executable)
 
 main_upgrade_from_github = _upgrade_entry_point
 
