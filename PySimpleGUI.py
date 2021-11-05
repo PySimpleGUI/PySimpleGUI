@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.17 Unreleased"
+version = __version__ = "4.53.0.18 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -60,6 +60,8 @@ _change_log = """
     4.53.0.17
         Changed the psgmain and psgupgrade code to relaunch using the version of Python used to call those functions
             It was using the settings file to get the Python version and should instead use whatever was used to invoke PySimpleGUI
+    4.53.0.18
+        Changed the _copy_files_from_github code to always use the currently running python interpreter to do the pip install!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22165,6 +22167,7 @@ def _the_github_upgrade_thread(window, sp):
         oline = line.decode().rstrip()
         window.write_event_value('-THREAD-', (sp, oline))
 
+    # DO NOT CHECK STDERR because it won't exist anymore. The subprocess code now combines stdout and stderr
     # window.write_event_value('-THREAD-', (sp, '----- STDERR ----'))
 
     # for line in sp.stderr:
@@ -22244,7 +22247,8 @@ def _copy_files_from_github():
     # install the pysimplegui package from local dist
     # https://pip.pypa.io/en/stable/user_guide/?highlight=subprocess#using-pip-from-your-program
     # subprocess.check_call([sys.executable, '-m', 'pip', 'install', path])
-    python_command = execute_py_get_interpreter()
+    # python_command = execute_py_get_interpreter()
+    python_command = sys.executable         # always use the currently running interpreter to perform the pip!
 
     layout = [[Text('Pip Upgrade Progress')],
               [Multiline(s=(90,30), k='-MLINE-', reroute_cprint=True, write_only=True)],
@@ -22254,8 +22258,8 @@ def _copy_files_from_github():
 
     cprint('The value of sys.executable = ', sys.executable, c='white on red')
 
-    if not python_command:
-        python_command = sys.executable
+    # if not python_command:
+    #     python_command = sys.executable
 
     cprint('Installing with the Python interpreter =', python_command, c='white on purple')
 
