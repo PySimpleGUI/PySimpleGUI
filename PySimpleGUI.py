@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.15 Unreleased"
+version = __version__ = "4.53.0.16 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -55,6 +55,8 @@ _change_log = """
             HUGE thank you to Jason for helping with this!  
     4.53.0.15
         More work on the right click menus for tabgroups. Need to always set one so that callback occurs
+    4.53.0.16
+        Fixed crash in the github upgrade thread that was due to Exec API changing to combine stdout and stderr by default
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22155,15 +22157,16 @@ def _the_github_upgrade_thread(window, sp):
     """
 
     window.write_event_value('-THREAD-', (sp, '===THEAD STARTING==='))
-    window.write_event_value('-THREAD-', (sp, '----- STDOUT Follows ----'))
+    window.write_event_value('-THREAD-', (sp, '----- STDOUT & STDERR Follows ----'))
     for line in sp.stdout:
         oline = line.decode().rstrip()
         window.write_event_value('-THREAD-', (sp, oline))
-    window.write_event_value('-THREAD-', (sp, '----- STDERR ----'))
 
-    for line in sp.stderr:
-        oline = line.decode().rstrip()
-        window.write_event_value('-THREAD-', (sp, oline))
+    # window.write_event_value('-THREAD-', (sp, '----- STDERR ----'))
+
+    # for line in sp.stderr:
+    #     oline = line.decode().rstrip()
+    #     window.write_event_value('-THREAD-', (sp, oline))
     window.write_event_value('-THREAD-', (sp, '===THEAD DONE==='))
 
 
