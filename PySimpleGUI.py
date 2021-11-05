@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.18 Unreleased"
+version = __version__ = "4.53.0.19 Unreleased"
 
 _change_log = """
     Changelog since 4.53.0 released to PyPI on 24-Oct-2021
@@ -62,6 +62,8 @@ _change_log = """
             It was using the settings file to get the Python version and should instead use whatever was used to invoke PySimpleGUI
     4.53.0.18
         Changed the _copy_files_from_github code to always use the currently running python interpreter to do the pip install!
+    4.53.0.19
+        Removed the print in the relauch of psgmain.... struggling a bit with the whole psgmain upgrading itself....
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22329,7 +22331,7 @@ def _upgrade_entry_point():
 
 
 def _main_entry_point():
-    print('Restarting main as a new process...(needed in case you want to GitHub Upgrade)')
+    # print('Restarting main as a new process...(needed in case you want to GitHub Upgrade)')
     # Relaunch using the same python interpreter that was used to run this function
     execute_py_file(__file__, interpreter_command=sys.executable)
 
