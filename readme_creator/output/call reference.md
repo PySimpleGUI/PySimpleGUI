@@ -2229,6 +2229,7 @@ Frame(title,
     right_click_menu = None,
     expand_x = False,
     expand_y = False,
+    grab = None,
     visible = True,
     element_justification = "left",
     vertical_alignment = None,
@@ -2245,9 +2246,9 @@ Parameter Descriptions:
 |                                      str                                       |   background_color    | background color of the Frame |
 |                                      enum                                      |    title_location     | location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT |
 |                                      enum                                      |        relief         | relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                   (int, int)                                   |         size          | (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column |
+|                                   (int, int)                                   |         size          | (width, height) Sets an initial hard-coded size for the Frame. This used to be a problem, but was fixed in 4.53.0 and works better than Columns when using the size paramter |
 |                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. for the TITLE. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      int                                       |     border_width      | width of border around element in pixels |
@@ -2257,9 +2258,10 @@ Parameter Descriptions:
 |                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |         grab          | If True can grab this element and move the window around. Default is False |
 |                                      bool                                      |        visible        | set visibility state of the element |
 |                                      str                                       | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
-|                                      str                                       |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                      str                                       |  vertical_alignment   | Place the Frame at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
 |                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -7127,8 +7129,9 @@ Changes some of the settings for the ProgressBar Element. Must call `Window.Read
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
 
 ```
-update(current_count,
+update(current_count = None,
     max = None,
+    bar_color = None,
     visible = None)
 ```
 
@@ -7136,9 +7139,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| int  | current_count | sets the current value |
-| int  |      max      | changes the max value |
-| bool |    visible    | control visibility of element |
+|        int        | current_count | sets the current value |
+|        int        |      max      | changes the max value |
+| (str, str) or str |   bar_color   | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
+|       bool        |    visible    | control visibility of element |
 | (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
 
 ### update_bar
@@ -7207,8 +7211,9 @@ Changes some of the settings for the ProgressBar Element. Must call `Window.Read
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
 
 ```
-Update(current_count,
+Update(current_count = None,
     max = None,
+    bar_color = None,
     visible = None)
 ```
 
@@ -7216,9 +7221,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| int  | current_count | sets the current value |
-| int  |      max      | changes the max value |
-| bool |    visible    | control visibility of element |
+|        int        | current_count | sets the current value |
+|        int        |      max      | changes the max value |
+| (str, str) or str |   bar_color   | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
+|       bool        |    visible    | control visibility of element |
 | (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
 
 ### UpdateBar
@@ -7262,8 +7268,14 @@ Used in a Horizontal fashion.  Placing one on each side of an element will enter
 Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
 
 ```
-Push()
+Push(background_color = None)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | background_color | color of background may be needed because of how this is implemented |
 
 ---------
 
@@ -8925,6 +8937,8 @@ Tab(title,
     expand_y = False,
     visible = True,
     element_justification = "left",
+    image_source = None,
+    image_subsample = None,
     metadata = None)
 ```
 
@@ -8936,11 +8950,11 @@ Parameter Descriptions:
 |                              List[List[Element]]                               |        layout         | The element layout that will be shown in the tab |
 |                                      str                                       |      title_color      | color of the tab text (note not currently working on tkinter) |
 |                                      str                                       |   background_color    | color of background of the entire layout |
-|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                       (str or (str, int[, str]) or None)                       |         font          | NOT USED in the tkinter port |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |       disabled        | If True button will be created disabled |
-|                                      int                                       |     border_width      | width of border around element in pixels |
+|                                      int                                       |     border_width      | NOT USED in tkinter port |
 |                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
@@ -8949,6 +8963,8 @@ Parameter Descriptions:
 |                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
 |                                      bool                                      |        visible        | set visibility state of the element |
 |                                      str                                       | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
+|                              str or bytes or None                              |     image_source      | A filename or a base64 bytes of an image to place on the Tab |
+|                                      int                                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -9302,12 +9318,14 @@ TabGroup(layout,
     selected_title_color = None,
     selected_background_color = None,
     background_color = None,
+    focus_color = None,
     font = None,
     change_submits = False,
     enable_events = False,
     pad = None,
     p = None,
     border_width = None,
+    tab_border_width = None,
     theme = None,
     key = None,
     k = None,
@@ -9332,12 +9350,14 @@ Parameter Descriptions:
 |                                      str                                       |   selected_title_color    | color of tab text when it is selected |
 |                                      str                                       | selected_background_color | color of tab when it is selected |
 |                                      str                                       |     background_color      | color of background area that tabs are located on |
+|                                      str                                       |        focus_color        | color of focus indicator on the tabs |
 |                       (str or (str, int[, str]) or None)                       |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                      bool                                      |       enable_events       | If True then switching tabs will generate an Event |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad            | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             p             | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      int                                       |       border_width        | width of border around element in pixels |
+|                                      int                                       |     tab_border_width      | width of border around the tabs |
 |                                      enum                                      |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
 |                         str or int or tuple or object                          |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -11100,8 +11120,14 @@ Acts like a Stretch element found in the Qt port.
 Used in a Vertical fashion.
 
 ```
-VPush()
+VPush(background_color = None)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | background_color | color of background may be needed because of how this is implemented |
 
 -----------------------------------
 
@@ -11175,7 +11201,7 @@ Parameter Descriptions:
 |                (int, int)                 |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
 |                   bool                    |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
 |                   bool                    |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|                (int, int)                 |          relative_location           | (x,y) location relative to the CENTER of the window, in pixels. Normally the window centers. This location is relative to THAT centered location. Note they can be negative. |
+|                (int, int)                 |          relative_location           | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                (int, int)                 |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
 |                (int, int)                 |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
 | (int, int or (int, int),(int,int)) or int |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
@@ -11642,6 +11668,17 @@ Minimize this window to the task bar
 ```python
 minimize()
 ```
+
+### mouse_location
+
+Return the (x,y) location of the mouse relative to the entire screen.  It's the same location that
+you would use to create a window, popup, etc.
+
+`mouse_location()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(int, int)| **return** | The location of the mouse pointer |
 
 ### move
 
@@ -12830,6 +12867,7 @@ CalendarButton(button_text,
     enable_events = None,
     key = None,
     k = None,
+    visible = True,
     locale = None,
     format = "%Y-%m-%d %H:%M:%S",
     begin_at_sunday_plus = 0,
@@ -12874,6 +12912,7 @@ Parameter Descriptions:
 |                                      str                                       |         title          | Title shown on the date chooser window |
 |                                      bool                                      |      no_titlebar       | if True no titlebar will be shown on the date chooser window |
 |                                   (int, int)                                   |        location        | Location on the screen (x,y) to show the calendar popup window |
+|                                      bool                                      |        visible         | set initial visibility state of the Button |
 |                                      Any                                       |        metadata        | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -12892,6 +12931,7 @@ Cancel(button_text = "Cancel",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -12913,6 +12953,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -12937,6 +12978,7 @@ ColorChooserButton(button_text,
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -12964,6 +13006,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 | (Button) | **RETURN** | returns a button
 
@@ -12987,6 +13030,7 @@ Debug(button_text = "",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13008,8 +13052,16 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
+
+This is a special type of Button.
+
+It will close the window but NOT send an event that the window has been closed.
+
+It's used in conjunction with non-blocking windows to silently close them.  They are used to
+implement the non-blocking popup windows. They're also found in some Demo Programs, so look there for proper use.
 
 ```
 DummyButton(button_text,
@@ -13031,6 +13083,7 @@ DummyButton(button_text,
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13057,6 +13110,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13075,6 +13129,7 @@ Exit(button_text = "Exit",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13096,6 +13151,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13117,6 +13173,7 @@ FileBrowse(button_text = "Browse",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13141,6 +13198,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13163,6 +13221,7 @@ FileSaveAs(button_text = "Save As...",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13188,6 +13247,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |        key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |      visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13211,6 +13271,7 @@ FilesBrowse(button_text = "Browse",
     p = None,
     key = None,
     k = None,
+    visible = True,
     files_delimiter = ";",
     metadata = None)
 ```
@@ -13236,6 +13297,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      str                                       | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
@@ -13257,6 +13319,7 @@ FolderBrowse(button_text = "Browse",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13280,6 +13343,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | The Button created
 
@@ -13298,6 +13362,7 @@ Help(button_text = "Help",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13319,6 +13384,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13337,6 +13403,7 @@ No(button_text = "No",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13358,6 +13425,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13376,6 +13444,7 @@ OK(button_text = "OK",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13397,6 +13466,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13415,6 +13485,7 @@ Ok(button_text = "Ok",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13436,6 +13507,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13454,6 +13526,7 @@ Open(button_text = "Open",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13475,6 +13548,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13493,6 +13567,7 @@ Quit(button_text = "Quit",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13514,6 +13589,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13537,6 +13613,7 @@ RealtimeButton(button_text,
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13549,6 +13626,7 @@ Parameter Descriptions:
 |                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
 |                               (Default = (None))                               |    image_size    | image size (O.K.) |
 |                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      int                                       |   border_width   | width of border around element |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
@@ -13562,7 +13640,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      int                                       |   border_width   | width of border around element |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | Button created
 
@@ -13581,6 +13659,7 @@ Save(button_text = "Save",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13602,6 +13681,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13624,6 +13704,7 @@ SaveAs(button_text = "Save As...",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13648,6 +13729,7 @@ Parameter Descriptions:
 |                                               (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int                                                |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int    :param key:               key for uniquely identify this element (for window.find_element) |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                                                        str or int or tuple or object                                                                         |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                                                                     bool                                                                                     |      visible      | set initial visibility state of the Button |
 |                                                                                     Any                                                                                      |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13666,6 +13748,7 @@ Submit(button_text = "Submit",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13687,6 +13770,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13705,6 +13789,7 @@ Yes(button_text = "Yes",
     p = None,
     key = None,
     k = None,
+    visible = True,
     metadata = None)
 ```
 
@@ -13726,6 +13811,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
@@ -13832,6 +13918,11 @@ Parameter Descriptions:
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | Button created
 
+DEPRICATED
+
+This button should not be used.  Instead explicitly close your windows by calling window.close() or by using
+the close parameter in window.read
+
 ```
 CButton(button_text,
     image_filename = None,
@@ -13879,6 +13970,11 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
+
+DEPRICATED
+
+This button should not be used.  Instead explicitly close your windows by calling window.close() or by using
+the close parameter in window.read
 
 ```
 CloseButton(button_text,
@@ -13947,6 +14043,7 @@ easy_print(args=*<1 or N object>,
     end = None,
     sep = None,
     location = (None, None),
+    relative_location = (None, None),
     font = None,
     no_titlebar = False,
     no_button = False,
@@ -13971,6 +14068,7 @@ Parameter Descriptions:
 |                str                 |          end          | end character |
 |                str                 |          sep          | separator character |
 |             (int, int)             |       location        | Location of upper left corner of the window |
+|             (int, int)             |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 | (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                bool                |      no_titlebar      | If True no titlebar will be shown |
 |                bool                |       no_button       | don't show button |
@@ -14007,6 +14105,7 @@ eprint(args=*<1 or N object>,
     end = None,
     sep = None,
     location = (None, None),
+    relative_location = (None, None),
     font = None,
     no_titlebar = False,
     no_button = False,
@@ -14031,6 +14130,7 @@ Parameter Descriptions:
 |                str                 |          end          | end character |
 |                str                 |          sep          | separator character |
 |             (int, int)             |       location        | Location of upper left corner of the window |
+|             (int, int)             |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 | (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                bool                |      no_titlebar      | If True no titlebar will be shown |
 |                bool                |       no_button       | don't show button |
@@ -14061,6 +14161,7 @@ sgprint(args=*<1 or N object>,
     end = None,
     sep = None,
     location = (None, None),
+    relative_location = (None, None),
     font = None,
     no_titlebar = False,
     no_button = False,
@@ -14085,6 +14186,7 @@ Parameter Descriptions:
 |                str                 |          end          | end character |
 |                str                 |          sep          | separator character |
 |             (int, int)             |       location        | Location of upper left corner of the window |
+|             (int, int)             |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 | (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                bool                |      no_titlebar      | If True no titlebar will be shown |
 |                bool                |       no_button       | don't show button |
@@ -14121,6 +14223,7 @@ EasyPrint(args=*<1 or N object>,
     end = None,
     sep = None,
     location = (None, None),
+    relative_location = (None, None),
     font = None,
     no_titlebar = False,
     no_button = False,
@@ -14145,6 +14248,7 @@ Parameter Descriptions:
 |                str                 |          end          | end character |
 |                str                 |          sep          | separator character |
 |             (int, int)             |       location        | Location of upper left corner of the window |
+|             (int, int)             |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 | (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                bool                |      no_titlebar      | If True no titlebar will be shown |
 |                bool                |       no_button       | don't show button |
@@ -14181,6 +14285,7 @@ Print(args=*<1 or N object>,
     end = None,
     sep = None,
     location = (None, None),
+    relative_location = (None, None),
     font = None,
     no_titlebar = False,
     no_button = False,
@@ -14205,6 +14310,7 @@ Parameter Descriptions:
 |                str                 |          end          | end character |
 |                str                 |          sep          | separator character |
 |             (int, int)             |       location        | Location of upper left corner of the window |
+|             (int, int)             |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 | (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                bool                |      no_titlebar      | If True no titlebar will be shown |
 |                bool                |       no_button       | don't show button |
@@ -14287,7 +14393,7 @@ Parameter Descriptions:
 |                str                 |       end        | end character |
 |                str                 |       sep        | separator character |
 |                Any                 |       key        | key of multiline to output to (if you want to override the one previously set) |
-|                                    |      window      | Window containing the multiline to output to (if you want to override the one previously set) |
+|               Window               |      window      | Window containing the multiline to output to (if you want to override the one previously set) |
 |                str                 |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 |                bool                |    autoscroll    | If True the contents of the element will automatically scroll as more data added to the end |
 
@@ -14441,6 +14547,7 @@ popup(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     any_key_closes = False,
     image = None,
     modal = True)
@@ -14466,6 +14573,7 @@ Parameter Descriptions:
 |                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               (int, int)                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|               (int, int)                |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
 |                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |              str or bytes               |        image        | Image to include at the top of the popup window |
@@ -14487,6 +14595,7 @@ popup_animated(image_source,
     grab_anywhere = True,
     keep_on_top = True,
     location = (None, None),
+    relative_location = (None, None),
     alpha_channel = None,
     time_between_frames = 0,
     transparent_color = None,
@@ -14507,6 +14616,7 @@ Parameter Descriptions:
 |        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
 |        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
 |     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|     (int, int)     |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int         | time_between_frames | Amount of time in milliseconds between each frame |
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
@@ -14533,6 +14643,7 @@ popup_auto_close(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14557,6 +14668,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -14579,6 +14691,7 @@ popup_cancel(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14602,6 +14715,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -14624,6 +14738,7 @@ popup_error(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14647,6 +14762,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -14662,6 +14778,7 @@ popup_get_date(start_mon = None,
     title = "Choose Date",
     keep_on_top = True,
     location = (None, None),
+    relative_location = (None, None),
     close_when_chosen = False,
     icon = None,
     locale = None,
@@ -14680,6 +14797,7 @@ Parameter Descriptions:
 |      int      | begin_at_sunday_plus | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
 | (str or bytes) |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 |  (int, int)   |       location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|  (int, int)   |  relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |      str      |        title         | Title that will be shown on the window |
 |     bool      |  close_when_chosen   | If True, the window will close and function return when a day is clicked |
 |      str      |        locale        | locale used to get the day names |
@@ -14711,6 +14829,7 @@ popup_get_file(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     files_delimiter = ";",
@@ -14742,6 +14861,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
@@ -14768,6 +14888,7 @@ popup_get_folder(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     modal = True,
@@ -14793,6 +14914,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
@@ -14817,6 +14939,7 @@ popup_get_text(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14825,22 +14948,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |     message      | message displayed to user |
-|                str                 |      title       | Window title |
-|                str                 |   default_text   | default value to put into input area |
-|                str                 |  password_char   | character to be shown instead of actually typed characters |
-|             (int, int)             |       size       | (width, height) of the InputText Element |
-|         (str, str) or str          |   button_color   | Color of the button (text, background) |
-|                str                 | background_color | background color of the entire window |
-|                str                 |    text_color    | color of the message text |
-|            bytes or str            |       icon       | filename or base64 string to be used for the window's icon |
-| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |   no_titlebar    | If True no titlebar will be shown |
-|                bool                |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|                bool                |   keep_on_top    | If True the window will remain above all current windows |
-|             (int, int)             |     location     | (x,y) Location on screen to display the upper left corner of window |
-|            str or bytes            |      image       | Image to include at the top of the popup window |
-|                bool                |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |      message      | message displayed to user |
+|                str                 |       title       | Window title |
+|                str                 |   default_text    | default value to put into input area |
+|                str                 |   password_char   | character to be shown instead of actually typed characters |
+|             (int, int)             |       size        | (width, height) of the InputText Element |
+|         (str, str) or str          |   button_color    | Color of the button (text, background) |
+|                str                 | background_color  | background color of the entire window |
+|                str                 |    text_color     | color of the message text |
+|            bytes or str            |       icon        | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    no_titlebar    | If True no titlebar will be shown |
+|                bool                |   grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|                bool                |    keep_on_top    | If True the window will remain above all current windows |
+|             (int, int)             |     location      | (x,y) Location on screen to display the upper left corner of window |
+|             (int, int)             | relative_location | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|            str or bytes            |       image       | Image to include at the top of the popup window |
+|                bool                |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Makes a "popup menu"
@@ -14882,6 +15006,7 @@ popup_no_buttons(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14903,6 +15028,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -14925,6 +15051,7 @@ popup_no_titlebar(args=*<1 or N object>,
     grab_anywhere = True,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -14948,6 +15075,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -14971,6 +15099,7 @@ popup_non_blocking(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -14994,6 +15123,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None | **RETURN** | Reason for popup closing
@@ -15045,6 +15175,7 @@ popup_ok(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15068,6 +15199,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15090,6 +15222,7 @@ popup_ok_cancel(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15113,6 +15246,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "OK" or "Cancel" or None | **RETURN** | clicked button
@@ -15136,6 +15270,7 @@ popup_quick(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -15160,6 +15295,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15183,6 +15319,7 @@ popup_quick_message(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -15207,6 +15344,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15225,6 +15363,7 @@ popup_scrolled(args=*<1 or N object>,
     auto_close_duration = None,
     size = (None, None),
     location = (None, None),
+    relative_location = (None, None),
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
@@ -15248,6 +15387,7 @@ Parameter Descriptions:
 |            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
 |             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
 |             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |                str                 |  background_color   | color of background |
 |                str                 |     text_color      | color of the text |
@@ -15279,6 +15419,7 @@ popup_yes_no(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15302,6 +15443,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
@@ -15322,6 +15464,7 @@ sprint(args=*<1 or N object>,
     auto_close_duration = None,
     size = (None, None),
     location = (None, None),
+    relative_location = (None, None),
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
@@ -15345,6 +15488,7 @@ Parameter Descriptions:
 |            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
 |             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
 |             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |                str                 |  background_color   | color of background |
 |                str                 |     text_color      | color of the text |
@@ -15372,6 +15516,7 @@ ScrolledTextBox(args=*<1 or N object>,
     auto_close_duration = None,
     size = (None, None),
     location = (None, None),
+    relative_location = (None, None),
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
@@ -15395,6 +15540,7 @@ Parameter Descriptions:
 |            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
 |             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
 |             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |                str                 |  background_color   | color of background |
 |                str                 |     text_color      | color of the text |
@@ -15438,6 +15584,7 @@ Popup(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     any_key_closes = False,
     image = None,
     modal = True)
@@ -15463,6 +15610,7 @@ Parameter Descriptions:
 |                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               (int, int)                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|               (int, int)                |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
 |                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |              str or bytes               |        image        | Image to include at the top of the popup window |
@@ -15484,6 +15632,7 @@ PopupAnimated(image_source,
     grab_anywhere = True,
     keep_on_top = True,
     location = (None, None),
+    relative_location = (None, None),
     alpha_channel = None,
     time_between_frames = 0,
     transparent_color = None,
@@ -15504,6 +15653,7 @@ Parameter Descriptions:
 |        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
 |        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
 |     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|     (int, int)     |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int         | time_between_frames | Amount of time in milliseconds between each frame |
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
@@ -15529,6 +15679,7 @@ PopupAnnoying(args=*<1 or N object>,
     grab_anywhere = True,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15552,6 +15703,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15575,6 +15727,7 @@ PopupAutoClose(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15599,6 +15752,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15621,6 +15775,7 @@ PopupCancel(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15644,6 +15799,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15666,6 +15822,7 @@ PopupError(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15689,6 +15846,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15714,6 +15872,7 @@ PopupGetFile(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     files_delimiter = ";",
@@ -15745,6 +15904,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
@@ -15771,6 +15931,7 @@ PopupGetFolder(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     modal = True,
@@ -15796,6 +15957,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
@@ -15820,6 +15982,7 @@ PopupGetText(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15828,22 +15991,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |     message      | message displayed to user |
-|                str                 |      title       | Window title |
-|                str                 |   default_text   | default value to put into input area |
-|                str                 |  password_char   | character to be shown instead of actually typed characters |
-|             (int, int)             |       size       | (width, height) of the InputText Element |
-|         (str, str) or str          |   button_color   | Color of the button (text, background) |
-|                str                 | background_color | background color of the entire window |
-|                str                 |    text_color    | color of the message text |
-|            bytes or str            |       icon       | filename or base64 string to be used for the window's icon |
-| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |   no_titlebar    | If True no titlebar will be shown |
-|                bool                |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|                bool                |   keep_on_top    | If True the window will remain above all current windows |
-|             (int, int)             |     location     | (x,y) Location on screen to display the upper left corner of window |
-|            str or bytes            |      image       | Image to include at the top of the popup window |
-|                bool                |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |      message      | message displayed to user |
+|                str                 |       title       | Window title |
+|                str                 |   default_text    | default value to put into input area |
+|                str                 |   password_char   | character to be shown instead of actually typed characters |
+|             (int, int)             |       size        | (width, height) of the InputText Element |
+|         (str, str) or str          |   button_color    | Color of the button (text, background) |
+|                str                 | background_color  | background color of the entire window |
+|                str                 |    text_color     | color of the message text |
+|            bytes or str            |       icon        | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    no_titlebar    | If True no titlebar will be shown |
+|                bool                |   grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|                bool                |    keep_on_top    | If True the window will remain above all current windows |
+|             (int, int)             |     location      | (x,y) Location on screen to display the upper left corner of window |
+|             (int, int)             | relative_location | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|            str or bytes            |       image       | Image to include at the top of the popup window |
+|                bool                |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -15864,6 +16028,7 @@ PopupNoBorder(args=*<1 or N object>,
     grab_anywhere = True,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15887,6 +16052,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15908,6 +16074,7 @@ PopupNoButtons(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15929,6 +16096,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15951,6 +16119,7 @@ PopupNoFrame(args=*<1 or N object>,
     grab_anywhere = True,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -15974,6 +16143,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15996,6 +16166,7 @@ PopupNoTitlebar(args=*<1 or N object>,
     grab_anywhere = True,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -16019,6 +16190,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -16042,6 +16214,7 @@ PopupNonBlocking(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -16065,6 +16238,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None | **RETURN** | Reason for popup closing
@@ -16087,6 +16261,7 @@ PopupOK(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -16110,6 +16285,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -16132,6 +16308,7 @@ PopupOKCancel(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -16155,6 +16332,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "OK" or "Cancel" or None | **RETURN** | clicked button
@@ -16178,6 +16356,7 @@ PopupQuick(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -16202,6 +16381,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -16225,6 +16405,7 @@ PopupQuickMessage(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -16249,6 +16430,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -16267,6 +16449,7 @@ PopupScrolled(args=*<1 or N object>,
     auto_close_duration = None,
     size = (None, None),
     location = (None, None),
+    relative_location = (None, None),
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
@@ -16290,6 +16473,7 @@ Parameter Descriptions:
 |            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
 |             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
 |             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |                str                 |  background_color   | color of background |
 |                str                 |     text_color      | color of the text |
@@ -16322,6 +16506,7 @@ PopupTimed(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -16346,6 +16531,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -16368,6 +16554,7 @@ PopupYesNo(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -16391,6 +16578,7 @@ Parameter Descriptions:
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |     keep_on_top     | If True the window will remain above all current windows |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
@@ -17270,18 +17458,20 @@ execute_command_subprocess(command,
     args=*<1 or N object>,
     wait = False,
     cwd = None,
-    pipe_output = False)
+    pipe_output = False,
+    merge_stderr_with_stdout = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str  |   command   | Filename to load settings from (and save to in the future) |
-| Any  |    *args    | Variable number of arguments that are passed to the program being started as command line parms |
-| bool |    wait     | If True then wait for the subprocess to finish |
-| str  |     cwd     | Working directory to use when executing the subprocess |
-| bool | pipe_output | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
+| str  |         command          | Filename to load settings from (and save to in the future) |
+| Any  |          *args           | Variable number of arguments that are passed to the program being started as command line parms |
+| bool |           wait           | If True then wait for the subprocess to finish |
+| str  |           cwd            | Working directory to use when executing the subprocess |
+| bool |       pipe_output        | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
+| bool | merge_stderr_with_stdout | If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout. |
 | (subprocess.Popen) | **RETURN** | Popen object
 
 Runs the editor that was configured in the global settings and opens the file to a specific line number.
@@ -17357,19 +17547,21 @@ execute_py_file(pyfile,
     cwd = None,
     interpreter_command = None,
     wait = False,
-    pipe_output = False)
+    pipe_output = False,
+    merge_stderr_with_stdout = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str  |       pyfile        | the file to run |
-| str  |        parms        | parameters to pass on the command line |
-| str  |         cwd         | the working directory to use |
-| str  | interpreter_command | the command used to invoke the Python interpreter |
-| bool |        wait         | the working directory to use |
-| bool |     pipe_output     | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
+| str  |          pyfile          | the file to run |
+| str  |          parms           | parameters to pass on the command line |
+| str  |           cwd            | the working directory to use |
+| str  |   interpreter_command    | the command used to invoke the Python interpreter |
+| bool |           wait           | the working directory to use |
+| bool |       pipe_output        | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
+| bool | merge_stderr_with_stdout | If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout. |
 | (subprocess.Popen) or None | **RETURN** | Popen object
 
 Returns True is the subprocess ID provided is for a process that is still running

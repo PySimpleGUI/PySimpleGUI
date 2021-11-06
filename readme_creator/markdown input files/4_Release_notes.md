@@ -2287,6 +2287,48 @@ I really like this release.  It pulls together a ***lot*** of work over the past
 * Doc updates to the Call Reference doc - Added `Sizer` element and reorganizing a bit.
 * Special thanks to Jason for providing amazing support to the PySimpleGUI users. If you think PySimpleGUI is great... if you really want to see something impressive, try logging an issue on the GitHub and watch Jason do his thing.
 
+## 4.54.0 PySimpleGUI 6-Nov-2021
+
+Tabs - Are even better now  
+Right click menu better for Tabs, Frame, Columns  
+relative_location proliferation  
+
+* Tab & TabGroup
+	* Added image_source parameter, enabling file-based and Base64 images to be added to your tabs
+	* image_subample parm added so images and be reduced in size
+	* TabGroup.add_tab also got the image support
+	* tab_border_width parm added to TabGroup to control the border around the tab labels
+	* Added constants for Tab Location for easier code completion. All begin with TAB_LOCATION_
+	* focus_color added to TabGroup
+	* Significant change to right-click menus for Tabs. Now the Tab determines the right click menu shown when right clicking a tab title. Enables a right-click to close feature.
+* Frame Element
+	* Better right click support in blank areas
+	* Added grab parameter
+	* Btter grab support in blank areas
+* VerticalSeperator - Improvement in expansion
+* VPush and Push - background_color parameter added
+* grab_any_where_on - unreported bug fixed
+* relative_location - a recent parameter to Window has been added to all popups and to Print
+* New Base64 images
+	* Hearts (TWO types), green checkmark, red X
+		* HEART_3D_BASE64
+		* HEART_FLAT_BASE64
+		* GREEN_CHECK_BASE64
+		* RED_X_BASE64
+	* Each are 90 x 90 pixels
+	* Use image_subsample to reduce size to 45, 30, etc
+* bar_color added to ProgressMeter.update
+* visible parm added to all pre-defined buttons (FileBrowse, FolderBrowse, Ok, Cancel, etc)
+* Exec APIs stderr merge with stdout
+	* merge_stderr_with_stdout added to execute_command_subprocess and execute_py_file
+	* Default it TRUE
+	* Stderr will be merged with stdout in 1 stream
+* Right click menus propagate down the container elements (Column, Frame, Tab) to the elements inside
+* Window.mouse_location() - returns tuple with mouse (x,y) location
+* SDK Help window now resizble
+* MENU_RIGHT_CLICK_DISABLED changed to match format of normal right click menus
+* psgmain and psgupgrade - changed version of Python used to relaunch to be the same as the one calling the function to invoke PySimpleGUI. Also changed the upgrade from GitHub logic to use Python interpreter for pip as used to invoke.
+
 
 ## Code Condition
 
