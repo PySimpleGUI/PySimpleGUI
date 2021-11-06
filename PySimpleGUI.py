@@ -1,69 +1,10 @@
 #!/usr/bin/python3
-version = __version__ = "4.53.0.19 Unreleased"
+version = __version__ = "4.54.0 Released 6-Nov-2021"
 
 _change_log = """
-    Changelog since 4.53.0 released to PyPI on 24-Oct-2021
+    Changelog since 4.54.0 released to PyPI on 6-Nov-2021
 
-    4.53.0.1
-        Changed how expansion is handled by Separator elements.
-            Only the horizontal separator expands now. The vertical separator will not cause the row to expand, but it will expand with a row.
-    4.53.0.2
-        Another attempt at getting VSep right.  Thank you to Jason for pointing out expand should be False
-    4.53.0.3
-        Lots of positive changes to the Frame and Column elements!  They both do a much better job of responding to right clicks in areas with no elements
-        Column and Frame are grabbable from areas that were not able to detect before
-        Added grab parameter to Frame element
-        Added background_color to Push & VPush elements
-        Fixed bug in grab_any_where_on
-    4.53.0.4
-        The proliferation of relative_location across the popups, Print
-        Some new BASE64 images (hearts, check & x) - use image_subsample to resize to your liking
-    4.53.0.5
-        Changed the Frame element's size description from "Do not use" to "by all means use"
-        Tab changes
-            image_source parawmter - Support for an image in the Tab (new image_source parameter of Tab Element)
-            image_subsample parameter - subsample for image (makes smaller by 1/image_subsample)
-        TabGroup changes
-            tab_border_width parameter - sets the border around the tab top portion. Now can set to 0 if you want
-    4.53.0.6
-        Added bar_color to ProgressMeter.update            
-        Fixed a couple of typos from previous changes
-    4.53.0.7
-        Added constants for the tab_location parameter of the TabGroup element so that IDEs will easily find them. They start with TAB_LOCATION_
-        Added visible parameter to the pre-defined buttons
-            FileBrowse, FolderBrowse, etc.
-            Ok, Cancel, etc
-    4.53.0.8
-        Added focus_color to TabGroup element
-    4.53.0.9
-        Parameter merge_stderr_with_stdout added to Exec API calls execute_command_subprocess and execute_py_file
-            Default is TRUE. The advantage is that all output can be received via stdout, in real time
-    4.53.0.10
-        Made right click menus propagate down container elements.  Previously only the Window's right click menu was used.
-            Now setting a right click menu on a Column, Frame, Tab will add the menu to elements inside the container element.
-    4.53.0.11
-        Added new Window method - Window.mouse_location().  Returns the (x,y) location of the mouse pointer
-    4.53.0.12
-        Support for Tabs with image added to TabGroup.add_tab. 
-    4.53.0.13
-        Made SDK Help window resizable & expands correctly. Simplified by using vertical_alignment on Column element instead of a vtop helper.
-        Changed definition of MENU_RIGHT_CLICK_DISABLED so that it is in the same format as a normal menu
-            Was getting an error when used in a Tab element with previous definition (index out of range due to missing list)
-    4.53.0.14
-        Changed how TabGroup and Tab Right Click Menus work!  (FOR THE BETTER)
-            Now when you right-click on a TAB, you will get the right click menu for THAT TAB rather than the TabGroup
-            HUGE thank you to Jason for helping with this!  
-    4.53.0.15
-        More work on the right click menus for tabgroups. Need to always set one so that callback occurs
-    4.53.0.16
-        Fixed crash in the github upgrade thread that was due to Exec API changing to combine stdout and stderr by default
-    4.53.0.17
-        Changed the psgmain and psgupgrade code to relaunch using the version of Python used to call those functions
-            It was using the settings file to get the Python version and should instead use whatever was used to invoke PySimpleGUI
-    4.53.0.18
-        Changed the _copy_files_from_github code to always use the currently running python interpreter to do the pip install!
-    4.53.0.19
-        Removed the print in the relauch of psgmain.... struggling a bit with the whole psgmain upgrading itself....
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345

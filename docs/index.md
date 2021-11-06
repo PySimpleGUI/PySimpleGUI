@@ -792,29 +792,29 @@ Not only that, it's the Pythonic thing to do.  Have a look at line 3 of the "Zen
 
 > The Zen of Python, by Tim Peters
 >
-> Beautiful is better than ugly.
-> Explicit is better than implicit.
-> Simple is better than complex.
-> Complex is better than complicated.
-> Flat is better than nested.
-> Sparse is better than dense.
-> Readability counts.
-> Special cases aren't special enough to break the rules.
-> Although practicality beats purity.
-> Errors should never pass silently.
-> Unless explicitly silenced.
-> In the face of ambiguity, refuse the temptation to guess.
-> There should be one-- and preferably only one --obvious way to do it.
-> Although that way may not be obvious at first unless you're Dutch.
-> Now is better than never.
-> Although never is often better than *right* now.
-> If the implementation is hard to explain, it's a bad idea.
-> If the implementation is easy to explain, it may be a good idea.
-> Namespaces are one honking great idea -- let's do more of those!
+> Beautiful is better than ugly . 
+> Explicit is better than implicit  .
+> Simple is better than complex.  
+> Complex is better than complicated.  
+> Flat is better than nested.  
+> Sparse is better than dense.  
+> Readability counts.  
+> Special cases aren't special enough to break the rules.  
+> Although practicality beats purity.  
+> Errors should never pass silently.  
+> Unless explicitly silenced.  
+> In the face of ambiguity, refuse the temptation to guess.  
+> There should be one-- and preferably only one --obvious way to do it.  
+> Although that way may not be obvious at first unless you're Dutch.  
+> Now is better than never.  
+> Although never is often better than *right* now.  
+> If the implementation is hard to explain, it's a bad idea.  
+> If the implementation is easy to explain, it may be a good idea.  
+> Namespaces are one honking great idea -- let's do more of those!  
 
 I just hope reading all these pages of documentation is going to make you believe that we're breaking suggestion:
-> If the implementation is hard to explain, it's a bad idea.
-> If the implementation is easy to explain, it may be a good idea.
+> If the implementation is hard to explain, it's a bad idea.  
+> If the implementation is easy to explain, it may be a good idea.  
 
 I don't think PySimpleGUI is ***difficult*** to explain, but I am striving to fully explain it so that you don't do this:
 
@@ -978,7 +978,7 @@ Caution is needed, however, when working with the unfinished ports.  PySimpleGUI
 
 While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex multi-windowed GUIs.
 
-For those of you that have heard PySimpleGUI is only good for doing the most simplest of GUIs, this feature list should put that myth to rest.  **The SIMPLE part of PySimpleGUI is how much effort _you_ expend to write a GUI, not the complexity of the program you are able to create.**  It's literally "simple" to do... and it is not limited to simple problems.
+**The SIMPLE part of PySimpleGUI is how much effort _you_ expend to write a GUI, not the complexity of the program you are able to create.**  It's literally "simple" to do... and it is not limited to simple problems.
 
 Features of PySimpleGUI include:
 
@@ -1050,6 +1050,8 @@ Features of PySimpleGUI include:
 - No async programming required (no callbacks to worry about)
 - Built-in debugger and REPL
 - User expandable by accessing underlying GUI Framework widgets directly
+- Exec APIs - wrapper for subprocessing and threading
+- UserSettings APIs - wrapper for JSON and INI files
 
 ---
 
@@ -1191,53 +1193,40 @@ Like above, you may have to install either pip or tkinter.  To do this on Python
 
 ## Upgrading from GitHub Using PySimpleGUI
 
-Starting in version 4.17.0 there is code in the PySimpleGUI package that upgrades your previously pip installed package using the latest version checked into GitHub.  
+There is code in the PySimpleGUI package that upgrades your previously pip installed package to the latest version checked into GitHub.  
 
-Previously if you wanted to run the GitHub version, you would:
-* Download the PySimpleGUI.py file from GitHub
-* Place it in your applications's folder
+It overwrites your PySimpleGUI.py file that you installed using `pip` with the currently posted version on GitHub.  Using this method when you're ready to install the next version from PyPI or you want to maybe roll back to a PyPI release, you only need to run `pip`.  
 
-This required you to go back later and delete this file when you want to move on to the next version released to PyPI.  
+### The PySimpleGUI "Test Harness"
 
-The new capability is the ability to overwrite your PySimpleGUI.py file that you installed using `pip` with the currently posted version on GitHub.  Using this method when you're ready to install the next version from PyPI or you want to maybe roll back to a PyPI release, you only need to run `pip`.  You don't have to find and delete any PySimpleGUI.py files.
+If you call `sg.main()` then you'll get the test harness and can use the upgrade feature.
 
-***Important - Linux Users*** - There is currently a problem using this utility on Linux systems.  It's being worked on and a patch will be released as soon as something is figured out.
+After you've pip installed, you can use the commands `psgmain` to run the test harness or `psgupgrade` to invoke the GitHub upgrade code.
 
-#### Command Line Upgrade
+There have been problems on some machines when `psgmain` and `psgupgrade` are used to upgrade PySimpleGUI.  The upgrade is in-place so there can be file locking problems.  If you have trouble using these commands, then you can also upgrade using this command:  
 
-To upgrade PySimpleGUI from the command line type this command into your dos window
+`python -m PySimpleGUI.PySimpleGUI upgrade`
 
-`python -m PySimpleGUI upgrade`
+The "Safest" approach is to call `sg.main()` from your code and then click the red upgrade button.
 
-You will first be shown a confirmation window:
+![sg main()](https://user-images.githubusercontent.com/46163555/140553187-7a15be8a-9b97-4f7d-af4e-e059ab5b1eee.gif)  
 
-![image](https://user-images.githubusercontent.com/46163555/77477572-f0f01300-6df2-11ea-812f-98a36e7c28e0.png)
+### Recovering From a Bad GitHub Release
 
-If you choose yes, then the new version will be installed and you'll see a red "completed" window
+If you run into a problem upgrading after upgrading from GitHub, you can likely use pip to uninstall, then re-install from PyPI to see if you can upgrade again from GitHub.  
 
-![image](https://user-images.githubusercontent.com/46163555/77477619-006f5c00-6df3-11ea-8b01-44b1bea22989.png)
-
-#### GUI Upgrade
-
-The PySimpleGUI Test Harness is another mechanism you can use to upgrade.  To start the test harness you "run" the PySimpleGUI package.  
-
-`python -m PySimpleGUI.PySimpleGUI`
-
-Of course if you're running Linux you may run `python3` instead.
-
-From your code you can call `PySimpleGUI.main()`.  This window may not look exactly like the one you see, but the thing that should be there is the red "Install" button.
-
-![image](https://user-images.githubusercontent.com/46163555/77478381-437dff00-6df4-11ea-994e-a443ff967917.png)
-
-Clicking the install button will bring up the same confirmation window shown as the command line upgrade above.
+`pip uninstall PySimpleGUI`  
+`pip install PySimpleGUI`  
 
 ### Testing your installation and Troubleshooting
 
-Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.
+Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  
 
 #### The Quick Test
 
 The PySimpleGUI Test Harness pictured in the previous section on GUI upgrades is the short program that's built into PySimpleGUI that serves multiple purposes.  It exercises many/most of the available Elements, displays version and location data and works as a quick self-test.
+
+`psgmain` is a command you can enter to the run PySimpleGUI test harness if you pip installed. You can also use:
 
 From your command line type:
 `python -m PySimpleGUI.PySimpleGUI`
@@ -1291,7 +1280,7 @@ Just like when using the REPL >>> to determine the location, this `print` in you
 
 ### Manual installation
 
-If you're not connected to the net on your target machine, or pip isn't working, or you want to run the latest code from GitHub, then all you have to do is place the single PySimpleGUI source file `PySimpleGUI.py` (for tkinter port) and place it in your application's folder (the folder where the py file is that imports PySimpleGUI).  Your application will load that local copy of PySimpleGUI as if it were a package.
+If you're not connected to the net on your target machine, or pip isn't working, or you want to run the latest code from GitHub, then all you have to do is place the single PySimpleGUI source file `PySimpleGUI.py` (for tkinter port)  in your application's folder (the folder where the py file is that imports PySimpleGUI).  Your application will load that local copy of PySimpleGUI as if it were a package.
 
 Be ***sure*** that you delete this PySimpleGUI.py file if you install a newer pip version.  Often the sequence of events is that a bug you've reported was fixed and checked into GitHub.  You download the PySimpleGUI.py file (or the appropriately named one for your port) and put with your app.  Then later your fix is posted with a new release on PyPI.  You'll want to delete the GitHub one before you install from pip.
 
@@ -1304,15 +1293,17 @@ PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It
 
 ### EXE file creation
 
-If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this document.
+If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller` or `cx_freeze`.  There are instructions on how to create an EXE at the bottom of this document.
+
+The PySimpleGUI EXE Maker can be found in a repo in the PySimpleGUI GitHub account.  It's a simple front-end to pyinstaller.
 
 ## IDEs
 
-A lot of people ask about IDEs, and many outright fear PyCharm.  Listen up.... compared to your journey of learning Python, learning to use PyCharm as your IDE is NOTHING.  It's a DAY typically (from 1 to 8 hours).  Or, if you're really really new, perhaps as much as a week *to get used to*.  So, we're not talking about you needing to learn to flap your arms and fly.
+A lot of people ask about IDEs, and many outright fear PyCharm. Compared to your journey of learning Python, learning to use PyCharm as your IDE is **nothing**.  It's a DAY typically (from 1 to 8 hours).  Or, if you're really really new, perhaps as much as a week *to get used to*.  So, we're not talking about you needing to learn to flap your arms and fly.
 
-To sum up that paragraph, stop whining like a little b*tch.  You're a grown man/woman, act like it.  "But it's hard..."  If you found this package, then you're a bright person :-)  Have some confidence in yourself for Christ sake.... I do.  Not going to lead you off some cliff, promise!
+If you found this package, then you're a bright person :-)  Have some confidence in yourself for Christ sake.... I do.  Not going to lead you off some cliff, promise!
 
-Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.  However, if you are a seasoned professional developer and know what you're doing, there is nothing about PySimpleGUI that will prevent you from working this way.  It's mostly a caution for beginners because more often than not, they get really messed up and confused.
+Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.  However, if you are a seasoned professional developer and know what you're doing, there is nothing about PySimpleGUI that will prevent you from working this way.  
 
 ### Officially Supported IDEs
 
@@ -1520,6 +1511,7 @@ popup(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     any_key_closes = False,
     image = None,
     modal = True)
@@ -1545,6 +1537,7 @@ Parameter Descriptions:
 |                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               (int, int)                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|               (int, int)                |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
 |                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |              str or bytes               |        image        | Image to include at the top of the popup window |
@@ -1583,6 +1576,7 @@ popup_scrolled(args=*<1 or N object>,
     auto_close_duration = None,
     size = (None, None),
     location = (None, None),
+    relative_location = (None, None),
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
@@ -1606,6 +1600,7 @@ Parameter Descriptions:
 |            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
 |             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
 |             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |                str                 |  background_color   | color of background |
 |                str                 |     text_color      | color of the text |
@@ -1658,6 +1653,7 @@ popup_no_wait(args=*<1 or N object>,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = False)
 ```
@@ -1681,6 +1677,7 @@ Parameter Descriptions:
 |                bool                |     no_titlebar     | If True no titlebar will be shown |
 |                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |             (int, int)             |      location       | Location of upper left corner of the window |
+|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None | **RETURN** | Reason for popup closing
@@ -1723,6 +1720,7 @@ popup_get_text(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     image = None,
     modal = True)
 ```
@@ -1731,22 +1729,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |     message      | message displayed to user |
-|                str                 |      title       | Window title |
-|                str                 |   default_text   | default value to put into input area |
-|                str                 |  password_char   | character to be shown instead of actually typed characters |
-|             (int, int)             |       size       | (width, height) of the InputText Element |
-|         (str, str) or str          |   button_color   | Color of the button (text, background) |
-|                str                 | background_color | background color of the entire window |
-|                str                 |    text_color    | color of the message text |
-|            bytes or str            |       icon       | filename or base64 string to be used for the window's icon |
-| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |   no_titlebar    | If True no titlebar will be shown |
-|                bool                |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|                bool                |   keep_on_top    | If True the window will remain above all current windows |
-|             (int, int)             |     location     | (x,y) Location on screen to display the upper left corner of window |
-|            str or bytes            |      image       | Image to include at the top of the popup window |
-|                bool                |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |      message      | message displayed to user |
+|                str                 |       title       | Window title |
+|                str                 |   default_text    | default value to put into input area |
+|                str                 |   password_char   | character to be shown instead of actually typed characters |
+|             (int, int)             |       size        | (width, height) of the InputText Element |
+|         (str, str) or str          |   button_color    | Color of the button (text, background) |
+|                str                 | background_color  | background color of the entire window |
+|                str                 |    text_color     | color of the message text |
+|            bytes or str            |       icon        | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    no_titlebar    | If True no titlebar will be shown |
+|                bool                |   grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|                bool                |    keep_on_top    | If True the window will remain above all current windows |
+|             (int, int)             |     location      | (x,y) Location on screen to display the upper left corner of window |
+|             (int, int)             | relative_location | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|            str or bytes            |       image       | Image to include at the top of the popup window |
+|                bool                |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 ```python
@@ -1784,6 +1783,7 @@ popup_get_file(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     files_delimiter = ";",
@@ -1815,6 +1815,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
@@ -1864,6 +1865,7 @@ popup_get_folder(message,
     grab_anywhere = False,
     keep_on_top = None,
     location = (None, None),
+    relative_location = (None, None),
     initial_folder = None,
     image = None,
     modal = True,
@@ -1889,6 +1891,7 @@ Parameter Descriptions:
 |                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |                bool                |       keep_on_top        | If True the window will remain above all current windows |
 |             (int, int)             |         location         | Location of upper left corner of the window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |                str                 |      initial_folder      | location in filesystem to begin browsing |
 |            str or bytes            |          image           | Image to include at the top of the popup window |
 |                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
@@ -1926,6 +1929,7 @@ popup_animated(image_source,
     grab_anywhere = True,
     keep_on_top = True,
     location = (None, None),
+    relative_location = (None, None),
     alpha_channel = None,
     time_between_frames = 0,
     transparent_color = None,
@@ -1946,6 +1950,7 @@ Parameter Descriptions:
 |        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
 |        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
 |     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|     (int, int)     |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
 |       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int         | time_between_frames | Amount of time in milliseconds between each frame |
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
@@ -9318,6 +9323,48 @@ I really like this release.  It pulls together a ***lot*** of work over the past
 * Testing more thoroughly 3.4, 3.6, 3.7, 3.8, 3.9, 3.10 and tkinter 8.6.2 through 8.6.10
 * Doc updates to the Call Reference doc - Added `Sizer` element and reorganizing a bit.
 * Special thanks to Jason for providing amazing support to the PySimpleGUI users. If you think PySimpleGUI is great... if you really want to see something impressive, try logging an issue on the GitHub and watch Jason do his thing.
+
+## 4.54.0 PySimpleGUI 6-Nov-2021
+
+Tabs - Are even better now  
+Right click menu better for Tabs, Frame, Columns  
+relative_location proliferation  
+
+* Tab & TabGroup
+	* Added image_source parameter, enabling file-based and Base64 images to be added to your tabs
+	* image_subample parm added so images and be reduced in size
+	* TabGroup.add_tab also got the image support
+	* tab_border_width parm added to TabGroup to control the border around the tab labels
+	* Added constants for Tab Location for easier code completion. All begin with TAB_LOCATION_
+	* focus_color added to TabGroup
+	* Significant change to right-click menus for Tabs. Now the Tab determines the right click menu shown when right clicking a tab title. Enables a right-click to close feature.
+* Frame Element
+	* Better right click support in blank areas
+	* Added grab parameter
+	* Btter grab support in blank areas
+* VerticalSeperator - Improvement in expansion
+* VPush and Push - background_color parameter added
+* grab_any_where_on - unreported bug fixed
+* relative_location - a recent parameter to Window has been added to all popups and to Print
+* New Base64 images
+	* Hearts (TWO types), green checkmark, red X
+		* HEART_3D_BASE64
+		* HEART_FLAT_BASE64
+		* GREEN_CHECK_BASE64
+		* RED_X_BASE64
+	* Each are 90 x 90 pixels
+	* Use image_subsample to reduce size to 45, 30, etc
+* bar_color added to ProgressMeter.update
+* visible parm added to all pre-defined buttons (FileBrowse, FolderBrowse, Ok, Cancel, etc)
+* Exec APIs stderr merge with stdout
+	* merge_stderr_with_stdout added to execute_command_subprocess and execute_py_file
+	* Default it TRUE
+	* Stderr will be merged with stdout in 1 stream
+* Right click menus propagate down the container elements (Column, Frame, Tab) to the elements inside
+* Window.mouse_location() - returns tuple with mouse (x,y) location
+* SDK Help window now resizble
+* MENU_RIGHT_CLICK_DISABLED changed to match format of normal right click menus
+* psgmain and psgupgrade - changed version of Python used to relaunch to be the same as the one calling the function to invoke PySimpleGUI. Also changed the upgrade from GitHub logic to use Python interpreter for pip as used to invoke.
 
 ## Code Condition
 

@@ -2616,6 +2616,9 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### minimize
 <!-- <+Window.minimize+> -->
 
+### mouse_location
+<!-- <+Window.mouse_location+> -->
+
 ### move
 <!-- <+Window.move+> -->
 
