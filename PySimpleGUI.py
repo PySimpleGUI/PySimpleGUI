@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.54.0.2 Unreleased"
+version = __version__ = "4.54.0.3 Unreleased"
 
 _change_log = """
     Changelog since 4.54.0 released to PyPI on 6-Nov-2021
@@ -8,7 +8,8 @@ _change_log = """
         Changed the Exec start subprocess/ run py file to use the sys.executable 
     4.54.0.2
         Change from pythonw to python if the main or upgrade sys.executable found to be pythonw. This seems to be the difference when psgupgrade fails.
-
+    4.54.0.3
+        Also change from pythonw to python in the github upgrade call to pip
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22198,12 +22199,15 @@ def _copy_files_from_github():
     # subprocess.check_call([sys.executable, '-m', 'pip', 'install', path])
     # python_command = execute_py_get_interpreter()
     python_command = sys.executable         # always use the currently running interpreter to perform the pip!
+    if 'pythonw' in python_command:
+        python_command = python_command.replace('pythonw', 'python')
 
     layout = [[Text('Pip Upgrade Progress')],
               [Multiline(s=(90,30), k='-MLINE-', reroute_cprint=True, write_only=True)],
               [Button('Downloading...', k='-EXIT-')]]
 
     window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
+
 
     cprint('The value of sys.executable = ', sys.executable, c='white on red')
 
@@ -22275,7 +22279,7 @@ def _upgrade_entry_point():
     """
     interpreter = sys.executable
     if 'pythonw' in interpreter:
-        interpreter.replace('pythonw', 'python')
+        interpreter = interpreter.replace('pythonw', 'python')
     execute_py_file(__file__, 'upgrade', interpreter_command=interpreter)
 
 
@@ -22285,7 +22289,7 @@ def _main_entry_point():
     # Relaunch using the same python interpreter that was used to run this function
     interpreter = sys.executable
     if 'pythonw' in interpreter:
-        interpreter.replace('pythonw', 'python')
+        interpreter = interpreter.replace('pythonw', 'python')
     execute_py_file(__file__, interpreter_command=interpreter)
 
 main_upgrade_from_github = _upgrade_entry_point
