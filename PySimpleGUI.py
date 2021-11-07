@@ -1,14 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.0.2 Unreleased"
+version = __version__ = "4.55.1 Released 7-Nov-2021"
 
 _change_log = """
-    Changelog since 4.55.0 released to PyPI on 7-Nov-2021
+    Changelog since 4.55.1 released to PyPI on 7-Nov-2021
     
-    4.55.0.1
-        Version bump so that something will be installed from GitHub that's different than PyPI
-    4.55.0.2
-        Fix in execute_py related calls. Went overboard with using sys.executable. Should only use it when nothing specified in global settings.
-    
+    4.55.1.1
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
