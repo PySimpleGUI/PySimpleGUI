@@ -1,8 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.0 Released 7-Nov-2021"
+version = __version__ = "4.55.0.1 Unreleased"
 
 _change_log = """
-    Changelog since 4.55.0 released to PyPI on 6-Nov-2021
+    Changelog since 4.55.0 released to PyPI on 7-Nov-2021
+    
+    4.55.0.1
+        Version bump so that something will be installed from GitHub that's different than PyPI
     
     """
 
