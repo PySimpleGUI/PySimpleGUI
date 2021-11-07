@@ -1,12 +1,13 @@
 #!/usr/bin/python3
-version = __version__ = "4.54.0.1 Unreleased"
+version = __version__ = "4.54.0.2 Unreleased"
 
 _change_log = """
     Changelog since 4.54.0 released to PyPI on 6-Nov-2021
     
     4.54.0.1
         Changed the Exec start subprocess/ run py file to use the sys.executable 
-
+    4.54.0.2
+        Change from pythonw to python if the main or upgrade sys.executable found to be pythonw. This seems to be the difference when psgupgrade fails.
 
     """
 
@@ -22272,14 +22273,20 @@ def _upgrade_entry_point():
     It simply runs the PySimpleGUI.py file with a command line argument "upgrade" which will
         actually do the upgrade.
     """
-    execute_py_file(__file__, 'upgrade', interpreter_command=sys.executable)
+    interpreter = sys.executable
+    if 'pythonw' in interpreter:
+        interpreter.replace('pythonw', 'python')
+    execute_py_file(__file__, 'upgrade', interpreter_command=interpreter)
 
 
 
 def _main_entry_point():
     # print('Restarting main as a new process...(needed in case you want to GitHub Upgrade)')
     # Relaunch using the same python interpreter that was used to run this function
-    execute_py_file(__file__, interpreter_command=sys.executable)
+    interpreter = sys.executable
+    if 'pythonw' in interpreter:
+        interpreter.replace('pythonw', 'python')
+    execute_py_file(__file__, interpreter_command=interpreter)
 
 main_upgrade_from_github = _upgrade_entry_point
 
