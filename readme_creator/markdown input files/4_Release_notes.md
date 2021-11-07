@@ -2330,6 +2330,17 @@ relative_location proliferation
 * psgmain and psgupgrade - changed version of Python used to relaunch to be the same as the one calling the function to invoke PySimpleGUI. Also changed the upgrade from GitHub logic to use Python interpreter for pip as used to invoke.
 
 
+## 4.55.0 PySimpleGUI 7-Nov-2021
+
+Exec APIs - Use sys.executable as default  
+FIXED the install from GitHub problem with psgmain/psgupgrade!  
+
+* Exec APIs Changes
+	* If no interpreter is set in the global settings, then the interpreter running currently (sys.executable) will be used as the default rather than the system-wide default. 
+	* Use python NOT pythonw (if returned from sys.executable) for all upgrades from github. The pip command was running pythonw and that caused future psgmain, psgupgrade, etc, commands to fail  
+
+
+
 ## Code Condition
 
     Make it run

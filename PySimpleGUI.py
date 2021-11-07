@@ -1,15 +1,9 @@
 #!/usr/bin/python3
-version = __version__ = "4.54.0.3 Unreleased"
+version = __version__ = "4.55.0 Released 7-Nov-2021"
 
 _change_log = """
-    Changelog since 4.54.0 released to PyPI on 6-Nov-2021
+    Changelog since 4.55.0 released to PyPI on 6-Nov-2021
     
-    4.54.0.1
-        Changed the Exec start subprocess/ run py file to use the sys.executable 
-    4.54.0.2
-        Change from pythonw to python if the main or upgrade sys.executable found to be pythonw. This seems to be the difference when psgupgrade fails.
-    4.54.0.3
-        Also change from pythonw to python in the github upgrade call to pip
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
