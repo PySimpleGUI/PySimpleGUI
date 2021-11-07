@@ -1,8 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.54.0 Released 6-Nov-2021"
+version = __version__ = "4.54.0.1 Unreleased"
 
 _change_log = """
     Changelog since 4.54.0 released to PyPI on 6-Nov-2021
+    
+    4.54.0.1
+        Changed the Exec start subprocess/ run py file to use the sys.executable 
 
 
     """
@@ -20556,10 +20559,12 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     if interpreter_command is not None:
         python_program = interpreter_command
     else:
-        pysimplegui_user_settings.load()        # Refresh the settings just in case they've changed via another program
-        python_program = pysimplegui_user_settings.get('-python command-', '')
-        if python_program == '':
-            python_program = 'python' if running_windows() else 'python3'
+        # use the version CURRENTLY RUNNING if nothing is specified. Previously used the one from the settings file
+        python_program = sys.executable
+        # pysimplegui_user_settings.load()        # Refresh the settings just in case they've changed via another program
+        # python_program = pysimplegui_user_settings.get('-python command-', '')
+        # if python_program == '':
+            # python_program = 'python' if running_windows() else 'python3'
     if parms is not None and python_program:
         sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output, merge_stderr_with_stdout=merge_stderr_with_stdout)
     elif python_program:
@@ -20572,16 +20577,16 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
 
 def execute_py_get_interpreter():
     """
-    Returns the command that was specified in the global options that will be used to execute Python files
-    when the execute_py_file function is called.
+    Returns the command that is currently running. Previously returned the one from the system settings, but
+    have determined that the one currently running is the better choice.
 
-
-    :return: Full path to python interpreter or '' if nothing entered
+    :return: Full path to python interpreter (uses sys.executable)
     :rtype:  (str)
     """
-    pysimplegui_user_settings.load()  # Refresh the settings just in case they've changed via another program
-    interpreter = pysimplegui_user_settings.get('-python command-', '')
-    return interpreter
+    return sys.executable
+    # pysimplegui_user_settings.load()  # Refresh the settings just in case they've changed via another program
+    # interpreter = pysimplegui_user_settings.get('-python command-', '')
+    # return interpreter
 
 
 def execute_editor(file_to_edit, line_number=None):
