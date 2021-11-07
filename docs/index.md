@@ -9375,6 +9375,12 @@ FIXED the install from GitHub problem with psgmain/psgupgrade!
 	* If no interpreter is set in the global settings, then the interpreter running currently (sys.executable) will be used as the default rather than the system-wide default. 
 	* Use python NOT pythonw (if returned from sys.executable) for all upgrades from github. The pip command was running pythonw and that caused future psgmain, psgupgrade, etc, commands to fail  
 
+## 4.55.1 PySimpleGUI 7-Nov-2021
+
+* Exec API Fix
+	* Fix for bug created in 4.55.0 that caused the Global Setting for Python interpreter to never be used
+	* The sys.executable interpreter will be used for GitHub upgrades and if no interpreter is specified in the PySimpleGUI settings
+
 ## Code Condition
 
     Make it run
