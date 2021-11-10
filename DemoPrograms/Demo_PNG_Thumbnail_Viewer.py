@@ -84,7 +84,7 @@ while True:
         for y in range(COLUMNS):
             cur_index = display_index + (x * 4) + y
             if cur_index < len(png_files):
-                filename = png_files[cur_index]
+                filename = png_files[int(cur_index)]
                 if filename not in thumbnails:
                     imgbytes = image_file_to_bytes(filename, (100, 100))
                     thumbnails[filename] = imgbytes
@@ -130,7 +130,7 @@ while True:
         x, y = event
         image_index = display_index + (x * 4) + y
         if image_index < len(png_files):
-            filename = png_files[image_index]
+            filename = png_files[int(image_index)]
             imgbytes = image_file_to_bytes(filename, (500, 500))
             window['image'].update(data=imgbytes)
             window['filename'].update(filename)
