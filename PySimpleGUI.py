@@ -1,12 +1,14 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.1 Released 7-Nov-2021"
+version = __version__ = "4.55.1.2 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
     
     4.55.1.1
         Addition of stdin parm to execute_command_subprocess. This is to fix problem when pyinstaller is used to make an EXE from a psg program that calls this function
-        
+    4.55.1.2
+        Changed getargspec call in the SDK Reference window to getfullargspec. In 3.11 getargspec is no longer supported and thus crashes
+        Added try to SDK Reference event loop to catch any additional problems that may pop up in 3.11
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -169,11 +171,10 @@ try:
 except:
     webbrowser_available = False
 # used for github upgrades
-import sys
 import urllib.request
 import urllib.error
 import urllib.parse
-
+import pydoc
 from urllib import request
 import os
 import sys
@@ -22546,8 +22547,8 @@ def main_sdk_help():
 
     for element in element_classes:
         # Build info about init method
-        args = inspect.getargspec(element.__init__).args[1:]
-        defaults = inspect.getargspec(element.__init__).defaults
+        args = inspect.getfullargspec(element.__init__).args[1:]
+        defaults = inspect.getfullargspec(element.__init__).defaults
         # print('------------- {element}----------')
         # print(args)
         # print(defaults)
@@ -22561,8 +22562,8 @@ def main_sdk_help():
 
         # Build info about update method
         try:
-            args = inspect.getargspec(element.update).args[1:]
-            defaults = inspect.getargspec(element.update).defaults
+            args = inspect.getfullargspec(element.update).args[1:]
+            defaults = inspect.getfullargspec(element.update).defaults
             if args is None or defaults is None:
                 element_arg_default_dict_update[element.__name__] = (('', ''),)
                 continue
@@ -22594,76 +22595,78 @@ def main_sdk_help():
     online_help_link = ''
     ml = window['-ML-']
     current_element = ''
-    while True:  # Event Loop
-        event, values = window.read()
-        if event in (WIN_CLOSED, 'Exit'):
-            break
-        if event == '-DOC LINK-':
-            if webbrowser_available and online_help_link:
-                webbrowser.open_new_tab(online_help_link)
-        if event == '-SUMMARY-':
-            event = current_element
+    try:
+        while True:  # Event Loop
+            event, values = window.read()
+            if event in (WIN_CLOSED, 'Exit'):
+                break
+            if event == '-DOC LINK-':
+                if webbrowser_available and online_help_link:
+                    webbrowser.open_new_tab(online_help_link)
+            if event == '-SUMMARY-':
+                event = current_element
 
-        if event in element_names.keys():
-            current_element = event
-            window['-ML-'].update('')
-            online_help_link = online_help_links.get(event, '')
-            window['-DOC LINK-'].update(online_help_link)
-            if not values['-SUMMARY-']:
-                elem = element_names[event]
-                ml.print(help(elem))
-                # print the aliases for the class
-                ml.print('\n--- Shortcut Aliases for Class ---')
-                for v in vars3:
-                    if elem == v[1] and elem.__name__ != v[0]:
-                        print(v[0])
-                ml.print('\n--- Init Parms ---')
-            else:
-                elem = element_names[event]
+            if event in element_names.keys():
+                current_element = event
+                window['-ML-'].update('')
+                online_help_link = online_help_links.get(event, '')
+                window['-DOC LINK-'].update(online_help_link)
+                if not values['-SUMMARY-']:
+                    elem = element_names[event]
+                    ml.print(pydoc.help(elem))
+                    # print the aliases for the class
+                    ml.print('\n--- Shortcut Aliases for Class ---')
+                    for v in vars3:
+                        if elem == v[1] and elem.__name__ != v[0]:
+                            print(v[0])
+                    ml.print('\n--- Init Parms ---')
+                else:
+                    elem = element_names[event]
 
-                element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
-                methods = inspect.getmembers(elem, inspect.isfunction)
-                methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
+                    element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
+                    methods = inspect.getmembers(elem, inspect.isfunction)
+                    methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
 
-                unique_methods = [m for m in methods if m not in element_methods and not m[0][0].isupper()]
+                    unique_methods = [m for m in methods if m not in element_methods and not m[0][0].isupper()]
 
-                properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
-                properties = [p[0] for p in properties if not p[0].startswith('_')]
-                ml.print('--- Methods ---', background_color='red', text_color='white')
-                ml.print('\n'.join(methods))
-                ml.print('--- Properties ---', background_color='red', text_color='white')
-                ml.print('\n'.join(properties))
-                if issubclass(elem, Element):
-                    ml.print('Methods Unique to This Element', background_color='red', text_color='white')
-                    ml.print('\n'.join(unique_methods))
-                ml.print('========== Init Parms ==========', background_color='#FFFF00', text_color='black')
-                elem_text_name = event
-                for parm, default in element_arg_default_dict[elem_text_name]:
-                    ml.print('{:18}'.format(parm), end=' = ')
-                    ml.print(default, end=',\n')
-                if elem_text_name in element_arg_default_dict_update:
-                    ml.print('========== Update Parms ==========', background_color='#FFFF00', text_color='black')
-                    for parm, default in element_arg_default_dict_update[elem_text_name]:
+                    properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
+                    properties = [p[0] for p in properties if not p[0].startswith('_')]
+                    ml.print('--- Methods ---', background_color='red', text_color='white')
+                    ml.print('\n'.join(methods))
+                    ml.print('--- Properties ---', background_color='red', text_color='white')
+                    ml.print('\n'.join(properties))
+                    if issubclass(elem, Element):
+                        ml.print('Methods Unique to This Element', background_color='red', text_color='white')
+                        ml.print('\n'.join(unique_methods))
+                    ml.print('========== Init Parms ==========', background_color='#FFFF00', text_color='black')
+                    elem_text_name = event
+                    for parm, default in element_arg_default_dict[elem_text_name]:
                         ml.print('{:18}'.format(parm), end=' = ')
                         ml.print(default, end=',\n')
-            ml.set_vscroll_position(0)  # scroll to top of multoline
-        elif event == 'Func Search':
-            search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
-            if search_string is not None:
-                online_help_link = ''
-                window['-DOC LINK-'].update('')
-                ml.update('')
-                for f_entry in functions_names:
-                    f = f_entry[0]
-                    if search_string in f.lower() and not f.startswith('_'):
-                        if (values['-PEP8-'] and not f[0].isupper()) or not values['-PEP8-']:
-                            if values['-SUMMARY-']:
-                                ml.print(f)
-                            else:
-                                ml.print('=========== ' + f + '===========', background_color='#FFFF00', text_color='black')
-                                ml.print(help(f_entry[1]))
-            ml.set_vscroll_position(0)  # scroll to top of multoline
-
+                    if elem_text_name in element_arg_default_dict_update:
+                        ml.print('========== Update Parms ==========', background_color='#FFFF00', text_color='black')
+                        for parm, default in element_arg_default_dict_update[elem_text_name]:
+                            ml.print('{:18}'.format(parm), end=' = ')
+                            ml.print(default, end=',\n')
+                ml.set_vscroll_position(0)  # scroll to top of multoline
+            elif event == 'Func Search':
+                search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
+                if search_string is not None:
+                    online_help_link = ''
+                    window['-DOC LINK-'].update('')
+                    ml.update('')
+                    for f_entry in functions_names:
+                        f = f_entry[0]
+                        if search_string in f.lower() and not f.startswith('_'):
+                            if (values['-PEP8-'] and not f[0].isupper()) or not values['-PEP8-']:
+                                if values['-SUMMARY-']:
+                                    ml.print(f)
+                                else:
+                                    ml.print('=========== ' + f + '===========', background_color='#FFFF00', text_color='black')
+                                    ml.print(pydoc.help(f_entry[1]))
+                ml.set_vscroll_position(0)  # scroll to top of multoline
+    except Exception as e:
+        _error_popup_with_traceback('Exception in SDK reference', e)
     window.close()
 
 
