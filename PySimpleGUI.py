@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1 Released 7-Nov-2021"
+version = __version__ = "4.55.1.1 Released 7-Nov-2021"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
     
     4.55.1.1
-
+        Addition of stdin parm to execute_command_subprocess. This is to fix problem when pyinstaller is used to make an EXE from a psg program that calls this function
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20469,7 +20470,7 @@ These are the functions used to implement the subprocess APIs (Exec APIs) of PyS
 '''
 
 
-def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output=False, merge_stderr_with_stdout=True):
+def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output=False, merge_stderr_with_stdout=True, stdin=None):
     """
     Runs the specified command as a subprocess.
     By default the call is non-blocking.
@@ -20488,10 +20489,13 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
     :type pipe_output:               (bool)
     :param merge_stderr_with_stdout: If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout.
     :type merge_stderr_with_stdout:  (bool)
+    :param stdin:                    Value passed to the Popen call. Defaults to subprocess.DEVNULL so that the pyinstaller created executable work correctly
+    :type stdin:                     (bool)
     :return:                         Popen object
     :rtype:                          (subprocess.Popen)
     """
-
+    if stdin is None:
+        stdin = subprocess.DEVNULL
     try:
         if args is not None:
             expanded_args = ' '.join(args)
@@ -20502,13 +20506,13 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
             # sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
             if pipe_output:
                 if merge_stderr_with_stdout:
-                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd)
+                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd, stdin=stdin)
                 else:
-                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+                    sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd, stdin=stdin)
             else:
-                sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
+                sp = subprocess.Popen(command + ' ' + expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd, stdin=stdin)
         else:
-            sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd, stdin=stdin)
         if wait:
             out, err = sp.communicate()
             if out:
@@ -22873,6 +22877,7 @@ def _create_main_window():
                     metadata='My window metadata',
                     finalize=True,
                     grab_anywhere=True,
+                    enable_close_attempted_event=True,
                     # ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
@@ -22908,7 +22913,7 @@ def main():
             print(event, values)
             # Print(event, text_color='white', background_color='red', end='')
             # Print(values)
-        if event == WIN_CLOSED or event == 'Exit' or (event == '-BMENU-' and values['-BMENU-'] == 'Exit'):
+        if event == WIN_CLOSED or event == WIN_CLOSE_ATTEMPTED_EVENT or event == 'Exit' or (event == '-BMENU-' and values['-BMENU-'] == 'Exit'):
             break
         if i < 800:
             graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
@@ -22994,6 +22999,7 @@ def main():
             window.normal()
         i += 1
         # _refresh_debugger()
+    print('event = ', event)
     window.close()
 
 
