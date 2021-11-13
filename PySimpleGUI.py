@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.2 Unreleased"
+version = __version__ = "4.55.1.3 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -9,6 +9,10 @@ _change_log = """
     4.55.1.2
         Changed getargspec call in the SDK Reference window to getfullargspec. In 3.11 getargspec is no longer supported and thus crashes
         Added try to SDK Reference event loop to catch any additional problems that may pop up in 3.11
+    4.55.1.3
+        Added Window.move_to_center - moves a window to the center of the screen. Good for when your window changes size or you want to recenter it
+        Disable debugger when installing from github
+        Better error reporting when a problem with the layout detected
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7177,7 +7181,7 @@ class Pane(Element):
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None,  expand_x=None, expand_y=None, visible=True, metadata=None):
         """
         :param pane_list:        Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
-        :type pane_list:         List[Column]
+        :type pane_list:         List[Column] | Tuple[Column]
         :param background_color: color of background
         :type background_color:  (str)
         :param size:             (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
@@ -8458,7 +8462,7 @@ class Window:
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
         :type title:                                 (str)
         :param layout:                               The layout for the window. Can also be specified in the Layout method
-        :type layout:                                List[List[Elements]]
+        :type layout:                                List[List[Element]] | Tuple[Tuple[Element]]
         :param default_element_size:                 size in characters (wide) and rows (high) for all elements in this window
         :type default_element_size:                  (int, int) - (width, height)
         :param default_button_element_size:          (width, height) size in characters (wide) and rows (high) for all Button elements in this window
@@ -8839,14 +8843,14 @@ class Window:
             try:
                 iter(row)
             except TypeError:
-                PopupError('Error creating Window layout',
+                _error_popup_with_traceback('Error Creating Window Layout', 'Error creating Window layout',
                            'Your row is not an iterable (e.g. a list)',
                            'Instead of a list, the type found was {}'.format(type(row)),
                            'The offensive row = ',
                            row,
-                           'This item will be stripped from your layout', keep_on_top=True, image=_random_error_emoji())
+                           'This item will be stripped from your layout')
                 continue
-            self.AddRow(*row)
+            self.add_row(*row)
 
     def layout(self, rows):
         """
@@ -8876,7 +8880,7 @@ class Window:
                                   font=self.titlebar_font)]] + rows
         else:
             new_rows = rows
-        self.AddRows(new_rows)
+        self.add_rows(new_rows)
         self._BuildKeyDict()
 
         if self._has_custom_titlebar_element():
@@ -9693,6 +9697,22 @@ class Window:
 
         except:
             pass
+
+
+    def move_to_center(self):
+        """
+        Recenter your window after it's been moved or the size changed.
+
+        This is a conveinence method. There are no tkinter calls involved, only pure PySimpleGUI API calls.
+        """
+        if not self._is_window_created('tried Window.move_to_center'):
+            return
+        screen_width, screen_height = self.get_screen_dimensions()
+        win_width, win_height = self.size
+        x, y = (screen_width - win_width)//2, (screen_height - win_height)//2
+        self.move(x, y)
+
+
 
     def minimize(self):
         """
@@ -22210,6 +22230,7 @@ def _copy_files_from_github():
 
     window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
 
+    window.disable_debugger()
 
     cprint('The value of sys.executable = ', sys.executable, c='white on red')
 
