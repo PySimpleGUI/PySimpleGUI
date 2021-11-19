@@ -1862,146 +1862,75 @@ if __name__ == '__main__':
 # Recipe - Save and Load Program Settings
 
 
-Some programs, in particular Desktop Widget like Rainmeter-style prorams, need to retain "state" or some series of settings.
+There is an entire set of API calls now available to you in PySimpleGUI to help with "settings".
 
-This program is a tad large for a Cookbook, but it's a commmon enough feature to go ahead and include.  Besides, it may give you some ideas.
+Please check out the demo programs as there are numerous demos that have calls to the settings APIs.
 
-The idea here is that your program's settings are stored in a dictionary.  This dictionary is then written to disk and loaded from disk.
+There is also a [section in the main documentation](https://pysimplegui.readthedocs.io/en/latest/#user-settings-api) about these APIs.   They are detailed in the call reference as well.
 
-One type of program where this kind of feature is a requirement is when yuou make "rainmeter" tyle Desktop Widgets.  These little programs almost always need to store some kind of state.... everything from the transprency of the widget to the zip code your program uses to look up the weather.
+The basics are that in your layout or before your layout, you'll read your settings.  If your program changes any settings, they will immediately be saved to your settings file.  You never have to worry about loading or saving the settings file.  It happens automatically.  Just start calling the get and set calls if using the "function interface".
 
-The architecture is quite simple.  You keep your settings ina dictionary.  Your GUI settings window modifies the dictionary and eventually it's written to disk so that the next time you run the probgram you don't have to set up everyihng that's been saved previously.
+If you do not set a filename, then the name of your .py or .pyw file will be used.  Beware, however, that turning your program into an EXE can impact the settings file as your filename won't look the same to the Python code.  If you're going to turn your code into an EXE, then it's best to explicitly set the filename.
 
-The package used to save / load that data is the JSON package.  It makes writing and reading Python dictionaries downright trivial.  I use it as a simplified database.  You can also hand edit these files easily.
-
-The portions of this Recipe you'll need to modify to integrate into your code will be:
-
-* the default settings at the top
-* the mapping table to/from settings keys to element keys
-* the settings filename
-* the settings window
-* replace the "main" program with yours
-
-
-The simple main program is there to trigger the change settings event:
-
-![image](https://user-images.githubusercontent.com/46163555/78509070-61832200-7759-11ea-9b3e-a36a3faadbcb.png)
-
-
-The more important window in this program is the settings window
-
-![image](https://user-images.githubusercontent.com/46163555/78509043-34367400-7759-11ea-99fa-a7b66a58ef8f.png)
-
-You'll be converting back and forth between the settings file contents and the values that come out of reading the settings GUI window.
-
-Notice how creation of the window is done is a separate function in this Recipe so that you get a "fresh" layout every time the window is created. It's critical that you do not try to re-use elements.
-
-If you're considering allowing the user to change your program's theme, then this is an excellent way to do that.  All that has to be done is to close your window when a new theme is chosen.  
-
+This statement sets the filename.  Note that the path is not indicated in this example.  PySimpleGUI will store all the settings in the default settings folder if you don't specify one.  
 
 ```python
-
-
-import PySimpleGUI as sg
-from json import (load as jsonload, dump as jsondump)
-from os import path
-
-"""
-    A simple "settings" implementation.  Load/Edit/Save settings for your programs
-    Uses json file format which makes it trivial to integrate into a Python program.  If you can
-    put your data into a dictionary, you can save it as a settings file.
-    
-    Note that it attempts to use a lookup dictionary to convert from the settings file to keys used in 
-    your settings window.  Some element's "update" methods may not work correctly for some elements.
-    
-    Copyright 2020 PySimpleGUI.com
-    Licensed under LGPL-3
-"""
-
-SETTINGS_FILE = path.join(path.dirname(__file__), r'settings_file.cfg')
-DEFAULT_SETTINGS = {'max_users': 10, 'user_data_folder': None , 'theme': sg.theme(), 'zipcode' : '94102'}
-# "Map" from the settings dictionary keys to the window's element keys
-SETTINGS_KEYS_TO_ELEMENT_KEYS = {'max_users': '-MAX USERS-', 'user_data_folder': '-USER FOLDER-' , 'theme': '-THEME-', 'zipcode' : '-ZIPCODE-'}
-
-##################### Load/Save Settings File #####################
-def load_settings(settings_file, default_settings):
-    try:
-        with open(settings_file, 'r') as f:
-            settings = jsonload(f)
-    except Exception as e:
-        sg.popup_quick_message(f'exception {e}', 'No settings file found... will create one for you', keep_on_top=True, background_color='red', text_color='white')
-        settings = default_settings
-        save_settings(settings_file, settings, None)
-    return settings
-
-
-def save_settings(settings_file, settings, values):
-    if values:      # if there are stuff specified by another window, fill in those values
-        for key in SETTINGS_KEYS_TO_ELEMENT_KEYS:  # update window with the values read from settings file
-            try:
-                settings[key] = values[SETTINGS_KEYS_TO_ELEMENT_KEYS[key]]
-            except Exception as e:
-                print(f'Problem updating settings from window values. Key = {key}')
-
-    with open(settings_file, 'w') as f:
-        jsondump(settings, f)
-
-    sg.popup('Settings saved')
-
-##################### Make a settings window #####################
-def create_settings_window(settings):
-    sg.theme(settings['theme'])
-
-    def TextLabel(text): return sg.Text(text+':', justification='r', size=(15,1))
-
-    layout = [  [sg.Text('Settings', font='Any 15')],
-                [TextLabel('Max Users'), sg.Input(key='-MAX USERS-')],
-                [TextLabel('User Folder'),sg.Input(key='-USER FOLDER-'), sg.FolderBrowse(target='-USER FOLDER-')],
-                [TextLabel('Zipcode'),sg.Input(key='-ZIPCODE-')],
-                [TextLabel('Theme'),sg.Combo(sg.theme_list(), size=(20, 20), key='-THEME-')],
-                [sg.Button('Save'), sg.Button('Exit')]  ]
-
-    window = sg.Window('Settings', layout, keep_on_top=True, finalize=True)
-
-    for key in SETTINGS_KEYS_TO_ELEMENT_KEYS:   # update window with the values read from settings file
-        try:
-            window[SETTINGS_KEYS_TO_ELEMENT_KEYS[key]].update(value=settings[key])
-        except Exception as e:
-            print(f'Problem updating PySimpleGUI window from settings. Key = {key}')
-
-    return window
-
-##################### Main Program Window & Event Loop #####################
-def create_main_window(settings):
-    sg.theme(settings['theme'])
-
-    layout = [[sg.T('This is my main application')],
-              [sg.T('Add your primary window stuff in here')],
-              [sg.B('Ok'), sg.B('Exit'), sg.B('Change Settings')]]
-
-    return sg.Window('Main Application', layout)
-
-
-def main():
-    window, settings = None, load_settings(SETTINGS_FILE, DEFAULT_SETTINGS )
-
-    while True:             # Event Loop
-        if window is None:
-            window = create_main_window(settings)
-
-        event, values = window.read()
-        if event in (sg.WIN_CLOSED, 'Exit'):
-            break
-        if event == 'Change Settings':
-            event, values = create_settings_window(settings).read(close=True)
-            if event == 'Save':
-                window.close()
-                window = None
-                save_settings(SETTINGS_FILE, settings, values)
-    window.close()
-main()
-
+sg.user_settings_filename(filename='DaysUntil.json')
 ```
+
+Reading a setting can be as easy as this call:
+
+```python
+theme = sg.user_settings_get_entry('-theme-', 'Dark Gray 13')
+```
+
+The first parm is the "key" and the second is the default value if no setting is found.
+
+Saving a setting can be done with this call:
+
+```python
+sg.user_settings_set_entry('-theme-', my_new_theme)
+```
+
+Take a look at the main documentation for the Object interface if you would prefer it over the function based interface.  These API calls are used in any demo program that has settings and for all PySimpleGUI projects that have settings.  They're super SIMPLE to use and work well.
+
+## A Simple Save Filename Example
+
+```python
+import PySimpleGUI as sg
+
+def save_previous_filename_demo():
+    """
+    Saving the previously selected filename....
+    A demo of one of the likely most popular use of user settings
+    * Use previous input as default for Input
+    * When a new filename is chosen, write the filename to user settings
+    """
+
+    # Notice that the Input element has a default value given (first parameter) that is read from the user settings
+    layout = [[sg.Text('Enter a filename:')],
+              [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse()],
+              [sg.B('Save'), sg.B('Exit Without Saving', key='Exit'), sg.T('(or click X to close without saving)')]]
+
+    window = sg.Window('Filename Example', layout)
+
+    while True:
+        event, values = window.read()
+        if event in (sg.WINDOW_CLOSED, 'Exit'):
+            break
+        elif event == 'Save':
+            sg.user_settings_set_entry('-filename-', values['-IN-'])
+
+    window.close()
+
+
+if __name__ == '__main__':
+    sg.user_settings_filename(path='.')  # Set the location for the settings file
+    # Run a couple of demo windows
+    save_previous_filename_demo()
+```
+
+
 
 ----------
 
