@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.3 Unreleased"
+version = __version__ = "4.55.1.4 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -13,6 +13,8 @@ _change_log = """
         Added Window.move_to_center - moves a window to the center of the screen. Good for when your window changes size or you want to recenter it
         Disable debugger when installing from github
         Better error reporting when a problem with the layout detected
+    4.55.1.4
+        Removed import of site and now get the information from os.path.dirname(sys.executable).  I like simpler!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -183,7 +185,6 @@ from urllib import request
 import os
 import sys
 import re
-import site
 import tempfile
 import ctypes
 import platform
@@ -6102,15 +6103,27 @@ class Sizegrip(Element):
         The color will match the theme's background color.
     """
 
-    def __init__(self, background_color=None, key=None):
+    def __init__(self, background_color=None, pad=None, p=(0,0), key=None, k=None):
         """
-
+        Sizegrip Element
         :param background_color: color to use for the background of the grip
         :type background_color:  str
+        :param pad:   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:    str | int | tuple | object
+        :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:      str | int | tuple | object
         """
-        bg = background_color if background_color is not None else theme_background_color()
 
-        super().__init__(ELEM_TYPE_SIZEGRIP, background_color=bg,key=key)
+        bg = background_color if background_color is not None else theme_background_color()
+        pad = pad if pad is not None else p
+        key = key if key is not None else k
+
+
+        super().__init__(ELEM_TYPE_SIZEGRIP, background_color=bg,key=key, pad=pad)
 
 
 SGrip = Sizegrip
@@ -15296,7 +15309,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
 
-                size_grip.pack(side=tk.BOTTOM, anchor='se', padx=0, pady=0, fill=tk.X, expand=True)
+                size_grip.pack(side=tk.BOTTOM, anchor='se', padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
                 # tricky part of sizegrip... it shouldn't cause the row to expand, but should expand and should add X axis if
                 # not already filling in that direction.  Otherwise, leaves things alone!
                 # row_should_expand = True
@@ -22255,21 +22268,15 @@ def _copy_files_from_github():
     # cleanup and remove files
     temp_dir.cleanup()
 
-    # return metadata
-    try:
-        mod_path = site.getsitepackages()[0]
-    except IndexError:
-        mod_path = ''
 
-    return package_version, mod_path or ''
+    return package_version
 
 
 def _upgrade_from_github():
-    mod_version, mod_path = _copy_files_from_github()
+    mod_version = _copy_files_from_github()
 
-    popup("*** SUCCESS ***", "PySimpleGUI", mod_version,
-          "successfully installed in ", mod_path, "files copied: ",
-          "PySimpleGUI.py", keep_on_top=True, background_color='red',
+    popup("*** SUCCESS ***", "PySimpleGUI.py installed version:", mod_version,
+          "For python located at:", os.path.dirname(sys.executable), keep_on_top=True, background_color='red',
           text_color='white')
 
 
