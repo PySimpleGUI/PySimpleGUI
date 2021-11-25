@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.4 Unreleased"
+version = __version__ = "4.55.1.5 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -15,6 +15,9 @@ _change_log = """
         Better error reporting when a problem with the layout detected
     4.55.1.4
         Removed import of site and now get the information from os.path.dirname(sys.executable).  I like simpler!
+    4.55.1.5
+        Combo - added parameters to control the colors on the button used to display the items. Parms are button_background_color and button_arrow_color
+            Default values continue to be the same the theme's button color if nothing is set.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1764,54 +1767,59 @@ class Combo(Element):
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
     """
 
-    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False,
-                 tooltip=None, readonly=False, font=None, visible=True, metadata=None):
+    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, button_background_color=None, button_arrow_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False, tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
-        :param values:           values to choose. While displayed as text, the items returned are what the caller supplied, not text
-        :type values:            List[Any] or Tuple[Any]
-        :param default_value:    Choice to be displayed as initial value. Must match one of values variable contents
-        :type default_value:     (Any)
-        :param size:             width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list. If an Int is passed rather than a tuple, then height is auto-set to 1 and width is value of the int
-        :type size:              (int, int)  | (None, None) | int
-        :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int)  | (None, None) | int
-        :param auto_size_text:   True if element should be the same size as the contents
-        :type auto_size_text:    (bool)
-        :param background_color: color of background
-        :type background_color:  (str)
-        :param text_color:       color of the text
-        :type text_color:        (str)
-        :param bind_return_key:  If True, then the return key will cause a the Combo to generate an event
-        :type bind_return_key:   (bool)
-        :param change_submits:   DEPRICATED DO NOT USE. Use `enable_events` instead
-        :type change_submits:    (bool)
-        :param enable_events:    Turns on the element specific events. Combo event is when a choice is made
-        :type enable_events:     (bool)
-        :param disabled:         set disable state for element
-        :type disabled:          (bool)
-        :param key:              Used with window.find_element and with return values to uniquely identify this element
-        :type key:               str | int | tuple | object
-        :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                 str | int | tuple | object
-        :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:          (bool)
-        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:          (bool)        :param tooltip:          text that will appear when mouse hovers over this element
-        :type tooltip:           (str)
-        :param readonly:         make element readonly (user can't change). True means user cannot change
-        :type readonly:          (bool)
-        :param font:             specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              (str or (str, int[, str]) or None)
-        :param visible:          set visibility state of the element
-        :type visible:           (bool)
-        :param metadata:         User metadata that can be set to ANYTHING
-        :type metadata:          (Any)
+        :param values:                  values to choose. While displayed as text, the items returned are what the caller supplied, not text
+        :type values:                   List[Any] or Tuple[Any]
+        :param default_value:           Choice to be displayed as initial value. Must match one of values variable contents
+        :type default_value:            (Any)
+        :param size:                    width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list. If an Int is passed rather than a tuple, then height is auto-set to 1 and width is value of the int
+        :type size:                     (int, int)  | (None, None) | int
+        :param s:                       Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                        (int, int)  | (None, None) | int
+        :param auto_size_text:          True if element should be the same size as the contents
+        :type auto_size_text:           (bool)
+        :param background_color:        color of background
+        :type background_color:         (str)
+        :param text_color:              color of the text
+        :type text_color:               (str)
+        :param button_background_color: The color of the background of the button on the combo box
+        :type button_background_color:  (str)
+        :param button_arrow_color:      The color of the arrow on the button on the combo box
+        :type button_arrow_color:       (str)
+        :param bind_return_key:         If True, then the return key will cause a the Combo to generate an event
+        :type bind_return_key:          (bool)
+        :param change_submits:          DEPRICATED DO NOT USE. Use `enable_events` instead
+        :type change_submits:           (bool)
+        :param enable_events:           Turns on the element specific events. Combo event is when a choice is made
+        :type enable_events:            (bool)
+        :param disabled:                set disable state for element
+        :type disabled:                 (bool)
+        :param key:                     Used with window.find_element and with return values to uniquely identify this element
+        :type key:                      str | int | tuple | object
+        :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                        str | int | tuple | object
+        :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param expand_x:                If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                 (bool)
+        :param expand_y:                If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                 (bool)
+        :param tooltip:                 text that will appear when mouse hovers over this element
+        :type tooltip:                  (str)
+        :param readonly:                make element readonly (user can't change). True means user cannot change
+        :type readonly:                 (bool)
+        :param font:                    specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                     (str or (str, int[, str]) or None)
+        :param visible:                 set visibility state of the element
+        :type visible:                  (bool)
+        :param metadata:                User metadata that can be set to ANYTHING
+        :type metadata:                 (Any)
         """
+
+
         self.Values = values
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits or enable_events
@@ -1826,6 +1834,15 @@ class Combo(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+        if button_background_color is None:
+            self.button_background_color = theme_button_color()[1]
+        else:
+            self.button_background_color = button_background_color
+        if button_arrow_color is None:
+            self.button_arrow_color = theme_button_color()[0]
+        else:
+            self.button_arrow_color = button_arrow_color
+
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -2009,6 +2026,7 @@ class OptionMenu(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -14225,7 +14243,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  COMBO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
-                element = element  # type: InputCombo
+                element = element  # type: Combo
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
                 if auto_size_text is False:
                     width = element_size[0]
@@ -14233,75 +14251,42 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     width = max_line_len + 1
                 element.TKStringVar = tk.StringVar()
                 style_name = _make_ttk_style_name('.TCombobox', element)
-                # style_name = 'TCombobox'
-                s = ttk.Style()
-                if _valid_theme(s, toplevel_form.TtkTheme):
-                    s.theme_use(toplevel_form.TtkTheme)
-                # s.theme_use('default')
 
-                if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                    # Creates 1 style per Text Color/ Background Color combination
-                    # style_name = str(element.Key) + '.TCombobox'
+                combostyle = ttk.Style()
+                element.ttk_style = combostyle
+                if _valid_theme(combostyle, toplevel_form.TtkTheme):
+                    combostyle.theme_use(toplevel_form.TtkTheme)
 
-                    combostyle = ttk.Style()
-                    if _valid_theme(combostyle, toplevel_form.TtkTheme):
-                        combostyle.theme_use(toplevel_form.TtkTheme)
-
-                    # Creates a unique name for each field element(Sure there is a better way to do this)
-                    # unique_field = str(element.Key) + '.TCombobox.field'
-                    unique_field = _make_ttk_style_name('.TCombobox.field', element)
+                # Creates a unique name for each field element(Sure there is a better way to do this)
+                unique_field = _make_ttk_style_name('.TCombobox.field', element)
 
 
-                    # Clones over the TCombobox.field element from the "alt" theme.
-                    # This is what will allow us to change the background color without altering the whole programs theme
+                # Set individual widget options
+                try:
+                    if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                        combostyle.configure(style_name, foreground=element.TextColor)
+                        combostyle.configure(style_name, selectforeground=element.TextColor)
+                        combostyle.configure(style_name, insertcolor=element.TextColor)
+                    if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                        combostyle.configure(style_name, selectbackground=element.BackgroundColor)
+                        combostyle.map(style_name, fieldbackground=[('readonly', element.BackgroundColor)])
+                        combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
 
-                    # try:        # if this element is in a window that's shown TWICE, will get an error here, so skip error
-                    #     combostyle.element_create(unique_field, "from", "alt")
-                    # except:
-                    #     pass
-
-                    # Create widget layout using cloned "alt" field
-                    # combostyle.layout(style_name, [
-                    #     (unique_field, {'children': [('Combobox.downarrow', {'side': 'right', 'sticky': 'ns'}),
-                    #                                  ('Combobox.padding',
-                    #                                   {'children': [('Combobox.focus',
-                    #                                                  {'children': [('Combobox.textarea',
-                    #                                                                 {'sticky': 'nswe'})],
-                    #                                                   'expand': '1',
-                    #                                                   'sticky': 'nswe'})],
-                    #                                    'expand': '1',
-                    #                                    'sticky': 'nswe'})],
-                    #                     'sticky': 'nswe'})])
-
-                    # Copy default TCombobox settings
-                    # Getting an error on this line of code
-                    # combostyle.configure(style_name, *combostyle.configure("TCombobox"))
-
-                    # Set individual widget options
-                    combostyle.configure(style_name, foreground=element.TextColor)
-                    combostyle.configure(style_name, selectbackground=element.BackgroundColor)
-                    combostyle.map(style_name, fieldbackground=[('readonly', element.BackgroundColor)])
-                    combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
-                    combostyle.configure(style_name, selectforeground=element.TextColor)
-                    combostyle.configure(style_name, insertcolor=element.TextColor)
-
-                    try:
-                        combostyle.configure(style_name, arrowcolor=theme_button_color()[0])
-                        combostyle.configure(style_name, background=theme_button_color()[1])
-                    except Exception as e:
-                        _error_popup_with_traceback('Combo Element error {}'.format(e),
-                                                    'Combo element key: {}'.format(element.Key),
-                                                    'The theme button color is used to make the arrows. theme_button_color= {}'.format(theme_button_color()),
-                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
-                        # print('* Problem setting combobox button color *', e)
+                    if element.button_arrow_color not in (None, COLOR_SYSTEM_DEFAULT):
+                        combostyle.configure(style_name, arrowcolor=element.button_arrow_color)
+                    if element.button_background_color not in (None, COLOR_SYSTEM_DEFAULT):
+                        combostyle.configure(style_name, background=element.button_background_color)
+                except Exception as e:
+                    _error_popup_with_traceback('Combo Element error {}'.format(e),
+                                                'Combo element key: {}'.format(element.Key),
+                                                'One of your colors is bad. Check the text, background, button background and button arrow colors',
+                                                "Parent Window's Title: {}".format(toplevel_form.Title))
 
                 # Strange code that is needed to set the font for the drop-down list
                 element._newfont = tkinter.font.Font(font=font)
                 tk_row_frame.option_add("*TCombobox*Listbox*Font", element._newfont)
 
-                element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width,
-                                                                textvariable=element.TKStringVar, font=font,
-                                                                style=style_name)
+                element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
 
                 # Chr0nic
                 element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
@@ -15096,6 +15081,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 style_name = _make_ttk_style_name( '.customtable.Treeview', element)
 
                 table_style = ttk.Style()
+                element.ttk_style = table_style
 
                 table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
