@@ -3496,9 +3496,61 @@ And the window it creates looks like this:
 
 # Elements
 
-You will find information on Elements and all other classes and functions are located near the end of this manual.  They are in 1 large section of the readme, in alphabetical order for easy lookups.  This section's discussion of Elements is meant to teach you how they work.  The other section has detailed call signatures and parameter definitions.
+You will find information on Elements and all other classes and functions are located in the Call Reference Tab of the documentation.
 
-"Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.
+"Elements" are the building blocks used to create windows.  Some GUI APIs use the term "Widget" to describe these graphic elements.  So that it's clear when a PySimpleGUI *Element* is being referenced versus an underlying GUI Framework's *Widget*.  PySimpleGUI Elements map to a GUI Framework Widget, usually in a 1-to-1 manner.  For example, a Text Element is implemented in tkinter using a Label Widget.
+
+## Table of Elements in Tkinter Port
+
+Each port of PySimpleGUI has a core set of Elements as well as port-specific elements.  Some port-specific elements include the Dial element in the Qt port, and the Pane element in the tkinter port.
+
+| Element Name        | Aliases                        | tkinter Widget | Description               |
+| :------------------ | :----------------------------- | :------------- | :------------------------ |
+| Text                | T, Txt                         | tk.Label       | One or more lines of Text |
+| Input               | I, In, InputText               | tk.Entry       | Single line text input    |
+| Combo               | DD, Drop, DropDown, InputCombo |                |                           |
+| OptionMenu          | InputOptionMenu                |                |                           |
+| Multiline           | ML, MLine                      |                |                           |
+| Output              |                                |                |                           |
+| Radio               | R, Rad                         |                |                           |
+| Checkbox            | CB, CBox, Check                |                |                           |
+| Spin                | Sp                             |                |                           |
+| Button              | B, Btn                         |                |                           |
+| Image               | Im                             |                |                           |
+| Canvas              |                                |                |                           |
+| Column              | Col                            |                |                           |
+| Frame               | Fr                             |                |                           |
+| Tab                 |                                |                |                           |
+| TabGroup            |                                |                |                           |
+| Pane                |                                |                |                           |
+| Graph               | G                              |                |                           |
+| Slider              | Sl                             |                |                           |
+| Listbox             | LB, LBox                       |                |                           |
+| Menu                | MenuBar, Menubar               |                |                           |
+| MenubarCustom       |                                |                |                           |
+| ButtonMenu          | BM, BMenu                      |                |                           |
+| Titlebar            |                                |                |                           |
+| ProgressBar         | PBar, Prog, Progress           |                |                           |
+| Table               |                                |                |                           |
+| Tree                |                                |                |                           |
+| VerticalSeparator   | VSep, VSeparator               |                |                           |
+| HorizontalSeparator | HSep, HSeparator               |                |                           |
+| StatusBar           | SBar                           |                |                           |
+| Sizegrip            | SGrip                          |                |                           |
+| Push                | P, Stretch                     |                |                           |
+| VPush               | VP, VStretch                   |                |                           |
+| Sizer               |                                |                |                           |
+
+## Layout Helper Functions
+
+Your Window's layout is composed of lists of Elements.  In addition to elements, these Layout Help Functions may also be present in a layout definition
+
+| Layout Helper | Description                                                                                                                               |
+| :------------ | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| pin           | "Pins" an element to a location in a layout. If element transitions from invisible to visible, pin ensures element is in correct location |
+| vtop          | Vertically align element or row of elements to the top of the row                                                                         |
+| vbottom       | Vertically align element or row of elements to the bottom of the row                                                                      |
+| vcenter       | Vertically align element or row of elements to the center of the row                                                                      |
 
 - Text
 - Single Line Input
@@ -3510,29 +3562,6 @@ You will find information on Elements and all other classes and functions are lo
 	- Read window
 	- Close window ("Button" & all shortcut buttons)
 	- Realtime
-- Checkboxes
-- Radio Buttons
-- Listbox
-- Slider
-- Multi-line Text Input/Output
-- Multi-line Text Output (not on tkinter version)
-- Scroll-able Output
-- Vertical Separator
-- Progress Bar
-- Option Menu
-- Menu
-- ButtonMenu
-- Frame
-- Column
-- Graph
-- Image
-- Table
-- Tree
-- Tab, TabGroup
-- StatusBar
-- Pane
-- Stretch (Qt only)
-- Sizer (plain PySimpleGUI only)
 
 ## Keys
 
@@ -5568,29 +5597,159 @@ You can also set the cursor for the Window as a whole, including the margins and
 
 ## Valid Cursor Strings
 
- `X_cursor, arrow, based_arrow_down, based_arrow_up, boat, bogosity, bottom_left_corner, bottom_right_corner, bottom_side, bottom_tee, box_spiral, center_ptr, circle, clock, coffee_mug, cross, cross_reverse, crosshair, diamond_cross, dot, dotbox, double_arrow, draft_large, draft_small, draped_box, exchange, fleur, gobbler, gumby, hand1, hand2, heart, icon, iron_cross, left_ptr, left_side, left_tee, leftbutton, ll_angle, lr_angle, man, middlebutton, mouse, pencil, pirate, plus, question_arrow, right_ptr, right_side, right_tee, rightbutton, rtl_logo, sailboat, sb_down_arrow, sb_h_double_arrow, sb_left_arrow, sb_right_arrow, sb_up_arrow, sb_v_double_arrow, shuttle, sizing, spider, spraycan, star, target, tcross, top_left_arrow, top_left_corner, top_right_corner, top_side, top_tee, trek, ul_angle, umbrella, ur_angle, watch, xterm`
+```
+X_cursor
+arrow
+based_arrow_down
+based_arrow_up
+boat
+bogosity
+bottom_left_corner
+bottom_right_corner
+bottom_side
+bottom_tee
+box_spiral
+center_ptr
+circle
+clock
+coffee_mug
+cross
+cross_reverse
+crosshair
+diamond_cross
+dot
+dotbox
+double_arrow
+draft_large
+draft_small
+draped_box
+exchange
+fleur
+gobbler
+gumby
+hand1
+hand2
+heart
+icon
+iron_cross
+left_ptr
+left_side
+left_tee
+leftbutton
+ll_angle
+lr_angle
+man
+middlebutton
+mouse
+pencil
+pirate
+plus
+question_arrow
+right_ptr
+right_side
+right_tee
+rightbutton
+rtl_logo
+sailboat
+sb_down_arrow
+sb_h_double_arrow
+sb_left_arrow
+sb_right_arrow
+sb_up_arrow
+sb_v_double_arrow
+shuttle
+sizing
+spider
+spraycan
+star
+target
+tcross
+top_left_arrow
+top_left_corner
+top_right_corner
+top_side
+top_tee
+trek
+ul_angle
+umbrella
+ur_angle
+watch
+xterm
+
+```
 
 ## No Cursor
 
-To specify no cursor should be shown, the cursor `'no'` can be used on some platforms
+If you want your mouse cursor to be invisible, then use the **string** `"none"` and your element or window will not show any cursor.
 
 ## Windows OS Specific
 
 One windows, these cursors map to native Windows cursors:
 
-`arrow, center_ptr, crosshair, fleur, ibeam, icon, sb_h_double_arrow, sb_v_double_arrow, watch, xterm`
+```
+arrow
+center_ptr
+crosshair
+fleur
+ibeam
+icon
+sb_h_double_arrow
+sb_v_double_arrow
+watch
+xterm
+```
 
-And these are also available:
+These are also available:
 
-`no, starting, size, size_ne_sw, size_ns, size_nw_se, size_we, uparrow, wait`
+```
+no
+starting
+size
+size_ne_sw
+size_ns
+size_nw_se
+size_we
+uparrow
+wait
+```
 
 ## Mac OS Specific
 
-`arrow, cross, crosshair, ibeam, plus, watch, xterm`
+```
+arrow
+cross
+crosshair
+ibeam
+plus
+watch
+xterm
+```
 
-And these additional native cursors are available for the Mac
+These additional native cursors are available for the Mac
 
-`copyarrow, aliasarrow, contextualmenuarrow, text, cross-hair, closedhand, openhand, pointinghand, resizeleft, resizeright, resizeleftright, resizeup, resizedown, resizeupdown, none, notallowed, poof, countinguphand, countingdownhand, countingupanddownhand, spinning`
+```
+copyarrow
+aliasarrow
+contextualmenuarrow
+text
+cross-hair
+closedhand
+openhand
+pointinghand
+resizeleft
+resizeright
+resizeleftright
+resizeup
+resizedown
+resizeupdown
+none
+notallowed
+poof
+countinguphand
+countingdownhand
+countingupanddownhand
+spinning
+```
 
 # Keyboard & Mouse Capture
 

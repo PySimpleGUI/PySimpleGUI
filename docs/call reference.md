@@ -1850,6 +1850,8 @@ Combo(values,
     auto_size_text = None,
     background_color = None,
     text_color = None,
+    button_background_color = None,
+    button_arrow_color = None,
     bind_return_key = False,
     change_submits = False,
     enable_events = False,
@@ -1871,27 +1873,30 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     List[Any] or Tuple[Any]                                     |      values      | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
-|                                               Any                                               |  default_value   | Choice to be displayed as initial value. Must match one of values variable contents |
-|                               (int, int)  or (None, None) or int                                |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list. If an Int is passed rather than a tuple, then height is auto-set to 1 and width is value of the int |
-|                               (int, int)  or (None, None) or int                                |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                              bool                                               |  auto_size_text  | True if element should be the same size as the contents |
-|                                               str                                               | background_color | color of background |
-|                                               str                                               |    text_color    | color of the text |
-|                                              bool                                               | bind_return_key  | If True, then the return key will cause a the Combo to generate an event |
-|                                              bool                                               |  change_submits  | DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                              bool                                               |  enable_events   | Turns on the element specific events. Combo event is when a choice is made |
-|                                              bool                                               |     disabled     | set disable state for element |
-|                                  str or int or tuple or object                                  |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                                  str or int or tuple or object                                  |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|         (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int         |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-|         (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int         |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                              bool                                               |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-| bool)        :param tooltip:          text that will appear when mouse hovers over this element |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                              bool                                               |     readonly     | make element readonly (user can't change). True means user cannot change |
-|                               (str or (str, int[, str]) or None)                                |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                              bool                                               |     visible      | set visibility state of the element |
-|                                               Any                                               |     metadata     | User metadata that can be set to ANYTHING |
+|                            List[Any] or Tuple[Any]                             |         values          | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
+|                                      Any                                       |      default_value      | Choice to be displayed as initial value. Must match one of values variable contents |
+|                       (int, int)  or (None, None) or int                       |          size           | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list. If an Int is passed rather than a tuple, then height is auto-set to 1 and width is value of the int |
+|                       (int, int)  or (None, None) or int                       |            s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |     auto_size_text      | True if element should be the same size as the contents |
+|                                      str                                       |    background_color     | color of background |
+|                                      str                                       |       text_color        | color of the text |
+|                                      str                                       | button_background_color | The color of the background of the button on the combo box |
+|                                      str                                       |   button_arrow_color    | The color of the arrow on the button on the combo box |
+|                                      bool                                      |     bind_return_key     | If True, then the return key will cause a the Combo to generate an event |
+|                                      bool                                      |     change_submits      | DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                      bool                                      |      enable_events      | Turns on the element specific events. Combo event is when a choice is made |
+|                                      bool                                      |        disabled         | set disable state for element |
+|                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
+|                                      str                                       |         tooltip         | text that will appear when mouse hovers over this element |
+|                                      bool                                      |        readonly         | make element readonly (user can't change). True means user cannot change |
+|                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |         visible         | set visibility state of the element |
+|                                      Any                                       |        metadata         | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -6632,7 +6637,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                  List[Column]                                  |    pane_list     | Must be a list of Column Elements. Each Column supplied becomes one pane that's shown |
+|                         List[Column] or Tuple[Column]                          |    pane_list     | Must be a list of Column Elements. Each Column supplied becomes one pane that's shown |
 |                                      str                                       | background_color | color of background |
 |                                   (int, int)                                   |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
 |                          (int, int)  or (None, None)                           |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
@@ -7683,15 +7688,25 @@ Parameter Descriptions:
         It should be placed on the last row of your window along with any other elements on that row.
         The color will match the theme's background color.
 
+Sizegrip Element
+
 ```
-Sizegrip(background_color = None, key = None)
+Sizegrip(background_color = None,
+    pad = None,
+    p = (0, 0),
+    key = None,
+    k = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | background_color | color to use for the background of the grip |
+|                                      str                                       | background_color | color to use for the background of the grip |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                         str or int or tuple or object                          |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### bind
 
@@ -9733,7 +9748,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                        List[List[str or int or float]]                         |         values          | ??? |
+|                        List[List[str or int or float]]                         |         values          | Your table data represented as a list of rows, with each row representing a row in your table. |
 |                                   List[str]                                    |        headings         | The headings to show on the top line |
 |                                   List[bool]                                   |   visible_column_map    | One entry for each column. False indicates the column is not shown |
 |                                   List[int]                                    |       col_widths        | Number of characters that each column will occupy |
@@ -11195,59 +11210,59 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                    str                    |                title                 | The title that will be displayed in the Titlebar and on the Taskbar |
-|           List[List[Elements]]            |                layout                | The layout for the window. Can also be specified in the Layout method |
-|       (int, int) - (width, height)        |         default_element_size         | size in characters (wide) and rows (high) for all elements in this window |
-|                (int, int)                 |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
-|                   bool                    |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
-|                   bool                    |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|                (int, int)                 |          relative_location           | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                (int, int)                 |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
-|                (int, int)                 |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
-| (int, int or (int, int),(int,int)) or int |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
-|                (int, int)                 |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|             (str, str) or str             |             button_color             | Default button colors for all buttons in the window |
-|    (str or (str, int[, str]) or None)     |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                (str, str)                 |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
-|                    str                    |           background_color           | color of background |
-|                    int                    |             border_depth             | Default border depth (width) for all elements in the window |
-|                   bool                    |              auto_close              | If True, the window will automatically close itself |
-|                    int                    |         auto_close_duration          | Number of seconds to wait before closing the window |
-|              (str or bytes)               |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's |
-|                   bool                    |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
-|                   float                   |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
-|                   bool                    |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
-|                   bool                    |          use_default_focus           | If True will use the default focus algorithm to set the focus to the "Correct" element |
-|       'left' or 'right' or 'center'       |          text_justification          | Default text justification for all Text Elements in window |
-|                   bool                    |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
-|                   bool                    |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
-|                   bool                    |     grab_anywhere_using_control      | If True can use CONTROL key + left mouse mouse to click and drag to move the window. DEFAULT is TRUE. Unlike normal grab anywhere, it works on all elements. |
-|                   bool                    |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
-|                   bool                    |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
-|                   bool                    |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
-|                   bool                    |           disable_minimize           | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
-|      List[List[ List[str] or str ]]       |           right_click_menu           | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                    str                    |          transparent_color           | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
-|                   bool                    |           debugger_enabled           | If True then the internal debugger will be enabled |
-|                    str                    |  right_click_menu_background_color   | Background color for right click menus |
-|                    str                    |     right_click_menu_text_color      | Text color for right click menus |
-|                    str                    | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
-|        (str, str) or str or Tuple         |   right_click_menu_selected_colors   | Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background. |
-|    (str or (str, int[, str]) or None)     |        right_click_menu_font         | Font for right click menus |
-|                   bool                    |       right_click_menu_tearoff       | If True then all right click menus can be torn off |
-|                   bool                    |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
-|                    str                    |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
-|                    str                    |              ttk_theme               | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
-|                   bool                    |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
-|                   bool                    |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
-|                   bool                    |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
-|               (str or None)               |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
-|               (str or None)               |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|    (str or (str, int[, str]) or None)     |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
-|              (bytes or str)               |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
-|                   bool                    |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
-|                   float                   |               scaling                | Apply scaling to the elements in the window. Can be set on a global basis using set_options |
-|                    Any                    |               metadata               | User metadata that can be set to ANYTHING |
+|                     str                     |                title                 | The title that will be displayed in the Titlebar and on the Taskbar |
+| List[List[Element]] or Tuple[Tuple[Element]] |                layout                | The layout for the window. Can also be specified in the Layout method |
+|        (int, int) - (width, height)         |         default_element_size         | size in characters (wide) and rows (high) for all elements in this window |
+|                 (int, int)                  |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
+|                    bool                     |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
+|                    bool                     |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|                 (int, int)                  |          relative_location           | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                 (int, int)                  |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|                 (int, int)                  |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
+|  (int, int or (int, int),(int,int)) or int  |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
+|                 (int, int)                  |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|              (str, str) or str              |             button_color             | Default button colors for all buttons in the window |
+|     (str or (str, int[, str]) or None)      |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                 (str, str)                  |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
+|                     str                     |           background_color           | color of background |
+|                     int                     |             border_depth             | Default border depth (width) for all elements in the window |
+|                    bool                     |              auto_close              | If True, the window will automatically close itself |
+|                     int                     |         auto_close_duration          | Number of seconds to wait before closing the window |
+|               (str or bytes)                |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's |
+|                    bool                     |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
+|                    float                    |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
+|                    bool                     |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
+|                    bool                     |          use_default_focus           | If True will use the default focus algorithm to set the focus to the "Correct" element |
+|        'left' or 'right' or 'center'        |          text_justification          | Default text justification for all Text Elements in window |
+|                    bool                     |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
+|                    bool                     |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                    bool                     |     grab_anywhere_using_control      | If True can use CONTROL key + left mouse mouse to click and drag to move the window. DEFAULT is TRUE. Unlike normal grab anywhere, it works on all elements. |
+|                    bool                     |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
+|                    bool                     |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
+|                    bool                     |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
+|                    bool                     |           disable_minimize           | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
+|       List[List[ List[str] or str ]]        |           right_click_menu           | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                     str                     |          transparent_color           | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
+|                    bool                     |           debugger_enabled           | If True then the internal debugger will be enabled |
+|                     str                     |  right_click_menu_background_color   | Background color for right click menus |
+|                     str                     |     right_click_menu_text_color      | Text color for right click menus |
+|                     str                     | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
+|         (str, str) or str or Tuple          |   right_click_menu_selected_colors   | Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background. |
+|     (str or (str, int[, str]) or None)      |        right_click_menu_font         | Font for right click menus |
+|                    bool                     |       right_click_menu_tearoff       | If True then all right click menus can be torn off |
+|                    bool                     |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
+|                     str                     |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
+|                     str                     |              ttk_theme               | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
+|                    bool                     |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
+|                    bool                     |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
+|                    bool                     |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
+|                (str or None)                |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
+|                (str or None)                |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
+|     (str or (str, int[, str]) or None)      |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|               (bytes or str)                |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                    bool                     |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
+|                    float                    |               scaling                | Apply scaling to the elements in the window. Can be set on a global basis using set_options |
+|                     Any                     |               metadata               | User metadata that can be set to ANYTHING |
 
 ### add_row
 
@@ -17459,7 +17474,8 @@ execute_command_subprocess(command,
     wait = False,
     cwd = None,
     pipe_output = False,
-    merge_stderr_with_stdout = True)
+    merge_stderr_with_stdout = True,
+    stdin = None)
 ```
 
 Parameter Descriptions:
@@ -17472,6 +17488,7 @@ Parameter Descriptions:
 | str  |           cwd            | Working directory to use when executing the subprocess |
 | bool |       pipe_output        | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
 | bool | merge_stderr_with_stdout | If True then output from the subprocess stderr will be merged with stdout. The result is ALL output will be on stdout. |
+| bool |          stdin           | Value passed to the Popen call. Defaults to subprocess.DEVNULL so that the pyinstaller created executable work correctly |
 | (subprocess.Popen) | **RETURN** | Popen object
 
 Runs the editor that was configured in the global settings and opens the file to a specific line number.
