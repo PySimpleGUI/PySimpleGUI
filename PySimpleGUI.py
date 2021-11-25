@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.5 Unreleased"
+version = __version__ = "4.55.1.6 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -18,6 +18,8 @@ _change_log = """
     4.55.1.5
         Combo - added parameters to control the colors on the button used to display the items. Parms are button_background_color and button_arrow_color
             Default values continue to be the same the theme's button color if nothing is set.
+    4.55.1.6
+        Fixed missing docstring item for Table value so that the new documentation will be accurate
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3439,6 +3441,111 @@ class Text(Element):
         except Exception as e:
             print('Error retrieving font information', e)
         return size
+
+    def _print_to_element(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None, append=None):
+        """
+        Print like Python normally prints except route the output to a multiline element and also add colors if desired
+
+        :param multiline_element: The multiline element to be output to
+        :type multiline_element:  (Multiline)
+        :param args:              The arguments to print
+        :type args:               List[Any]
+        :param end:               The end char to use just like print uses
+        :type end:                (str)
+        :param sep:               The separation character like print uses
+        :type sep:                (str)
+        :param text_color:        color of the text
+        :type text_color:         (str)
+        :param background_color:  The background color of the line
+        :type background_color:   (str)
+        :param autoscroll:        If True (the default), the element will scroll to bottom after updating
+        :type autoscroll:         (bool)
+        :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
+        :type font:               str | (str, int)
+        """
+        end_str = str(end) if end is not None else '\n'
+        sep_str = str(sep) if sep is not None else ' '
+
+        outstring = ''
+        num_args = len(args)
+        for i, arg in enumerate(args):
+            outstring += str(arg)
+            if i != num_args - 1:
+                outstring += sep_str
+        outstring += end_str
+        if append:
+            outstring = self.get() + outstring
+
+        self.update(outstring, text_color=text_color, background_color=background_color, font=font)
+
+        try:  # if the element is set to autorefresh, then refresh the parent window
+            if self.AutoRefresh:
+                self.ParentForm.refresh()
+        except:
+            pass
+
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None, c=None, autoscroll=True, append=True):
+        """
+        Print like Python normally prints except route the output to a multiline element and also add colors if desired
+
+        colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+        There are also "aliases" for text_color, background_color and colors (t, b, c)
+        t - An alias for color of the text (makes for shorter calls)
+        b - An alias for the background_color parameter
+        c - (str, str) - "shorthand" way of specifying color. (foreground, backgrouned)
+        c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+        With the aliases it's possible to write the same print but in more compact ways:
+        cprint('This will print white text on red background', c=('white', 'red'))
+        cprint('This will print white text on red background', c='white on red')
+        cprint('This will print white text on red background', text_color='white', background_color='red')
+        cprint('This will print white text on red background', t='white', b='red')
+
+        :param args:             The arguments to print
+        :type args:              (Any)
+        :param end:              The end char to use just like print uses
+        :type end:               (str)
+        :param sep:              The separation character like print uses
+        :type sep:               (str)
+        :param text_color:       The color of the text
+        :type text_color:        (str)
+        :param background_color: The background color of the line
+        :type background_color:  (str)
+        :param justification:    text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
+        :type justification:     (str)
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the args being printed
+        :type font:              (str or (str, int[, str]) or None)
+        :param colors:           Either a tuple or a string that has both the text and background colors. Or just the text color
+        :type colors:            (str) or (str, str)
+        :param t:                Color of the text
+        :type t:                 (str)
+        :param b:                The background color of the line
+        :type b:                 (str)
+        :param c:                Either a tuple or a string that has both the text and background colors or just tex color (same as the color parm)
+        :type c:                 (str) or (str, str)
+        :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
+        :type autoscroll:        (bool)
+        """
+
+        kw_text_color = text_color or t
+        kw_background_color = background_color or b
+        dual_color = colors or c
+        try:
+            if isinstance(dual_color, tuple):
+                kw_text_color = dual_color[0]
+                kw_background_color = dual_color[1]
+            elif isinstance(dual_color, str):
+                if ' on ' in dual_color:  # if has "on" in the string, then have both text and background
+                    kw_text_color = dual_color.split(' on ')[0]
+                    kw_background_color = dual_color.split(' on ')[1]
+                else:  # if no "on" then assume the color string is just the text color
+                    kw_text_color = dual_color
+        except Exception as e:
+            print('* multiline print warning * you messed up with color formatting', e)
+
+        self._print_to_element( *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=autoscroll, font=font, append=append)
+
 
     Get = get
     Update = update
@@ -7678,7 +7785,7 @@ class Table(Element):
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
-        :param values:                  ???
+        :param values:                  Your table data represented as a 2-dimensions table... a list of rows, with each row representing a row in your table.
         :type values:                   List[List[str | int | float]]
         :param headings:                The headings to show on the top line
         :type headings:                 List[str]
