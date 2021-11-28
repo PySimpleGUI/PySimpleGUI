@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.6 Unreleased"
+version = __version__ = "4.55.1.7 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -20,6 +20,11 @@ _change_log = """
             Default values continue to be the same the theme's button color if nothing is set.
     4.55.1.6
         Fixed missing docstring item for Table value so that the new documentation will be accurate
+        (Maybe temporarily) added print to the Text element. Was an easy addition, but is limited in how colors are controlled, scrolling, etc.  May be very short-lived addition.
+    4.55.1.7
+        New Table Element parameter - right_click_selects. Default is False. If True, then will select a row using the right mouse button, but only if
+            zero or one rows are selected. If multiple rows are already selected, then the right click will not change the selection. This feature enables
+            a right-click-menu to be combined with table selection for features such as "delete row" using a right click menu.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7782,7 +7787,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
-                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, bind_return_key=False, pad=None, p=None,
+                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, right_click_selects=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:                  Your table data represented as a 2-dimensions table... a list of rows, with each row representing a row in your table.
@@ -7839,6 +7844,8 @@ class Table(Element):
         :type enable_events:            (bool)
         :param enable_click_events:     Turns on the element click events that will give you (row, col) click data when the table is clicked
         :type enable_click_events:      (bool)
+        :param right_click_selects:     If True, then right clicking a row will select that row if multiple rows are not currently selected
+        :type right_click_selects:      (bool)
         :param bind_return_key:         if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
         :type bind_return_key:          (bool)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
@@ -7892,6 +7899,7 @@ class Table(Element):
         self.StartingRowNumber = 0  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         self.enable_click_events = enable_click_events
+        self.right_click_selects = right_click_selects
         self.last_clicked_position = (None, None)
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
@@ -8045,6 +8053,7 @@ class Table(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+        # popup(obj_to_string_single_obj(event))
         try:
             region = self.Widget.identify('region', event.x, event.y)
             if region == 'heading':
@@ -8072,6 +8081,11 @@ class Table(Element):
         self.ParentForm.TKroot.update()
         # self.TKTreeview.()
         selections = self.TKTreeview.selection()
+        if self.right_click_selects and len(selections) <= 1:
+            if (event.num == 3 and not running_mac()) or (event.num == 2 and running_mac()):
+                if row != -1 and row is not None:
+                    selections = [row+1]
+                    self.TKTreeview.selection_set(selections)
         # print(selections)
         self.SelectedRows = [int(x) - 1 for x in selections]
         # print('The new selected rows = ', self.SelectedRows)
@@ -8082,6 +8096,7 @@ class Table(Element):
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
             _exit_mainloop(self.ParentForm)
+
 
 
     def get(self):
@@ -13786,7 +13801,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                   highlightthickness=0)
                 # ----------------------- PLAIN Column ----------------------
                 else:
-
                     if element.Size != (None, None):
                         element.Widget = element.TKColFrame = TkFixedFrame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
@@ -13803,7 +13817,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         element.Widget = element.TKColFrame = tk.Frame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
-                        if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
+                        if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
 
                 if element.Justification is None:
@@ -15216,6 +15230,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.enable_click_events is True:
                     treeview.bind('<Button-1>', element._table_clicked)
+                if element.right_click_selects:
+                    if running_mac():
+                        treeview.bind('<Button-2>', element._table_clicked)
+                    else:
+                        treeview.bind('<Button-3>', element._table_clicked)
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.BindReturnKey:
                     treeview.bind('<Return>', element._treeview_double_click)
