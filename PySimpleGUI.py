@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.7 Unreleased"
+version = __version__ = "4.55.1.8 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -25,6 +25,12 @@ _change_log = """
         New Table Element parameter - right_click_selects. Default is False. If True, then will select a row using the right mouse button, but only if
             zero or one rows are selected. If multiple rows are already selected, then the right click will not change the selection. This feature enables
             a right-click-menu to be combined with table selection for features such as "delete row" using a right click menu.
+        Fixed bug in Column element - was incorrectly checking background color for None or COLOR_SYSTEM_DEFAULT 
+    4.55.1.8
+        Changed docstring for Table.get_last_clicked_postition to indicate what's returned now. Was not useful for tkinter port until recently when cell clicks added.
+        Better auto-sizing of Columns for Tables.
+            Better sizing of the row number column using the font for the header in the calculation
+            Use the column heading font to help determine if the header will be what determines the width instead of the data in the column
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8113,11 +8119,9 @@ class Table(Element):
 
     def get_last_clicked_position(self):
         """
-        Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
-        edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
-        user when Table was created or Updated.
-
-        :return: the current table values (for now what was originally provided up updated)
+        Returns a tuple with the row and column of the cell that was last clicked.
+        Headers will have a row == -1 and the Row Number Column (if present) will have a column == -1
+        :return: The (row,col) position of the last cell clicked in the table
         :rtype:  (int | None, int | None)
         """
         return self.last_clicked_position
@@ -15168,14 +15172,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
-                    treeview.column(element.RowHeaderText, width=_string_width_in_pixels(font, element.RowHeaderText) + 10, minwidth=10, anchor=anchor,
-                                    stretch=0)
+                    row_number_header_width =_string_width_in_pixels(element.HeaderFont, element.RowHeaderText) + 10
+                    row_number_width = _string_width_in_pixels(font, str(len(element.Values))) + 10
+                    row_number_width = max(row_number_header_width, row_number_width)
+                    treeview.column(element.RowHeaderText, width=row_number_width, minwidth=10, anchor=anchor, stretch=0)
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = max(column_widths[i], len(heading)) * _char_width_in_pixels(font)
+                        width = max(column_widths[i] * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
                     else:
                         try:
                             width = element.ColumnWidths[i] * _char_width_in_pixels(font)
