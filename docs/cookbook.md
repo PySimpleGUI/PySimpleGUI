@@ -3033,17 +3033,17 @@ while True:
     if event == 'EXIT'  or event == sg.WIN_CLOSED:
         break # exit button clicked
     if event == 'script1':
-        sp = sg.execute_command_subprocess('pip', 'list', wait=True)
+        sp = sg.execute_command_subprocess('pip', 'list', wait=False, pipe_output=True)
         print(sg.execute_get_results(sp)[0])
     elif event == 'script2':
         print(f'Running python --version')
         # For this one we need to wait for the subprocess to complete to get the results
-        sp = sg.execute_command_subprocess('python', '--version', wait=True)
+        sp = sg.execute_command_subprocess('python', '--version', wait=False, pipe_output=True)
         print(sg.execute_get_results(sp)[0])
     elif event == 'Run':
         args = values['-IN-'].split(' ')
         print(f'Running {values["-IN-"]} args={args}')
-        sp = sg.execute_command_subprocess(args[0], *args[1:])
+        sp = sg.execute_command_subprocess(args[0], *args[1:], wait=False, pipe_output=True)
         # This will cause the program to wait for the subprocess to finish
         print(sg.execute_get_results(sp)[0])
     elif event == 'Run No Wait':
