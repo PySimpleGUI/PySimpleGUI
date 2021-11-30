@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.8 Unreleased"
+version = __version__ = "4.55.1.9 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -31,6 +31,8 @@ _change_log = """
         Better auto-sizing of Columns for Tables.
             Better sizing of the row number column using the font for the header in the calculation
             Use the column heading font to help determine if the header will be what determines the width instead of the data in the column
+    4.55.1.9
+        Don't print the error message about wm_overrideredirect while hiding the master root if running on a Mac. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15638,7 +15640,8 @@ def StartupTK(window):
         try:
             Window.hidden_master_root.wm_overrideredirect(True)
         except Exception as e:
-            print('* Error performing wm_overrideredirect while hiding the hidden master root*', e)
+            if not running_mac():
+                print('* Error performing wm_overrideredirect while hiding the hidden master root*', e)
         Window.hidden_master_root.withdraw()
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
         root = tk.Toplevel(class_=window.Title)
