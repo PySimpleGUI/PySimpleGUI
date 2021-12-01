@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.9 Unreleased"
+version = __version__ = "4.55.1.10 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -33,6 +33,8 @@ _change_log = """
             Use the column heading font to help determine if the header will be what determines the width instead of the data in the column
     4.55.1.9
         Don't print the error message about wm_overrideredirect while hiding the master root if running on a Mac. 
+    4.55.1.10
+        Fix for Tree Element not setting the row height if none is specified. Needed to set to value based on the font used.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8335,7 +8337,7 @@ class Tree(Element):
         :type key:      str | int | tuple | object
         :param value:   sets the node identified by key to a particular value
         :type value:    (Any)
-        :param text:    sets the node identified by ket to this string
+        :param text:    sets the node identified by key to this string
         :type text:     (str)
         :param icon:    can be either a base64 icon or a filename for the icon
         :type icon:     bytes | str
@@ -15374,6 +15376,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tree_style.configure(style_name, font=font)
                 if element.RowHeight:
                     tree_style.configure(style_name, rowheight=element.RowHeight)
+                else:
+                    tree_style.configure(style_name, rowheight=_char_height_in_pixels(font))
                 treeview.configure(style=style_name)  # IMPORTANT! Be sure and set the style name for this widget
                 element.scrollbar = scrollbar = tk.Scrollbar(element_frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
