@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.10 Unreleased"
+version = __version__ = "4.55.1.11 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -35,6 +35,11 @@ _change_log = """
         Don't print the error message about wm_overrideredirect while hiding the master root if running on a Mac. 
     4.55.1.10
         Fix for Tree Element not setting the row height if none is specified. Needed to set to value based on the font used.
+    4.55.1.11
+        Tree Element
+            * Always left justify the first column. This is how it's always worked. tkinter 8.6.12 changed the behavior of the first col. This changes it back
+            * Better auto-size column. Uses the data as well as the Column header to determine size of column
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15304,10 +15309,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                                    height=height,
                                                                    selectmode=element.SelectMode)
                 treeview = element.TKTreeview
+                max_widths = {}
+                for key, node in element.TreeData.tree_dict.items():
+                    for i, value in enumerate(node.values):
+                        max_width = max_widths.get(i, 0)
+                        if len(str(value)) > max_width:
+                            max_widths[i] = len(str(value))
+
                 for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = min(element.MaxColumnWidth, len(heading) + 1)
+                        max_width = max_widths.get(i, 0)
+                        max_width = max(max_width, len(heading))
+                        width = min(element.MaxColumnWidth, max_width+1)
                     else:
                         try:
                             width = element.ColumnWidths[i]
@@ -15351,7 +15365,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         add_treeview_data(node)
 
                 add_treeview_data(element.TreeData.root_node)
-                treeview.column('#0', width=element.Col0Width * _char_width_in_pixels(font), anchor=anchor)
+                treeview.column('#0', width=element.Col0Width * _char_width_in_pixels(font), anchor=tk.W)
                 # ----- configure colors -----
                 # style_name = str(element.Key) + '.Treeview'
                 style_name = _make_ttk_style_name('.Treeview', element)
