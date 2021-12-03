@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.12 Unreleased"
+version = __version__ = "4.55.1.13 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -42,6 +42,8 @@ _change_log = """
     4.55.1.12
         Table Element - fix case when tables have too many headers, thus not matching the data columns
         Tree element - addition of a heading for the Column 0 (the main column shown in the Tree). Default is '' which is what's shown today.
+    4.55.1.13
+        Graph Element - Experimental addition of parm motion_events - If True then mouse motion over the Graph returns event of key + '+MOVE' or (key, '+MOVE')
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5229,7 +5231,7 @@ class Graph(Element):
     """
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, p=None,
-                 change_submits=False, drag_submits=False, enable_events=False, key=None, k=None, tooltip=None,
+                 change_submits=False, drag_submits=False, enable_events=False, motion_events=False, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, float_values=False, border_width=0, metadata=None):
         """
         :param canvas_size:       size of the canvas area in pixels
@@ -5250,6 +5252,8 @@ class Graph(Element):
         :type drag_submits:       (bool)
         :param enable_events:     If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
         :type enable_events:      (bool)
+        :param motion_events:     If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string)
+        :type motion_events:      (bool)
         :param key:               Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                str | int | tuple | object
         :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -5289,6 +5293,7 @@ class Graph(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+        self.motion_events = motion_events
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -5913,7 +5918,7 @@ class Graph(Element):
         :type event:
         """
 
-        if not self.MouseButtonDown:
+        if not self.MouseButtonDown and not self.motion_events:
             return
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
         self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
@@ -5923,6 +5928,11 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
+        if self.motion_events and not self.MouseButtonDown:
+            if isinstance(self.ParentForm.LastButtonClicked, str):
+                self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+MOVE'
+            else:
+                self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+MOVE')
         _exit_mainloop(self.ParentForm)
 
     BringFigureToFront = bring_figure_to_front
@@ -15197,7 +15207,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.AutoSizeColumns:
                         col_width = column_widths.get(i, len(heading))      # in case more headings than there are columns of data
                         width = max(col_width * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
-                        # width = max(column_widths[i] * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
                     else:
                         try:
                             width = element.ColumnWidths[i] * _char_width_in_pixels(font)
