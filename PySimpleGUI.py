@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.11 Unreleased"
+version = __version__ = "4.55.1.12 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -39,7 +39,9 @@ _change_log = """
         Tree Element
             * Always left justify the first column. This is how it's always worked. tkinter 8.6.12 changed the behavior of the first col. This changes it back
             * Better auto-size column. Uses the data as well as the Column header to determine size of column
-        
+    4.55.1.12
+        Table Element - fix case when tables have too many headers, thus not matching the data columns
+        Tree element - addition of a heading for the Column 0 (the main column shown in the Tree). Default is '' which is what's shown today.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8151,7 +8153,7 @@ class Tree(Element):
     to hold the user's data and pass to the element for display.
     """
 
-    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
+    def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, col0_heading='',
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, num_rows=None,
@@ -8168,6 +8170,8 @@ class Tree(Element):
         :type col_widths:               List[int]
         :param col0_width:              Size of Column 0 which is where the row numbers will be optionally shown
         :type col0_width:               (int)
+        :param col0_heading:            Text to be shown in the header for the left-most column
+        :type col0_heading:             (str)
         :param def_col_width:           default column width
         :type def_col_width:            (int)
         :param auto_size_columns:       if True, the size of a column is determined  using the contents of the column
@@ -8256,6 +8260,7 @@ class Tree(Element):
         self.ShowExpanded = show_expanded
         self.NumRows = num_rows
         self.Col0Width = col0_width
+        self.col0_heading = col0_heading
         self.TKTreeview = None  # type: ttk.Treeview
         self.element_frame = None  # type: tk.Frame
         self.SelectedRows = []
@@ -8499,7 +8504,7 @@ class TreeData(object):
         :type level:  (int)
         """
         return '\n'.join(
-            [str(node.key) + ' : ' + str(node.text)] +
+            [str(node.key) + ' : ' + str(node.text) + ' [ ' +  ', '.join([str(v) for v in node.values])  +' ]'] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
     Insert = insert
@@ -15190,7 +15195,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, heading in enumerate(headings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = max(column_widths[i] * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
+                        col_width = column_widths.get(i, len(heading))      # in case more headings than there are columns of data
+                        width = max(col_width * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
+                        # width = max(column_widths[i] * _char_width_in_pixels(font), len(heading)*_char_width_in_pixels(element.HeaderFont))
                     else:
                         try:
                             width = element.ColumnWidths[i] * _char_width_in_pixels(font)
@@ -15316,6 +15323,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if len(str(value)) > max_width:
                             max_widths[i] = len(str(value))
 
+
                 for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
@@ -15349,15 +15357,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                             node.photo = photo
                             try:
-                                id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None, text=node.text, values=node.values,
-                                                     open=element.ShowExpanded, image=node.photo)
+                                id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None, text=node.text, values=node.values, open=element.ShowExpanded, image=node.photo)
                                 element.IdToKey[id] = node.key
                                 element.KeyToID[node.key] = id
                             except Exception as e:
                                 print('Error inserting image into tree', e)
                         else:
-                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None, text=node.text, values=node.values,
-                                                 open=element.ShowExpanded)
+                            id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None, text=node.text, values=node.values, open=element.ShowExpanded)
                             element.IdToKey[id] = node.key
                             element.KeyToID[node.key] = id
 
@@ -15366,6 +15372,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 add_treeview_data(element.TreeData.root_node)
                 treeview.column('#0', width=element.Col0Width * _char_width_in_pixels(font), anchor=tk.W)
+                treeview.heading('#0', text=element.col0_heading)
+
                 # ----- configure colors -----
                 # style_name = str(element.Key) + '.Treeview'
                 style_name = _make_ttk_style_name('.Treeview', element)
