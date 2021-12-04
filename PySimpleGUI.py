@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.13 Unreleased"
+version = __version__ = "4.55.1.14 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -44,6 +44,10 @@ _change_log = """
         Tree element - addition of a heading for the Column 0 (the main column shown in the Tree). Default is '' which is what's shown today.
     4.55.1.13
         Graph Element - Experimental addition of parm motion_events - If True then mouse motion over the Graph returns event of key + '+MOVE' or (key, '+MOVE')
+    4.55.1.14
+        ButtonMenu Element
+            New init parm - image_source - Use instead of the filename and data parms. This parm is a unified one and is how several other elements work now too.
+            New update parms - image_source, image_size, image_subsample - enables the initial image to be changed to a new one
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4569,7 +4573,7 @@ class ButtonMenu(Element):
     The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
     """
 
-    def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
+    def __init__(self, button_text, menu_def, tooltip=None, disabled=False, image_source=None,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None,
                  font=None, item_font=None, pad=None, p=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True, metadata=None):
@@ -4582,6 +4586,8 @@ class ButtonMenu(Element):
         :type tooltip:              (str)
         :param disabled:            If True button will be created disabled
         :type disabled:             (bool)
+        :param image_source:        Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
+        :type image_source:         (str | bytes)
         :param image_filename:      image filename if there is a button image. GIFs and PNGs only.
         :type image_filename:       (str)
         :param image_data:          Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -4642,6 +4648,14 @@ class ButtonMenu(Element):
         self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.ItemFont = item_font
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
+        if image_source is not None:
+            if isinstance(image_source, str):
+                image_filename = image_source
+            elif isinstance(image_source, bytes):
+                image_data = image_source
+            else:
+                warnings.warn('ButtonMenu element - image_source is not a valid type: {}'.format(type(image_source)), UserWarning)
+
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -4679,7 +4693,7 @@ class ButtonMenu(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    def update(self, menu_definition=None, visible=None):
+    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4687,6 +4701,12 @@ class ButtonMenu(Element):
         :type menu_definition:  List[List]
         :param visible:         control visibility of element
         :type visible:          (bool)
+        :param image_source:    new image if image is to be changed. Can be a filename or a base64 encoded byte-string
+        :type image_source:     (str | bytes)
+        :param image_size:      Size of the image in pixels (width, height)
+        :type image_size:       (int, int)
+        :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:  (int)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -4706,6 +4726,38 @@ class ButtonMenu(Element):
                 top_menu.config(font=self.ItemFont)
             AddMenuItem(self.TKMenu, self.MenuDefinition[1], self)
             self.TKButtonMenu.configure(menu=self.TKMenu)
+        if image_source is not None:
+            filename = data = None
+            if image_source is not None:
+                if isinstance(image_source, bytes):
+                    data = image_source
+                elif isinstance(image_source, str):
+                    filename = image_source
+                else:
+                    warnings.warn('ButtonMenu element - image_source is not a valid type: {}'.format(type(image_source)), UserWarning)
+            image = None
+            if filename is not None:
+                image = tk.PhotoImage(file=filename)
+                if image_subsample is not None:
+                    image = image.subsample(image_subsample)
+            elif data is not None:
+                # if type(data) is bytes:
+                try:
+                    image = tk.PhotoImage(data=data)
+                    if image_subsample is not None:
+                        image = image.subsample(image_subsample)
+                except Exception as e:
+                    image = data
+
+            if image is not None:
+                if type(image) is not bytes:
+                    width, height = image_size[0] if image_size[0] is not None else image.width(), image_size[1] if image_size[1] is not None else image.height()
+                else:
+                    width, height = image_size
+
+                self.TKButtonMenu.config(image=image, compound=tk.CENTER, width=width, height=height)
+                self.TKButtonMenu.image = image
+
         if visible is False:
             self.TKButtonMenu.pack_forget()
         elif visible is True:
