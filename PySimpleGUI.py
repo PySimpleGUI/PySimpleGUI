@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.14 Unreleased"
+version = __version__ = "4.55.1.15 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -48,6 +48,8 @@ _change_log = """
         ButtonMenu Element
             New init parm - image_source - Use instead of the filename and data parms. This parm is a unified one and is how several other elements work now too.
             New update parms - image_source, image_size, image_subsample - enables the initial image to be changed to a new one
+    4.55.1.15
+        Fix in sdk_help - crashed if asked for summary view of Titlebar or MenubarCustom because they're not classes            
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19672,7 +19674,7 @@ def _error_popup_with_traceback(title, *args):
             error_message = line
             break
     if file_info_pysimplegui is None:
-        _error_popup_with_code(title, None, None, 'Did not find your error info')
+        _error_popup_with_code(title, None, None, 'Did not find your traceback info', *args)
         return
 
     error_parts = None
@@ -22769,6 +22771,7 @@ def main_sdk_help():
         'Window': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#window',
     }
 
+    NOT_AN_ELEMENT = 'Not An Element'
     element_classes = Element.__subclasses__()
     element_names = {element.__name__: element for element in element_classes}
     element_names['Window'] = Window
@@ -22858,32 +22861,35 @@ def main_sdk_help():
                     ml.print('\n--- Init Parms ---')
                 else:
                     elem = element_names[event]
+                    if inspect.isfunction(elem):
+                        ml.print('Not a class...It is a function', background_color='red', text_color='white')
+                    else:
+                        element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
+                        methods = inspect.getmembers(elem, inspect.isfunction)
+                        methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
 
-                    element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
-                    methods = inspect.getmembers(elem, inspect.isfunction)
-                    methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
+                        unique_methods = [m for m in methods if m not in element_methods and not m[0][0].isupper()]
 
-                    unique_methods = [m for m in methods if m not in element_methods and not m[0][0].isupper()]
-
-                    properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
-                    properties = [p[0] for p in properties if not p[0].startswith('_')]
-                    ml.print('--- Methods ---', background_color='red', text_color='white')
-                    ml.print('\n'.join(methods))
-                    ml.print('--- Properties ---', background_color='red', text_color='white')
-                    ml.print('\n'.join(properties))
-                    if issubclass(elem, Element):
-                        ml.print('Methods Unique to This Element', background_color='red', text_color='white')
-                        ml.print('\n'.join(unique_methods))
-                    ml.print('========== Init Parms ==========', background_color='#FFFF00', text_color='black')
-                    elem_text_name = event
-                    for parm, default in element_arg_default_dict[elem_text_name]:
-                        ml.print('{:18}'.format(parm), end=' = ')
-                        ml.print(default, end=',\n')
-                    if elem_text_name in element_arg_default_dict_update:
-                        ml.print('========== Update Parms ==========', background_color='#FFFF00', text_color='black')
-                        for parm, default in element_arg_default_dict_update[elem_text_name]:
+                        properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
+                        properties = [p[0] for p in properties if not p[0].startswith('_')]
+                        ml.print('--- Methods ---', background_color='red', text_color='white')
+                        ml.print('\n'.join(methods))
+                        ml.print('--- Properties ---', background_color='red', text_color='white')
+                        ml.print('\n'.join(properties))
+                        if elem != NOT_AN_ELEMENT:
+                            if issubclass(elem, Element):
+                                ml.print('Methods Unique to This Element', background_color='red', text_color='white')
+                                ml.print('\n'.join(unique_methods))
+                        ml.print('========== Init Parms ==========', background_color='#FFFF00', text_color='black')
+                        elem_text_name = event
+                        for parm, default in element_arg_default_dict[elem_text_name]:
                             ml.print('{:18}'.format(parm), end=' = ')
                             ml.print(default, end=',\n')
+                        if elem_text_name in element_arg_default_dict_update:
+                            ml.print('========== Update Parms ==========', background_color='#FFFF00', text_color='black')
+                            for parm, default in element_arg_default_dict_update[elem_text_name]:
+                                ml.print('{:18}'.format(parm), end=' = ')
+                                ml.print(default, end=',\n')
                 ml.set_vscroll_position(0)  # scroll to top of multoline
             elif event == 'Func Search':
                 search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
