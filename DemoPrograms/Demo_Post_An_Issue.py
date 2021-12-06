@@ -12,10 +12,10 @@ import urllib.parse
     
 """
 
-def make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
-                  python_exp, prog_exp, used_gui, gui_notes,
-                  cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                  detailed_desc, code,):
+def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
+                                     python_exp, prog_exp, used_gui, gui_notes,
+                                     cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
+                                     detailed_desc, code, ):
     body = \
 """
 ### Type of Issue (Enhancement, Error, Bug, Question)
@@ -108,7 +108,7 @@ This pre-formatted code block is all set for you to paste in your bit of code:
 
 
 
-def make_github_link(title, body):
+def _github_issue_post_make_github_link(title, body):
     pysimplegui_url = "https://github.com/PySimpleGUI/PySimpleGUI"
     pysimplegui_issues = f"{pysimplegui_url}/issues/new?"
 
@@ -119,7 +119,7 @@ def make_github_link(title, body):
 
 #########################################################################################################
 
-def validate(values, checklist, issue_types):
+def _github_issue_post_validate(values, checklist, issue_types):
     issue_type = None
     for itype in issue_types:
         if values[itype]:
@@ -303,9 +303,12 @@ def main_open_github_issue():
                 # [sg.Frame('Details',frame_details, font=font_frame, k='-FRAME DETAILS-')],
                 # [sg.Frame('Minimum Code to Duplicate',frame_code, font=font_frame, k='-FRAME CODE-')],
                 [sg.Text(size=(12,1), key='-OUT-')],
-                [sg.B('Post Issue'), sg.B('Create Markdown Only'), sg.B('Quit')]]
+                ]
 
-    layout = [[sg.Pane([sg.Col(top_layout), sg.Col(bottom_layout)])]]
+    layout_pane = sg.Pane([sg.Col(top_layout), sg.Col(bottom_layout)], key='-PANE-')
+
+    layout = [[layout_pane],
+              [sg.Col([[sg.B('Post Issue'), sg.B('Create Markdown Only'), sg.B('Quit')]], expand_x=False, expand_y=False)]]
 
     window = sg.Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=False)
     for i in range(len(checklist)):
@@ -314,6 +317,7 @@ def main_open_github_issue():
     window['-ML CODE-'].expand(True, True, True)
     window['-ML DETAILS-'].expand(True, True, True)
     window['-ML MARKDOWN-'].expand(True, True, True)
+    window['-PANE-'].expand(True, True, True)
     # window['-FRAME CODE-'].expand(True, True, True)
     # window['-FRAME DETAILS-'].expand(True, True, True)
 
@@ -365,13 +369,13 @@ def main_open_github_issue():
                 continue
             checkboxes = ['X' if values[('-CB-', i)] else ' ' for i in range(len(checklist))]
 
-            if not validate(values, checklist, issue_types):
+            if not _github_issue_post_validate(values, checklist, issue_types):
                 continue
 
-            markdown = make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'], values['-VER PYTHON-'],
-                                      values['-EXP PROG-'],  values['-EXP PYTHON-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No', values['-EXP NOTES-'], *checkboxes, values['-ML DETAILS-'], values['-ML CODE-'] )
+            markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'], values['-VER PYTHON-'],
+                                                        values['-EXP PYTHON-'], values['-EXP PROG-'],  'Yes' if values['-CB PRIOR GUI-'] else 'No', values['-EXP NOTES-'], *checkboxes, values['-ML DETAILS-'], values['-ML CODE-'])
             window['-ML MARKDOWN-'].update(markdown)
-            link = make_github_link(values['-TITLE-'], window['-ML MARKDOWN-'].get())
+            link = _github_issue_post_make_github_link(values['-TITLE-'], window['-ML MARKDOWN-'].get())
             if event == 'Post Issue':
                 webbrowser.open_new_tab(link)
             else:

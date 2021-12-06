@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.15 Unreleased"
+version = __version__ = "4.55.1.16 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -50,6 +50,8 @@ _change_log = """
             New update parms - image_source, image_size, image_subsample - enables the initial image to be changed to a new one
     4.55.1.15
         Fix in sdk_help - crashed if asked for summary view of Titlebar or MenubarCustom because they're not classes            
+    4.55.1.16
+        Fix in open github issue - the python experience and overall experience values were swapped.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22303,7 +22305,7 @@ def main_open_github_issue():
 
             markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'],
                                                         values['-VER PYTHON-'],
-                                                        values['-EXP PROG-'], values['-EXP PYTHON-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No',
+                                                        values['-EXP PYTHON-'],values['-EXP PROG-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No',
                                                         values['-EXP NOTES-'],
                                                         **cb_dict)
             window['-ML MARKDOWN-'].update(markdown)
