@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.16 Unreleased"
+version = __version__ = "4.55.1.17 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -52,6 +52,8 @@ _change_log = """
         Fix in sdk_help - crashed if asked for summary view of Titlebar or MenubarCustom because they're not classes            
     4.55.1.16
         Fix in open github issue - the python experience and overall experience values were swapped.
+    4.55.1.17
+        UserSettings - delete_entry will show popup error now with traceback like almost all PySimpleGUI errors (can be silenced)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20322,7 +20324,7 @@ class UserSettings:
                     #     self.config_file_contents = f.readlines()
         except Exception as e:
             if not self.silent_on_error:
-                _error_popup_with_traceback('User settings read warning', 'Error reading settings from file', self.full_filename, e)
+                _error_popup_with_traceback('User Settings read warning', 'Error reading settings from file', self.full_filename, e)
                 # print('*** UserSettings.read - Error reading settings from file: ***\n', self.full_filename, e)
                 # print(_create_error_message())
 
@@ -20361,8 +20363,8 @@ class UserSettings:
                     self.save()
             else:
                 if not self.silent_on_error:
-                    print('*** Warning - key ', key, ' not found in settings ***\n')
-                    print(_create_error_message())
+                    _error_popup_with_traceback('User Settings delete_entry Warning - key', key, ' not found in settings')
+
         else:
             if section is not None:
                 section_dict = self.get(section)
