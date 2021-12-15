@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.18 Unreleased"
+version = __version__ = "4.55.1.19 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -56,6 +56,8 @@ _change_log = """
         UserSettings - delete_entry will show popup error now with traceback like almost all PySimpleGUI errors (can be silenced)
     4.55.1.18
         TTK Button - wraplen fix, height padding fix? (thank you Jason for another fix!)
+    4.55.1.19
+        Button - fix for wraplen on non-TTK buttons. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4101,9 +4103,9 @@ class Button(Element):
         :param border_width:          width of border around button in pixels
         :type border_width:           (int)
         :param size:                  (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:                   (int, int)  | (None, None) | int
+        :type size:                   (int | None, int | None)  | (None, None) | int
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int, int)  | (None, None) | int
+        :type s:                      (int | None, int | None)  | (None, None) | int
         :param auto_size_button:      if True the button size is sized to fit the text
         :type auto_size_button:       (bool)
         :param button_color:          Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
@@ -14113,7 +14115,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(relief=tk.FLAT)
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
-                wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if elementpad[0] == 0 or elementpad[1] == 0:
                     tkbutton.config(highlightthickness=0)
 
@@ -14153,7 +14154,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     "Parent Window's Title: {}".format(toplevel_form.Title))
 
                 if width != 0:
-                    tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
+                    wraplen = width * _char_width_in_pixels(font)
+                    tkbutton.configure(wraplength=wraplen)  # set wrap to width of widget
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
 
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
