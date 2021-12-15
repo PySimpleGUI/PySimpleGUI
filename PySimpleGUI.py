@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.17 Unreleased"
+version = __version__ = "4.55.1.18 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -54,6 +54,8 @@ _change_log = """
         Fix in open github issue - the python experience and overall experience values were swapped.
     4.55.1.17
         UserSettings - delete_entry will show popup error now with traceback like almost all PySimpleGUI errors (can be silenced)
+    4.55.1.18
+        TTK Button - wraplen fix, height padding fix? (thank you Jason for another fix!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -14255,9 +14257,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
 
                 if height > 1:
-                    button_style.configure(style_name, padding=height * _char_width_in_pixels(font))  # should this be height instead?
-                wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
+                    button_style.configure(style_name, padding=height * _char_height_in_pixels(font))  # should this be height instead?
                 if width != 0:
+                    wraplen = width * _char_width_in_pixels(font) # width of widget in Pixels
                     button_style.configure(style_name, wraplength=wraplen)  # set wrap to width of widget
 
                 ## -------------- TTK Button With Image -------------- ##
