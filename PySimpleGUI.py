@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.19 Unreleased"
+version = __version__ = "4.55.1.20 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -58,6 +58,8 @@ _change_log = """
         TTK Button - wraplen fix, height padding fix? (thank you Jason for another fix!)
     4.55.1.19
         Button - fix for wraplen on non-TTK buttons. 
+    4.55.1.20
+        Layout reuse error message
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9054,6 +9056,7 @@ class Window:
                     '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 _error_popup_with_traceback('Error creating Window layout',
+                                            'You have broken the layout reuse rule! Thou shall not reuse layouts.',
                                             'The layout specified has already been used',
                                             'You MUST start witha "clean", unused layout every time you create a window',
                                             'The offensive Element = ',
@@ -20887,7 +20890,7 @@ def execute_get_results(subprocess_id, timeout=None):
     :param timeout:       Time in fractions of a second to wait. Returns '','' if timeout. Default of None means wait forever
     :type timeout:        (None | float)
     :returns:             Tuple with 2 strings (stdout, stderr)
-    :rtype:               (str, str)
+    :rtype:               (str | None , str | None)
     """
 
     out_decoded = err_decoded = None
@@ -20898,9 +20901,12 @@ def execute_get_results(subprocess_id, timeout=None):
                 out_decoded = out.decode("utf-8")
             if err:
                 err_decoded = err.decode("utf-8")
+        except ValueError:
+            # will get an error if stdout and stderr are combined and attempt to read stderr
+            # so ignore the error that would be generated
+            pass
         except Exception as e:
             popup_error('Error in execute_get_results', e)
-            out_decoded = err_decoded = None
     return out_decoded, err_decoded
 
 
