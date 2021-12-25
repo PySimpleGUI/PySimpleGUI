@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.20 Unreleased"
+version = __version__ = "4.55.1.21 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -60,6 +60,8 @@ _change_log = """
         Button - fix for wraplen on non-TTK buttons. 
     4.55.1.20
         Layout reuse error message
+    4.55.1.21
+        Fix for set_options checking for "not None" instead of "True" for the dpi_awareness setting.  Note that once turned on, there is no option to turn off.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16933,7 +16935,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if keep_on_top is not None:
         DEFAULT_KEEP_ON_TOP = keep_on_top
 
-    if dpi_awareness is not None:
+    if dpi_awareness is True:
         if running_windows():
             if platform.release() == "7":
                 ctypes.windll.user32.SetProcessDPIAware()
