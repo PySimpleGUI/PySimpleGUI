@@ -288,7 +288,12 @@ window['-OUTPUT-'].update(values['-IN-'])
 
 `window['-OUTPUT-']` returns the element that has the key `'-OUTPUT-'`.  Then the `update` method for that element is called so that the value of the Text Element is modified.  Be sure you have supplied a `size` that is large enough to display your output. If the size is too small, the output will be truncated. 
 
-If you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first using the `finalize` parameter when you create your `Window`. "Interacting" means calling that element's methods such as `update`, `draw_line`, etc.
+There are **two important concepts when updating elements!**
+
+1. If you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first using the `finalize` parameter when you create your `Window`. "Interacting" means calling that element's methods such as `update`, `expand`, `draw_line`, etc.
+2. Your change ***will not be visible in the window until*** you either:  
+	A. Call `window.read()` again  
+	B. Call `window.refresh()  
 
 ------------
 
