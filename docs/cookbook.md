@@ -293,7 +293,7 @@ There are **two important concepts when updating elements!**
 1. If you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first using the `finalize` parameter when you create your `Window`. "Interacting" means calling that element's methods such as `update`, `expand`, `draw_line`, etc.
 2. Your change ***will not be visible in the window until*** you either:  
 	A. Call `window.read()` again  
-	B. Call `window.refresh()  
+	B. Call `window.refresh()`  
 
 ------------
 
@@ -324,6 +324,11 @@ To call any of these other methods, you do the element lookup, then add on the c
 window[my_key].set_tooltip('New Tooltip')
 ```
 
+***NOTE!***
+
+Operations on elements will not appear in your window immediately.  If you wish for them to appear immediately, prior to your next `window.read()` call, you must call `window.refresh()`.  A call to `read` or `refresh` causes your changes to be displayed.
+
+
 ----
 
 # Exiting a Window
@@ -349,7 +354,7 @@ This is your user's "way out".  **Always** give a way out to your user or else t
 
 Beginners to Python may not understand this statement and it's important to understand it so that you don't simply ignore it because you don't understand the syntax.
 
-The if statment is identical to this if statement:
+The if statement is identical to this if statement:
 ```python
 if event == sg.WIN_CLOSED or event == 'Quit':
     break
@@ -1791,7 +1796,7 @@ You will continue to be able to manually route stdout and stderr to the Multline
 
 ### Automatic Refresh
 
-The mutliline element has an option for auto-refreshing after an update.   The Output element automatically refreshes after each write.  Hopefully this will not slow things down considerably.
+The Multiline element has an option for auto-refreshing after an update.   The Output element automatically refreshes after each write.  Hopefully this will not slow things down considerably.
 
 Here is the code for 4B
 
