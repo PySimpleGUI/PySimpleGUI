@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.21 Unreleased"
+version = __version__ = "4.55.1.22 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -62,6 +62,8 @@ _change_log = """
         Layout reuse error message
     4.55.1.21
         Fix for set_options checking for "not None" instead of "True" for the dpi_awareness setting.  Note that once turned on, there is no option to turn off.
+    4.55.1.22
+        Docstring changes for all Element.update methods to indicate that the change will not be visible until Window.refresh or Window.read is called
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1728,7 +1730,8 @@ class Input(Element):
 
     def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None):
         """
-        Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param value:            new text to display as default text in Input field
         :type value:             (str)
@@ -1897,6 +1900,7 @@ class Combo(Element):
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
         though more combinations are available. The easy way to remember is that if you
         change the readonly parameter then you are enabling the element.
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:        change which value is current selected based on new list of previous list of choices
         :type value:         (Any)
         :param values:       change list of choices
@@ -2078,6 +2082,7 @@ class OptionMenu(Element):
     def update(self, value=None, values=None, disabled=None, visible=None, size=(None, None)):
         """
         Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:    the value to choose by default
         :type value:     (Any)
         :param values:   Values to be displayed
@@ -2244,6 +2249,7 @@ class Listbox(Element):
     def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param values:          new list of choices to be shown to user
         :type values:           List[Any]
         :param disabled:        disable or enable state of the element
@@ -2465,6 +2471,7 @@ class Radio(Element):
     def update(self, value=None, text=None, background_color=None, text_color=None, circle_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:            if True change to selected and set others in group to unselected
         :type value:             (bool)
         :param text:             Text to display next to radio button
@@ -2664,6 +2671,7 @@ class Checkbox(Element):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:            if True checks the checkbox, False clears it
         :type value:             (bool)
         :param text:             Text to display next to checkbox
@@ -2823,6 +2831,7 @@ class Spin(Element):
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
         though more combinations are available. The easy way to remember is that if you
         change the readonly parameter then you are enabling the element.
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:    set the current value from list of choices
         :type value:     (Any)
         :param values:   set available choices
@@ -3038,6 +3047,7 @@ class Multiline(Element):
                background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:                      new text to display
         :type value:                       (Any)
         :param disabled:                   disable or enable state of the element
@@ -3381,6 +3391,7 @@ class Text(Element):
     def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:            new text to show
         :type value:             (str)
         :param background_color: color of background
@@ -3681,6 +3692,7 @@ class StatusBar(Element):
     def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param value:            new text to show
         :type value:             (str)
         :param background_color: color of background
@@ -3998,6 +4010,7 @@ class Output(Element):
     def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param value:   string that will replace current contents of the output area
         :type value:    (str)
@@ -4449,6 +4462,8 @@ class Button(Element):
                visible=None, image_subsample=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
+
         :param text:                  sets button text
         :type text:                   (str)
         :param button_color:          Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
@@ -4710,6 +4725,7 @@ class ButtonMenu(Element):
     def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param menu_definition: (New menu definition (in menu definition format)
         :type menu_definition:  List[List]
@@ -4903,6 +4919,7 @@ class ProgressBar(Element):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
         Now has the ability to modify the count so that the update_bar method is not longer needed separately
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param current_count: sets the current value
         :type current_count:  (int)
@@ -5038,6 +5055,7 @@ class Image(Element):
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
         delete the previously shown image.
+        Changes will not be visible in your window until you call window.read or window.refresh.
         :param source:   A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
         :type source:    str | bytes | None
         :param filename: filename to the new image to display.
@@ -5759,6 +5777,7 @@ class Graph(Element):
     def update(self, background_color=None, visible=None):
         """
         Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param background_color: color of background
         :type background_color:  ???
@@ -6218,6 +6237,7 @@ class Frame(Element):
     def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param value:   New text value to show on frame
         :type value:    (Any)
@@ -6524,6 +6544,7 @@ class Tab(Element):
     def update(self, title=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param title:    tab title
         :type title:     (str)
@@ -6988,6 +7009,7 @@ class Slider(Element):
     def update(self, value=None, range=(None, None), disabled=None, visible=None):
         """
         Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param value:    sets current slider value
         :type value:     int | float
@@ -7360,6 +7382,7 @@ class Column(Element):
     def update(self, visible=None):
         """
         Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param visible: control visibility of element
         :type visible:  (bool)
@@ -7483,6 +7506,7 @@ class Pane(Element):
     def update(self, visible=None):
         """
         Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param visible: control visibility of element
         :type visible:  (bool)
@@ -7814,8 +7838,9 @@ class Menu(Element):
     def update(self, menu_definition=None, visible=None):
         """
         Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
-        :param menu_definition: ???
+        :param menu_definition: The menu definition list
         :type menu_definition:  List[List[Tuple[str, List[str]]]
         :param visible:         control visibility of element
         :type visible:          (bool)
@@ -8021,6 +8046,7 @@ class Table(Element):
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param values:                A new 2-dimensional table to show
         :type values:                 List[List[str | int | float]]
@@ -8416,6 +8442,7 @@ class Tree(Element):
     def update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes will not be visible in your window until you call window.read or window.refresh.
 
         :param values:  Representation of the tree
         :type values:   (TreeData)
