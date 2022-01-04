@@ -1496,11 +1496,13 @@ class Button(Element):
 
 
 def convert_tkinter_filetypes_to_wx(filetypes):
-    wx_filetypes = ''
+    wx_filetypes = []
     for item in filetypes:
         filetype = item[0] + ' (' + item[1] + ')|'+ item[1]
-        wx_filetypes += filetype
-    return wx_filetypes
+        wx_filetypes.append(filetype)
+
+    wx_filetype_string = "|".join(wx_filetypes)
+    return wx_filetype_string
 
 
 # -------------------------  Button lazy functions  ------------------------- #
