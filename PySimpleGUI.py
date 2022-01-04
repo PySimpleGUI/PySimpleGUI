@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.22 Unreleased"
+version = __version__ = "4.55.1.23 Unreleased"
 
 _change_log = """
     Changelog since 4.55.1 released to PyPI on 7-Nov-2021
@@ -64,6 +64,12 @@ _change_log = """
         Fix for set_options checking for "not None" instead of "True" for the dpi_awareness setting.  Note that once turned on, there is no option to turn off.
     4.55.1.22
         Docstring changes for all Element.update methods to indicate that the change will not be visible until Window.refresh or Window.read is called
+    4.55.1.23
+        Enabled the Text class methods that measure strings and characters to be called prior to any windows being created. Method list:
+            string_width_in_pixels, char_height_in_pixels, char_width_in_pixels
+        Also replaced the error messages that were being printed with a poper error popup
+        Removed destruction of hidden master root from popup_get_file and popup_get_folder
+            
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3450,11 +3456,21 @@ class Text(Element):
         :return:          Width in pixels of "A"
         :rtype:           (int)
         """
+        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
+        if Window.NumOpenWindows == 0:
+            root = tk.Tk()
+        else:
+            root = None
+
         size = 0
         try:
             size = tkinter.font.Font(font=font).measure(character)  # single character width
         except Exception as e:
-            print('Error retrieving font information', e)
+            _error_popup_with_traceback('Exception retrieving char width in pixels', e)
+
+        if root is not None:
+            root.destroy()
+
         return size
 
     @classmethod
@@ -3468,18 +3484,27 @@ class Text(Element):
         :return:     Height in pixels of "A"
         :rtype:      (int)
         """
+
+        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
+        if Window.NumOpenWindows == 0:
+            root = tk.Tk()
+        else:
+            root = None
+
         size = 0
         try:
             size = tkinter.font.Font(font=font).metrics('linespace')
         except Exception as e:
-            print('Error retrieving font information', e)
+            _error_popup_with_traceback('Exception retrieving char height in pixels', e)
+        if root is not None:
+            root.destroy()
+
         return size
 
     @classmethod
     def string_width_in_pixels(cls, font, string):
         """
         Get the with of the supplied string in pixels for the font being passed in.
-        Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font:   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
         :type font:    (str or (str, int[, str]) or None)
@@ -3488,11 +3513,22 @@ class Text(Element):
         :return:       Width in pixels of string
         :rtype:        (int)
         """
+
+        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
+        if Window.NumOpenWindows == 0:
+            root = tk.Tk()
+        else:
+            root = None
+
         size = 0
         try:
             size = tkinter.font.Font(font=font).measure(string)  # string's  width
         except Exception as e:
-            print('Error retrieving font information', e)
+            _error_popup_with_traceback('Exception retrieving string width in pixels', e)
+
+        if root is not None:
+            root.destroy()
+
         return size
 
     def _print_to_element(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None, append=None):
@@ -9022,7 +9058,7 @@ class Window:
         :rtype:  (int, int)
         """
         root = tk.Tk()
-        screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
+        screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         root.destroy()
         return screen_width, screen_height
@@ -9679,7 +9715,8 @@ class Window:
         """
         Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
         Use this call when you want something to appear in your Window immediately (as soon as this function is called).
-        Without this call your changes to a Window will not be visible to the user until the next Read call
+        If you change an element in a window, your change will not be visible until the next call to Window.read
+        or a call to Window.refresh()
 
         :return: `self` so that method calls can be easily "chained"
         :rtype:  (Window)
@@ -19001,10 +19038,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
         )  # show the 'get folder' dialog box
 
         root.destroy()
-        if Window.NumOpenWindows == 1:
-            Window.NumOpenWindows = 0
-            Window.hidden_master_root.destroy()
-            Window.hidden_master_root = None
+
 
         return folder_name
 
@@ -19208,10 +19242,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                                                      parent=root if not running_mac() else None,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
         root.destroy()
-        if Window.NumOpenWindows == 1:
-            Window.NumOpenWindows = 0
-            Window.hidden_master_root.destroy()
-            Window.hidden_master_root = None
+
         if not multiple_files and type(filename) in (tuple, list):
             if len(filename):  # only if not 0 length, otherwise will get an error
                 filename = filename[0]
