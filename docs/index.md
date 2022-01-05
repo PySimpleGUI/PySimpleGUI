@@ -35,8 +35,6 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript">
 var sc_project=12622535; 
 var sc_invisible=1; 
@@ -9574,6 +9572,53 @@ FIXED the install from GitHub problem with psgmain/psgupgrade!
 	* Fix for bug created in 4.55.0 that caused the Global Setting for Python interpreter to never be used
 	* The sys.executable interpreter will be used for GitHub upgrades and if no interpreter is specified in the PySimpleGUI settings
 
+## 4.56.0 PySimpleGUI 5-Jan-2022
+
+The "It's been a minute" & "Welcome to 2022!" release  
+
+* Addition of stdin parm to execute_command_subprocess. This is to fix problem when pyinstaller is used to make an EXE from a psg program that calls this function
+* Changed getargspec call in the SDK Reference window to getfullargspec. In 3.11 getargspec is no longer supported and thus crashes
+* Added try to SDK Reference event loop to catch any additional problems that may pop up in 3.11
+* Added Window.move_to_center moves a window to the center of the screen. Good for when your window changes size or you want to recenter it
+* Disable debugger when installing from github
+* Better error reporting when a problem with the layout detected
+* Removed import of site and now get the information from os.path.dirname(sys.executable).  I like simpler!
+* Combo added parameters to control the colors on the button used to display the items. Parms are button_background_color and button_arrow_color
+    * Default values continue to be the same the theme's button color if nothing is set.
+* Fixed missing docstring item for Table value so that the new documentation will be accurate
+* (Maybe temporarily) added print to the Text element. Was an easy addition, but is limited in how colors are controlled, scrolling, etc.  May be very short-lived addition.
+* New Table Element parameter right_click_selects. Default is False. If True, then will select a row using the right mouse button, but only if
+    * zero or one rows are selected. If multiple rows are already selected, then the right click will not change the selection. This feature enables
+    * a right-click-menu to be combined with table selection for features such as "delete row" using a right click menu.
+* Fixed bug in Column element was incorrectly checking background color for None or COLOR_SYSTEM_DEFAULT 
+* Changed docstring for Table.get_last_clicked_postition to indicate what's returned now. Was not useful for tkinter port until recently when cell clicks added.
+* Better auto-sizing of Columns for Tables.
+    * Better sizing of the row number column using the font for the header in the calculation
+    * Use the column heading font to help determine if the header will be what determines the width instead of the data in the column
+* Don't print the error message about wm_overrideredirect while hiding the master root if running on a Mac. 
+* Fix for Tree Element not setting the row height if none is specified. Needed to set to value based on the font used.
+* Tree Element
+    * Always left justify the first column. This is how it's always worked. tkinter 8.6.12 changed the behavior of the first col. This changes it back
+    * Better auto-size column. Uses the data as well as the Column header to determine size of column
+* Table Element fix case when tables have too many headers, thus not matching the data columns
+* Tree element addition of a heading for the Column 0 (the main column shown in the Tree). Default is '' which is what's shown today.
+* Graph Element Experimental addition of parm motion_events If True then mouse motion over the Graph returns event of key '+MOVE' or (key, '+MOVE')
+* ButtonMenu Element
+    * New init parm image_source Use instead of the filename and data parms. This parm is a unified one and is how several other elements work now too.
+    * New update parms image_source, image_size, image_subsample enables the initial image to be changed to a new one
+* Fix in sdk_help crashed if asked for summary view of Titlebar or MenubarCustom because they're not classes            
+* Fix in open github issue the python experience and overall experience values were swapped.
+* UserSettings delete_entry will show popup error now with traceback like almost all PySimpleGUI errors (can be silenced)
+* TTK Button wraplen fix, height padding fix? (thank you Jason for another fix!)
+* Button fix for wraplen on non-TTK buttons. 
+* Layout reuse error message
+* Fix for set_options checking for "not None" instead of "True" for the dpi_awareness setting.  Note that once turned on, there is no option to turn off.
+* Docstring changes for all Element.update methods to indicate that the change will not be visible until Window.refresh or Window.read is called
+* Enabled the Text class methods that measure strings and characters to be called prior to any windows being created. Method list:
+    * string_width_in_pixels, char_height_in_pixels, char_width_in_pixels
+    * Replaced the error messages that were being printed with a poper error popup
+* Removed destruction of hidden master root from popup_get_file and popup_get_folder
+
 ## Code Condition
 
     Make it run
@@ -9616,7 +9661,7 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
 Written and owned by PySimpleGUI.
 
-This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020, 2021 by PySimpleGUI
+This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020, 2021, 2022 by PySimpleGUI
 
 Send business correspondence to PySimpleGUI@PySimpleGUI.com
 
@@ -9635,13 +9680,13 @@ Please see the readme file for usage of other Python packages by this project.
 
 ## Support
 
-In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
+In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: https://www.paypal.me/pythongui.  You'll find all the ways you can help support PySimpleGUI in the readme. 
 
 The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free or perhaps continue at all, but until then we'll all enjoy the successes we're having.
 
 ## Legal
 
-All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Tech LLC.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have are copyright owned by PySimpleGUI
+All documentation in this file and in the PySimpleGUI GitHub account are copyright 2018-2022 by PySimpleGUI Tech LLC.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have are copyright owned by PySimpleGUI
 
 The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked
 

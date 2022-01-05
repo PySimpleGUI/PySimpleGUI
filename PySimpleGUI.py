@@ -1,75 +1,10 @@
 #!/usr/bin/python3
-version = __version__ = "4.55.1.23 Unreleased"
+version = __version__ = "4.56.0 Released 5-Jan-2022"
 
 _change_log = """
-    Changelog since 4.55.1 released to PyPI on 7-Nov-2021
+    Changelog since 4.56.0 released to PyPI on 5-Jan-2022
     
-    4.55.1.1
-        Addition of stdin parm to execute_command_subprocess. This is to fix problem when pyinstaller is used to make an EXE from a psg program that calls this function
-    4.55.1.2
-        Changed getargspec call in the SDK Reference window to getfullargspec. In 3.11 getargspec is no longer supported and thus crashes
-        Added try to SDK Reference event loop to catch any additional problems that may pop up in 3.11
-    4.55.1.3
-        Added Window.move_to_center - moves a window to the center of the screen. Good for when your window changes size or you want to recenter it
-        Disable debugger when installing from github
-        Better error reporting when a problem with the layout detected
-    4.55.1.4
-        Removed import of site and now get the information from os.path.dirname(sys.executable).  I like simpler!
-    4.55.1.5
-        Combo - added parameters to control the colors on the button used to display the items. Parms are button_background_color and button_arrow_color
-            Default values continue to be the same the theme's button color if nothing is set.
-    4.55.1.6
-        Fixed missing docstring item for Table value so that the new documentation will be accurate
-        (Maybe temporarily) added print to the Text element. Was an easy addition, but is limited in how colors are controlled, scrolling, etc.  May be very short-lived addition.
-    4.55.1.7
-        New Table Element parameter - right_click_selects. Default is False. If True, then will select a row using the right mouse button, but only if
-            zero or one rows are selected. If multiple rows are already selected, then the right click will not change the selection. This feature enables
-            a right-click-menu to be combined with table selection for features such as "delete row" using a right click menu.
-        Fixed bug in Column element - was incorrectly checking background color for None or COLOR_SYSTEM_DEFAULT 
-    4.55.1.8
-        Changed docstring for Table.get_last_clicked_postition to indicate what's returned now. Was not useful for tkinter port until recently when cell clicks added.
-        Better auto-sizing of Columns for Tables.
-            Better sizing of the row number column using the font for the header in the calculation
-            Use the column heading font to help determine if the header will be what determines the width instead of the data in the column
-    4.55.1.9
-        Don't print the error message about wm_overrideredirect while hiding the master root if running on a Mac. 
-    4.55.1.10
-        Fix for Tree Element not setting the row height if none is specified. Needed to set to value based on the font used.
-    4.55.1.11
-        Tree Element
-            * Always left justify the first column. This is how it's always worked. tkinter 8.6.12 changed the behavior of the first col. This changes it back
-            * Better auto-size column. Uses the data as well as the Column header to determine size of column
-    4.55.1.12
-        Table Element - fix case when tables have too many headers, thus not matching the data columns
-        Tree element - addition of a heading for the Column 0 (the main column shown in the Tree). Default is '' which is what's shown today.
-    4.55.1.13
-        Graph Element - Experimental addition of parm motion_events - If True then mouse motion over the Graph returns event of key + '+MOVE' or (key, '+MOVE')
-    4.55.1.14
-        ButtonMenu Element
-            New init parm - image_source - Use instead of the filename and data parms. This parm is a unified one and is how several other elements work now too.
-            New update parms - image_source, image_size, image_subsample - enables the initial image to be changed to a new one
-    4.55.1.15
-        Fix in sdk_help - crashed if asked for summary view of Titlebar or MenubarCustom because they're not classes            
-    4.55.1.16
-        Fix in open github issue - the python experience and overall experience values were swapped.
-    4.55.1.17
-        UserSettings - delete_entry will show popup error now with traceback like almost all PySimpleGUI errors (can be silenced)
-    4.55.1.18
-        TTK Button - wraplen fix, height padding fix? (thank you Jason for another fix!)
-    4.55.1.19
-        Button - fix for wraplen on non-TTK buttons. 
-    4.55.1.20
-        Layout reuse error message
-    4.55.1.21
-        Fix for set_options checking for "not None" instead of "True" for the dpi_awareness setting.  Note that once turned on, there is no option to turn off.
-    4.55.1.22
-        Docstring changes for all Element.update methods to indicate that the change will not be visible until Window.refresh or Window.read is called
-    4.55.1.23
-        Enabled the Text class methods that measure strings and characters to be called prior to any windows being created. Method list:
-            string_width_in_pixels, char_height_in_pixels, char_width_in_pixels
-        Also replaced the error messages that were being printed with a poper error popup
-        Removed destruction of hidden master root from popup_get_file and popup_get_folder
-            
+  
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -93,7 +28,7 @@ port = 'PySimpleGUI'
 
 
 """
-    Copyright 2018, 2019, 2020, 2021 PySimpleGUI(tm)
+    Copyright 2018, 2019, 2020, 2021, 2022 PySimpleGUI(tm)
 
     Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
 
@@ -107,9 +42,21 @@ port = 'PySimpleGUI'
     PySimpleGUI is a "system", not just a program.  There are 4 components of the "PySimpleGUI system"
     1. This software - PySimpleGUI.com
     2. The documentation - PySimpleGUI.org
+        * PySimpleGUI.org
+        * Calls.PySimpleGUI.org
+        * Cookbook.PySimpleGUI.org
     3. Demo Programs - Demos.PySimpleGUI.org
     4. Support - Issues.PySimpleGUI.org
+    5. eCookbook - eCookbook.PySimpleGUI.org
 
+
+    Now available - "The Official PySimpleGUI Course" on Udemy!
+    https://www.udemy.com/pysimplegui
+    
+    Watch for a coupon codes in the documentation on PySimpleGUI.org
+
+    Please consider sponsoring all open source developers that make software you or your business use. They need your help.
+    
 
     This software is available for your use under a LGPL3+ license
 
@@ -138,12 +85,10 @@ port = 'PySimpleGUI'
               Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
               https://pysimplegui.readthedocs.io/en/latest/
        If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
-    3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file
+    3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file as per the license agreement
+
     -----------------------------------------------------------------------------------------------------------------
 
-    The PySimpleGUI project goals are simple:
-        1. Have fun
-        2. You, the user, are successful
 
     The first bit of good news for you is that literally 100s of pages of documentation await you. 
     300 Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
@@ -160,7 +105,8 @@ port = 'PySimpleGUI'
 
     The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
 
-    A note from your sponsor....
+    A final note from mike...
+    
         “Don’t aim at success. The more you aim at it and make it a target, the more you are going to miss it. 
         For success, like happiness, cannot be pursued; it must ensue, and it only does so as the unintended side effect of one’s personal dedication to a cause greater.”
             — Viktor Frankl
