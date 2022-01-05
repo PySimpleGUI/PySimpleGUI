@@ -35,7 +35,6 @@
     </div>
 </div>
 
-
 <script type="text/javascript">
 var sc_project=12622535; 
 var sc_invisible=1; 
@@ -129,8 +128,8 @@ Parameter Descriptions:
 |                                   (int, int)                                   |      image_size       | Size of the image in pixels (width, height) |
 |                                      int                                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |                                      int                                       |     border_width      | width of border around button in pixels |
-|                       (int, int)  or (None, None) or int                       |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
-|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|               (int or None, int or None)  or (None, None) or int               |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|               (int or None, int or None)  or (None, None) or int               |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |   auto_size_button    | if True the button size is sized to fit the text |
 |                    (str, str) or str or (int, int) or None                     |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 |                               (str, str) or str                                | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
@@ -369,6 +368,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(text = None,
@@ -462,6 +462,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(text = None,
@@ -500,6 +501,7 @@ ButtonMenu(button_text,
     menu_def,
     tooltip = None,
     disabled = False,
+    image_source = None,
     image_filename = None,
     image_data = None,
     image_size = (None, None),
@@ -533,6 +535,7 @@ Parameter Descriptions:
 |                                List[List[str]]                                 |      menu_def       | A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types |
 |                                      str                                       |       tooltip       | text, that will appear when mouse hovers over the element |
 |                                      bool                                      |      disabled       | If True button will be created disabled |
+|                                 (str or bytes)                                 |    image_source     | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
 |                                      str                                       |   image_filename    | image filename if there is a button image. GIFs and PNGs only. |
 |                                  bytes or str                                  |     image_data      | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                                   (int, int)                                   |     image_size      | Size of the image in pixels (width, height) |
@@ -757,17 +760,25 @@ unhide_row()
 ### update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
-update(menu_definition = None, visible = None)
+update(menu_definition = None,
+    visible = None,
+    image_source = None,
+    image_size = (None, None),
+    image_subsample = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[List] | menu_definition | (New menu definition (in menu definition format) |
-|    bool    |     visible     | control visibility of element |
+|  List[List]   | menu_definition | (New menu definition (in menu definition format) |
+|     bool      |     visible     | control visibility of element |
+| (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
+|  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
+|      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 
 ### visible
 
@@ -825,17 +836,25 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
-Update(menu_definition = None, visible = None)
+Update(menu_definition = None,
+    visible = None,
+    image_source = None,
+    image_size = (None, None),
+    image_subsample = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[List] | menu_definition | (New menu definition (in menu definition format) |
-|    bool    |     visible     | control visibility of element |
+|  List[List]   | menu_definition | (New menu definition (in menu definition format) |
+|     bool      |     visible     | control visibility of element |
+| (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
+|  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
+|      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 
 ---------
 
@@ -1381,6 +1400,7 @@ unhide_row()
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -1461,6 +1481,7 @@ Parameter Descriptions:
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -1774,6 +1795,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(visible = None)
@@ -1861,6 +1883,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(visible = None)
@@ -2134,6 +2157,7 @@ Changes some of the settings for the Combo Element. Must call `Window.Read` or `
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -2220,6 +2244,7 @@ Changes some of the settings for the Combo Element. Must call `Window.Read` or `
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -2520,6 +2545,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None, visible = None)
@@ -2608,6 +2634,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None, visible = None)
@@ -2644,6 +2671,7 @@ Graph(canvas_size,
     change_submits = False,
     drag_submits = False,
     enable_events = False,
+    motion_events = False,
     key = None,
     k = None,
     tooltip = None,
@@ -2669,6 +2697,7 @@ Parameter Descriptions:
 |                                      bool                                      |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                      bool                                      |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
 |                                      bool                                      |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
+|                                      bool                                      |   motion_events   | If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string) |
 |                         str or int or tuple or object                          |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
@@ -2683,6 +2712,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(background_color = None, visible = None)
@@ -3241,6 +3271,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(background_color = None, visible = None)
@@ -4130,6 +4161,7 @@ unhide_row()
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
 To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
 delete the previously shown image.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(source = None,
@@ -4232,6 +4264,7 @@ Parameter Descriptions:
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
 To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
 delete the previously shown image.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(source = None,
@@ -4548,7 +4581,8 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -4630,7 +4664,8 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -4970,6 +5005,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(values = None,
@@ -5072,6 +5108,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(values = None,
@@ -5334,6 +5371,7 @@ unhide_row()
 ### update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(menu_definition = None, visible = None)
@@ -5343,7 +5381,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[List[Tuple[str, List[str]]] | menu_definition | ??? |
+| List[List[Tuple[str, List[str]]] | menu_definition | The menu definition list |
 |               bool               |     visible     | control visibility of element |
 
 ### visible
@@ -5393,6 +5431,7 @@ Parameter Descriptions:
 ### Update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(menu_definition = None, visible = None)
@@ -5402,7 +5441,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[List[Tuple[str, List[str]]] | menu_definition | ??? |
+| List[List[Tuple[str, List[str]]] | menu_definition | The menu definition list |
 |               bool               |     visible     | control visibility of element |
 
 ---------
@@ -5828,6 +5867,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -5918,6 +5958,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -6202,6 +6243,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -6268,6 +6310,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -6552,6 +6595,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None, visible = None)
@@ -6631,6 +6675,7 @@ Returns the TKOutput object used to create the element
 ### Update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None, visible = None)
@@ -6877,6 +6922,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(visible = None)
@@ -6935,6 +6981,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(visible = None)
@@ -7168,6 +7215,7 @@ unhide_row()
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(current_count = None,
@@ -7250,6 +7298,7 @@ Parameter Descriptions:
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(current_count = None,
@@ -7583,6 +7632,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -7671,6 +7721,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -8196,6 +8247,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -8260,6 +8312,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -8536,6 +8589,7 @@ Changes some of the settings for the Spin Element. Must call `Window.Read` or `W
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -8617,6 +8671,7 @@ Changes some of the settings for the Spin Element. Must call `Window.Read` or `W
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -8878,6 +8933,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -8944,6 +9000,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -9241,6 +9298,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(title = None,
@@ -9340,6 +9398,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(title = None,
@@ -9767,6 +9826,7 @@ Table(values,
     change_submits = False,
     enable_events = False,
     enable_click_events = False,
+    right_click_selects = False,
     bind_return_key = False,
     pad = None,
     p = None,
@@ -9784,7 +9844,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                        List[List[str or int or float]]                         |         values          | Your table data represented as a list of rows, with each row representing a row in your table. |
+|                        List[List[str or int or float]]                         |         values          | Your table data represented as a 2-dimensions table... a list of rows, with each row representing a row in your table. |
 |                                   List[str]                                    |        headings         | The headings to show on the top line |
 |                                   List[bool]                                   |   visible_column_map    | One entry for each column. False indicates the column is not shown |
 |                                   List[int]                                    |       col_widths        | Number of characters that each column will occupy |
@@ -9811,6 +9871,7 @@ Parameter Descriptions:
 |                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
 |                                      bool                                      |   enable_click_events   | Turns on the element click events that will give you (row, col) click data when the table is clicked |
+|                                      bool                                      |   right_click_selects   | If True, then right clicking a row will select that row if multiple rows are not currently selected |
 |                                      bool                                      |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -10021,6 +10082,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(values = None,
@@ -10101,6 +10163,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(values = None,
@@ -10361,6 +10424,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(value = None,
@@ -10437,6 +10501,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(value = None,
@@ -10517,6 +10582,7 @@ Tree(data = None,
     visible_column_map = None,
     col_widths = None,
     col0_width = 10,
+    col0_heading = "",
     def_col_width = 10,
     auto_size_columns = True,
     max_col_width = 20,
@@ -10555,6 +10621,7 @@ Parameter Descriptions:
 |                                   List[bool]                                   |   visible_column_map    | Determines if a column should be visible. If left empty, all columns will be shown |
 |                                   List[int]                                    |       col_widths        | List of column widths so that individual column widths can be controlled |
 |                                      int                                       |       col0_width        | Size of Column 0 which is where the row numbers will be optionally shown |
+|                                      str                                       |      col0_heading       | Text to be shown in the header for the left-most column |
 |                                      int                                       |      def_col_width      | default column width |
 |                                      bool                                      |    auto_size_columns    | if True, the size of a column is determined using the contents of the column |
 |                                      int                                       |      max_col_width      | the maximum size a column can be |
@@ -10797,6 +10864,7 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 update(values = None,
@@ -10814,7 +10882,7 @@ Parameter Descriptions:
 |          TreeData          | values  | Representation of the tree |
 | str or int or tuple or object |   key   | identifies a particular item in tree to update |
 |            Any             |  value  | sets the node identified by key to a particular value |
-|            str             |  text   | sets the node identified by ket to this string |
+|            str             |  text   | sets the node identified by key to this string |
 |        bytes or str        |  icon   | can be either a base64 icon or a filename for the icon |
 |            bool            | visible | control visibility of element |
 
@@ -10865,6 +10933,7 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes will not be visible in your window until you call window.read or window.refresh.
 
 ```
 Update(values = None,
@@ -10882,7 +10951,7 @@ Parameter Descriptions:
 |          TreeData          | values  | Representation of the tree |
 | str or int or tuple or object |   key   | identifies a particular item in tree to update |
 |            Any             |  value  | sets the node identified by key to a particular value |
-|            str             |  text   | sets the node identified by ket to this string |
+|            str             |  text   | sets the node identified by key to this string |
 |        bytes or str        |  icon   | can be either a base64 icon or a filename for the icon |
 |            bool            | visible | control visibility of element |
 
@@ -11804,7 +11873,8 @@ reappear()
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
-Without this call your changes to a Window will not be visible to the user until the next Read call
+If you change an element in a window, your change will not be visible until the next call to Window.read
+or a call to Window.refresh()
 
 `refresh()`
 
@@ -12420,7 +12490,8 @@ Reappear()
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
-Without this call your changes to a Window will not be visible to the user until the next Read call
+If you change an element in a window, your change will not be visible until the next call to Window.read
+or a call to Window.refresh()
 
 `Refresh()`
 
