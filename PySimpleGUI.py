@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0 Released 5-Jan-2022"
+version = __version__ = "4.56.0.1 Uneleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
     
-  
+    4.56.0.1
+        set_options - added disable_modal_windows option to provide a single call to disable the modal feature globally (including popups)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -516,6 +517,7 @@ TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
+DEFAULT_MODAL_WINDOWS_ENABLED = True
 
 TAB_LOCATION_TOP = 'top'
 TAB_LOCATION_TOP_LEFT = 'topleft'
@@ -3920,6 +3922,7 @@ class Output(Element):
 
     The Multiline Element is the superior and recommended method for showing the output of stdout.
     The Multiline Element has been added to significantly while the Output element has not.
+    If you choose to use a Multiline element to replace an Output element, be sure an turn on the write_only paramter in the Multline
 
     Of course, Output Element continues to operate and be backwards compatible, but you're missing out on
     features such as routing the cprint output to the element.
@@ -10691,6 +10694,10 @@ class Window:
         if running_mac() and ENABLE_MAC_MODAL_DISABLE_PATCH:
             return
 
+        # if modal windows have been disabled globally
+        if not DEFAULT_MODAL_WINDOWS_ENABLED:
+            return
+
         try:
             self.TKroot.transient()
             self.TKroot.grab_set()
@@ -16617,7 +16624,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None,
+                disable_modal_windows=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -16724,7 +16732,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param dpi_awareness:                   If True then will turn on DPI awareness (Windows only at the moment)
     :type dpi_awareness:                    (bool)
     :param scaling:                         Sets the default scaling for all windows including popups, etc.
-    :type scaling:                          (float)    
+    :type scaling:                          (float)
+    :param disable_modal_windows:           If True then all windows, including popups, will not be modal windows
+    :type disable_modal_windows:            (bool)
     :return:                                None
     :rtype:                                 None
     """
@@ -16780,6 +16790,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME
     global DEFAULT_KEEP_ON_TOP
     global DEFAULT_SCALING
+    global DEFAULT_MODAL_WINDOWS_ENABLED
     global _pysimplegui_user_settings
     # global _my_windows
 
@@ -16954,6 +16965,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if scaling is not None:
         DEFAULT_SCALING = scaling
+
+    if disable_modal_windows is not None:
+        DEFAULT_MODAL_WINDOWS_ENABLED = not disable_modal_windows
+
 
     return True
 
