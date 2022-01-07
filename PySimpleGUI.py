@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.1 Uneleased"
+version = __version__ = "4.56.0.2 Uneleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
     
     4.56.0.1
         set_options - added disable_modal_windows option to provide a single call to disable the modal feature globally (including popups)
+    4.56.0.2
+        Added OptionMenu to the list of tkinter widgets that are ignored when the grab anywhere feature is used
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -552,7 +554,7 @@ TEXT_LOCATION_BOTTOM_LEFT = tk.SW
 TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
-GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox)
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox, tk.OptionMenu)
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
