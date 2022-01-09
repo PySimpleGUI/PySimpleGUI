@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.2 Uneleased"
+version = __version__ = "4.56.0.3 Uneleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -8,6 +8,8 @@ _change_log = """
         set_options - added disable_modal_windows option to provide a single call to disable the modal feature globally (including popups)
     4.56.0.2
         Added OptionMenu to the list of tkinter widgets that are ignored when the grab anywhere feature is used
+    4.56.0.3
+        Slider - update the range FIRST and then the value in the update method (thank you Jason for the fix)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7010,6 +7012,8 @@ class Slider(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if range != (None, None):
+            self.TKScale.config(from_=range[0], to_=range[1])
         if value is not None:
             try:
                 self.TKIntVar.set(value)
@@ -7024,10 +7028,9 @@ class Slider(Element):
             self.TKScale.pack_forget()
         elif visible is True:
             self.TKScale.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-        if range != (None, None):
-            self.TKScale.config(from_=range[0], to_=range[1])
         if visible is not None:
             self._visible = visible
+
 
     def _SliderChangedHandler(self, event):
         """
