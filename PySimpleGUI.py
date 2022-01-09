@@ -7028,8 +7028,6 @@ class Slider(Element):
             self.TKScale.pack_forget()
         elif visible is True:
             self.TKScale.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-        if range != (None, None):
-            self.TKScale.config(from_=range[0], to_=range[1])
         if visible is not None:
             self._visible = visible
 
