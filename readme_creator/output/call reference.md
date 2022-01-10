@@ -368,7 +368,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(text = None,
@@ -462,7 +467,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(text = None,
@@ -760,7 +770,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(menu_definition = None,
@@ -836,7 +851,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(menu_definition = None,
@@ -1400,7 +1420,12 @@ unhide_row()
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -1481,7 +1506,12 @@ Parameter Descriptions:
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -1795,7 +1825,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(visible = None)
@@ -1883,7 +1918,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(visible = None)
@@ -2157,7 +2197,12 @@ Changes some of the settings for the Combo Element. Must call `Window.Read` or `
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -2244,7 +2289,12 @@ Changes some of the settings for the Combo Element. Must call `Window.Read` or `
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -2545,7 +2595,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None, visible = None)
@@ -2634,7 +2689,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None, visible = None)
@@ -2712,7 +2772,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(background_color = None, visible = None)
@@ -3271,7 +3336,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(background_color = None, visible = None)
@@ -4161,7 +4231,12 @@ unhide_row()
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
 To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
 delete the previously shown image.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(source = None,
@@ -4264,7 +4339,12 @@ Parameter Descriptions:
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
 To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
 delete the previously shown image.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(source = None,
@@ -4584,6 +4664,10 @@ unhide_row()
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
 Changes will not be visible in your window until you call window.read or window.refresh.
 
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
+
 ```
 update(value = None,
     disabled = None,
@@ -4666,6 +4750,10 @@ Parameter Descriptions:
 
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -5007,6 +5095,10 @@ unhide_row()
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 Changes will not be visible in your window until you call window.read or window.refresh.
 
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
+
 ```
 update(values = None,
     disabled = None,
@@ -5109,6 +5201,10 @@ Parameter Descriptions:
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(values = None,
@@ -5371,7 +5467,12 @@ unhide_row()
 ### update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(menu_definition = None, visible = None)
@@ -5431,7 +5532,12 @@ Parameter Descriptions:
 ### Update
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(menu_definition = None, visible = None)
@@ -5867,7 +5973,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -5958,7 +6069,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -6243,7 +6359,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -6310,7 +6431,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -6342,6 +6468,7 @@ You can control which Multiline Element receives your stdout output as well as u
 
     The Multiline Element is the superior and recommended method for showing the output of stdout.
     The Multiline Element has been added to significantly while the Output element has not.
+    If you choose to use a Multiline element to replace an Output element, be sure an turn on the write_only paramter in the Multline
 
     Of course, Output Element continues to operate and be backwards compatible, but you're missing out on
     features such as routing the cprint output to the element.
@@ -6595,7 +6722,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None, visible = None)
@@ -6675,7 +6807,12 @@ Returns the TKOutput object used to create the element
 ### Update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None, visible = None)
@@ -6922,7 +7059,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(visible = None)
@@ -6981,7 +7123,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(visible = None)
@@ -7215,7 +7362,12 @@ unhide_row()
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(current_count = None,
@@ -7298,7 +7450,12 @@ Parameter Descriptions:
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 Now has the ability to modify the count so that the update_bar method is not longer needed separately
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(current_count = None,
@@ -7632,7 +7789,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -7721,7 +7883,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -7979,7 +8146,10 @@ unhide_row()
 
 A dummy update call.  This will only be called if an element hasn't implemented an update method
 It is provided here for docstring purposes.  If you got here by browing code via PyCharm, know
-that this is not the function that will be called.  Your actual element's update method will be called
+that this is not the function that will be called.  Your actual element's update method will be called.
+
+If you call update, you must call window.refresh if you want the change to happen prior to your next
+window.read() call. Normally uou don't do this as the window.read call is likely going to happen next.
 
 ```
 update(args=*<1 or N object>, kwargs)
@@ -8247,7 +8417,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -8312,7 +8487,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -8589,7 +8769,12 @@ Changes some of the settings for the Spin Element. Must call `Window.Read` or `W
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -8671,7 +8856,12 @@ Changes some of the settings for the Spin Element. Must call `Window.Read` or `W
 Note that the state can be in 3 states only.... enabled, disabled, readonly even
 though more combinations are available. The easy way to remember is that if you
 change the readonly parameter then you are enabling the element.
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -8933,7 +9123,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -9000,7 +9195,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -9298,7 +9498,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(title = None,
@@ -9398,7 +9603,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(title = None,
@@ -10082,7 +10292,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(values = None,
@@ -10163,7 +10378,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(values = None,
@@ -10424,7 +10644,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(value = None,
@@ -10501,7 +10726,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(value = None,
@@ -10864,7 +11094,12 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 update(values = None,
@@ -10933,7 +11168,12 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
 Changes will not be visible in your window until you call window.read or window.refresh.
+
+If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+when made visible.
 
 ```
 Update(values = None,
@@ -17832,7 +18072,8 @@ set_options(icon = None,
     pysimplegui_settings_filename = None,
     keep_on_top = None,
     dpi_awareness = None,
-    scaling = None)
+    scaling = None,
+    disable_modal_windows = None)
 ```
 
 Parameter Descriptions:
@@ -17892,6 +18133,7 @@ Parameter Descriptions:
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
+|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -17962,7 +18204,8 @@ SetOptions(icon = None,
     pysimplegui_settings_filename = None,
     keep_on_top = None,
     dpi_awareness = None,
-    scaling = None)
+    scaling = None,
+    disable_modal_windows = None)
 ```
 
 Parameter Descriptions:
@@ -18022,6 +18265,7 @@ Parameter Descriptions:
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
+|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()

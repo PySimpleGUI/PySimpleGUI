@@ -10,6 +10,9 @@ _change_log = """
         Added OptionMenu to the list of tkinter widgets that are ignored when the grab anywhere feature is used
     4.56.0.3
         Slider - update the range FIRST and then the value in the update method (thank you Jason for the fix)
+    4.56.0.4
+        Updated docstrings for all Element.update methods to indicate that the helper function "pin" need to be used to keep an element
+            in place if visibility changes
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1563,7 +1566,10 @@ class Element():
         """
         A dummy update call.  This will only be called if an element hasn't implemented an update method
         It is provided here for docstring purposes.  If you got here by browing code via PyCharm, know
-        that this is not the function that will be called.  Your actual element's update method will be called
+        that this is not the function that will be called.  Your actual element's update method will be called.
+
+        If you call update, you must call window.refresh if you want the change to happen prior to your next
+        window.read() call. Normally uou don't do this as the window.read call is likely going to happen next.
         """
         print('* Base Element Class update was called. Your element does not seem to have an update method')
 
@@ -1690,6 +1696,10 @@ class Input(Element):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param value:            new text to display as default text in Input field
         :type value:             (str)
@@ -1858,7 +1868,13 @@ class Combo(Element):
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
         though more combinations are available. The easy way to remember is that if you
         change the readonly parameter then you are enabling the element.
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:        change which value is current selected based on new list of previous list of choices
         :type value:         (Any)
         :param values:       change list of choices
@@ -2040,7 +2056,13 @@ class OptionMenu(Element):
     def update(self, value=None, values=None, disabled=None, visible=None, size=(None, None)):
         """
         Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:    the value to choose by default
         :type value:     (Any)
         :param values:   Values to be displayed
@@ -2208,6 +2230,11 @@ class Listbox(Element):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param values:          new list of choices to be shown to user
         :type values:           List[Any]
         :param disabled:        disable or enable state of the element
@@ -2429,7 +2456,13 @@ class Radio(Element):
     def update(self, value=None, text=None, background_color=None, text_color=None, circle_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:            if True change to selected and set others in group to unselected
         :type value:             (bool)
         :param text:             Text to display next to radio button
@@ -2629,7 +2662,13 @@ class Checkbox(Element):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:            if True checks the checkbox, False clears it
         :type value:             (bool)
         :param text:             Text to display next to checkbox
@@ -2789,7 +2828,13 @@ class Spin(Element):
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
         though more combinations are available. The easy way to remember is that if you
         change the readonly parameter then you are enabling the element.
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:    set the current value from list of choices
         :type value:     (Any)
         :param values:   set available choices
@@ -3005,7 +3050,13 @@ class Multiline(Element):
                background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:                      new text to display
         :type value:                       (Any)
         :param disabled:                   disable or enable state of the element
@@ -3349,7 +3400,13 @@ class Text(Element):
     def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:            new text to show
         :type value:             (str)
         :param background_color: color of background
@@ -3680,7 +3737,13 @@ class StatusBar(Element):
     def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param value:            new text to show
         :type value:             (str)
         :param background_color: color of background
@@ -3999,7 +4062,12 @@ class Output(Element):
     def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param value:   string that will replace current contents of the output area
         :type value:    (str)
@@ -4451,7 +4519,12 @@ class Button(Element):
                visible=None, image_subsample=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param text:                  sets button text
         :type text:                   (str)
@@ -4714,7 +4787,12 @@ class ButtonMenu(Element):
     def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param menu_definition: (New menu definition (in menu definition format)
         :type menu_definition:  List[List]
@@ -4908,7 +4986,12 @@ class ProgressBar(Element):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
         Now has the ability to modify the count so that the update_bar method is not longer needed separately
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param current_count: sets the current value
         :type current_count:  (int)
@@ -5044,7 +5127,13 @@ class Image(Element):
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
         delete the previously shown image.
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
+
         :param source:   A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
         :type source:    str | bytes | None
         :param filename: filename to the new image to display.
@@ -5766,7 +5855,12 @@ class Graph(Element):
     def update(self, background_color=None, visible=None):
         """
         Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param background_color: color of background
         :type background_color:  ???
@@ -6226,7 +6320,12 @@ class Frame(Element):
     def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param value:   New text value to show on frame
         :type value:    (Any)
@@ -6533,7 +6632,12 @@ class Tab(Element):
     def update(self, title=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param title:    tab title
         :type title:     (str)
@@ -6998,7 +7102,12 @@ class Slider(Element):
     def update(self, value=None, range=(None, None), disabled=None, visible=None):
         """
         Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param value:    sets current slider value
         :type value:     int | float
@@ -7372,7 +7481,12 @@ class Column(Element):
     def update(self, visible=None):
         """
         Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param visible: control visibility of element
         :type visible:  (bool)
@@ -7496,7 +7610,12 @@ class Pane(Element):
     def update(self, visible=None):
         """
         Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param visible: control visibility of element
         :type visible:  (bool)
@@ -7828,7 +7947,12 @@ class Menu(Element):
     def update(self, menu_definition=None, visible=None):
         """
         Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param menu_definition: The menu definition list
         :type menu_definition:  List[List[Tuple[str, List[str]]]
@@ -8036,7 +8160,12 @@ class Table(Element):
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param values:                A new 2-dimensional table to show
         :type values:                 List[List[str | int | float]]
@@ -8432,7 +8561,12 @@ class Tree(Element):
     def update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
         Changes will not be visible in your window until you call window.read or window.refresh.
+
+        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+        when made visible.
 
         :param values:  Representation of the tree
         :type values:   (TreeData)
