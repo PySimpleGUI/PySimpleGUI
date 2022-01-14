@@ -1423,6 +1423,49 @@ Experimenting is the best way to get a handle on how your system responds.
 
 It would be great to know if this works on Linux and the Mac.
 
+This code is from a Demo Program named `Demo_Window_Location_Finder.py` and will help you located the x,y position on your monitors.  Grab the yellow square with your mouse to move the tool around your screen.  The 4 arrows point to the direction indicated
+  
+
+![image](https://user-images.githubusercontent.com/46163555/149558096-826b5e19-e549-41ed-87cc-614ab20a0913.png)  
+
+
+  
+```python
+import PySimpleGUI as sg
+
+sg.theme('dark green 7')
+
+layout = [
+    [sg.T(sg.SYMBOL_UP_ARROWHEAD),
+     sg.Text(size=(None, 1), key='-OUT-'),
+     sg.Text(size=(None, 1), key='-OUT2-', expand_x=True, expand_y=True, justification='c'), sg.T(sg.SYMBOL_UP_ARROWHEAD)],
+    [sg.T('Screen size: '), sg.T(sg.Window.get_screen_size()), sg.T(sg.SYMBOL_SQUARE)],
+    [sg.T(sg.SYMBOL_DOWN_ARROWHEAD),
+     sg.Text(size=(None, 1), key='-OUT4-'),
+     sg.Text(size=(None, 1), key='-OUT3-', expand_x=True, expand_y=True, justification='r'), sg.T(sg.SYMBOL_DOWN_ARROWHEAD, justification='r')],
+]
+
+window = sg.Window('Title not seen', layout, grab_anywhere=True, no_titlebar=True, margins=(0, 0), element_padding=(0, 0), right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT,
+                   keep_on_top=True, font='_ 25', finalize=True, transparent_color=sg.theme_background_color())
+
+while True:
+    event, values = window.read(timeout=100)
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Edit Me':
+        sg.execute_editor(__file__)
+
+    loc = window.current_location()
+    window['-OUT-'].update(loc)
+    window['-OUT2-'].update((loc[0] + window.size[0], loc[1]))
+    window['-OUT3-'].update((loc[0] + window.size[0], loc[1] + window.size[1]))
+    window['-OUT4-'].update((loc[0], loc[1] + window.size[1]))
+
+window.close()
+```
+
+
+
 
 ---------
 
@@ -1620,7 +1663,8 @@ Perhaps a better example would be if you wanted to allow your window to be resiz
 
 But, if you're determined to hard code a size and want to vertically center your elements in that window, then the `VPush` is a good way to go.
 
-This example window is 300 pixels by 300 pixels.  The layout is both center justified and center aligned.  This is accomplished using a combination of `Push` and `VPush` elements.
+This example window is 300 pixels by 300 pixels.  The layout is both center justified and center aligned.  This is accomplished using a combination of `Push` and `VPush` elements.  
+
 ![image](https://user-images.githubusercontent.com/46163555/149555894-c56c7b40-d06a-4391-b261-bbede2e9b191.png)
 
 ```python
