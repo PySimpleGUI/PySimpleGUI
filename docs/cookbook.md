@@ -1426,6 +1426,225 @@ It would be great to know if this works on Linux and the Mac.
 
 ---------
 
+# Recipe - Element Justification and Alignment
+
+There are 2 terms used in PySimpleGUI regarding positioning:
+* Justification - Positioning on the horizontal axis (left, center, right)
+* Alignment - Positioning on the vertical axis (top, middle, bottom)
+
+## Justification
+
+Justification of elements can be accomplished using 2 methods.  
+1. Use a Column Element with the `element_justification` parameter
+2. Use the `Push` element
+
+The `Push` was added in 2021 to the tkinter port.  The PySimpleGUIQt port already has an element called `Stretch` that works in a similar way.  You could say that `Push` is an alias for `Stretch`, even though `Stretch` wasn't a tkinter element previously.
+
+### Push
+
+The way to think about `Push` elements is to think of them a an element that "repels" or pushes around other elements.  The `Push` works on a row by row basis.  Each row that you want the `Push` to impact will need to have one or more `Push` elements on that row.
+
+Normally, each row is left justified in PySimpleGUI (unless you've set a parameter in the Window object or the row is in a Column element that has a setting that impacts justification.  
+
+Think of the sides of a window as a wall that cannot move.  Elements can move, but the side-walls cannot.  If you place a `Push` element on the left side of another element, then it will "push" the element to the right.  If you place a `Push` on the right side, then it will "push" the element to the left.  If you use TWO `Push` elements and place one on each side of an element, then the element will be centered.
+
+This recipe demonstrates using a `Push` element to create rows that have different justification happening on each row.
+
+The first row of the layout is 50 chars so that the window will be wide enough that each row's justification will have some room to move around.
+
+The second row doesn't **need** a `Push` element in order for the element to be left justified.  However, if your entire window was right justified, then using the `Push` on the right side of an element would push it to be left justified.
+
+Notice the last row of the layout.   There are 2 buttons together with a Push on each side.  This causes those 2 buttons to be centered.
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('*'*50)],
+          [sg.Text('Left Justified'), sg.Push()],
+          [sg.Push(), sg.Text('Right Justified')],
+          [sg.Push(), sg.Text('Center Justified'), sg.Push()],
+          [sg.Push(), sg.Button('Ok'), sg.Button('Cancel'), sg.Push()]]
+
+window = sg.Window('Push Element', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+
+![image](https://user-images.githubusercontent.com/46163555/149537710-cbd6e286-9b60-4819-ab58-cd2a3f85ddf0.png)
+
+
+### Container Element Justification (`element_justification` parameter)
+
+You can use Container Elements (Column, Frame, Tab and Window too) to justify multiple rows at a time.  The parameter `element_justification` controls how elements within a container or Window are justified.
+
+In this example, all elements in the window are centered
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('*'*50)],
+          [sg.Text('All elements will be Centered')],
+          [sg.Button('Ok'), sg.Button('Cancel')]]
+
+window = sg.Window('Element Justification', layout, element_justification='c')
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+
+![image](https://user-images.githubusercontent.com/46163555/149542024-eefc60f4-4b6d-4f04-9f7a-614b0d2ee75f.png)
+
+
+
+## Alignment - single rows
+
+"Alignment" is the term used to describe the vertical positioning of elements.  Within a single row, alignment is performed by using a container element or by using a one of the alignment "layout helper functions".  You'll find the layout helper functions in the call reference documentation here:   
+https://pysimplegui.readthedocs.io/en/latest/call%20reference/#layout-helper-funcs
+
+There are 3 functions in particular that affect vertical positioning:  
+* vtop - Align an element or an entire row to the "top" of the row
+* vbottom - Align an element or an entire row to the "bottom" of the row
+* vcenter - Align an element or an entire row to the "center" of the row
+
+By default the alignment on each row is center.
+
+This program uses the default alignment which will center elements on each row.
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Listbox(list(range(10)), size=(5,5)), sg.Multiline(size=(25,10))],
+          [sg.Button('Ok'), sg.Button('Cancel')]]
+
+window = sg.Window('Element Alignment', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+![image](https://user-images.githubusercontent.com/46163555/149552722-1e8abf8e-b7c8-45ba-b69f-9a56fbf50173.png)
+
+
+If you want to have the Listbox and the Multiline aligned at the top, then you can use the `vtop` helper function.  Since the Listbox is the shorter height, you could add `vtop` just to that element.  Or, you can use `vtop` and pass in the entire row so that if the size of one of these elements changes in the future so that the Multiline is shorter, they'll remain top aligned.
+
+If the elements on that row were top-aligned, the window will look like this:
+
+![image](https://user-images.githubusercontent.com/46163555/149553462-c5a54be2-e5d0-434d-a466-1aa4da6e225a.png)
+
+Here are 3 ways you can accomplish this operation.
+
+Align only the single element
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.vtop(sg.Listbox(list(range(10)), size=(5,5))), sg.Multiline(size=(25,10))],
+          [sg.Button('Ok'), sg.Button('Cancel')]]
+
+window = sg.Window('Element Alignment', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+
+Align the entire row
+
+```python
+import PySimpleGUI as sg
+
+layout = [sg.vtop([sg.Listbox(list(range(10)), size=(5,5)), sg.Multiline(size=(25,10))]),
+          [sg.Button('Ok'), sg.Button('Cancel')]]
+
+window = sg.Window('Element Alignment', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+
+Notice how using `vtop` in the example above replaces the entire row with just the `vtop` call.  The reason for this is that the `vtop` function returns a list (i.e. a row).  This means that brackets are not needed.  But it looks a little odd and makes it more difficult to see where the rows are.
+
+Newer versions of PySimpleGUI allow an extra set of brackets `[ ]` so that the layout appears to still be a list-per-row.
+
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.vtop([sg.Listbox(list(range(10)), size=(5,5)), sg.Multiline(size=(25,10))])],
+          [sg.Button('Ok'), sg.Button('Cancel')]]
+
+window = sg.Window('Element Alignment', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+
+## Alignment - `VPush`
+
+Just like the `Push` element will "push" elements around in a horizontal fashion, the `VPush` element pushes entire groups of rows up and down within the container they are inside of.
+
+If you have a single `VPush` in your layout, then the layout will be pushed to the top or to the bottom.  Normally layouts are top-aligned by default so there's no need to have a single `VPush` at the bottom.  If you have two `VPush` elements, then it will center the elements between them.
+
+One of the best examples of using `VPush` is when a window's size has been hard coded.  Hard coding a window's size is **not recommended** in PySimpleGUI.  The reason is that the contents inside may not fit inside your hard coded size on some computers.  It's usually better to allow the window's size to "float" and be automatically sized to fit the contents. 
+
+Perhaps a better example would be if you wanted to allow your window to be resized and have the contents vertically aligned after resizing.
+
+But, if you're determined to hard code a size and want to vertically center your elements in that window, then the `VPush` is a good way to go.
+
+This example window is 300 pixels by 300 pixels.  The layout is both center justified and center aligned.  This is accomplished using a combination of `Push` and `VPush` elements.
+![image](https://user-images.githubusercontent.com/46163555/149555894-c56c7b40-d06a-4391-b261-bbede2e9b191.png)
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.VPush()],
+          [sg.Push(), sg.Text('Centered in the window'), sg.Push()],
+          [sg.Push(), sg.Button('Ok'), sg.Button('Cancel'), sg.Push()],
+          [sg.VPush()]]
+
+window = sg.Window('A Centered Layout', layout, resizable=True, size=(300, 300))
+
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+```
+
+
+----------
+
+
+
+
 # Recipe - Printing
 
 Outputting text is a very common operation in programming.  Your first Python program may have been
@@ -1436,7 +1655,7 @@ print('Hello World')
 
 But in the world of GUIs where do "prints" fit in?  Well, lots of places!  Of course you can still use the normal `print` statement.  It will output to StdOut (standard out) which is normally the shell where the program was launched from.  
 
-Prining to the console becomes a problem however when you launch using `pythonw` on Windows or if you launch your program in some other way that doesn't have a console.  With PySimpleGUI you have many options available to you so fear not.  
+Printing to the console becomes a problem however when you launch using `pythonw` on Windows or if you launch your program in some other way that doesn't have a console.  With PySimpleGUI you have many options available to you so fear not.  
 
 These Recipes explore how to retain *prints already in your code*.  Let's say your code was written for a console and you want to migrate over to a GUI.  Maybe there are so many print statements that you don't want to modify every one of them individually.
 
@@ -2675,7 +2894,7 @@ Before scrolling down to the code, guess how many lines of Python code were requ
 #!/usr/bin/env Python3      
 import PySimpleGUI as sg      
     
-sg.ChangeLookAndFeel('GreenTan')      
+sg.theme('GreenTan')      
     
 # ------ Menu Definition ------ #      
 menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],      
@@ -3139,9 +3358,9 @@ A standard non-blocking GUI with lots of inputs.
     import PySimpleGUI as sg      
       
     # Green & tan color scheme      
-    sg.ChangeLookAndFeel('GreenTan')      
+    sg.theme('GreenTan')      
       
-    sg.SetOptions(text_justification='right')      
+    sg.set_options(text_justification='right')      
       
     layout = [[sg.Text('Machine Learning Command Line Parameters', font=('Helvetica', 16))],      
               [sg.Text('Passes', size=(15, 1)), sg.Spin(values=[i for i in range(1, 1000)], initial_value=20, size=(6, 1)),      
@@ -3229,7 +3448,7 @@ To make it easier to see the Column in the window, the Column background has bee
     # Prior to the Column element, this layout was not possible      
     # Columns layouts look identical to GUI layouts, they are a list of lists of elements.    
       
-    sg.ChangeLookAndFeel('BlueMono')      
+    sg.theme('BlueMono')      
       
     # Column layout      
     col = [[sg.Text('col Row 1', text_color='white', background_color='blue')],      
@@ -3634,8 +3853,8 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     states for buttons and changes the text color to show greyed-out (disabled) buttons      
     """      
       
-    sg.ChangeLookAndFeel('Dark')      
-    sg.SetOptions(element_padding=(0,0))      
+    sg.theme('Dark')      
+    sg.set_options(element_padding=(0,0))      
       
     layout = [[sg.T('User:', pad=((3,0),0)), sg.OptionMenu(values = ('User 1', 'User 2'), size=(20,1)), sg.T('0', size=(8,1))],      
               [sg.T('Customer:', pad=((3,0),0)), sg.OptionMenu(values=('Customer 1', 'Customer 2'), size=(20,1)), sg.T('1', size=(8,1))],      
@@ -3759,20 +3978,17 @@ else:
 ## Desktop Floating Toolbar      
       
 #### Hiding your windows commmand window      
-For this and the Time & CPU Widgets you may wish to consider using a tool or technique that will hide your Windows Command Prompt window.  I recommend the techniques found on this site:      
-      
-[http://www.robvanderwoude.com/battech_hideconsole.php](http://www.robvanderwoude.com/battech_hideconsole.php)      
-      
-At the moment I'm using the technique that involves wscript and a script named RunNHide.vbs.  They are working beautifully.  I'm using a hotkey program and launch by using this script with the command "python.exe insert_program_here.py".   I guess the next widget should be one that shows all the programs launched this way so you can kill any bad ones.  If you don't properly catch the exit button on your window then your while loop is going to keep on working while your window is no longer there so be careful in your code to always have exit explicitly handled.    
+
+If you would like your python program to run without showing a console window, then you can name your file with a `.pyw` extension and open the file using `pythonw` instead of `python`.  This is the preferred way to launch a final version of a PySimpleGUI program as there is no need for a Console window and it will be a much more "Windows-like" experience.
       
       
 ### Floating toolbar      
-      
-This is a cool one!  (Sorry about the code pastes... I'm working in it)      
-      
-Impress your friends at what a tool-wizard you are by popping a custom toolbar that you keep in the corner of your screen.  It stays on top of all your other windows.      
-      
-      
+
+NOTE - Please look in the Demo Programs that use the newer Exec APIs.  This Recipe uses an older technique to launch subprocesses.  You'll find the Exec APIs documented in the main documentation and the Call Reference.
+
+"Launchers" have come a long long ways since the early days of PySimpleGUI.  This recipe directly calls `subprocess.Popen`.  In 2020 a new set of APIs, the Exec APIs, were added to PySimpleGUI.  These calls simplify the subprocess calls thus making them more approachable for newcomers to Python.
+
+
       
       
 ![toolbar gray](https://user-images.githubusercontent.com/13696193/45324308-bfb73700-b51b-11e8-90e7-ab24f3d6e61d.jpg)      
@@ -3798,11 +4014,11 @@ You can easily change colors to match your background by changing a couple of pa
         def print(line):      
             window['output'].update(line)      
       
-        sg.ChangeLookAndFeel('Dark')      
+        sg.theme('Dark')      
       
         namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py') ]      
       
-        sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)      
+        sg.set_options(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)      
         layout =  [[sg.Combo(values=namesonly, size=(35,30), key='demofile'),      
                     sg.Button('Run', button_color=('white', '#00168B')),      
                     sg.Button('Program 1'),      
@@ -3886,8 +4102,8 @@ import time
 
 
 # ----------------  Create Form  ----------------
-sg.ChangeLookAndFeel('Black')
-sg.SetOptions(element_padding=(0, 0))
+sg.theme('Black')
+sg.set_options(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
          [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
@@ -3951,7 +4167,7 @@ import PySimpleGUI as sg
 import psutil
 
 # ----------------  Create Window  ----------------
-sg.ChangeLookAndFeel('Black')
+sg.theme('Black')
 layout = [[sg.Text('')],
           [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
           [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0)),
@@ -3998,8 +4214,8 @@ If you double click the dashed line at the top of the list of choices, that menu
 ```python      
     import PySimpleGUI as sg      
       
-    sg.ChangeLookAndFeel('LightGreen')      
-    sg.SetOptions(element_padding=(0, 0))      
+    sg.theme('LightGreen')      
+    sg.set_options(element_padding=(0, 0))      
       
     # ------ Menu Definition ------ #      
     menu_def = [['File', ['Open', 'Save', 'Exit'  ]],      
@@ -4105,16 +4321,24 @@ while True:
   
 ## Creating a Windows .EXE File      
       
-It's possible to create a single .EXE file that can be distributed to Windows users.  There is no requirement to install the Python interpreter on the PC you wish to run it on.  Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.      
-      
-Installation of the packages, you'll need to install PySimpleGUI and PyInstaller (you need to install only once)      
-      
-    pip install PySimpleGUI      
-    pip install PyInstaller      
-      
+NEW in 2021 was the release of the [`psgcompiler`](https://github.com/PySimpleGUI/psgcompiler) project.  This is a front-end to the popular PyInstaller package.  `psgcompiler` adds a PySimpleGUI GUI front-end to PyInstaller, making it easier for you to create binary versions of your code for distributing to people that do not have  Python stalled on their system.
+
+The `psgcompiler` will eventually support multiple back-ends. At the moment, only PyInstaller is supported.  A HUGE "THANK YOU" to the PyInstaller project for making a brilliant program that enables Python programmers to share their work with non-Python users.
+
+`psgcompiler` makes it possible to create a single .EXE file that can be distributed to Windows users.  There is no requirement to install the Python interpreter on the PC you wish to run it on.  Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.  
+
+You can also make APP files for the Mac and binary distributable for Linux as well. However, in order to do so, you must run the program on the OS you are targeting. In other words it is not a cross-compiler.  You cannot run `psgcompiler`/`PyInstaller` on Windows and produce a Mac executable.
+
+If you want to directly user PyInstaller instead of psgcompiler, then you can install the packages separately and use PyInstaller directly.
+
+```
+pip install PySimpleGUI      
+pip install PyInstaller      
+```
+
 To create your EXE file from your program that uses PySimpleGUI, `my_program.py`,  enter this command in your  Windows command prompt:      
       
-    pyinstaller -wF my_program.py      
+pyinstaller -wF my_program.py      
       
 You will be left with a single file, `my_program.exe`, located in a folder named `dist` under the folder where you executed the `pyinstaller` command.      
       
@@ -4131,6 +4355,6 @@ Your EXE file should run without creating a "shell window".  Only the GUI window
 
 The PySimpleGUI Organization
 
-This documentation as well as all PySimpleGUI code and documentation is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+This documentation as well as all PySimpleGUI code and documentation is Copyright 2018, 2019, 2020, 2021, 2022 by PySimpleGUI.org
 
 Send correspondence to PySimpleGUI@PySimpleGUI.com prior to use of documentation
