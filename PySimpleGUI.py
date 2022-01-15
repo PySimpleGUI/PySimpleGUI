@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.5 Uneleased"
+version = __version__ = "4.56.0.6 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -15,6 +15,8 @@ _change_log = """
             in place if visibility changes
     4.56.0.5
         Replaced sponsor tab with a tab about the udemy course as well as the buy me a coffee link.
+    4.56.0.6
+        Fixed event generation for Spin element.  Also changed to use the "command" parameter to get the event. NOTE - still need to handle manual entry
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1180,6 +1182,14 @@ class Element():
         Internal callback function for when an entry is selected in a Combobox.
         :param event: Event data from tkinter (not used)
         :type event:
+
+        """
+        self._generic_callback_handler('')
+
+
+    def _SpinboxSelectHandler(self):
+        """
+        Internal callback function for when an entry is selected in a Combobox.
 
         """
         self._generic_callback_handler('')
@@ -15005,9 +15015,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
-                    element.TKSpinBox.bind('<ButtonRelease-1>', element._SpinChangedHandler)
-                    element.TKSpinBox.bind('<Up>', element._SpinChangedHandler)
-                    element.TKSpinBox.bind('<Down>', element._SpinChangedHandler)
+                    element.TKSpinBox.configure(command=element._SpinboxSelectHandler)
+                    # element.TKSpinBox.bind('<ButtonRelease-1>', element._SpinChangedHandler)
+                    # element.TKSpinBox.bind('<Up>', element._SpinChangedHandler)
+                    # element.TKSpinBox.bind('<Down>', element._SpinChangedHandler)
                 if element.Readonly:
                     element.TKSpinBox['state'] = 'readonly'
                 if element.Disabled is True:  # note overrides readonly if disabled
