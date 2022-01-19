@@ -1,8 +1,19 @@
-
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
   <h2 align="center">Python GUIs for Humans</h2>
 </p>
+
+<table>
+  <tr>
+    <td>
+      <img src="https://www.dropbox.com/s/6wzf3ebmj97v4zs/PySimpleGUI-GitHub-Udemy-Course.png?raw=1" width=200 alt="PySimpleGUI Udemy Course">
+    </td>
+    <td>
+      <h5>apply coupon for discount:<br>2E43BB0C9E0997247E30</h6>
+      <a href="https://www.udemy.com/course/pysimplegui/?referralCode=68B3C3DE22776E5F8EFE">click here to visit course page</a>
+    </td>
+  </tr>
+</table>
 
 Transforms the tkinter, Qt, WxPython, and Remi (browser-based) GUI frameworks into a simpler interface.  The window definition is simplified by using Python core data types understood by beginners (lists and dictionaries). Further simplification happens by changing event handling from a callback-based model to a message passing one.  
 
@@ -11,10 +22,13 @@ Your code is not _required_ to have an object oriented architecture which makes 
 Some programs are not well-suited for PySimpleGUI however.  By definition, PySimpleGUI implements a subset of the underlying GUI frameworks' capabilities.  It's difficult to define exactly which programs are well suited for PySimpleGUI and which are not.  It depends on the details of your program.  Duplicating Excel in every detail is an example of something not well suited for PySimpleGUI.
 
 [Japanese version of this readme](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
+  
+PySimpleGUI needs your support.  If you find PySimpleGUI useful, please consider sponsoring the project on GitHub or BuyMeACoffee.  It's expensive working full-time on PySimpleGUI and also paying for ongoing expenses (domains, artists, software, consultants, sponsoring open source projects).  
 
 <a href="https://www.buymeacoffee.com/PySimpleGUI" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee" width="217px" ></a>
 
-I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project.  Every donation helps, and help is needed and appreciated.
+<a href="https://github.com/sponsors/PySimpleGUI" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=%3Curl%3E&color=f88379"></a>
+
 
 <hr>
 
@@ -75,32 +89,36 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
 </p>
 
 ## Recognition of Open Source Use
-In the Demo Programs or one of the PySimpleGUI Account's Repos these packages were used at least one time. Some of your are the goodies on the right of the GUI gap.
-chatterbot
-cv2
-fitz
-forecastio
-gtts
-matplotlib
-mido
-mpl_toolkits
-notifypy
-numpy
-pandas
-PIL
-praw
-psgtray
-psutil
-pyfiglet
-pygame
-pylab
-pymunk
-requests
-vlc
-win32api
-win32con
-win32gui
-win32process
+In the Demo Programs or one of the PySimpleGUI Account's Repos these packages were used at least one time. Some of your are the goodies on the right of the GUI gap.  
+  
+ If you use Open Source software in your project, be sure and supply information about the packages you used.  
+
+- chatterbot
+- cv2
+- fitz
+- forecastio
+- gtts
+- matplotlib
+- mido
+- mpl_toolkits
+- notifypy
+- numpy
+- pandas
+- PIL
+- praw
+- psgtray
+- psutil
+- pyfiglet
+- pygame
+- pylab
+- pymunk
+- requests
+- vlc
+- win32api
+- win32con
+- win32gui
+- win32process  
+
 
 #### LPLG3 as an Example
 
@@ -124,7 +142,7 @@ Since the above packages each have a similar license clause, I'm listing them he
 
 You all have my respect and admiration.  You're enabling bigger things. What a special kind of thing to make. Who knows what you've enabled. I believe more people are getting over to your creations and getting to experience them.
 
-tkinter team - PySimpleGUI would be nowhere without your lengthy work & continios dedication. ONE GUI API for 3 different OS's? Really? With no code changes to move between? That's a huge accomplishment. You're #1 to me.
+tkinter team - PySimpleGUI would be nowhere without your lengthy work & continuous dedication. ONE GUI API for 3 different OS's? Really? With no code changes to move between? That's a huge accomplishment. You're #1 to me.  Thank you for your hard work 🙏.
 
 ## Getting Over "The Bar"
 
@@ -146,6 +164,12 @@ After recounting the varied and long road to finding PySimpleGUI, the stories be
 It's been these emails and the messages of gratitude seen here in the GitHub Issues that made dedicating my life to his project a non-decision.
 
 <hr>
+
+## Subscribing to Announcements 📢 
+  
+
+If you click the "Subscribe" button in [the Announcements GitHub Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/142), then you'll be notified when project news is published.  This Issue is **the official location** to get the latest PySimpleGUI information.  Information is posted frequently including release contents, tips & tricks, documentation updates, etc. There have been over 1,000 posts since the project started.
+<hr> 
 
 # About Me 👋
 
@@ -170,8 +194,11 @@ There is a significant amount of documentation, a cookbook, 100's of demo progra
 <hr>
 
 # Educational Resources 📚
+  
+PySimpleGUI now has an official Udemy course!  Check the header of this readme and the PySimpleGUI documentation for a coupon code.  The course can be found at [www.udemy.com/PySimpleGUI](https://www.udemy.com/PySimpleGUI).  **This course** is currently the only income source for the PySimpleGUI project other than sponsorships and donations.
 
-www.PySimpleGUI.org is easy to remember and is where the documentation is located. You'll find tabs across the top that represent several different documents. The documentation is located on "Read The Docs" so that there is a table of contents for each document and they are easy to search.
+[www.PySimpleGUI.org](http://www.PySimpleGUI.org)
+is easy to remember and is where the documentation is located. You'll find tabs across the top that represent several different documents. The documentation is located on "Read The Docs" so that there is a table of contents for each document and they are easy to search.
 
 There are 100s of pages of written documentation and 100s of example programs that will help you be effective very quickly.  Rather than requiring days or weeks of investment to learn a single GUI package, you may be able to complete your project in a single afternoon when using PySimpleGUI.
 
@@ -740,9 +767,24 @@ The theme changed colors of the background, text, input background, input text, 
 
 <hr>
 
+# Distribution
+
+Want to share your PySimpleGUI program with friends and family that don't have Python installed on their computer?  Try the GUI front-end for PyInstaller that you'll find in the [psgcompiler](https://github.com/PySimpleGUI/psgcompiler) project.
+
+![](https://raw.githubusercontent.com/PySimpleGUI/psgcompiler/main/screenshot_for_readme/psgcompiler_screenshot.jpg?token=ALAGMY3Z33WHFX3RTFXEZ73BTEUPO)
+
+
+<hr>
+
 # Support 💪
 
-Your first stop should be the [documentation](http://www.PySimpleGUI.org) and [demo programs](http://Demos.PySimpleGUI.org).  If you still have a question or need help...  no problem... help is available to you, at no cost. Simply [file an Issue](http://Issues.PySimpleGUI.org) on the PySimpleGUI GitHub repo and you'll get help.  
+Your first stop should be the [documentation](http://www.PySimpleGUI.org) and [demo programs](http://Demos.PySimpleGUI.org).   
+
+Be sure and install the Demo Browser (instructions in the Cookbook) so that you can search and run the 100s of demo programs.
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_Main_Window_Explained.jpg)
+
+If you still have a question or need help...  no problem... help is available to you, at no cost. Simply [file an Issue](http://Issues.PySimpleGUI.org) on the PySimpleGUI GitHub repo and you'll get help.  
 
 Nearly all software companies have a form that accompanies bug reports.  It's not a bad trade... fill in the form, get free software support.  This information helps get you an answer efficiently.
 
@@ -797,13 +839,16 @@ If there is a feature missing that you need or you have an enhancement to sugges
 
 # Special Thanks 🙏
 
-This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  The unique minesweeper that uses an image for the board was created by Israel.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  [@Chr0nicT](https://github.com/Chr0nicT) is the youngest developer I've worked with, ever, on projects. This kid shocks me on a regular basis.  Ask for a capability, such as the PySimpleGUI GitHub Issues form error checking bot, and it simply happens regardless of the technologies involved. I'm fortunate that we were introduced. Someday he's going to be whisked away, but until then we're all benefiting from his talent.  The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35). [@nngogol](https://github.com/nngogol) has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of initial release.  He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of doc strings as well as tools that generate the online documenation using the PySimpleGUI code itself.  PySimpleGUI would not be where it is today were it not for the help of these individuals.
+The PySimpleGUI team is tiny and they're all superstars. Every week I've been stunned by what they do. Dream-team is an understatement.  Simply put [@Chr0nicT](https://github.com/Chr0nicT), [@jason990420](https://github.com/jason990420), [@Snaiel](https://github.com/snaiel) and Mike[@PySimpleGUI](https://github.com/PySimpleGUI) ***are*** PySimpleGUI.
 
-The more than 2,200 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is *you* that has been the inspiration that fuels this project's engine.  
+
+This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  The unique minesweeper that uses an image for the board was created by Israel.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  [@Chr0nicT](https://github.com/Chr0nicT) is the youngest developer I've worked with, ever, on projects. This kid shocks me on a regular basis.  Ask for a capability, such as the PySimpleGUI GitHub Issues form error checking bot, and it simply happens regardless of the technologies involved. I'm fortunate that we were introduced. Someday he's going to be whisked away, but until then we're all benefiting from his talent. [@Snaiel](https://github.com/snaiel) made the Udemy course happen. It wouldn't have been 1/4th of what it is without his amazing skills in video production, course design, marketing brilliance, and web programming. The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35). [@nngogol](https://github.com/nngogol) has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of initial release.  He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of doc strings as well as tools that generate the online documenation using the PySimpleGUI code itself.  PySimpleGUI would not be where it is today were it not for the help of these individuals.
+
+The more than 4,000 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is *you* that has been the inspiration that fuels this project's engine.  
 
 The overseas users that post on Twitter overnight are the spark that starts the day's work on PySimpleGUI. They've been a source of positive energy that gets the development engine started and ready to run every day. As a token of appreciation, this readme file has been translated into [Japanese](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
 
-You've all been the best user community an Open Source developer could hope for.
+PySimpleGUI users have been the best user community an Open Source developer could hope for. I've never seen expressions of gratitude and joy like PySimpleGUI show on a daily basis. 
 
-© Copyright 2021 PySimpleGUI
+© Copyright 2021, 2022 PySimpleGUI
 
