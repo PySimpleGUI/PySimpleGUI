@@ -8911,7 +8911,7 @@ Emojis, Global settings, Exec APIs
 	* Official PySimpleGUI emojis now usable for your applications
 	* Used in the error messages
 	* Has the PSG super-hero logo on his/her chest
-	* #1 PySimpleGUI Goal remains the same.... FUN!
+	* Number 1 PySimpleGUI Goal remains the same.... FUN!
 	* EMOJI_BASE64_LIST is the list of all emojis. These are formed from the EMOJI_BASE64_SAD_LIST and EMOJI_BASE64_HAPPY_LIST
 * "Take me to error"
 	* It's been close to 2 years in the making, but finally it's here.
