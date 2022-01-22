@@ -21,6 +21,7 @@ _change_log = """
         New Emojis for 2022!        
     4.56.0.8
         Changed +CICKED+ to +CLICKED+ (typo) in the table header
+        Added constant TABLE_CLICKED_INDICATOR that is the value '+CLICKED+' so that it can be referenced instead of user's hard cording a string
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -533,7 +534,7 @@ TABLE_SELECT_MODE_NONE = tk.NONE
 TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
-
+TABLE_CLICKED_INDICATOR = '+CLICKED+'           # Part of the tuple returned as an event when a Table element has click events enabled
 DEFAULT_MODAL_WINDOWS_ENABLED = True
 
 TAB_LOCATION_TOP = 'top'
@@ -8347,7 +8348,7 @@ class Table(Element):
         # print('The new selected rows = ', self.SelectedRows)
         if self.enable_click_events is True:
             if self.Key is not None:
-                self.ParentForm.LastButtonClicked = (self.Key, '+CLICKED+', (row, column))
+                self.ParentForm.LastButtonClicked = (self.Key, TABLE_CLICKED_INDICATOR, (row, column))
             else:
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
