@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.7 Unreleased"
+version = __version__ = "4.56.0.8 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -19,6 +19,8 @@ _change_log = """
         Fixed event generation for Spin element.  Also changed to use the "command" parameter to get the event. NOTE - still need to handle manual entry
     4.56.0.7
         New Emojis for 2022!        
+    4.56.0.8
+        Changed +CICKED+ to +CLICKED+ (typo) in the table header
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8345,7 +8347,7 @@ class Table(Element):
         # print('The new selected rows = ', self.SelectedRows)
         if self.enable_click_events is True:
             if self.Key is not None:
-                self.ParentForm.LastButtonClicked = (self.Key, '+CICKED+', (row, column))
+                self.ParentForm.LastButtonClicked = (self.Key, '+CLICKED+', (row, column))
             else:
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
