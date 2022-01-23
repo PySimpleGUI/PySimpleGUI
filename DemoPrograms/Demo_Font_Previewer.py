@@ -1,16 +1,19 @@
 #!/usr/bin/env python
-import sys
 import PySimpleGUI as sg
-from tkinter import font
-import tkinter
-root = tkinter.Tk()
-fonts = list(font.families())
-fonts.sort()
-root.destroy()
 
 '''
-    Showing fonts in PSG / tk
+    Demo Font Previewer
+    
+    Gets a list of the installed fonts according to tkinter.
+    Requires PySimpleGUI version 4.57.0 and newer (that's when sg.Text.fonts_installed_list was added)
+    
+    Uses the Text element's class method to get the fonts reported by tkinter.
+    
+    Copyright 2020, 2021, 2022 PySimpleGUI
 '''
+
+fonts = sg.Text.fonts_installed_list()
+
 
 sg.theme('Black')
 
