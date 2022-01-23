@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.8 Unreleased"
+version = __version__ = "4.56.0.9 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -22,6 +22,8 @@ _change_log = """
     4.56.0.8
         Changed +CICKED+ to +CLICKED+ (typo) in the table header
         Added constant TABLE_CLICKED_INDICATOR that is the value '+CLICKED+' so that it can be referenced instead of user's hard cording a string
+    4.56.0.9
+        Added class method Text.fonts_installed_list - returns list of fonts as reported by tkinter
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3468,6 +3470,27 @@ class Text(Element):
         except:
             text = ''
         return text
+
+
+    @classmethod
+    def fonts_installed_list(cls):
+        """
+        Returns a list of strings that tkinter reports as the installed fonts
+
+        :return:          List of the installed font names
+        :rtype:           List[str]
+        """
+        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
+        if Window.hidden_master_root is None:
+            root = tk.Tk()
+        else:
+            root = Window.hidden_master_root
+
+        fonts = list(tkinter.font.families())
+        fonts.sort()
+        if Window.hidden_master_root is None:
+            root.destroy()
+        return fonts
 
 
     @classmethod
