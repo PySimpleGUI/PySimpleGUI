@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.9 Unreleased"
+version = __version__ = "4.56.0.10 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -24,6 +24,8 @@ _change_log = """
         Added constant TABLE_CLICKED_INDICATOR that is the value '+CLICKED+' so that it can be referenced instead of user's hard cording a string
     4.56.0.9
         Added class method Text.fonts_installed_list - returns list of fonts as reported by tkinter
+    4.56.0.10
+        New coupon... hmmm... this is going to get tiring since coupons are forced to expire in a timeframe not our choosing
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23313,7 +23315,7 @@ def _create_main_window():
     tab3 = Tab('Table &\nTree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', k='-TAB TABLE-')
     tab4 = Tab('Sliders\n', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', k='-TAB VAR-')
     tab5 = Tab('Input\nMultiline', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', k='-TAB TEXT-')
-    tab6 = Tab('Master or\nSponsor', frame7, k='-TAB SPONSOR-')
+    tab6 = Tab('Course or\nSponsor', frame7, k='-TAB SPONSOR-')
     tab7 = Tab('Popups\n', pop_test_tab_layout, k='-TAB POPUP-')
     tab8 = Tab('Themes\n', themes_tab_layout, k='-TAB THEMES-')
     tab9 = Tab('Global\nSettings', global_settings_tab_layout, k='-TAB GlOBAL SETTINGS-')
@@ -23452,7 +23454,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
-            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '2E43BB0C9E0997247E30')
+            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '5C14671AABA040B06FDC')
 
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)

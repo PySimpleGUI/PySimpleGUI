@@ -10499,7 +10499,21 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
-#### get
+### fonts_installed_list
+
+Returns a list of strings that tkinter reports as the installed fonts
+
+```
+fonts_installed_list()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[str] | **RETURN** | List of the installed font names
+
+### get
 
 Gets the current value of the displayed text
 

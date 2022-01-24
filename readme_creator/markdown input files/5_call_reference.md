@@ -2300,7 +2300,10 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Text.expand+> -->
 
-#### get
+### fonts_installed_list
+<!-- <+Text.fonts_installed_list+> -->
+
+### get
 <!-- <+Text.get+> -->
 
 ### get_size
