@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.10 Unreleased"
+version = __version__ = "4.56.0.11 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -26,6 +26,9 @@ _change_log = """
         Added class method Text.fonts_installed_list - returns list of fonts as reported by tkinter
     4.56.0.10
         New coupon... hmmm... this is going to get tiring since coupons are forced to expire in a timeframe not our choosing
+    4.56.0.11
+        Horizontal scrollbar for Multline element (long awaited).  New parameter added to control just this one scrollbar. The no_scrollbar existing parm 
+            refers to the vertical scrollbar
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2958,7 +2961,7 @@ class Multiline(Element):
     """
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
-                 size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
+                 size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:       Initial text to show
@@ -2981,6 +2984,8 @@ class Multiline(Element):
         :type background_color:    (str)
         :param text_color:         color of the text
         :type text_color:          (str)
+        :param horizontal_scroll:  Controls if a horizontal scrollbar should be shown.  If True a horizontal scrollbar will be shown in addition to vertical
+        :type horizontal_scroll:   (bool)
         :param change_submits:     DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :type change_submits:      (bool)
         :param enable_events:      Turns on the element specific events. Spin events happen when an item changes
@@ -3015,7 +3020,7 @@ class Multiline(Element):
         :type tooltip:             (str)
         :param justification:      text justification. left, right, center. Can use single characters l, r, c.
         :type justification:       (str)
-        :param no_scrollbar:       If False then a scrollbar will be shown (the default)
+        :param no_scrollbar:       If False then a vertical scrollbar will be shown (the default)
         :type no_scrollbar:        (bool)
         :param expand_x:           If True the element will automatically expand in the X direction to fill available space
         :type expand_x:            (bool)
@@ -3044,6 +3049,8 @@ class Multiline(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TagCounter = 0
         self.TKText = self.Widget = None  # type: tkst.ScrolledText
+        self.element_frame = None  # type: tk.Frame
+        self.HorizontalScroll = horizontal_scroll
         self.tags = set()
         self.WriteOnly = write_only
         self.AutoRefresh = auto_refresh
@@ -3063,6 +3070,7 @@ class Multiline(Element):
         if reroute_stderr:
             self.reroute_stderr_to_here()
         self.no_scrollbar = no_scrollbar
+        self.hscrollbar = None      # The horizontal scrollbar
         sz = size if size != (None, None) else s
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
@@ -3171,10 +3179,15 @@ class Multiline(Element):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
+
+
         if visible is False:
-            self.TKText.pack_forget()
+            self.element_frame.pack_forget()
+            # if self.HorizontalScroll:
+            #     self.hscrollbar.pack_forget()
         elif visible is True:
-            self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self.element_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            # self.hscrollbar.pack(side=tk.BOTTOM, fill='x')
 
         if self.AutoRefresh and self.ParentForm:
             try:  # in case the window was destroyed
@@ -14838,11 +14851,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Multiline
                 width, height = element_size
                 bd = element.BorderWidth
+                element.element_frame = element_frame = tk.Frame(tk_row_frame)
+
                 if element.no_scrollbar:
-                    element.TKText = element.Widget = tk.Text(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
+                    element.TKText = element.Widget = tk.Text(element_frame, width=width, height=height,  bd=bd, font=font, relief=RELIEF_SUNKEN)
                 else:
-                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font,
-                                                                                   relief=RELIEF_SUNKEN)
+                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(element_frame, width=width, height=height, bd=bd, font=font, relief=RELIEF_SUNKEN)
+
+                # Horizontal scrollbar
+                if element.HorizontalScroll:
+                    element.TKText.config(wrap='none')
+                    hscrollbar = tk.Scrollbar(element_frame, orient=tk.HORIZONTAL)
+                    hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                    hscrollbar.config(command=element.Widget.xview)
+                    element.Widget.configure(xscrollcommand=hscrollbar.set)
+                    element.hscrollbar = hscrollbar
+
+                    # Chr0nic
+                    element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.TKText.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+                else:
+                    element.TKText.config(wrap='word')
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
@@ -14866,11 +14895,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
 
-                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+                element.element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+                element.Widget.pack(side=tk.LEFT, fill=fill, expand=expand)
 
 
                 if element.visible is False:
-                    element.TKText.pack_forget()
+                    element.element_frame.pack_forget()
                 else:
                     # Chr0nic
                     element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
