@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.11 Unreleased"
+version = __version__ = "4.56.0.12 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -29,6 +29,9 @@ _change_log = """
     4.56.0.11
         Horizontal scrollbar for Multline element (long awaited).  New parameter added to control just this one scrollbar. The no_scrollbar existing parm 
             refers to the vertical scrollbar
+    4.56.0.12
+        Fix for font parameter only being applied to Text portion of popup_get_text. Should have been to the entire window.
+        Updated the internal keys to use the -KEY- coding convention. Was using the really old _KEY_ coding convention.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16262,20 +16265,20 @@ class QuickMeter(object):
         if self.orientation.lower().startswith('h'):
             col = []
             col += [[T(''.join(map(lambda x: str(x) + '\n', args)),
-                       key='_OPTMSG_')]]  ### convert all *args into one string that can be updated
-            col += [[T('', size=(30, 10), key='_STATS_')],
-                    [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size,
+                       key='-OPTMSG-')]]  ### convert all *args into one string that can be updated
+            col += [[T('', size=(30, 10), key='-STATS-')],
+                    [ProgressBar(max_value=self.max_value, orientation='h', key='-PROG-', size=self.size,
                                  bar_color=self.bar_color)]]
             if not self.no_button:
                 col += [[Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col)]
         else:
-            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size,
+            col = [[ProgressBar(max_value=self.max_value, orientation='v', key='-PROG-', size=self.size,
                                 bar_color=self.bar_color)]]
             col2 = []
             col2 += [[T(''.join(map(lambda x: str(x) + '\n', args)),
-                        key='_OPTMSG_')]]  ### convert all *args into one string that can be updated
-            col2 += [[T('', size=(30, 10), key='_STATS_')]]
+                        key='-OPTMSG-')]]  ### convert all *args into one string that can be updated
+            col2 += [[T('', size=(30, 10), key='-STATS-')]]
             if not self.no_button:
                 col2 += [[Cancel(button_color=self.button_color), Stretch()]]
 
@@ -16289,9 +16292,9 @@ class QuickMeter(object):
 
         self.current_value = current_value
         self.max_value = max_value
-        self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
-        self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
-        self.window.Element('_OPTMSG_').Update(
+        self.window.Element('-PROG-').UpdateBar(self.current_value, self.max_value)
+        self.window.Element('-STATS-').Update('\n'.join(self.ComputeProgressStats()))
+        self.window.Element('-OPTMSG-').Update(
             value=''.join(map(lambda x: str(x) + '\n', args)))  ###  update the string with the args
         event, values = self.window.read(timeout=0)
         if event in ('Cancel', None) or current_value >= max_value:
@@ -19538,12 +19541,12 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     else:
         layout = [[]]
 
-    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
-               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
+               [InputText(default_text=default_text, size=size, key='-INPUT-', password_char=password_char)],
                [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, finalize=True, modal=modal)
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, finalize=True, modal=modal, font=font)
 
     button, values = window.read()
     window.close()
@@ -19551,7 +19554,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     if button != 'Ok':
         return None
     else:
-        path = values['_INPUT_']
+        path = values['-INPUT-']
         return path
 
 
@@ -21426,17 +21429,17 @@ class _Debugger:
                            InVar('_VAR1_'),
                            InVar('_VAR2_'), ]
 
-        interactive_frame = [[T('>>> '), In(size=(83, 1), key='_REPL_',
+        interactive_frame = [[T('>>> '), In(size=(83, 1), key='-REPL-',
                                             tooltip='Type in any "expression" or "statement"\n and it will be disaplayed below.\nPress RETURN KEY instead of "Go"\nbutton for faster use'),
                               B('Go', bind_return_key=True, visible=True)],
-                             [Multiline(size=(93, 26), key='_OUTPUT_', autoscroll=True, do_not_clear=True)], ]
+                             [Multiline(size=(93, 26), key='-OUTPUT-', autoscroll=True, do_not_clear=True)], ]
 
-        autowatch_frame = [[Button('Choose Variables To Auto Watch', key='_LOCALS_'),
+        autowatch_frame = [[Button('Choose Variables To Auto Watch', key='-LOCALS-'),
                             Button('Clear All Auto Watches'),
-                            Button('Show All Variables', key='_SHOW_ALL_'),
-                            Button('Locals', key='_ALL_LOCALS_'),
-                            Button('Globals', key='_GLOBALS_'),
-                            Button('Popout', key='_POPOUT_')]]
+                            Button('Show All Variables', key='-SHOW_ALL-'),
+                            Button('Locals', key='-ALL_LOCALS-'),
+                            Button('Globals', key='-GLOBALS-'),
+                            Button('Popout', key='-POPOUT-')]]
 
         var_layout = []
         for i in range(NUM_AUTO_WATCH):
@@ -21493,11 +21496,11 @@ class _Debugger:
             self.watcher_window = None
             return False
         # ------------------------------- Process events from REPL Tab -------------------------------
-        cmd = values['_REPL_']  # get the REPL entered
+        cmd = values['-REPL-']  # get the REPL entered
         # BUTTON - GO (NOTE - This button is invisible!!)
         if event == 'Go':  # GO BUTTON
-            self.watcher_window.Element('_REPL_').Update('')
-            self.watcher_window.Element('_OUTPUT_').Update(">>> {}\n".format(cmd), append=True, autoscroll=True)
+            self.watcher_window.Element('-REPL-').Update('')
+            self.watcher_window.Element('-OUTPUT-').Update(">>> {}\n".format(cmd), append=True, autoscroll=True)
 
             try:
                 result = eval('{}'.format(cmd), myglobals, mylocals)
@@ -21510,7 +21513,7 @@ class _Debugger:
                     except Exception as e:
                         result = 'Exception {}\n'.format(e)
 
-            self.watcher_window.Element('_OUTPUT_').Update('{}\n'.format(result), append=True, autoscroll=True)
+            self.watcher_window.Element('-OUTPUT-').Update('{}\n'.format(result), append=True, autoscroll=True)
         # BUTTON - DETAIL
         elif event.endswith('_DETAIL_'):  # DETAIL BUTTON
             var = values['_VAR{}_'.format(event[4])]
@@ -21533,13 +21536,13 @@ class _Debugger:
             popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=DEBUGGER_VARIABLE_DETAILS_FONT)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
-        elif event == '_LOCALS_':  # Show all locals BUTTON
+        elif event == '-LOCALS-':  # Show all locals BUTTON
             self._choose_auto_watches(mylocals)
         # BUTTON - Locals (quick popup)
-        elif event == '_ALL_LOCALS_':
+        elif event == '-ALL_LOCALS-':
             self._display_all_vars(mylocals)
         # BUTTON - Globals (quick popup)
-        elif event == '_GLOBALS_':
+        elif event == '-GLOBALS-':
             self._display_all_vars(myglobals)
         # BUTTON - clear all
         elif event == 'Clear All Auto Watches':
@@ -21547,11 +21550,11 @@ class _Debugger:
                 self.local_choices = {}
                 self.custom_watch = ''
         # BUTTON - Popout
-        elif event == '_POPOUT_':
+        elif event == '-POPOUT-':
             if not self.popout_window:
                 self._build_floating_window()
         # BUTTON - Show All
-        elif event == '_SHOW_ALL_':
+        elif event == '-SHOW_ALL-':
             for key in self.locals:
                 self.local_choices[key] = not key.startswith('_')
 
@@ -21573,7 +21576,7 @@ class _Debugger:
         # -------------------- Process the automatic "watch list" ------------------
         slot = 0
         for key in self.local_choices:
-            if key == '_CUSTOM_WATCH_':
+            if key == '-CUSTOM_WATCH-':
                 continue
             if self.local_choices[key]:
                 self.watcher_window.Element('_WATCH{}_'.format(slot)).Update(key)
@@ -21711,9 +21714,9 @@ class _Debugger:
             layout.append(line)
 
         layout += [
-            [Text('Custom Watch (any expression)'), Input(default_text=self.custom_watch, size=(40, 1), key='_CUSTOM_WATCH_')]]
+            [Text('Custom Watch (any expression)'), Input(default_text=self.custom_watch, size=(40, 1), key='-CUSTOM_WATCH-')]]
         layout += [
-            [Ok(), Cancel(), Button('Clear All'), Button('Select [almost] All', key='_AUTO_SELECT_')]]
+            [Ok(), Cancel(), Button('Clear All'), Button('Select [almost] All', key='-AUTO_SELECT-')]]
 
         window = Window('All Locals', layout, icon=PSG_DEBUGGER_LOGO, finalize=True)
 
@@ -21723,18 +21726,18 @@ class _Debugger:
                 break
             elif event == 'Ok':
                 self.local_choices = values
-                self.custom_watch = values['_CUSTOM_WATCH_']
+                self.custom_watch = values['-CUSTOM_WATCH-']
                 break
             elif event == 'Clear All':
                 popup_quick_message('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True,
                                     text_color='red', font='ANY 18')
                 for key in sorted_dict:
                     window.Element(key).Update(False)
-                window.Element('_CUSTOM_WATCH_').Update('')
+                window.Element('-CUSTOM_WATCH-').Update('')
             elif event == 'Select All':
                 for key in sorted_dict:
                     window.Element(key).Update(False)
-            elif event == '_AUTO_SELECT_':
+            elif event == '-AUTO_SELECT-':
                 for key in sorted_dict:
                     window.Element(key).Update(not key.startswith('_'))
 
@@ -23285,9 +23288,9 @@ def _create_main_window():
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
 
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
-        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='_COMBO1_', )],
-        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 20', default_value='Combo item 2', key='_COMBO2_', )],
-        # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='_COMBO2_')],
+        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='-COMBO1-', )],
+        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 20', default_value='Combo item 2', key='-COMBO2-', )],
+        # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='-COMBO2-')],
         [Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3))],
     ]
 
@@ -23306,11 +23309,11 @@ def _create_main_window():
     frame5 = [[
         Table(values=matrix, headings=matrix[0],
               auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',
-              num_rows=10, alternating_row_color='lightblue', key='_table_',
+              num_rows=10, alternating_row_color='lightblue', key='-TABLE-',
               col_widths=[5, 5, 5, 5], size=(400, 200), ),
         T('  '),
         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
-             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, )],[VStretch()]]
+             num_rows=10, col0_width=10, key='-TREE-', show_expanded=True, )],[VStretch()]]
     frame7 = [[Image(EMOJI_BASE64_HAPPY_HEARTS, enable_events=True, k='-EMOJI-HEARTS-'), T('Do you'), Image(HEART_3D_BASE64, subsample=3, enable_events=True, k='-HEART-'), T('so far?')],
               [T('Want to be taught PySimpleGUI?  Then maybe the "Official PySimpleGUI Course" on Udemy is for you.')],
               [T('Coupon codes are sometimes around so check docs, announcements, easter eggs on this page, to see specials.')],
@@ -23355,9 +23358,9 @@ def _create_main_window():
 
     layout_top = Column([
         [Image(EMOJI_BASE64_HAPPY_BIG_SMILE, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
-         Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
+         Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-IMAGE-'),
          Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
-              tooltip='My tooltip', key='_TEXT1_')],
+              tooltip='My tooltip', key='-TEXT1-')],
         VerLine(ver, 'PySimpleGUI Version') + [Image(HEART_3D_BASE64, subsample=4)],
         VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
         VerLine(tclversion_detailed, 'detailed tkinter version'),
@@ -23366,7 +23369,7 @@ def _create_main_window():
 
     layout_bottom = [
         [B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE TABS-'),
-         pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='_TAB_GROUP_')]], k='-TAB GROUP-'))],
+         pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='-TAB_GROUP-')]], k='-TAB GROUP COL-'))],
         [B('Button', highlight_colors=('yellow', 'red'),pad=(1, 0)), B('Hide Stuff',pad=(1, 0), metadata='my metadata'),
          B('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button',pad=(1, 0)),
          B('See-through Mode', tooltip='Make the background transparent',pad=(1, 0)),
@@ -23382,9 +23385,9 @@ def _create_main_window():
     layout = [[]]
 
     if not USE_CUSTOM_TITLEBAR:
-        layout += [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow', tearoff=True)]]
+        layout += [[Menu(menu_def, key='-MENU-', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow', tearoff=True)]]
     else:
-        layout += [[MenubarCustom(menu_def, key='_MENU_', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),
+        layout += [[MenubarCustom(menu_def, key='-MENU-', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),
                                   background_color='red', text_color='white', disabled_text_color='yellow')]]
 
     layout += [[layout_top] + [ProgressBar(max_value=800, size=(20, 25), orientation='v', key='+PROGRESS+')]]
@@ -23445,14 +23448,14 @@ def main():
             graph_elem.Move(-1, 0)
             graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
         window['+PROGRESS+'].UpdateBar(i % 800)
-        window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
+        window.Element('-IMAGE-').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
         if event == 'Button':
-            window.Element('_TEXT1_').SetTooltip('NEW TEXT')
-            window.Element('_MENU_').Update(visible=True)
+            window.Element('-TEXT1-').SetTooltip('NEW TEXT')
+            window.Element('-MENU-').Update(visible=True)
         elif event.startswith('Hide'):
             # window.Normal()
-            window.Element('_MENU_').Update(visible=False)
+            window.Element('-MENU-').Update(visible=False)
         elif event == 'Popout':
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
@@ -23498,9 +23501,9 @@ def main():
             window = _create_main_window()
             graph_elem = window['+GRAPH+']
         elif event == '-HIDE TABS-':
-            window['-TAB GROUP-'].update(visible=window['-TAB GROUP-'].metadata == True)
-            window['-TAB GROUP-'].metadata = not window['-TAB GROUP-'].metadata
-            window['-HIDE TABS-'].update(text=SYMBOL_UP if window['-TAB GROUP-'].metadata else SYMBOL_DOWN)
+            window['-TAB GROUP COL-'].update(visible=window['-TAB GROUP COL-'].metadata == True)
+            window['-TAB GROUP COL-'].metadata = not window['-TAB GROUP COL-'].metadata
+            window['-HIDE TABS-'].update(text=SYMBOL_UP if window['-TAB GROUP COL-'].metadata else SYMBOL_DOWN)
         elif event == 'SDK Reference':
             main_sdk_help()
         elif event == 'Global Settings':
