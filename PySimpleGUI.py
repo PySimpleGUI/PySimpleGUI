@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.12 Unreleased"
+version = __version__ = "4.56.0.13 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -32,6 +32,8 @@ _change_log = """
     4.56.0.12
         Fix for font parameter only being applied to Text portion of popup_get_text. Should have been to the entire window.
         Updated the internal keys to use the -KEY- coding convention. Was using the really old _KEY_ coding convention.
+    4.56.0.13
+        Added check for bad Image filename in Image.update. Will show an error popup now like the initial Image element creation error popup
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5221,9 +5223,13 @@ class Image(Element):
 
         image = None
         if filename is not None:
-            image = tk.PhotoImage(file=filename)
-            if subsample is not None:
-                image = image.subsample(subsample)
+            try:
+                image = tk.PhotoImage(file=filename)
+                if subsample is not None:
+                    image = image.subsample(subsample)
+            except Exception as e:
+                _error_popup_with_traceback('Exception updating Image element', e)
+
         elif data is not None:
             # if type(data) is bytes:
             try:
