@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.13 Unreleased"
+version = __version__ = "4.56.0.14 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -34,6 +34,8 @@ _change_log = """
         Updated the internal keys to use the -KEY- coding convention. Was using the really old _KEY_ coding convention.
     4.56.0.13
         Added check for bad Image filename in Image.update. Will show an error popup now like the initial Image element creation error popup
+    4.56.0.14
+        New coupon
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23493,7 +23495,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
-            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '5C14671AABA040B06FDC')
+            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '25506BBB290573A0BCB4')
 
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)

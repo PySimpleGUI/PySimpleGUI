@@ -5616,6 +5616,7 @@ Multiline(default_text = "",
     auto_size_text = None,
     background_color = None,
     text_color = None,
+    horizontal_scroll = False,
     change_submits = False,
     enable_events = False,
     do_not_clear = True,
@@ -5656,6 +5657,7 @@ Parameter Descriptions:
 |                                      bool                                      |   auto_size_text   | if True will size the element to match the length of the text |
 |                                      str                                       |  background_color  | color of background |
 |                                      str                                       |     text_color     | color of the text |
+|                                      bool                                      | horizontal_scroll  | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
 |                                      bool                                      |   change_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |   enable_events    | Turns on the element specific events. Spin events happen when an item changes |
 |                                      bool                                      |    do_not_clear    | if False the element will be cleared any time the Window.Read call returns |
@@ -5673,7 +5675,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
 |                                      str                                       |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
-|                                      bool                                      |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
+|                                      bool                                      |    no_scrollbar    | If False then a vertical scrollbar will be shown (the default) |
 |                                      bool                                      |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
 |                                      bool                                      |       rstrip       | If True the value returned in will have whitespace stripped from the right side |
