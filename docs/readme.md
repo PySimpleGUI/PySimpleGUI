@@ -341,6 +341,31 @@ As you can see several things can be changed for a `Text` element.  The call ref
 
 <hr>
 
+## Jump Start! Get the Demo Programs & Demo Browser 🔎
+
+The over 300 Demo Programs will give you a jump-start and provide many design patterns for you to learn how to use PySimpleGUI and how to integrate PySimpleGUI with other packages.  By far the best way to experience these demos is using the Demo Browser.  This tool enables you to search, edit and run the Demo Programs.  
+
+To get them installed quickly along with the Demo Browser, use `pip` to install `psgdemos`:  
+  
+`python -m pip install psgdemos`  
+
+
+or if you're in Linux, Mac, etc, that uses `python3` instead of `python` to launch Python:
+
+`python3 -m pip install psgdemos`  
+
+
+Once installed, launch the demo browser by typing `psgdemos` from the command line"  
+
+`psgdemos`  
+
+![SNAG-1543](https://user-images.githubusercontent.com/46163555/151877440-85ad9239-3219-4711-8cdf-9abc1501f05a.jpg)
+
+
+-------------------------
+
+
+
 ## Layouts Are Funny LOL! 😆
 
 Your window's layout is a "list of lists" (LOL).  Windows are broken down into "rows".  Each row in your window becomes a list in your layout.  Concatenate together all of the lists and you've got a layout...a list of lists.
