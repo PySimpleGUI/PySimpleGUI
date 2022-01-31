@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.14 Unreleased"
+version = __version__ = "4.56.0.15 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -36,6 +36,8 @@ _change_log = """
         Added check for bad Image filename in Image.update. Will show an error popup now like the initial Image element creation error popup
     4.56.0.14
         New coupon
+    4.56.0.15
+        Addition of parameter paste (bool) to Input.update.  Indicates that clipboard should be pasted into element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1725,7 +1727,7 @@ class Input(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None):
+    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None, paste=None):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
         Changes will not be visible in your window until you call window.read or window.refresh.
@@ -1750,6 +1752,8 @@ class Input(Element):
         :type move_cursor_to:    int | str
         :param password_char:    Password character if this is a password field
         :type password_char:     str
+        :param paste:            If True "Pastes" the clipboard value into the element. If anything is selected it is replaced. The text is inserted at the current cursor location.
+        :type paste:             bool
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
@@ -1773,6 +1777,12 @@ class Input(Element):
                 self.TKEntry.icursor(move_cursor_to)
         if select:
             self.TKEntry.select_range(0, 'end')
+        if paste is True:
+            try:
+                self.TKEntry.delete('sel.first', 'sel.last')
+            except:
+                pass
+            self.TKEntry.insert("insert", clipboard_get())
         if visible is False:
             self.TKEntry.pack_forget()
         elif visible is True:
