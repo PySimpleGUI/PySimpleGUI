@@ -482,7 +482,31 @@ Some of the features this program provides are:
 
 ## Downloading the PySimpleGUI Demo Programs
 
-If you have not yet downloaded the Demo Programs, then follow these instructions to download the repo and demos:
+
+### Jump Start! Get the Demo Programs & Demo Browser 
+
+The over 300 Demo Programs will give you a jump-start and provide many design patterns for you to learn how to use PySimpleGUI and how to integrate PySimpleGUI with other packages.  By far the best way to experience these demos is using the Demo Browser.  This tool enables you to search, edit and run the Demo Programs.  
+
+To get them installed quickly along with the Demo Browser, use `pip` to install `psgdemos`:  
+  
+`python -m pip install psgdemos`  
+
+
+or if you're in Linux, Mac, etc, that uses `python3` instead of `python` to launch Python:
+
+`python3 -m pip install psgdemos`  
+
+
+Once installed, launch the demo browser by typing `psgdemos` from the command line"  
+
+`psgdemos`  
+
+![SNAG-1543](https://user-images.githubusercontent.com/46163555/151877440-85ad9239-3219-4711-8cdf-9abc1501f05a.jpg)
+### Download the Repo and Demos
+
+If you chose not to pip install the `psgdemos` package, then you can download the PySimpleGUI Repo from GitHub and run the Demo Browser.
+
+Follow these instructions to download the repo and demos:
 
 * Go to http://www.PySimpleGUI.com (the PySimpleGUI GitHub)
 * Download the repo as a ZIP file
