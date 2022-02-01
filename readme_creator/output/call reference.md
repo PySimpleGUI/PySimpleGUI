@@ -4676,7 +4676,8 @@ update(value = None,
     text_color = None,
     background_color = None,
     move_cursor_to = "end",
-    password_char = None)
+    password_char = None,
+    paste = None)
 ```
 
 Parameter Descriptions:
@@ -4691,6 +4692,7 @@ Parameter Descriptions:
 |    str    | background_color | change color of the background |
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 |    str    |  password_char   | Password character if this is a password field |
+|   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
 
 ### visible
 
@@ -4763,7 +4765,8 @@ Update(value = None,
     text_color = None,
     background_color = None,
     move_cursor_to = "end",
-    password_char = None)
+    password_char = None,
+    paste = None)
 ```
 
 Parameter Descriptions:
@@ -4778,6 +4781,7 @@ Parameter Descriptions:
 |    str    | background_color | change color of the background |
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 |    str    |  password_char   | Password character if this is a password field |
+|   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
 
 ---------
 
