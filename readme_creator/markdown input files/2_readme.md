@@ -1843,42 +1843,42 @@ You will find information on Elements and all other classes and functions are lo
 
 Each port of PySimpleGUI has a core set of Elements as well as port-specific elements.  Some port-specific elements include the Dial element in the Qt port, and the Pane element in the tkinter port.
 
-| Element Name        | Aliases                        | tkinter Widget | Description               |
-| :------------------ | :----------------------------- | :------------- | :------------------------ |
-| Text                | T, Txt                         | tk.Label       | One or more lines of Text |
-| Input               | I, In, InputText               | tk.Entry       | Single line text input    |
-| Combo               | DD, Drop, DropDown, InputCombo |                |                           |
-| OptionMenu          | InputOptionMenu                |                |                           |
-| Multiline           | ML, MLine                      |                |                           |
-| Output              |                                |                |                           |
-| Radio               | R, Rad                         |                |                           |
-| Checkbox            | CB, CBox, Check                |                |                           |
-| Spin                | Sp                             |                |                           |
-| Button              | B, Btn                         |                |                           |
-| Image               | Im                             |                |                           |
-| Canvas              |                                |                |                           |
-| Column              | Col                            |                |                           |
-| Frame               | Fr                             |                |                           |
-| Tab                 |                                |                |                           |
-| TabGroup            |                                |                |                           |
-| Pane                |                                |                |                           |
-| Graph               | G                              |                |                           |
-| Slider              | Sl                             |                |                           |
-| Listbox             | LB, LBox                       |                |                           |
-| Menu                | MenuBar, Menubar               |                |                           |
-| MenubarCustom       |                                |                |                           |
-| ButtonMenu          | BM, BMenu                      |                |                           |
-| Titlebar            |                                |                |                           |
-| ProgressBar         | PBar, Prog, Progress           |                |                           |
-| Table               |                                |                |                           |
-| Tree                |                                |                |                           |
-| VerticalSeparator   | VSep, VSeparator               |                |                           |
-| HorizontalSeparator | HSep, HSeparator               |                |                           |
-| StatusBar           | SBar                           |                |                           |
-| Sizegrip            | SGrip                          |                |                           |
-| Push                | P, Stretch                     |                |                           |
-| VPush               | VP, VStretch                   |                |                           |
-| Sizer               |                                |                |                           |
+| Element Name        | Aliases                        | tkinter Widget                          | Description                                                  |
+| :------------------ | :----------------------------- | :-------------------------------------- | :----------------------------------------------------------- |
+| Text                | T, Txt                         | tk.Label                                | One or more lines of Text                                    |
+| Input               | I, In, InputText               | tk.Entry                                | Single line text input                                       |
+| Combo               | DD, Drop, DropDown, InputCombo | ttk.Combobox                            | A "Dropdown" list that can be edited too                     |
+| OptionMenu          | InputOptionMenu                | tk.OptionMenu                           | Like a Combo                                                 |
+| Multiline           | ML, MLine                      | tk.Text or tk.scrolledtext.ScrolledText | Multiple lines of text for input or output                   |
+| Output              |                                | tk.Text (sorta)                         | Not suggested. Multiline is better choice. Re-routes stdout  |
+| Radio               | R, Rad                         | tk.Radiobutton                          | Radio Buttons - choose 1 from several                        |
+| Checkbox            | CB, CBox, Check                | tk.Checkbutton                          | Checkbox - binary choice Yes/No                              |
+| Spin                | Sp                             | tk.Spinbox                              | Choose 1 by using arrows. Can manually enter also            |
+| Button              | B, Btn                         | tk.Button or ttk.Button                 | Button - plain or with image                                 |
+| Image               | Im                             | tk.Label                                | A PNG or GIF image                                           |
+| Canvas              |                                | tk.Canvas                               | A drawing area. Graph may be batter to use                   |
+| Column              | Col                            | Combination Canvas & Frame              | Embeds layouts inside layouts                                |
+| Frame               | Fr                             | tk.LabelFrame                           | A frame with a title and a border                            |
+| Tab                 |                                | tk.Frame                                | Container used with TabGroup                                 |
+| TabGroup            |                                | ttk.Notebook                            | Holds Tabs in layouts                                        |
+| Pane                |                                | tk.PanedWindow                          | Sliding columns (it's kinda weird but useful)                |
+| Graph               | G                              | tk.Canvas                               | A drawing area with primitives                               |
+| Slider              | Sl                             | tk.Scale                                | Slider to choose from range of choices                       |
+| Listbox             | LB, LBox                       | tk.Listbox                              | Listbox - a list of choices                                  |
+| Menu                | MenuBar, Menubar               | tk.Menu                                 | A standard Menubar                                           |
+| MenubarCustom       |                                | Combined Elements                       | Custom colors and font for menubar                           |
+| ButtonMenu          | BM, BMenu                      | tk.Menubutton                           | Button that shows a menu                                     |
+| Titlebar            |                                | Combined Elements                       | Custom colors for a titlebar                                 |
+| ProgressBar         | PBar, Prog, Progress           | ttk.Progressbar                         |                                                              |
+| Table               |                                | ttk.Treeview                            | A table with clickible cells and headers                     |
+| Tree                |                                | ttk.Treeview                            | A tree with collapsible sections                             |
+| VerticalSeparator   | VSep, VSeparator               | ttk.Separator                           | Vertical line                                                |
+| HorizontalSeparator | HSep, HSeparator               | ttk.Separator                           | Horizontal line                                              |
+| StatusBar           | SBar                           | tk.Label                                | Statusbar for bottom of window                               |
+| Sizegrip            | SGrip                          | ttk.Sizegrip                            | A grip for the bottom right corner of a window               |
+| Push                | P, Stretch                     | PySimpleGUI Elements                    | Pushes elements horizontally                                 |
+| VPush               | VP, VStretch                   | PySimpleGUI Elements                    | Pushes rows vertically                                       |
+| Sizer               |                                | Column Element                          | Creates a Width x Height number of pixels for padding/sizing |
 
 
 ## Layout Helper Functions

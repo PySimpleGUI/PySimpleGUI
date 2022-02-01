@@ -707,21 +707,36 @@ Find the keyboard shortcut for your IDE to run the currently shown program so th
 These tools were created to help you achieve a steady stream of these little successes.
 
 * This readme and its example pieces of code
-* The Cookbook - Copy, paste, run, success
-* Demo Programs - Copy these small programs to give yourself an instant headstart
+* The Cookbook & eCoobook - Copy, paste, run, success
+* Demo Programs - Copy these small programs to give yourself an instant head-start
 * Documentation shown in your IDE (docstrings) means you do not need to open any document to get the full assortment of options available to you for each Element & function call
 
-The initial "get up and running" portion of PySimpleGUI should take you less than 5 minutes.  The goal is 5 minutes from your decision "I'll give it a try" to having your first window up on the screen "Oh wow, it was that easy?!"
+The initial "get up and running" portion of PySimpleGUI should take you less than 5 minutes (the 5 minute challenge).  ***The goal is 5 minutes from your decision "I'll give it a try" to having your first window up on the screen***. "Oh wow, it was that easy?!"
 
 The primary learning paths for PySimpleGUI are:
 
-* This readme document over 100 pages of PySimpleGUI User Manual 
-	* http://www.PySimpleGUI.org
+* The Documentation
+	* Resist the urge to "Google It"
+	* The old-school way, "Read the Documenation", for this project, will be the most efficient path.
+	* PySimpleGUI Documentation - [http://www.PySimpleGUI.org](http://www.PySimpleGUI.org)
+	* Here you will find the main doc, the Cookbook, the Call Reference, the Readme... all in 1 location.
+* This readme document on GitHub and in the main documentation
+	* PySimpleGUI GitHub: [http://www.PySimpleGUI.com](http://www.PySimpleGUI.com)
 * The Cookbook - Recipes to get you going and quick
-	* http://Cookbook.PySimpleGUI.org
+	* [http://Cookbook.PySimpleGUI.org](http://Cookbook.PySimpleGUI.org)
+	* The online Interactive eCookbook is also available - [http://eCookbook.PySimpleGUI.org](http://eCookbook.PySimpleGUI.org)
 * The Demo Programs - Start hacking on one of these running solutions
-	* http://www.PySimpleGUI.com
-* The YouTube videos - If you like instructional videos, there are 15+ videos
+	* [http://Demos.PySimpleGUI.org](http://Demos.PySimpleGUI.org)
+	* The easiest way to obtain and use them is by pip installing `psgdemos`
+* The Udemy Course! "The Official PySimpleGUI Course"
+	* The is ONE and only 1 video course on the Internet that helps the PySimpleGUI financially.
+	* [http://udemy.pysimplegui.org/](http://udemy.pysimplegui.org/)
+	* There are 61 lessons that will teach you all aspects of PySimpleGUI
+	* It was a year in the making and covers features up through end of 2021
+	* It's the best course I've ever written and recorded (says Mike). Each lesson is compact, consise, focused, easy to understand
+* The YouTube videos - If you like instructional videos, there are 15+ videos.  
+	* **Caution** is advised... these videos are from 2020.  **Much** has changed since they were made.  They are still quite valid as what you're taught will work.  But, you're missing 2 years of intense development that are not represented in these lessons.  The Udemy course is a more complete and current course.
+	* 2020 to 2022 update - [https://youtu.be/lRuvKfilJnA](https://youtu.be/lRuvKfilJnA)-Lists a few of the many changes to PySimpleGUI since the 2020 lessons were recorded. 
 	* [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
 	* [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
 
@@ -733,28 +748,48 @@ A high percentage of users report both learning PySimpleGUI and completing their
 
 This isn't a rare event and it's not bragging.  GUI programming doesn't HAVE to be difficult by definition and PySimpleGUI has certainly made it much much more approachable and easier (not to mention simpler).
 
-But, you need to look at this document when pushing into new, unknown territory.  Don't guess... or more specifically, don't guess and then give up when it doesn't work.
+But there will be times that you need to read documentation, look at examples, when pushing into new, unknown territory.  Don't guess... or more specifically, don't guess and then give up when it doesn't work.
 
-## This Readme and Cookbook
+## This Documentation, Call Reference and Cookbook
 
-The readme and Cookbook, etc are best viewed on ReadTheDocs.  The quickest way there is to visit:
+The quickest way to the docs is to visit:
 http://www.PySimpleGUI.org
 
-You will be auto-forwarded to the right destination.  There are multiple tabs on ReadTheDocs.  One for the main readme and one for the Cookbook.  There are other documents there like an architectural design doc.
+You will be auto-forwarded to the right destination.  There are multiple tabs on ReadTheDocs. 
 
-The Cookbook has approx 27 "Recipes" or short programs that can be easily copied and pasted.
+The call reference is an important document as it explains every call and every parameter.  Note that this same information is available to you via docstrings so that as you are writing your code, you can read the documentation without ever leaving your IDE (e.g. PyCharm)
 
 ## Demo Programs
 
-The GitHub repo has the Demo Programs.  There are ones built for plain PySimpleGUI that are usually portable to other versions of PySimpleGUI.  And there are some that are associated with one of the other ports.  The easiest way to the GitHub:
+The GitHub repo has the Demo Programs.  There are ones built for plain PySimpleGUI that are usually portable to other versions of PySimpleGUI.  And there are some that are associated with one of the other ports.  
 
-http://www.PySimpleGUI.com
+As of the start of 2022 **there are over 300 Demo Programs**.  
 
-As of this writing, on 2019-07-10 there are 177 Demo Programs for you to choose from.  
-
-These programs demonstrate to you how to use the Elements and especially how to integrate PySimpleGUI with some of the popular open source technologies such as OpenCV, PyGame, PyPlot, and Matplotlib to name a few.
+These programs demonstrate to you how to use the Elements and  how to integrate PySimpleGUI with some of the popular open source technologies such as OpenCV, PyGame, PyPlot, and Matplotlib to name a few.
 
 Many Demo Programs that are in the main folder will run on multiple ports of PySimpleGUI.  There are also port-specific Demo Programs.  You'll find those in the folder with the port.  So, Qt specific Demo Programs are in the PySimpleGUIQt folder.
+
+## Jump Start! Get the Demo Programs & Demo Browser Quickly!
+
+The over 300 Demo Programs will give you a jump-start and provide many design patterns for you to learn how to use PySimpleGUI and how to integrate PySimpleGUI with other packages.  By far the best way to experience these demos is using the Demo Browser.  This tool enables you to search, edit and run the Demo Programs.  
+
+### The `psgdemos` PyPI Package
+
+In Jan 2022 a new package was added so that you can get both the Demo Programs and the Demo Browser by entering 1 install command.  
+
+To get them installed quickly along with the Demo Browser, use `pip` to install `psgdemos`:  
+
+`python -m pip install psgdemos`  
+
+or if you're in Linux, Mac, etc, that uses `python3` instead of `python` to launch Python:
+
+`python3 -m pip install psgdemos`  
+
+Once installed, launch the demo browser by typing `psgdemos` from the command line"  
+
+`psgdemos`  
+
+![SNAG-1543](https://user-images.githubusercontent.com/46163555/151877440-85ad9239-3219-4711-8cdf-9abc1501f05a.jpg)
 
 ---
 
@@ -772,7 +807,7 @@ import PySimpleGUI as sg
 sg.popup('Hello From PySimpleGUI!', 'This is the shortest GUI program ever!')
 ```
 
-![hello world](https://user-images.githubusercontent.com/13696193/44960047-1f7f6380-aec6-11e8-9d5e-12ef935bcade.jpg)
+![hello world](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/HelloWorld.jpg)
 
 Or how about a ***custom GUI*** in 1 line of code?  No kidding this is a valid program and it uses Elements and produce the same Widgets like you normally would in a tkinter program.  It's just been compacted together is all, strictly for demonstration purposes as there's no need to go that extreme in compactness, unless you have a reason to and then you can be thankful it's possible to do.
 
@@ -782,14 +817,14 @@ import PySimpleGUI as sg
 event, values = sg.Window('Get filename example', [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ]).read(close=True)
 ```
 
-![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
+![get filename](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/GetFileExample.jpg)
 
 ## The Beauty of Simplicity
 
 > One day I will find the right words, and they will be simple.
 ― Jack Kerouac
 
-That's nice that you can crunch things into 1 line, like in the above example, but it's not readable.  Let's add some whitespace so you can see the **beauty** of the PySimpleGUI code.
+That's nice that you can crunch things into 1 line, like in the above example, but it's not readable.  Let's add some whitespace so you can see the **beauty** of the PySimpleGUI code.  And while we're at it, we'll change the color theme to something darker that's perhaps more attractive to some of you.
 
 Take a moment and look at the code below.  Can you "see" the window looking at the `layout` variable, knowing that each line of code represents a single row of Elements?  There are 3 "rows" of Elements shown in the window and there are 3 lines of code that define it.
 
@@ -798,11 +833,11 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-sg.theme('Dark Blue 3')  # please make your creations colorful
+sg.theme('Dark Grey 13')
 
-layout = [	[sg.Text('Filename')],
-          	[sg.Input(), sg.FileBrowse()], 
-	  		[sg.OK(), sg.Cancel()]] 
+layout = [[sg.Text('Filename')],
+          [sg.Input(), sg.FileBrowse()],
+          [sg.OK(), sg.Cancel()]]
 
 window = sg.Window('Get filename example', layout)
 
@@ -810,7 +845,7 @@ event, values = window.read()
 window.close()
 ```
 
-![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
+![get filename](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/Simple.jpg)
 
 Unlike other GUI SDKs, you can likely understand every line of code you just read, even though you have not yet read a single instructional line from this document about how you write Elements in a layout.
 
@@ -818,7 +853,7 @@ There are no pesky classes you are *required* to write, no callback functions to
 
 The same code, in tkinter, is 5 times longer and I'm guessing you won't be able to just read it and understand it.  While you were reading through the code, did you notice there are no comments, yet you still were able to understand, using intuition alone.
 
-You will find this theme of Simple everywhere in and around PySimpleGUI.  It's a way of thinking as well as an architecture direction.  Remember, you, Mr./Ms. Developer, are at the center of the package.  So, from your vantage point, of course everything should look and feel simple.
+You will find this theme of Simple everywhere in and around PySimpleGUI.  It's a way of thinking as well as an architecture direction.  Remember, you, Mr./Ms. Developer, are at the center of the package.  So, from your vantage point, of course everything should look and feel simple.  
 
 Not only that, it's the Pythonic thing to do.  Have a look at line 3 of the "Zen of Python".
 
@@ -852,7 +887,10 @@ I don't think PySimpleGUI is ***difficult*** to explain, but I am striving to fu
 
 > In the face of ambiguity, refuse the temptation to guess.
 
-Sometimes you can guess and be fine.  Other times, things may work, but the side effects are potentially significant.  There may be a much better way to solve a problem - Log an Issue on GitHub!  
+Sometimes you can guess and be fine.  Other times, things may work, but the side effects are potentially significant. Are be a much better way to solve a problem:  
+
+* Look in the documentation  
+* Log an Issue on GitHub!  
 
 ------
 
@@ -876,9 +914,35 @@ Find a balance that works for you.
 
 These windows below were ALL made using PySimpleGUI, the tkinter version and they look good enough to not be simply scoffed at and dismissed.  Remember, developer, you have a rather significant hand in how your application looks and operates.  You certainly cannot pin it all on the GUIs you're using.
 
-So many posts on Reddit asking which GUI is going to result in a "beautiful window", as if there's a magic GUI library that pretties things up for you.  There are some calls in PySimpleGUI that will help you.  For example, you can make a single call to "Chang the look and feel" which loads predefined color pallets so your windows can have some instant color and it matches.
+So many posts on Reddit asking which GUI is going to result in a "beautiful window", as if there's a magic GUI library that pretties things up for you.  There are some calls in PySimpleGUI that will help you.  For example, you can make a single call to "Change the Theme" which loads predefined color pallets so your windows will instantly have colors that match.
 
-Beautiful windows are created, not simply given to you.  There are people that design and create artwork for user interfaces, you know that right?  Artists draw buttons, artwork that you include in the window to make it nicer.
+***Beautiful windows are created***, not simply given to you.  There are people that design and create artwork for user interfaces, you know that... right?  Artists draw buttons, artwork that you include in the window to make it nicer.  They understand color theory and how to design an attractive user interface.  
+
+### Custom Titlebars - A Trivial Start at Beautification
+
+You can replace the titlebar that your operating system provides with one that is custom to your user interface by using the `Titlebar` element.
+
+Normally, the Operating System provides the titlebar.  This means they are unlikely to match your color scheme.  Here is a Window with a dark color theme and the default titlebar provided by Windows.  
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/NormalTitlebar.jpg)  
+
+It's an OK window.  By adding a `Titlebar` element to your layout, then your window completely matches your color theme.  Here is the same window with a PySimpleGUI `Titlebar` element  
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/CustomTitlebar1.jpg)  
+
+Regardless of the "Theme" you choose for your window, the Titlebar will match it.  
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/CustomTitlebar2.jpg)  
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/CustomTitlebar3.jpg)  
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_docs/CustomTitlebar0.jpg)  
+
+## Some Examples Of More "Polished" Windows
+
+A** note from the "2022 Mike"**... these windows were created 2 years ago. A lot more work has been completed to enable even better windows using packages like Pillow.  In other words, these are not the current "best" examples.
+
+The User Screenshots Gallery is currently housed in [Issue #10 on GitHub](https://github.com/PySimpleGUI/PySimpleGUI/issues/10).  GitHub does very strange pagination.  The MIDDLE portion of the text and images on the page is hidden and you have to repeatedly press a "Load More" link.  
 
 Some of these have been "polished", others like the Matplotlib example is more a functional example to show you it works.
 
@@ -3536,42 +3600,42 @@ You will find information on Elements and all other classes and functions are lo
 
 Each port of PySimpleGUI has a core set of Elements as well as port-specific elements.  Some port-specific elements include the Dial element in the Qt port, and the Pane element in the tkinter port.
 
-| Element Name        | Aliases                        | tkinter Widget | Description               |
-| :------------------ | :----------------------------- | :------------- | :------------------------ |
-| Text                | T, Txt                         | tk.Label       | One or more lines of Text |
-| Input               | I, In, InputText               | tk.Entry       | Single line text input    |
-| Combo               | DD, Drop, DropDown, InputCombo |                |                           |
-| OptionMenu          | InputOptionMenu                |                |                           |
-| Multiline           | ML, MLine                      |                |                           |
-| Output              |                                |                |                           |
-| Radio               | R, Rad                         |                |                           |
-| Checkbox            | CB, CBox, Check                |                |                           |
-| Spin                | Sp                             |                |                           |
-| Button              | B, Btn                         |                |                           |
-| Image               | Im                             |                |                           |
-| Canvas              |                                |                |                           |
-| Column              | Col                            |                |                           |
-| Frame               | Fr                             |                |                           |
-| Tab                 |                                |                |                           |
-| TabGroup            |                                |                |                           |
-| Pane                |                                |                |                           |
-| Graph               | G                              |                |                           |
-| Slider              | Sl                             |                |                           |
-| Listbox             | LB, LBox                       |                |                           |
-| Menu                | MenuBar, Menubar               |                |                           |
-| MenubarCustom       |                                |                |                           |
-| ButtonMenu          | BM, BMenu                      |                |                           |
-| Titlebar            |                                |                |                           |
-| ProgressBar         | PBar, Prog, Progress           |                |                           |
-| Table               |                                |                |                           |
-| Tree                |                                |                |                           |
-| VerticalSeparator   | VSep, VSeparator               |                |                           |
-| HorizontalSeparator | HSep, HSeparator               |                |                           |
-| StatusBar           | SBar                           |                |                           |
-| Sizegrip            | SGrip                          |                |                           |
-| Push                | P, Stretch                     |                |                           |
-| VPush               | VP, VStretch                   |                |                           |
-| Sizer               |                                |                |                           |
+| Element Name        | Aliases                        | tkinter Widget                          | Description                                                  |
+| :------------------ | :----------------------------- | :-------------------------------------- | :----------------------------------------------------------- |
+| Text                | T, Txt                         | tk.Label                                | One or more lines of Text                                    |
+| Input               | I, In, InputText               | tk.Entry                                | Single line text input                                       |
+| Combo               | DD, Drop, DropDown, InputCombo | ttk.Combobox                            | A "Dropdown" list that can be edited too                     |
+| OptionMenu          | InputOptionMenu                | tk.OptionMenu                           | Like a Combo                                                 |
+| Multiline           | ML, MLine                      | tk.Text or tk.scrolledtext.ScrolledText | Multiple lines of text for input or output                   |
+| Output              |                                | tk.Text (sorta)                         | Not suggested. Multiline is better choice. Re-routes stdout  |
+| Radio               | R, Rad                         | tk.Radiobutton                          | Radio Buttons - choose 1 from several                        |
+| Checkbox            | CB, CBox, Check                | tk.Checkbutton                          | Checkbox - binary choice Yes/No                              |
+| Spin                | Sp                             | tk.Spinbox                              | Choose 1 by using arrows. Can manually enter also            |
+| Button              | B, Btn                         | tk.Button or ttk.Button                 | Button - plain or with image                                 |
+| Image               | Im                             | tk.Label                                | A PNG or GIF image                                           |
+| Canvas              |                                | tk.Canvas                               | A drawing area. Graph may be batter to use                   |
+| Column              | Col                            | Combination Canvas & Frame              | Embeds layouts inside layouts                                |
+| Frame               | Fr                             | tk.LabelFrame                           | A frame with a title and a border                            |
+| Tab                 |                                | tk.Frame                                | Container used with TabGroup                                 |
+| TabGroup            |                                | ttk.Notebook                            | Holds Tabs in layouts                                        |
+| Pane                |                                | tk.PanedWindow                          | Sliding columns (it's kinda weird but useful)                |
+| Graph               | G                              | tk.Canvas                               | A drawing area with primitives                               |
+| Slider              | Sl                             | tk.Scale                                | Slider to choose from range of choices                       |
+| Listbox             | LB, LBox                       | tk.Listbox                              | Listbox - a list of choices                                  |
+| Menu                | MenuBar, Menubar               | tk.Menu                                 | A standard Menubar                                           |
+| MenubarCustom       |                                | Combined Elements                       | Custom colors and font for menubar                           |
+| ButtonMenu          | BM, BMenu                      | tk.Menubutton                           | Button that shows a menu                                     |
+| Titlebar            |                                | Combined Elements                       | Custom colors for a titlebar                                 |
+| ProgressBar         | PBar, Prog, Progress           | ttk.Progressbar                         |                                                              |
+| Table               |                                | ttk.Treeview                            | A table with clickible cells and headers                     |
+| Tree                |                                | ttk.Treeview                            | A tree with collapsible sections                             |
+| VerticalSeparator   | VSep, VSeparator               | ttk.Separator                           | Vertical line                                                |
+| HorizontalSeparator | HSep, HSeparator               | ttk.Separator                           | Horizontal line                                              |
+| StatusBar           | SBar                           | tk.Label                                | Statusbar for bottom of window                               |
+| Sizegrip            | SGrip                          | ttk.Sizegrip                            | A grip for the bottom right corner of a window               |
+| Push                | P, Stretch                     | PySimpleGUI Elements                    | Pushes elements horizontally                                 |
+| VPush               | VP, VStretch                   | PySimpleGUI Elements                    | Pushes rows vertically                                       |
+| Sizer               |                                | Column Element                          | Creates a Width x Height number of pixels for padding/sizing |
 
 ## Layout Helper Functions
 
