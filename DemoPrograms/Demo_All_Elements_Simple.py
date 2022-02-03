@@ -18,6 +18,7 @@ import PySimpleGUI as sg
 NAME_SIZE=23
 
 def make_window(theme=None):
+
     def name(name):
         dots = NAME_SIZE-len(name)-2
         return sg.Text(name + ' ' + '•'*dots, size=(NAME_SIZE,1), justification='r',pad=(0,0), font='Courier 10')
@@ -44,7 +45,7 @@ def make_window(theme=None):
                 [name('Button'), sg.Button('Button')],
                 [name('ButtonMenu'), sg.ButtonMenu('ButtonMenu', sg.MENU_RIGHT_CLICK_EDITME_EXIT)],
                 [name('Slider'), sg.Slider((0,10), orientation='h', s=(10,15))],
-                [name('Listbox'), sg.Listbox(['Listbox', 'Listbox 2'], s=(15,2))],
+                [name('Listbox'), sg.Listbox(['Listbox', 'Listbox 2'], no_scrollbar=True,  s=(15,2))],
                 [name('Image'), sg.Image(sg.EMOJI_BASE64_HAPPY_THUMBS_UP)],
                 [name('Graph'), sg.Graph((125, 50), (0,0), (125,50), k='-GRAPH-')]  ]
 
