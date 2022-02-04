@@ -16,6 +16,7 @@ import PySimpleGUI as sg
 # sg.theme('Dark Grey 13')      # uncommment to see how a particular theme looks
 
 NAME_SIZE=23
+use_custom_titlebar = False
 
 def make_window(theme=None):
 
@@ -32,7 +33,7 @@ def make_window(theme=None):
     treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
     treedata.Insert("", '_C_', 'C', [], )
 
-    layout_l = [[sg.Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]])],
+    layout_l = [
                 [name('Text'), sg.Text('Text')],
                 [name('Input'), sg.Input(s=15)],
                 [name('Multiline'), sg.Multiline(s=(15,2))],
@@ -65,16 +66,19 @@ def make_window(theme=None):
                 [name('StatusBar'), sg.StatusBar('StatusBar')],
                 [name('Sizegrip'), sg.Sizegrip()]  ]
 
-    layout = [[sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
+    layout = [[sg.MenubarCustom([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)] if use_custom_titlebar else [sg.Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+              [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-')],
+              [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
               [sg.Col(layout_l), sg.Col(layout_r)]]
-    window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
-
+    window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, keep_on_top=True, use_custom_titlebar=use_custom_titlebar)
     window['-PBAR-'].update(30)
     window['-GRAPH-'].draw_image(data=sg.EMOJI_BASE64_HAPPY_JOY, location=(0,50))
 
     return window
 
 def main():
+    global use_custom_titlebar
+
     window = make_window()
 
     while True:
@@ -87,6 +91,12 @@ def main():
             sg.theme(values['-COMBO-'])
             window.close()
             window = make_window()
+        if event == '-USE CUSTOM TITLEBAR-':
+            use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
+            window.close()
+            window = make_window()
+        elif event == 'Version':
+            sg.popup_scrolled(sg.get_versions(), keep_on_top=True, non_blocking=True)
     window.close()
 
 
