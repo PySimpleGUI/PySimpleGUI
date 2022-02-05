@@ -592,7 +592,7 @@ sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Rename files or folders')],
 	  [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
-	  [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+	  [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
 	  [sg.Submit(), sg.Cancel()]]
 
 window = sg.Window('Rename Files or Folders', layout)
@@ -625,7 +625,7 @@ Now let's look at how those 2 rows and the other two row from Python code:
 ```python
 layout = [[sg.Text('Rename files or folders')],
           [sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
-          [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
+          [sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FileBrowse()],
           [sg.Submit(), sg.Cancel()]]
 ```
 
@@ -780,7 +780,9 @@ if event in (sg.WIN_CLOSED, 'Exit'):
     break
 ```
 
-In case you're yelling at the documentation that the second form should always be used, remember that many of the PySimpleGUI users are new to  Python.  If the very first example of a PySimpleGUI program they see has that if statement in it, they will instantly be lost before they can even begin their journey.  So, the decision was made to, you guessed it, go SIMPLE.  The statement with the "or" is simpler to understand.
+In case you're yelling at your screen right now that the second form should always be used, remember that many of the PySimpleGUI users are new to  Python.  If the very first example of a PySimpleGUI program they see has that if statement in it, they will instantly be lost before they can even begin their journey.  So, the decision was made to, you guessed it, go SIMPLE.  The statement with the "or" is simpler to understand.
+
+This notion of binary choices in programming that's  crept in over the past couple decades... that there's a "BEST" or "only 1 right way"... loses the sophisticated thinking that a software engineer needs to be successful in a wide variety of situations.  Every situation, every person, every problem... is unique.   **There is no idealized best that always fits.**
 
 
 ### A Complete Example - Traditional Window Closed Check
@@ -893,6 +895,7 @@ If you enter the parameter described in this section - `enable_close_attempted_e
 
 This demo shows you code similar to the code used in this section of the documentation. Use this Browser program!  It will make finding examples ***much easier***!
 
+See the section up above on the pip-installable version of the demos (search for - `psgdemos`) to get the super-quick method of getting the demo programs and the Demo Browser.
 
 ### The `values` Variable - Return values as a list
 
@@ -987,81 +990,149 @@ The anatomy of a PySimpleGUI event loop is as follows, *generally speaking*.
 * Check to see if window was closed or user wishes to exit
 * A series of `if event ....` statements
 
-Here is a complete, short program to demonstrate each of these concepts.
+
+## All Elements
+
+Here is a complete, short, program that contains *all of the PySimpleGUI Elements*.
+
 ```python
 import PySimpleGUI as sg
 
-sg.ChangeLookAndFeel('GreenTan')
+"""
+    Demo - Element List
 
-# ------ Menu Definition ------ #
-menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
-            ['&Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
-            ['&Help', '&About...'], ]
+    All 34 elements shown in 1 window as simply as possible.
 
-# ------ Column Definition ------ #
-column1 = [[sg.Text('Column 1', background_color='lightblue', justification='center', size=(10, 1))],
-           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],
-           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],
-           [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
+    Copyright 2022 PySimpleGUI
+"""
 
-layout = [
-    [sg.Menu(menu_def, tearoff=True)],
-    [sg.Text('(Almost) All widgets in one Window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-    [sg.Text('Here is some text.... and a place to enter text')],
-    [sg.InputText('This is my text')],
-    [sg.Frame(layout=[
-    [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],
-    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],
-    [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),
-     sg.Multiline(default_text='A second multi-line', size=(35, 3))],
-    [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),
-     sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],
-    [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],
-    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),
-     sg.Frame('Labelled Group',[[
-     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25, tick_interval=25),
-     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),
-     sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),
-     sg.Column(column1, background_color='lightblue')]])],
-    [sg.Text('_' * 80)],
-    [sg.Text('Choose A Folder', size=(35, 1))],
-    [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),
-     sg.InputText('Default Folder'), sg.FolderBrowse()],
-    [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]]
+use_custom_titlebar = False
 
-window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
-event, values = window.read()
+def make_window(theme=None):
+    NAME_SIZE = 23
+
+    def name(name):
+        dots = NAME_SIZE-len(name)-2
+        return sg.Text(name + ' ' + '•'*dots, size=(NAME_SIZE,1), justification='r',pad=(0,0), font='Courier 10')
+
+    sg.theme(theme)
+
+    treedata = sg.TreeData()
+
+    treedata.Insert("", '_A_', 'Tree Item 1', [1234], )
+    treedata.Insert("", '_B_', 'B', [])
+    treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
+
+    layout_l = [[name('Text'), sg.Text('Text')],
+                [name('Input'), sg.Input(s=15)],
+                [name('Multiline'), sg.Multiline(s=(15,2))],
+                [name('Output'), sg.Output(s=(15,2))],
+                [name('Combo'), sg.Combo(sg.theme_list(), default_value=sg.theme(), s=(15,22), enable_events=True, readonly=True, k='-COMBO-')],
+                [name('OptionMenu'), sg.OptionMenu(['OptionMenu',],s=(15,2))],
+                [name('Checkbox'), sg.Checkbox('Checkbox')],
+                [name('Radio'), sg.Radio('Radio', 1)],
+                [name('Spin'), sg.Spin(['Spin',], s=(15,2))],
+                [name('Button'), sg.Button('Button')],
+                [name('ButtonMenu'), sg.ButtonMenu('ButtonMenu', sg.MENU_RIGHT_CLICK_EDITME_EXIT)],
+                [name('Slider'), sg.Slider((0,10), orientation='h', s=(10,15))],
+                [name('Listbox'), sg.Listbox(['Listbox', 'Listbox 2'], no_scrollbar=True,  s=(15,2))],
+                [name('Image'), sg.Image(sg.EMOJI_BASE64_HAPPY_THUMBS_UP)],
+                [name('Graph'), sg.Graph((125, 50), (0,0), (125,50), k='-GRAPH-')]  ]
+
+    layout_r  = [[name('Canvas'), sg.Canvas(background_color=sg.theme_button_color()[1], size=(125,50))],
+                [name('ProgressBar'), sg.ProgressBar(100, orientation='h', s=(10,20), k='-PBAR-')],
+                [name('Table'), sg.Table([[1,2,3], [4,5,6]], ['Col 1','Col 2','Col 3'], num_rows=2)],
+                [name('Tree'), sg.Tree(treedata, ['Heading',], num_rows=3)],
+                [name('Horizontal Separator'), sg.HSep()],
+                [name('Vertical Separator'), sg.VSep()],
+                [name('Frame'), sg.Frame('Frame', [[sg.T(s=15)]])],
+                [name('Column'), sg.Column([[sg.T(s=15)]])],
+                [name('Tab, TabGroup'), sg.TabGroup([[sg.Tab('Tab1',[[sg.T(s=(15,2))]]), sg.Tab('Tab2', [[]])]])],
+                [name('Pane'), sg.Pane([sg.Col([[sg.T('Pane 1')]]), sg.Col([[sg.T('Pane 2')]])])],
+                [name('Push'), sg.Push(), sg.T('Pushed over')],
+                [name('VPush'), sg.VPush()],
+                [name('Sizer'), sg.Sizer(1,1)],
+                [name('StatusBar'), sg.StatusBar('StatusBar')],
+                [name('Sizegrip'), sg.Sizegrip()]  ]
+
+    layout = [[sg.MenubarCustom([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)] if use_custom_titlebar else [sg.Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+              [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-')],
+              [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
+              [sg.Col(layout_l), sg.Col(layout_r)]]
+
+    window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, keep_on_top=True, use_custom_titlebar=use_custom_titlebar)
+
+    window['-PBAR-'].update(30)                                                     # Show 30% complete on ProgressBar
+    window['-GRAPH-'].draw_image(data=sg.EMOJI_BASE64_HAPPY_JOY, location=(0,50))   # Draw something in the Graph Element
+
+    return window
+
+# Start of the program...
+window = make_window()
+
+while True:
+    event, values = window.read()
+    sg.popup(event, values)                     # show the results of the read in a popup Window
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if values['-COMBO-'] != sg.theme():
+        sg.theme(values['-COMBO-'])
+        window.close()
+        window = make_window()
+    if event == '-USE CUSTOM TITLEBAR-':
+        use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
+        window.close()
+        window = make_window()
 window.close()
 
-sg.Popup('Title',
-         'The results of the window.',
-         'The button clicked was "{}"'.format(event),
-         'The values are', values)
 
 ```
-This is a complex window with quite a bit of custom sizing to make things line up well.  This is code you only have to write once.  When looking at the code, remember that what you're seeing is a list of lists.  Each row contains a list of Graphical Elements that are used to create the window.  If you see a pair of square brackets [ ] then you know you're reading one of the rows.  Each row of your GUI will be one of these lists.
 
-This window may look "ugly" to you which is because no effort has been made to make it look nice. It's purely functional. There are 30 Elements in the window.  THIRTY Elements. Considering what it does, it's miraculous or in the least incredibly impressive.  Why?  Because in less than 50 lines of code that window was created, shown, collected the results and showed the results in another window.
+When you run it, assuming you've not set a default theme in the system settings, you'll see a window that looks like this (when on Windows):
 
-50 lines.  It'll take you 50 lines of tkinter or Qt code to get the first 3 elements of the window written, if you can even do that.
+![image](https://user-images.githubusercontent.com/46163555/152656799-1b5ec932-d2ec-470d-9df3-42121e6298c9.png)
 
-No, let's be clear here... this window will take a massive amount of code using the conventional Python GUI packages.  It's a fact and if you care to prove me wrong, then by ALL means PLEASE do it.  Please write this window using tkinter, Qt, or WxPython and send the code!
+The checkbox at the top that reads "Use Custom Titlebar & Menubar" will enable you to see the what the window looks like using the PySimpleGUI Custom Titlebar and Custom Menubar.
 
-Note this window even has a menubar across the top, something easy to miss.
-
-
-![image](https://user-images.githubusercontent.com/13696193/62234730-4295ea00-b399-11e9-9281-5defb91886f6.png)
-
-Clicking the Submit button caused the window call to return.  The call to Popup resulted in this window.
+![image](https://user-images.githubusercontent.com/46163555/152656821-5b393d2c-4081-480c-9735-2297d67305d4.png)
+Using this one test program, you can easily browse the PySimpleGUI Themes by choosing a new color Theme using the Combo Element.
 
 
-![image](https://user-images.githubusercontent.com/13696193/62234737-47f33480-b399-11e9-8a2c-087cc49868cd.png)
+![image](https://user-images.githubusercontent.com/46163555/152656849-6107854a-610a-4c74-a521-923e3394b9cc.png)
+
+### But it's so UGLY!
 
 
+![image](https://user-images.githubusercontent.com/46163555/152658001-3e270768-0636-48f4-90b7-1fa4bb901ab2.png)
+On Windows, using straight Python, this is the non-GUI alternative.
+
+![image](https://user-images.githubusercontent.com/46163555/152658061-fb6bbbb4-b298-41a2-a725-4352719906a4.png)
+
+The 1970s and 1980s were a great era for computing, but I wouldn't call the user interfaces "attractive".  Borland made some great tools in the 90's for doing TUIs.  There are some excellent Python packages available for you if you're after a TUI!  If that's the look you're after, give them a try.  You may like the results.  But, it's not what PySimpleGUI is about.  
+
+We're making GUIs for the masses, something you can give to anyone and they'll understand how to use it.  If you asked a Windows user (i.e. a normal person, not a programmer) to open a command window in the past decade then you likely got a worried look back.  Normal people aren't going to use your Python program that's command line based and be thrilled about it.  Your programming pals will love your TUI, Mary, who works in accounting, will not.
+
+The example window may look "ugly" or dated to you.  ***It's fair to say that it looks dated***.  While PySimpleGUI Themes instantly give you a color scheme that matches, it doesn't go much further in making tkinter more attractive/"modern".  
+
+***However***, you are far from being out of options to improve the look of your GUI.  This bare-bones program is your **starting point**.  This is where you begin the process of making an attractive user interface.  You've not yet ***started*** to make your interface look better.
+
+No effort has been made to make it look nice. It's purely functional. There are 34 Elements in the window.  34 Elements. Considering what it does, it's miraculous or in the least incredibly impressive.  Why? Because in 65 lines of Python code that window was created, shown, and collected the results.  
+
+Let's be clear here... this window will take a massive amount of code using the conventional Python GUI packages.  If you manage to write a tkinter, Qt or WxPython program that shows all of these Widgets in under 65 lines of Python code, then by all means send the code over.  
+
+Fair, side by side tests, recreating the exact same application, have shown numerous times that PySimpleGUI code is at least 1/2 to 1/10th the amount of code than tkinter requires.  
+
+There is no magic behind why it's so much shorter.  PySimpleGUI is writing all the boilerplate code on your behalf.  The same tkinter code is being executed that you would write by hand.  The difference is that the code is contained in the PySimpleGUI source code instead of in your application code.  That's all that's going on with "wrappers" like PySimpleGUI.  Code is being generated and executed for you in order to simplify your code.
+
+A large amount of time nor code is required to create custom Buttons and other elements, including entirely new and more complex elements such a Dials or Gauges. Transforming a button from plain to an image is a parameter to the Button element.   It's... not... THAT... **HARD**.  You're a programmer, write some code, or *add a parameter* if you want more attractive interfaces.  The hooks are there waiting for you to be creative.
+
+### Window Closed Events
 
 **`Note, event values can be None`**.  The value for `event` will be the text that is displayed on the button element when it was created or the key for the button.  If the user closed the window using the "X" in the upper right corner of the window, then `event` will be `sg.WIN_CLOSED` which is equal to `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for `sg.WIN_CLOSED`.
 
 For "persistent windows",  **always give your users a way out of the window**.  Otherwise you'll end up  with windows that never properly close.  It's literally 2 lines of code that you'll find in every Demo Program.  While you're at it, make sure a `window.close()` call is after your event loop so that your window closes for sure.
+
+### The `values` Dictionary
 
 You can see in the results Popup window that the values returned are a dictionary.  Each input field in the window generates one item in the return values list.  Input fields often return a `string`. Check Boxes and Radio Buttons return `bool`.  Sliders return float or perhaps int depending on how you configured it or which port you're using.
 
@@ -1069,28 +1140,89 @@ If your window has no keys and it has no buttons that are "browse" type of butto
 
 Note in the list of return values in this example, many of the keys are numbers.  That's because no keys were specified on any of the elements (although one was automatically made for you).  If you don't specify a key for your element, then a number will be sequentially assigned.  For elements that you don't plan on modifying or reading values from, like a Text Element, you can skip adding keys.  For other elements, you'll likely want to add keys so that you can easily access the values and perform operations on them.
 
-### Operations That Take a "Long Time"
+## Operations That Take a "Long Time"
 
 If you're a Windows user you've seen windows show in their title bar "Not Responding" which is soon followed by a Windows popup stating that "Your program has stopped responding".  Well, you too can make that message and popup appear if you so wish!  All you need to do is execute an operation that takes "too long" (i.e. a few seconds) inside your event loop.
 
-You have a couple of options for dealing this with.  If your operation can be broken up into smaller parts, then you can call `Window.Refresh()` occasionally to avoid this message.  If you're running a loop for example, drop that call in with your other work.  This will keep the GUI happy and Window's won't complain.
+You have a couple of options for dealing this with.  If your operation can be broken up into smaller parts, then you can call `Window.refresh()` occasionally to avoid this message.  If you're running a loop for example, drop that call in with your other work.  This will keep the GUI happy and Window's won't complain.
 
-If, on the other hand, your operation is not under your control or you are unable to add `Refresh` calls, then the next option available to you is to move your long operations into a thread.
-
-### The "Old Way"
-
-There are a couple of demo programs available for you to see how to do this.  You basically put your work into a thread.  When the thread is completed, it tells the GUI by sending a message through a queue.  The event loop will run with a timer set to a value that represents how "responsive" you want your GUI to be to the work completing.
+If, on the other hand, your operation is not under your control or you are unable to add `refresh` calls, then the next option available to you is to move your long operations into a thread.
 
 
-### The "New Way" - `Window.write_event_value`
+### Threading Made Simple
 
-This new function that is available currently only in the tkinter port as of July 2020 is exciting and represents the future way multi-threading will be handled in PySimpleGUI (or so is hoped).
+You've been at Python for a couple weeks, bravely ventured into GUI world, and the function you called when a button click is detected takes 20 seconds to complete.  Your window displays the "Not Responding" message.  If you ask what to do on StackOverflow, you'll be told that "all you have to do is use threads".
+
+![image](https://user-images.githubusercontent.com/46163555/152658001-3e270768-0636-48f4-90b7-1fa4bb901ab2.png)
+Two weeks into programming, and you've just been told you need to learn Threading?  
+
+This exact scenario is why the window method `perform_long_operation` was created.  It's a way for you to "ease into" threading without learning about threading.  Forget that thread was even mentioned.  Let's just talk about "long operations" instead.
+
+There are 2 ways you can use this call.  If your function does not take any parameters, then you can enter the name of the function (**without the parentheses!**) as the first parameter to `perform_long_operation`.    
+
+```python
+window.perform_long_operation(my_function, '-FUNCTION COMPLETED-')
+```
+  
+If your function has parameters, then you'll need to use a lambda.  Don't freak out at hearing "lambda" (yet).  Just add it as in this example code...
+
+```python
+window.perform_long_operation(lambda: my_function_with_parms(10), '-FUNCTION COMPLETED-')
+```
+
+Write the first parameter was if you were calling your function, and then put `lambda: ` in front of that.
+
+The second parameter to `perform_long_operation` is the event (a key) that you want to get back from `window.read()` when your function returns.
+
+Finally, if your function has a return value, then that value will show up in the `values` dictionary with the key that you provided.  In this example, `values['-FUNCTION COMPLETED-']` will contain the return value from your function.
+
+
+```python
+import PySimpleGUI as sg
+import time
+
+def my_function():
+    time.sleep(30)
+
+def my_function_with_parms(duration):
+    time.sleep(duration)
+    return 'My Return Value'
+
+layout = [  [sg.Text('Call a lengthy function')],
+            [sg.Button('Start'), sg.Button('Start 2'), sg.Button('Exit')]  ]
+
+window = sg.Window('Long Operation Example', layout)
+
+while True:
+    event, values = window.read()
+    print(event, values)
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Start':
+        window.perform_long_operation(my_function, '-FUNCTION COMPLETED-')
+    elif event == 'Start 2':
+        window.perform_long_operation(lambda: my_function_with_parms(10), '-FUNCTION COMPLETED-')
+    elif event == '-FUNCTION COMPLETED-':
+        sg.popup('Your function completed!')
+window.close()
+
+
+```
+
+So, in summary, `window.perform_long_operation` starts and manages the thread on your behalf.  You are returned an event when your "long operation" completes.  If your function returns a value, then that value will show up in the `values` variable from your `window.read()` call.  Threading made simple.
+
+
+### Threading the "New Way" - `Window.write_event_value`
+
+This new function that is available currently only in the tkinter port as of July 2020 is exciting and represents the future way multi-threading is handled in PySimpleGUI.
 
 Previously, a queue was used where your event loop would **poll** for incoming messages from a thread.
 
-Now, threads can directly inject events into a Window so that it will show up in the `window.read()` calls.  This allows a your event loop to "pend", waiting for normal window events as well as events being generated by threads.
+Now, threads can directly inject events into a Window so that it will show up in the `window.read()` calls.  This allows a your event loop to "pend", waiting for normal window events as well as events being generated by threads.  It is much more efficient than polling.
 
-You can see this new capability in action in this demo:  Demo_Multithreaded_Write_Event_Value.py
+You can see this new capability in action in this demo:  `Demo_Multithreaded_Write_Event_Value.py`
+
+Just use the Demo Browser to search for `write_event_value` to get more examples.  
 
 Here is that program for your inspection and education.  It's SO nice to no longer poll for threaded events.
 
@@ -1168,19 +1300,7 @@ if __name__ == '__main__':
 ```
 
 
-### Multithreaded Programs
-
-While on the topic of multiple threads, another demo was prepared that shows how you can run multiple threads in your program that all communicate with the event loop in order to display something in the GUI window.  Recall that for PySimpleGUI (at least the tkinter port) you cannot make PySimpleGUI calls in threads other than the main program thread.
-
-The key to these threaded programs is communication from the threads to your event loop.  The mechanism chosen for these demonstrations uses the Python built-in `queue` module.  The event loop polls these queues to see if something has been sent over from one of the threads to be displayed.
-
-You'll find the demo that shows multiple threads communicating with a single GUI is called:
-
-```python
-Demo_Multithreaded_Queued.py
-```
-
-Once again a **warning** is in order for plain PySimpleGUI (tkinter based) - your GUI must never run as anything but the main program thread and no threads can directly call PySimpleGUI calls.
+You'll find plenty of examples to help you with these concepts if you look in the Demo Programs.  So, pip install the Demo Programs and the Demo Browser so that you can easily search and find examples of what you're trying to accomplish.
 
 ---
 
@@ -1425,7 +1545,7 @@ The creation part of a window involves 3 steps.
 
 1. Create a `Window` object
 2. Adding your Layout to the window
-3. Optional - Finalize if want to make changes prior to `Read` call
+3. Optional - Finalize if want to make changes prior to `read` call
 
 Over time the PySimpleGUI code has continued to compact, compress, so that as little code as possible will need to be written by the programmer.
 
