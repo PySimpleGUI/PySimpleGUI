@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.18 Unreleased"
+version = __version__ = "4.56.0.19 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -46,7 +46,9 @@ _change_log = """
         Fix for Listbox scrollbar not behaving correctly when making element invisible / visible
     4.56.0.18
         New base64 image - PYTHON_COLORED_HEARTS_BASE64 (yes, more hearts... apologies to the heart-haters)
-    
+    4.56.0.19
+        Docstring update for Window.perform_long_operation - warns users that Thread are used and thus no PySimpleGUI calls are allowed. Also
+            added description of exactly what happens when the user's function completes. Thank you @zhaowb for pointing out this warning wasn't present. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11093,6 +11095,14 @@ class Window:
         """
         Call your function that will take a long time to execute.  When it's complete, send an event
         specified by the end_key.
+        This is a way for you to "ease into" threading without learning the details of threading.
+        Your function will run, and when it returns 2 things will happen:
+        1. The value you provide for end_key will be returned to you when you call window.read()
+        2. If your function returns a value, then the value returned will also be included in your windows.read call in the values dictionary
+
+        IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleGUI calls from
+        the function you provide with the exception of one function, Window.write_event_value.
+
 
         :param func:    A lambda or a function name with no parms
         :type func:     Any
