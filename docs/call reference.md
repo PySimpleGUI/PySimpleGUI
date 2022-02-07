@@ -12087,6 +12087,13 @@ normal()
 
 Call your function that will take a long time to execute.  When it's complete, send an event
 specified by the end_key.
+This is a way for you to "ease into" threading without learning the details of threading.
+Your function will run, and when it returns 2 things will happen:
+1. The value you provide for end_key will be returned to you when you call window.read()
+2. If your function returns a value, then the value returned will also be included in your windows.read call in the values dictionary
+
+IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleGUI calls from
+the function you provide with the exception of one function, Window.write_event_value.
 
 ```
 perform_long_operation(func, end_key)
