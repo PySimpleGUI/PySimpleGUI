@@ -9,8 +9,8 @@
       <img src="https://www.dropbox.com/s/6wzf3ebmj97v4zs/PySimpleGUI-GitHub-Udemy-Course.png?raw=1" width=200 alt="PySimpleGUI Udemy Course">
     </td>
     <td>
-      <h5>apply coupon for discount:<br>25506BBB290573A0BCB4</h6>
-      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=25506BBB290573A0BCB4">click here to visit course page</a>
+      <h5>apply coupon for discount:<br>49FD2127F43EB64CE568</h6>
+      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=49FD2127F43EB64CE568">click here to visit course page</a>
     </td>
   </tr>
 </table>
@@ -873,7 +873,7 @@ The more than 4,000 GitHub repos that use PySimpleGUI are owed a "Thank You" as 
 
 The overseas users that post on Twitter overnight are the spark that starts the day's work on PySimpleGUI. They've been a source of positive energy that gets the development engine started and ready to run every day. As a token of appreciation, this readme file has been translated into [Japanese](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
 
-PySimpleGUI users have been the best user community an Open Source developer could hope for. I've never seen expressions of gratitude and joy like PySimpleGUI show on a daily basis. 
+PySimpleGUI users have been the best user community an Open Source developer could hope for. I've never seen expressions of gratitude and joy like PySimpleGUI users show on a daily basis.  
 
 © Copyright 2021, 2022 PySimpleGUI
 
