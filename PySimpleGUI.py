@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.19 Unreleased"
+version = __version__ = "4.56.0.20 Unreleased"
 
 _change_log = """
     Changelog since 4.56.0 released to PyPI on 5-Jan-2022
@@ -49,6 +49,8 @@ _change_log = """
     4.56.0.19
         Docstring update for Window.perform_long_operation - warns users that Thread are used and thus no PySimpleGUI calls are allowed. Also
             added description of exactly what happens when the user's function completes. Thank you @zhaowb for pointing out this warning wasn't present. 
+    4.56.0.20
+        Anbother coupon - only able to do 5 days at a time right now.... 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23526,7 +23528,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
-            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '25506BBB290573A0BCB4')
+            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '49FD2127F43EB64CE568')
 
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
