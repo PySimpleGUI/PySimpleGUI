@@ -7184,6 +7184,60 @@ window.close()
 
 ------------------
 
+# Troubleshooting
+
+![](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/emojis/frust_112.png)  
+
+This section was added in early 2022, so it's a bit late in arriving, but it's a start.  This section meant to be found when searching for common errors.  
+
+Some errors are too broad to cover here like module not found.  That one has a huge number of possible root causes.  
+
+Instead, we're covering errors that are likely problems in your source code and they cannot be found by the PySimpleGUI code.  
+
+If it's any consolation, I run into these same errors frequently!  We're programmers and mistakes happen.
+
+## TypeError: list indices must be integers or slices, not ...
+
+You'll get this error when you miss adding a comma at the end of a row in your layout.
+
+Having extra commas isn't a problem and sometimes can be helpful to prevent this error.  By leaving an extra comma on the last row, then you'll be able to add more rows without the fear of this error.
+
+This is a **good** layout:
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Row 1')],
+          [sg.Text('Row 2')],]
+
+event, values =  sg.Window('Window Title', layout).read(close=True)
+
+```
+
+This one is **not good**
+If the commas are removed from the layout, then we'll get this TypeError...
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Row 1')]
+          [sg.Text('Row 2')]]
+
+event, values =  sg.Window('Window Title', layout).read(close=True)
+
+```
+
+Generates the TypeErrpr:
+
+```
+Traceback (most recent call last):
+  File "scratch_356.py", line 4, in <module>
+    [sg.Text('Row 2')]]
+TypeError: list indices must be integers or slices, not Text
+
+Process finished with exit code 1
+```
+
 ---
 
 # "Demo Programs" Applications
