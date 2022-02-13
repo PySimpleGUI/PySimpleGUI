@@ -1,58 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.56.0.21 Unreleased"
+version = __version__ = "4.57.0 Released 13-Feb-2022"
 
 _change_log = """
-    Changelog since 4.56.0 released to PyPI on 5-Jan-2022
+    Changelog since 4.57.0 released to PyPI on 13-Feb-2022
     
     4.56.0.1
-        set_options - added disable_modal_windows option to provide a single call to disable the modal feature globally (including popups)
-    4.56.0.2
-        Added OptionMenu to the list of tkinter widgets that are ignored when the grab anywhere feature is used
-    4.56.0.3
-        Slider - update the range FIRST and then the value in the update method (thank you Jason for the fix)
-    4.56.0.4
-        Updated docstrings for all Element.update methods to indicate that the helper function "pin" need to be used to keep an element
-            in place if visibility changes
-    4.56.0.5
-        Replaced sponsor tab with a tab about the udemy course as well as the buy me a coffee link.
-    4.56.0.6
-        Fixed event generation for Spin element.  Also changed to use the "command" parameter to get the event. NOTE - still need to handle manual entry
-    4.56.0.7
-        New Emojis for 2022!        
-    4.56.0.8
-        Changed +CICKED+ to +CLICKED+ (typo) in the table header
-        Added constant TABLE_CLICKED_INDICATOR that is the value '+CLICKED+' so that it can be referenced instead of user's hard cording a string
-    4.56.0.9
-        Added class method Text.fonts_installed_list - returns list of fonts as reported by tkinter
-    4.56.0.10
-        New coupon... hmmm... this is going to get tiring since coupons are forced to expire in a timeframe not our choosing
-    4.56.0.11
-        Horizontal scrollbar for Multline element (long awaited).  New parameter added to control just this one scrollbar. The no_scrollbar existing parm 
-            refers to the vertical scrollbar
-    4.56.0.12
-        Fix for font parameter only being applied to Text portion of popup_get_text. Should have been to the entire window.
-        Updated the internal keys to use the -KEY- coding convention. Was using the really old _KEY_ coding convention.
-    4.56.0.13
-        Added check for bad Image filename in Image.update. Will show an error popup now like the initial Image element creation error popup
-    4.56.0.14
-        New coupon
-    4.56.0.15
-        Addition of parameter paste (bool) to Input.update.  Indicates that clipboard should be pasted into element
-    4.56.0.16
-        Changed behavior of Input.update new paste parm. Now it will simply insert as if the value was pasted but the value is still specified by value parm
-            This is more flexible than forcing the value to be from the clipboard
-        Another Emoji
-    4.56.0.17
-        Fix for Listbox scrollbar not behaving correctly when making element invisible / visible
-    4.56.0.18
-        New base64 image - PYTHON_COLORED_HEARTS_BASE64 (yes, more hearts... apologies to the heart-haters)
-    4.56.0.19
-        Docstring update for Window.perform_long_operation - warns users that Thread are used and thus no PySimpleGUI calls are allowed. Also
-            added description of exactly what happens when the user's function completes. Thank you @zhaowb for pointing out this warning wasn't present. 
-    4.56.0.20
-        Another coupon - only able to do 5 days at a time right now.... 
-    4.56.0.21
-        Yes, another coupon.... these WILL slow down in frequency once the "Exercises" portion is completed (trying hard to get done in 2 more weeks)
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345

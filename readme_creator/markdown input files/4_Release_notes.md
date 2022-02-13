@@ -2234,7 +2234,7 @@ Column Element allow None for 1 size direction
 	* Very useful for multi-window applications
 	* Also works when you've set a default window location using the `set_options` call.
 
-## 4.51.2 - 4.41.7 
+## 4.51.2 - 4.51.7 
 
 A series of dot releases to make the psg commands operational for upgrading, etc.  Was a bit of a mess for a week
 
@@ -2396,6 +2396,32 @@ The "It's been a minute" & "Welcome to 2022!" release
     * Replaced the error messages that were being printed with a poper error popup
 * Removed destruction of hidden master root from popup_get_file and popup_get_folder
 
+
+
+## 4.57.0 PySimpleGUI 13-Feb 2022
+  
+A little of this, a little of that  
+New Emojis for 2022... collect them all!  
+
+
+- set_options added disable_modal_windows option to provide a single call to disable the modal feature globally (including popups)
+- Added OptionMenu to the list of tkinter widgets that are ignored when the grab anywhere feature is used
+- Slider update the range FIRST and then the value in the update method (thank you Jason for the fix)
+- Updated docstrings for all Element.update methods to indicate that the helper function "pin" need to be used to keep an element in place if visibility changes
+- Replaced sponsor tab with a tab about the udemy course as well as the buy me a coffee link
+- Fixed event generation for Spin element.  Also changed to use the "command" parameter to get the event. NOTE still need to handle manual entry
+- New Emojis for 2022! 
+- New base64 image PYTHON_COLORED_HEARTS_BASE64 (yes, more hearts... apologies to the heart-haters)
+- Changed +CICKEDto +CLICKED(typo) in the table header
+- Added constant TABLE_CLICKED_INDICATOR that is the value '+CLICKED+' so that it can be referenced instead of user's hard cording a string
+- Added class method Text.fonts_installed_list returns list of fonts as reported by tkinter
+- Horizontal scrollbar for Multiline element (long awaited).  New parameter added to control just this one scrollbar. The no_scrollbar existing parm refers to the vertical scrollbar
+- Fix for font parameter only being applied to Text portion of popup_get_text. Should have been to the entire window.
+- Updated the internal keys to use the -KEY- coding convention. Was using the really old _KEY_ coding convention.
+- Added check for bad Image filename in Image.update. Will show an error popup now like the initial Image element creation error popup
+- Addition of parameter paste (bool) to Input.update.  Inserts as if the value was pasted rather than replacing entirely
+- Fix for Listbox scrollbar not behaving correctly when making element invisible / visible
+- Docstring update for Window.perform_long_operation warns users that Thread are used and thus no PySimpleGUI calls are allowed. Also added description of exactly what happens when the user's function completes. 
 
 
 ## Code Condition
