@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0 Released 13-Feb-2022"
+version = __version__ = "4.57.0.1 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
     
-    4.56.0.1
-
+    4.57.0.1
+        Added checking for timeout error to execute_get_results instead of showing an error popup as it's not truly an error in this case
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21132,6 +21132,9 @@ def execute_get_results(subprocess_id, timeout=None):
         except ValueError:
             # will get an error if stdout and stderr are combined and attempt to read stderr
             # so ignore the error that would be generated
+            pass
+        except subprocess.TimeoutExpired:
+            # a Timeout error is not actually an error that needs to be reported
             pass
         except Exception as e:
             popup_error('Error in execute_get_results', e)
