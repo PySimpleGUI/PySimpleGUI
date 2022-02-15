@@ -1,51 +1,31 @@
-import subprocess
-import sys
 import PySimpleGUI as sg
 
 """
 	Demo Program - Realtime output of a shell command in the window
 		Shows how you can run a long-running subprocess and have the output
 		be displayed in realtime in the window.
+    
+    Copyright 2022 PySimpleGUI		
 """
 
-sg.theme('Dark Blue 3')
 
 def main():
-	layout = [
-				[sg.Output(size=(110,30), background_color='black', text_color='white')],
-				[sg.T('Promt> '), sg.Input(key='-IN-', do_not_clear=False)],
-				[sg.Button('Run', bind_return_key=True), sg.Button('Exit')] ]
+    layout = [
+        [sg.Multiline(size=(110, 30), echo_stdout_stderr=True, reroute_stdout=True, autoscroll=True, background_color='black', text_color='white', key='-MLINE-')],
+        [sg.T('Promt> '), sg.Input(key='-IN-', focus=True, do_not_clear=False)],
+        [sg.Button('Run', bind_return_key=True), sg.Button('Exit')]]
 
-	window = sg.Window('Realtime Shell Command Output', layout)
+    window = sg.Window('Realtime Shell Command Output', layout)
+    while True:  # Event Loop
+        event, values = window.read()
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+        elif event == 'Run':
+            sp = sg.execute_command_subprocess(values['-IN-'], pipe_output=True, wait=False)
+            results = sg.execute_get_results(sp, timeout=1)
+            print(results[0])
 
-	while True:             # Event Loop
-		event, values = window.read()
-		# print(event, values)
-		if event in (sg.WIN_CLOSED, 'Exit'):
-			break
-		elif event == 'Run':
-			runCommand(cmd=values['-IN-'], window=window)
-	window.close()
-
-
-def runCommand(cmd, timeout=None, window=None):
-	nop = None
-	""" run shell command
-	@param cmd: command to execute
-	@param timeout: timeout for command execution
-	@param window: the PySimpleGUI window that the output is going to (needed to do refresh on)
-	@return: (return code from command, command output)
-	"""
-	p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-	output = ''
-	for line in p.stdout:
-		line = line.decode(errors='replace' if (sys.version_info) < (3, 5) else 'backslashreplace').rstrip()
-		output += line
-		print(line)
-		window.refresh() if window else nop        # yes, a 1-line if, so shoot me
-
-	retval = p.wait(timeout)
-	return (retval, output)
+    window.close()
 
 
 main()
