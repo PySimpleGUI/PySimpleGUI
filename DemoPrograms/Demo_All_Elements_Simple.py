@@ -3,22 +3,16 @@ import PySimpleGUI as sg
 """
     Demo - Element List
 
-    All elements (almost) shown in 1 window as simply as possible.
-    Two of the elements can't be demonstrated
-        Titlebar
-        MenubarCustom
-
-    This is because the Normal titlebar and the Menu element are shown.
+    All elements shown in 1 window as simply as possible.
 
     Copyright 2022 PySimpleGUI
 """
 
-# sg.theme('Dark Grey 13')      # uncommment to see how a particular theme looks
-
-NAME_SIZE=23
 use_custom_titlebar = False
 
 def make_window(theme=None):
+
+    NAME_SIZE = 23
 
     def name(name):
         dots = NAME_SIZE-len(name)-2
@@ -31,14 +25,13 @@ def make_window(theme=None):
     treedata.Insert("", '_A_', 'Tree Item 1', [1234], )
     treedata.Insert("", '_B_', 'B', [])
     treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
-    treedata.Insert("", '_C_', 'C', [], )
 
     layout_l = [
                 [name('Text'), sg.Text('Text')],
                 [name('Input'), sg.Input(s=15)],
                 [name('Multiline'), sg.Multiline(s=(15,2))],
                 [name('Output'), sg.Output(s=(15,2))],
-                [name('Combo'), sg.Combo(sg.theme_list(), default_value=sg.theme(), s=(15,22), enable_events=True, k='-COMBO-')],
+                [name('Combo'), sg.Combo(sg.theme_list(), default_value=sg.theme(), s=(15,22), enable_events=True, readonly=True, k='-COMBO-')],
                 [name('OptionMenu'), sg.OptionMenu(['OptionMenu',],s=(15,2))],
                 [name('Checkbox'), sg.Checkbox('Checkbox')],
                 [name('Radio'), sg.Radio('Radio', 1)],
@@ -70,35 +63,33 @@ def make_window(theme=None):
               [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-')],
               [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
               [sg.Col(layout_l), sg.Col(layout_r)]]
+
     window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, keep_on_top=True, use_custom_titlebar=use_custom_titlebar)
-    window['-PBAR-'].update(30)
-    window['-GRAPH-'].draw_image(data=sg.EMOJI_BASE64_HAPPY_JOY, location=(0,50))
+
+    window['-PBAR-'].update(30)                                                     # Show 30% complete on ProgressBar
+    window['-GRAPH-'].draw_image(data=sg.EMOJI_BASE64_HAPPY_JOY, location=(0,50))   # Draw something in the Graph Element
 
     return window
 
-def main():
-    global use_custom_titlebar
 
-    window = make_window()
+window = make_window()
 
-    while True:
-        event, values = window.read()
-        if event == sg.WIN_CLOSED or event == 'Exit':
-            break
-        if event == 'Edit Me':
-            sg.execute_editor(__file__)
-        if values['-COMBO-'] != sg.theme():
-            sg.theme(values['-COMBO-'])
-            window.close()
-            window = make_window()
-        if event == '-USE CUSTOM TITLEBAR-':
-            use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
-            window.close()
-            window = make_window()
-        elif event == 'Version':
-            sg.popup_scrolled(sg.get_versions(), keep_on_top=True, non_blocking=True)
-    window.close()
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Edit Me':
+        sg.execute_editor(__file__)
+    if values['-COMBO-'] != sg.theme():
+        sg.theme(values['-COMBO-'])
+        window.close()
+        window = make_window()
+    if event == '-USE CUSTOM TITLEBAR-':
+        use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
+        window.close()
+        window = make_window()
+    elif event == 'Version':
+        sg.popup_scrolled(sg.get_versions(), __file__, keep_on_top=True, non_blocking=True)
+window.close()
 
 
-if __name__ == '__main__':
-    main()
