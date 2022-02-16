@@ -3,11 +3,13 @@ import sys
 import os
 import PySimpleGUI as sg
 
+sg.theme('light brown 8')
+
+
 """
-    A PySimpleGUI or PySimpleGUIQt demo program that will display a folder heirarchy with icons for the folders and files.
-    Note that if you are scanning a large folder then tkinter will eventually complain abouit too many bitmaps and crash
-    Getting events back from clicks on the entries works for PySimpleGUI, but appears to not be implemented in PySimpleGUIQt
-    If you need tree events using PySimpleGUIQt then post an Issue on the GitHub http://www.PySimpleGUI.com
+    Demo program that will display a folder hierarchy with icons for the folders and files.
+    Note that if you are scanning a large folder then tkinter will eventually complain about too many bitmaps.
+    This can be fixed easily enough by reusing the images within PySimpleGUI (enhancement request can be opened if you hit this problem)
 """
 
 # Base64 versions of images of a folder and a file. PNG files (may not work with PySimpleGUI27, swap with GIFs)
@@ -31,28 +33,26 @@ def add_files_in_folder(parent, dirname):
             treedata.Insert(parent, fullname, f, values=[], icon=folder_icon)
             add_files_in_folder(fullname, fullname)
         else:
-
-            treedata.Insert(parent, fullname, f, values=[
-                            os.stat(fullname).st_size], icon=file_icon)
-
+            treedata.Insert(parent, fullname, f, values=[os.stat(fullname).st_size], icon=file_icon)
 
 add_files_in_folder('', starting_path)
-
 
 layout = [[sg.Text('File and folder browser Test')],
           [sg.Tree(data=treedata,
                    headings=['Size', ],
                    auto_size_columns=True,
+                   select_mode=sg.TABLE_SELECT_MODE_EXTENDED,
                    num_rows=20,
                    col0_width=40,
                    key='-TREE-',
                    show_expanded=False,
-                   enable_events=True),
-           ],
+                   enable_events=True,
+                   expand_x=True,
+                   expand_y=True,
+                   ),],
           [sg.Button('Ok'), sg.Button('Cancel')]]
 
-window = sg.Window('Tree Element Test', layout)
-
+window = sg.Window('Tree Element Test', layout, resizable=True, finalize=True)
 
 while True:     # Event Loop
     event, values = window.read()
