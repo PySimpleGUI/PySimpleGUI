@@ -85,7 +85,8 @@ def main(location):
                        margins=(1,1),
                        element_padding=(0,0),
                        border_depth=0,
-                       location=location)
+                       location=location,
+                       right_click_menu=[[''], ['Edit Me', 'Exit',]])
 
 
     graphs = []
@@ -95,12 +96,15 @@ def main(location):
                                  window[('-TXT-',  (rows, cols))],
                                  0, colors[(rows*NUM_COLS+cols)%len(colors)])]
 
+
     # ----------------  main loop  ----------------
     while True :
         # --------- Read and update window once every Polling Frequency --------
         event, values = window.read(timeout=POLL_FREQUENCY)
         if event in (sg.WIN_CLOSED, 'Exit'):         # Be nice and give an exit
             break
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
         # read CPU for each core
         stats = psutil.cpu_percent(percpu=True)
 

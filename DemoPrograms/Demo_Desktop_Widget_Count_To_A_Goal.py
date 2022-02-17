@@ -50,7 +50,7 @@ class Gauge():
         : Return
           Addition result for number1 and number2.
         """
-        return number1 + number1
+        return number1 + number2
 
     def limit(number):
         """

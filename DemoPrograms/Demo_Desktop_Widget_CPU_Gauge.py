@@ -42,7 +42,7 @@ class Gauge():
         : Return
           Addition result for number1 and number2.
         """
-        return number1 + number1
+        return number1 + number2
 
     def limit(number):
         """
@@ -274,7 +274,7 @@ def main(location):
         [sg.T(size=(5, 1), font='Any 20', justification='c', background_color='black', k='-gauge VALUE-')]]
 
 
-    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
+    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
 
     gauge = Gauge(pointer_color=sg.theme_text_color(), clock_color=sg.theme_text_color(), major_tick_color=sg.theme_text_color(),
                   minor_tick_color=sg.theme_input_background_color(), pointer_outer_color=sg.theme_text_color(), major_tick_start_radius=45,
@@ -293,7 +293,8 @@ def main(location):
         # ----------- update the graphics and text in the window ------------
         # update the window, wait for a while, then check for exit
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-location-', window.current_location())  # The line of code to save the position before exiting
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
@@ -306,5 +307,5 @@ if __name__ == '__main__':
         location = sys.argv[1].split(',')
         location = (int(location[0]), int(location[1]))
     else:
-        location = (None, None)
+        location = sg.user_settings_get_entry('-location-', (None, None))
     main(location)

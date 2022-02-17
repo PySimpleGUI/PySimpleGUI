@@ -25,34 +25,38 @@ import PySimpleGUI as sg
 """
 
 # ------------------- The Old Way -------------------
+import PySimpleGUI as sg
 
 layout = [[sg.Text('My Window')],
           [sg.InputText(size=(50, 1), key='-FILENAME-'), sg.FileBrowse()],
           [sg.Button('Go'), sg.Button('Exit')]]
 
-event1, values1 = sg.Window('Window Title', layout).read(close=True)
+event1, values1 = sg.Window('Normal Filename', layout).read(close=True)
 
 # ------------------- The New Way with history -------------------
+import PySimpleGUI as sg
 
 layout = [[sg.Text('My Window')],
           [sg.Combo(sg.user_settings_get_entry('-filenames-', []), default_value=sg.user_settings_get_entry('-last filename-', ''), size=(50, 1), key='-FILENAME-'),
            sg.FileBrowse()],
           [sg.Button('Go'), sg.Button('Exit')]]
 
-event, values = sg.Window('Window Title', layout).read(close=True)
+event, values = sg.Window('Filename with History', layout).read(close=True)
 
 if event == 'Go':
     sg.user_settings_set_entry('-filenames-', list(set(sg.user_settings_get_entry('-filenames-', []) + [values['-FILENAME-'], ])))
     sg.user_settings_set_entry('-last filename-', values['-FILENAME-'])
 
+
 # ------------------- The New Way with history and clear -------------------
+import PySimpleGUI as sg
 
 layout = [[sg.Text('My Window')],
           [sg.Combo(sg.user_settings_get_entry('-filenames-', []), default_value=sg.user_settings_get_entry('-last filename-', ''), size=(50, 1), key='-FILENAME-'),
            sg.FileBrowse()],
           [sg.Button('Go'), sg.B('Clear'), sg.Button('Exit')]]
 
-window = sg.Window('Window Title', layout)
+window = sg.Window('Filename History Clearable', layout)
 
 while True:
     event, values = window.read()
