@@ -150,6 +150,8 @@ def main():
     while True:
         event, values = window.read(timeout=1000*60*60)     # wake every hour
         if event == sg.WIN_CLOSED or event == 'Exit':
+            if event == 'Exit':
+                sg.user_settings_set_entry('-location-', window.current_location())
             break
         if event == 'Add Package':
             window.metadata += 1

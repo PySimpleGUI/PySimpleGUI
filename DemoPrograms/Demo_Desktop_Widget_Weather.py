@@ -208,11 +208,12 @@ def create_window(win_location):
 
     layout = [[top_col],
               [lf_col, rt_col],
-              [bot_col]]
+              [bot_col],
+              [sg.Text(f'{sg.ver} {sg.framework_version} {sys.version}', font=('Arial', 8), background_color=BG_COLOR, text_color=TXT_COLOR, pad=(0,0))]]
 
     window = sg.Window(layout=layout, title='Weather Widget', margins=(0, 0), finalize=True, location=win_location,
                        element_justification='center', keep_on_top=True, no_titlebar=True, grab_anywhere=True, alpha_channel=ALPHA,
-                       right_click_menu=[[''], 'Exit'])
+                       right_click_menu=[[''], ['Edit Me', 'Versions', 'Exit',]], enable_close_attempted_event=True)
 
     for col in ['COL1', 'COL2', 'TopCOL', 'BotCOL', '-QUIT-']:
         window[col].expand(expand_y=True, expand_x=True)
@@ -261,14 +262,19 @@ def main(refresh_rate, win_location):
 
     while True:  # Event Loop
         event, values = window.read(timeout=refresh_in_milliseconds)
-        if event in (None, '-QUIT-', 'Exit'):
+        if event in (None, '-QUIT-', 'Exit', sg.WIN_CLOSE_ATTEMPTED_EVENT):
+            sg.user_settings_set_entry('-win location-', window.current_location())  # The line of code to save the position before exiting
             break
         if event == '-CHANGE-':
             x, y = window.current_location()
             settings = change_settings(settings, (x + 200, y+50))
         elif event == '-REFRESH-':
             sg.popup_quick_message('Refreshing...', keep_on_top=True, background_color='red', text_color='white',
-                                   auto_close_duration=3, non_blocking=False, location=(win_location[0]+170, win_location[1]+150))
+                                   auto_close_duration=3, non_blocking=False, location=(window.current_location()[0]+window.size[0]//2-30, window.current_location()[1]+window.size[1]//2-10))
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
+        elif event == 'Versions':
+            sg.main_get_debug_data()
         elif event != sg.TIMEOUT_KEY:
             sg.Print('Unknown event received\nEvent & values:\n', event, values, location=win_location)
 
@@ -282,5 +288,6 @@ if __name__ == '__main__':
         win_location = sys.argv[1].split(',')
         win_location = (int(win_location[0]), int(win_location[1]))
     else:
-        win_location = (None, None)
+        win_location = sg.user_settings_get_entry('-win location-', (None, None))
+
     main(refresh_rate=1, win_location=win_location)

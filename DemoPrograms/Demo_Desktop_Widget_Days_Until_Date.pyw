@@ -19,6 +19,7 @@ import datetime
 
 ALPHA = 0.9  # Initial alpha until user changes
 THEME = 'Dark green 3'  # Initial theme until user changes
+sg.user_settings_filename(filename='DaysUntil.json')
 refresh_font = sg.user_settings_get_entry('-refresh font-', 'Courier 8')
 title_font = sg.user_settings_get_entry('-title font-', 'Courier 8')
 main_number_font = sg.user_settings_get_entry('-main number font-', 'Courier 70')

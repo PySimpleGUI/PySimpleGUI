@@ -24,7 +24,6 @@ g_cpu_percent = 0
 g_procs = None
 g_exit = False
 
-
 def CPU_thread(args):
     global g_interval, g_cpu_percent, g_procs, g_exit
 
@@ -53,7 +52,7 @@ def main(location):
     ]
 
     window = sg.Window('Top CPU Processes', layout,
-                       no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True)
+                       no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
 
     # start cpu measurement thread
     thread = Thread(target=CPU_thread, args=(None,))
@@ -67,9 +66,10 @@ def main(location):
         # --------- Do Button Operations --------
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
         timeout_value = int(values['spin']) * 1000      # for now on, use spinner for timeout
-
+        g_interval = int(values['spin'])
         cpu_percent = g_cpu_percent
         display_string = ''
         if g_procs:

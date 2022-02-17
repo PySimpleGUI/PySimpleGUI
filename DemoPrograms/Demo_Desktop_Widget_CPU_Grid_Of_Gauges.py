@@ -2,6 +2,7 @@
 import PySimpleGUI as sg
 import sys
 import psutil
+import math
 
 """
     Desktop floating widget - CPU Cores as Gauges
@@ -17,18 +18,15 @@ import psutil
     Copyright 2020 PySimpleGUI
 """
 
-GRAPH_WIDTH = 120       # each individual graph size in pixels
-GRAPH_HEIGHT = 40
+# gsize = (120, 75)
+# gsize = (85, 40)
+gsize = (55, 30)
+
 TRANSPARENCY = .8       # how transparent the window looks. 0 = invisible, 1 = normal window
 NUM_COLS = 4
-POLL_FREQUENCY = 2000    # how often to update graphs in milliseconds
+POLL_FREQUENCY = 1500    # how often to update graphs in milliseconds
 
 colors = ('#23a0a0', '#56d856', '#be45be', '#5681d8', '#d34545', '#BE7C29')
-
-
-
-import math
-import random
 
 
 class Gauge():
@@ -56,7 +54,7 @@ class Gauge():
         : Return
           Addition result for number1 and number2.
         """
-        return number1 + number1
+        return number1 + number2
 
     def limit(number):
         """
@@ -67,7 +65,6 @@ class Gauge():
           angel degree in 0 ~ 360, return 0 if number < 0, 360 if number > 360.
         """
         return max(min(360, number), 0)
-
     class Clock():
         """
         Draw background circle or arc
@@ -134,7 +131,7 @@ class Gauge():
             self.figure = []
             self.stop_angle = angle
             self.graph_elem = graph_elem
-            self.new(degree=angle)
+            self.new(degree=angle, color=pointer_color)
 
         def new(self, degree=0, color=None):
             """
@@ -224,10 +221,10 @@ class Gauge():
     All angles defined as count clockwise from negative x-axis.
     Should create instance of clock, pointer, minor tick and major tick first.
     """
-    def __init__(self, center=(0, 0), start_angle=0, stop_angle=180, major_tick_width=5, minor_tick_width=2,major_tick_start_radius=90, major_tick_stop_radius=100, major_tick_step=30, clock_radius=100, pointer_line_width=5, pointer_inner_radius=10, pointer_outer_radius=75, pointer_color='white', pointer_origin_color='black', pointer_outer_color='white', pointer_angle=0, degree=0, clock_color='white', major_tick_color='black', minor_tick_color='black', minor_tick_start_radius=90, minor_tick_stop_radius=100, graph_elem=None):
+    def __init__(self, center=(0, 0), start_angle=0, stop_angle=180, major_tick_width=5, minor_tick_width=2,major_tick_start_radius=90, major_tick_stop_radius=100, minor_tick_step=5, major_tick_step=30, clock_radius=100, pointer_line_width=5, pointer_inner_radius=10, pointer_outer_radius=75, pointer_color='white', pointer_origin_color='black', pointer_outer_color='white', pointer_angle=0, degree=0, clock_color='white', major_tick_color='black', minor_tick_color='black', minor_tick_start_radius=90, minor_tick_stop_radius=100, graph_elem=None):
 
         self.clock = Gauge.Clock(start_angle=start_angle, stop_angle=stop_angle, fill_color=clock_color, radius=clock_radius, graph_elem=graph_elem)
-        self.minor_tick = Gauge.Tick(start_angle=start_angle, stop_angle=stop_angle, line_width=minor_tick_width, line_color=minor_tick_color, start_radius=minor_tick_start_radius, stop_radius=minor_tick_stop_radius, graph_elem=graph_elem)
+        self.minor_tick = Gauge.Tick(start_angle=start_angle, stop_angle=stop_angle, line_width=minor_tick_width, line_color=minor_tick_color, start_radius=minor_tick_start_radius, stop_radius=minor_tick_stop_radius, graph_elem=graph_elem, step=minor_tick_step)
         self.major_tick = Gauge.Tick(start_angle=start_angle, stop_angle=stop_angle, line_width=major_tick_width, start_radius=major_tick_start_radius, stop_radius=major_tick_stop_radius, step=major_tick_step, line_color=major_tick_color, graph_elem=graph_elem)
         self.pointer = Gauge.Pointer(angle=pointer_angle, inner_radius=pointer_inner_radius, outer_radius=pointer_outer_radius, pointer_color=pointer_color, outer_color=pointer_outer_color, origin_color=pointer_origin_color, line_width=pointer_line_width, graph_elem=graph_elem)
 
@@ -250,7 +247,7 @@ class Gauge():
         if self.pointer:
             self.pointer.move(delta_x, delta_y)
 
-    def change(self, degree=None, step=1):
+    def change(self, degree=None, step=1, pointer_color=None):
         """
         Rotation of pointer
         call it with degree and step to set initial options for rotation.
@@ -266,17 +263,17 @@ class Gauge():
             new_degree = now + step
             if ((step > 0 and new_degree < self.pointer.stop_degree) or
                 (step < 0 and new_degree > self.pointer.stop_degree)):
-                    self.pointer.new(degree=new_degree, color='red' if new_degree > 90 else None)
+                    self.pointer.new(degree=new_degree, color=pointer_color)
                     return False
             else:
-                self.pointer.new(degree=self.pointer.stop_degree, color='red' if self.pointer.stop_degree > 90 else None)
+                self.pointer.new(degree=self.pointer.stop_degree, color=pointer_color)
                 return True
 
-
+# ------------------------------ BEGINNING OF CPU WIDGET GUI CODE ------------------------------
 
 # DashGraph does the drawing of each graph
 class DashGraph(object):
-    def __init__(self, graph_elem, text_elem, starting_count, color):
+    def __init__(self, gsize, graph_elem, text_elem, starting_count, color):
         self.graph_current_item = 0
         self.graph_elem = graph_elem        # type: sg.Graph
         self.text_elem = text_elem
@@ -285,26 +282,36 @@ class DashGraph(object):
         self.color = color
         self.line_list = []                 # list of currently visible lines. Used to delete oild figures
 
-        self.gauge = Gauge(pointer_color=color, clock_color=color, major_tick_color=color,
-                  minor_tick_color=color,  pointer_outer_color=sg.theme_text_color(), major_tick_start_radius=45,
-                  minor_tick_start_radius=45, minor_tick_stop_radius=50, major_tick_stop_radius=50, major_tick_step=30, clock_radius=50, pointer_line_width=3,
-                  pointer_inner_radius=10, pointer_outer_radius=50, graph_elem=graph_elem)
+        self.gauge = Gauge(pointer_color=color,
+                        clock_color=color,
+                        major_tick_color=color,
+                        minor_tick_color=color,
+                        pointer_outer_color=color,
+                        major_tick_start_radius=gsize[1] - 10,
+                        minor_tick_start_radius=gsize[1] - 10,
+                        minor_tick_stop_radius=gsize[1] - 5,
+                        major_tick_stop_radius=gsize[1] - 5,
+                        clock_radius=gsize[1] - 5,
+                        pointer_outer_radius=gsize[1] - 5,
+                        major_tick_step=30,
+                        minor_tick_step=15,
+                        pointer_line_width=3,
+                        pointer_inner_radius=10,
+                        graph_elem=graph_elem)
+
 
         self.gauge.change(degree=0)
 
     def graph_percentage_abs(self, value):
-        if self.gauge.change():
+        if self.gauge.change(pointer_color='red' if value > 50 else None):
             new_angle = value*180/100
-            self.gauge.change(degree=new_angle, step=new_angle)
-            self.gauge.change()
+            self.gauge.change(degree=new_angle, step=100, pointer_color='red' if value > 50 else None)
+            self.gauge.change(pointer_color='red' if value > 50 else None)
 
     def text_display(self, text):
         self.text_elem.update(text)
 
 def main(location):
-    gsize = (100, 55)
-
-
     # A couple of "User defined elements" that combine several elements and enable bulk edits
     def Txt(text, **kwargs):
         return(sg.Text(text, font=('Helvetica 8'), **kwargs))
@@ -312,7 +319,7 @@ def main(location):
     def GraphColumn(name, key):
         layout = [
             [sg.Graph(gsize, (-gsize[0] // 2, 0), (gsize[0] // 2, gsize[1]), key=key+'-GRAPH-')],
-            [sg.T(size=(5, 1), justification='c', font='Courier 14', k=key+'-GAUGE VALUE-')]]
+            [sg.T(size=(5, 1), justification='c', font='Courier 10', k=key+'-GAUGE VALUE-')]]
         return sg.Column(layout, pad=(2, 2), element_justification='c')
 
     num_cores = len(psutil.cpu_percent(percpu=True))        # get the number of cores in the CPU
@@ -320,9 +327,7 @@ def main(location):
     sg.theme('black')
     sg.set_options(element_padding=(0,0), margins=(1,1), border_width=0)
 
-    # the clever Red X graphic
-    red_x = "R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
-    layout = [[ sg.Button(image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
+    layout = [[ sg.Button(image_data=sg.red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window'),
                 sg.Text('     CPU Core Usage')] ]
 
     # add on the graphs
@@ -342,10 +347,12 @@ def main(location):
                        use_default_focus=False,
                        finalize=True,
                        location=location,
-                       right_click_menu=[[''], 'Exit'])
+                       right_click_menu=[[''], 'Exit'],
+                       # transparent_color='black',
+                       )
 
     # setup graphs & initial values
-    graphs = [DashGraph(window['-CPU-'+str(i)+'-GRAPH-'],
+    graphs = [DashGraph(gsize, window['-CPU-'+str(i)+'-GRAPH-'],
                                 window['-CPU-'+str(i) + '-GAUGE VALUE-'],
                                 0, colors[i%6]) for i in range(num_cores) ]
 

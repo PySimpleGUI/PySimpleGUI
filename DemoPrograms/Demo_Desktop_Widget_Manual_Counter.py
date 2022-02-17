@@ -121,7 +121,7 @@ def main():
             if new_count is not None:
                 counter = int(new_count)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your counter', default_text=sg.user_settings_get_entry('-title-', ''), location=window.current_location(), keep_on_top=True)
+            new_title = sg.popup_get_text('Choose a title for your counter', default_text=sg.user_settings_get_entry('-title-', ''), location=window.current_location(), )
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
@@ -134,7 +134,7 @@ def main():
                 # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Main Font':
-            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=True, location=window.current_location())
+            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=False, location=window.current_location())
             if font:
                 sg.user_settings_set_entry('-main number font-', font)
                 _, window = window.close(), make_window(loc)
@@ -164,7 +164,7 @@ def main():
                 if sound_file is not None:
                     sg.user_settings_set_entry('-sound file-', sound_file)
         elif event =='Show Settings':
-            sg.Print(sg.UserSettings._default_for_function_interface)
+            sg.popup_scrolled(sg.UserSettings._default_for_function_interface, location=window.current_location())
 
         sg.user_settings_set_entry('-counter-', counter)
 
@@ -172,4 +172,5 @@ def main():
 
 
 if __name__ == '__main__':
+    sg.set_options(keep_on_top=True)
     main()

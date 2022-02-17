@@ -4,7 +4,7 @@ import sys
 
 """
     Another simple Desktop Widget using PySimpleGUI
-    This time a RAM indicator.  The Widget is square.  
+    This time a CPU Usage indicator.  The Widget is square.  
     The bottom section will be shaded to 
     represent the total amount CPU currently in use.
     Uses the theme's button color for colors.
@@ -13,23 +13,19 @@ import sys
 """
 
 ALPHA = 0.5
-THEME = 'Dark purple 6 '
+THEME = 'Dark purple 6'
 GSIZE = (160, 160)
 UPDATE_FREQUENCY_MILLISECONDS = 2 * 1000
 
 
-def human_size(bytes, units=(' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB')):
-    """ Returns a human readable string reprentation of bytes"""
-    return str(bytes) + ' ' + units[0] if bytes < 1024 else human_size(bytes >> 10, units[1:])
-
-
 def main(location):
-    graph = sg.Graph(GSIZE, (0, 0), GSIZE, key='-GRAPH-', enable_events=True)
+    graph = sg.Graph(GSIZE, (0, 0), GSIZE, key='-GRAPH-')
+
     layout = [[graph]]
 
-    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
+    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
 
-    text_id2 = graph.draw_text(f'CPU', (GSIZE[0] // 2, GSIZE[1] // 4), font='Any 20', text_location=sg.TEXT_LOCATION_CENTER,                               color=sg.theme_button_color()[0])
+    text_id2 = graph.draw_text(f'CPU', (GSIZE[0] // 2, GSIZE[1] // 4), font='Any 20', text_location=sg.TEXT_LOCATION_CENTER, color=sg.theme_button_color()[0])
 
 
     while True:  # Event Loop
@@ -45,7 +41,8 @@ def main(location):
 
         # update the window, wait for a while, then check for exit
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-location-', window.current_location())  # The line of code to save the position before exiting
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
@@ -62,5 +59,5 @@ if __name__ == '__main__':
         location = sys.argv[1].split(',')
         location = (int(location[0]), int(location[1]))
     else:
-        location = (None, None)
+        location = sg.user_settings_get_entry('-location-', (None, None))
     main(location)
