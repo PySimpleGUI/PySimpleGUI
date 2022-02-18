@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.1 Unreleased"
+version = __version__ = "4.57.0.2 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
     
     4.57.0.1
         Added checking for timeout error to execute_get_results instead of showing an error popup as it's not truly an error in this case
+    4.57.0.2
+        Added cast to bool of default parm for Checkbox element in case user passes in an incorrect type
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2623,7 +2625,7 @@ class Checkbox(Element):
 
 
         self.Text = text
-        self.InitialState = default
+        self.InitialState = bool(default)
         self.Value = None
         self.TKCheckbutton = self.Widget = None  # type: tk.Checkbutton
         self.Disabled = disabled
