@@ -22,7 +22,7 @@ import PySimpleGUI as sg
 
 
 layout = [[sg.Combo(sorted(sg.user_settings_get_entry('-filenames-', [])), default_value=sg.user_settings_get_entry('-last filename-', ''), size=(50, 1), key='-FILENAME-'), sg.FileBrowse(), sg.B('Clear History')],
-          [sg.Button('Ok'),  sg.Button('Cancel')]]
+          [sg.Button('Ok', bind_return_key=True),  sg.Button('Cancel')]]
 
 window = sg.Window('Filename Chooser With History', layout)
 
