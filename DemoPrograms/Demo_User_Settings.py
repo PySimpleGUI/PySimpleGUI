@@ -36,13 +36,13 @@ def make_window():
     :return: (sg.Window)  The window that was created
     """
 
-    sg.theme(sg.user_settings_get_entry('theme', 'DarkBlue2'))  # set the theme
+    sg.theme(sg.user_settings_get_entry('-theme-', 'DarkBlue2'))  # set the theme
 
     layout = [[sg.Text('Settings Window')],
-              [sg.Input(sg.user_settings_get_entry('input', ''), k='-IN-')],
+              [sg.Input(sg.user_settings_get_entry('-input-', ''), k='-IN-')],
               [sg.Listbox(sg.theme_list(), default_values=[sg.user_settings_get_entry('theme')], size=(15, 10), k='-LISTBOX-')],
-              [sg.CB('Option 1', sg.user_settings_get_entry('option1', True), k='-CB1-')],
-              [sg.CB('Option 2', sg.user_settings_get_entry('option2', False), k='-CB2-')],
+              [sg.CB('Option 1', sg.user_settings_get_entry('-option1-', True), k='-CB1-')],
+              [sg.CB('Option 2', sg.user_settings_get_entry('-option2-', False), k='-CB2-')],
               [sg.T('Settings file = ' + sg.user_settings_filename())],
               [sg.Button('Save'), sg.Button('Exit without saving', k='Exit')]]
 
@@ -64,10 +64,10 @@ def settings_window():
             break
         if event == 'Save':
             # Save some of the values as user settings
-            sg.user_settings_set_entry('input', values['-IN-'])
-            sg.user_settings_set_entry('theme', values['-LISTBOX-'][0])
-            sg.user_settings_set_entry('option1', values['-CB1-'])
-            sg.user_settings_set_entry('option2', values['-CB2-'])
+            sg.user_settings_set_entry('-input-', values['-IN-'])
+            sg.user_settings_set_entry('-theme-', values['-LISTBOX-'][0])
+            sg.user_settings_set_entry('-option1-', values['-CB1-'])
+            sg.user_settings_set_entry('-option2-', values['-CB2-'])
 
         # if the theme was changed, restart the window
         if values['-LISTBOX-'][0] != current_theme:
@@ -86,17 +86,17 @@ def save_previous_filename_demo():
 
     # Notice that the Input element has a default value given (first parameter) that is read from the user settings
     layout = [[sg.Text('Enter a filename:')],
-              [sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()],
+              [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse()],
               [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]]
 
     window = sg.Window('Filename Example', layout)
 
     while True:
         event, values = window.read()
-        if event in(sg.WINDOW_CLOSED, 'Exit'):
+        if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
         elif event == 'Save':
-            sg.user_settings_set_entry('filename', values['-IN-'])
+            sg.user_settings_set_entry('-filename-', values['-IN-'])
 
     window.close()
 

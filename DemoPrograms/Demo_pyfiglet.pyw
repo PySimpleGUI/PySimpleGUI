@@ -107,7 +107,7 @@ def make_window():
               [sg.Button('Exit', right_click_menu=sg.MENU_RIGHT_CLICK_DISABLED), sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + ' tkinter ver ' + sg.tclversion_detailed + '  Python ver ' + sys.version, font='Default 8', pad=(0,0))],]
     layout[-1].append(sg.Sizegrip())
 
-    window = sg.Window('psg-figlet', layout, resizable=True, finalize=True, right_click_menu=['_', ['Edit Me', 'Copy', 'Exit']], icon=icon)
+    window = sg.Window('psgfiglet', layout, resizable=True, finalize=True, right_click_menu=['_', ['Edit Me', 'Copy', 'Exit']], icon=icon)
 
     window['-COL R-'].expand(True, True, True)
     # window['-OUTPUT-'].expand(True, True, False)

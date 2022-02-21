@@ -17,7 +17,7 @@ import PySimpleGUI as sg
 def main():
     column_to_be_centered = [  [sg.Text('My Window')],
                 [sg.Input(key='-IN-')],
-                [sg.Text(size=(12,1), key='-OUT-')],
+                [sg.Text(size=(30,1), key='-OUT-')],
                 [sg.Button('Go'), sg.Button('Exit')]  ]
 
     layout = [[sg.Text(key='-EXPAND-', font='ANY 1', pad=(0, 0))],  # the thing that expands from top
