@@ -24,23 +24,29 @@ def make_win2():
               [sg.Button('Erase'), sg.Button('Popup'), sg.Button('Exit')]]
     return sg.Window('Second Window', layout, finalize=True)
 
-window1, window2 = make_win1(), None        # start off with 1 window open
 
-while True:             # Event Loop
-    window, event, values = sg.read_all_windows()
-    if event == sg.WIN_CLOSED or event == 'Exit':
-        window.close()
-        if window == window2:       # if closing win 2, mark as closed
-            window2 = None
-        elif window == window1:     # if closing win 1, exit program
-            break
-    elif event == 'Popup':
-        sg.popup('This is a BLOCKING popup','all windows remain inactive while popup active')
-    elif event == 'Launch 2nd Window' and not window2:
-        window2 = make_win2()
-    elif event == '-IN-':
-        window['-OUTPUT-'].update(f'You enetered {values["-IN-"]}')
-    elif event == 'Erase':
-        window['-OUTPUT-'].update('')
-        window['-IN-'].update('')
-window.close()
+
+def main():
+    window1, window2 = make_win1(), None        # start off with 1 window open
+
+    while True:             # Event Loop
+        window, event, values = sg.read_all_windows()
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            window.close()
+            if window == window2:       # if closing win 2, mark as closed
+                window2 = None
+            elif window == window1:     # if closing win 1, exit program
+                break
+        elif event == 'Popup':
+            sg.popup('This is a BLOCKING popup','all windows remain inactive while popup active')
+        elif event == 'Launch 2nd Window' and not window2:
+            window2 = make_win2()
+        elif event == '-IN-':
+            window['-OUTPUT-'].update(f'You enetered {values["-IN-"]}')
+        elif event == 'Erase':
+            window['-OUTPUT-'].update('')
+            window['-IN-'].update('')
+    window.close()
+
+if __name__ == '__main__':
+    main()
