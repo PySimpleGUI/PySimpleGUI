@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.3 Unreleased"
+version = __version__ = "4.57.0.4 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -10,6 +10,8 @@ _change_log = """
         Added cast to bool of default parm for Checkbox element in case user passes in an incorrect type
     4.57.0.3
         Coupon... for 30 days this time....
+    4.57.0.4
+        ButtonMenu.update - addition of button_text parameter. Enables changing text displayed on the ButtonMenu. Should have been an original feature.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4827,7 +4829,7 @@ class ButtonMenu(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None):
+    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, button_text=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4847,6 +4849,8 @@ class ButtonMenu(Element):
         :type image_size:       (int, int)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:  (int)
+        :param button_text:     Text to be shown on the button
+        :type button_text:      (str)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -4897,7 +4901,9 @@ class ButtonMenu(Element):
 
                 self.TKButtonMenu.config(image=image, compound=tk.CENTER, width=width, height=height)
                 self.TKButtonMenu.image = image
-
+        if button_text is not None:
+            self.TKButtonMenu.configure(text=button_text)
+            self.ButtonText = button_text
         if visible is False:
             self.TKButtonMenu.pack_forget()
         elif visible is True:
@@ -23490,7 +23496,8 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
-            popup_scrolled("Oh look!  It's a Udemy discsount coupon!", '0D50D92ADEDA243A4A4B')
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '0D50D92ADEDA243A4A4B',
+                           'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE)
 
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
