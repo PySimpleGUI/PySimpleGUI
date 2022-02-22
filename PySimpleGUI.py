@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.4 Unreleased"
+version = __version__ = "4.57.0.5 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -12,6 +12,8 @@ _change_log = """
         Coupon... for 30 days this time....
     4.57.0.4
         ButtonMenu.update - addition of button_text parameter. Enables changing text displayed on the ButtonMenu. Should have been an original feature.
+    4.57.0.5
+        Open GitHub Issue GUI - Tabs use 2 lines now. Added tab asking where found PSG.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22206,7 +22208,7 @@ GREEN_CHECK_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAJV0lEQVR4n
 def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
                                      python_exp, prog_exp, used_gui, gui_notes,
                                      cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                                     detailed_desc, code, project_details):
+                                     detailed_desc, code, project_details, where_found):
     body = \
 """
 ## Type of Issue (Enhancement, Error, Bug, Question)
@@ -22286,16 +22288,28 @@ These items may solve your problem. Please check those you've done by changing -
 #### Screenshot, Sketch, or Drawing
 
 
--------------------------
 
-{}
-
-
-    """.format(python_exp, prog_exp, used_gui, gui_notes,
+""".format(python_exp, prog_exp, used_gui, gui_notes,
                 cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                detailed_desc, code if len(code) > 10 else '# Paste your code here',
-               '## Watcha Makin?\n' + str(project_details) if project_details else '')
+                detailed_desc, code if len(code) > 10 else '# Paste your code here')
 
+
+    if project_details or where_found:
+        body2 +=  '------------------------'
+
+    if project_details:
+        body2 +=  \
+"""
+## Watcha Makin?
+{}
+""".format(str(project_details))
+
+    if where_found:
+        body2 += \
+"""
+## How did you find PySimpleGUI?
+{}
+""".format(str(where_found))
     return body + body2
 
 
@@ -22320,16 +22334,12 @@ def _github_issue_post_validate(values, checklist, issue_types):
         popup_error('Must choose issue type')
         return False
     if values['-OS WIN-']:
-        operating_system = 'Windows'
         os_ver = values['-OS WIN VER-']
     elif values['-OS LINUX-']:
-        operating_system = 'Linux'
         os_ver = values['-OS LINUX VER-']
     elif values['-OS MAC-']:
-        operating_system = 'Mac'
         os_ver = values['-OS MAC VER-']
     elif values['-OS OTHER-']:
-        operating_system = 'Other'
         os_ver = values['-OS OTHER VER-']
     else:
         popup_error('Must choose Operating System')
@@ -22469,7 +22479,7 @@ def main_open_github_issue():
                  ('For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)', ''),
                  ('Run your program outside of your debugger (from a command line)', ''),
                  ('Searched through Issues (open and closed) to see if already reported', 'http://Issues.PySimpleGUI.org'),
-                 ('Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed vut not released.', ''))
+                 ('Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released.', ''))
 
     checklist_col1 = Col([[CB(c, k=('-CB-', i)), T(t, k='-T{}-'.format(i), enable_events=True)] for i, (c, t) in enumerate(checklist[:4])], k='-C FRAME CBs1-')
     checklist_col2 = Col([[CB(c, k=('-CB-', i + 4)), T(t, k='-T{}-'.format(i + 4), enable_events=True)] for i, (c, t) in enumerate(checklist[4:])], pad=(0, 0),
@@ -22478,9 +22488,16 @@ def main_open_github_issue():
         [[Tab('Checklist 1 *', [[checklist_col1]], expand_x=True, expand_y=True), Tab('Checklist 2  *', [[checklist_col2]]), Tab('Experience', col_experience, k='-Tab Exp-', pad=(0, 0))]], expand_x=True, expand_y=True)
 
     frame_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML DETAILS-', expand_x=True, expand_y=True)]]
+
     tooltip_project_details = 'If you care to share a little about your project,\nthen by all means tell us what you are making!'
     frame_project_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML PROJECT DETAILS-', expand_x=True, expand_y=True, tooltip=tooltip_project_details)]]
-    frame_code = [[Multiline(size=(80, 10), font='Courier 8', k='-ML CODE-', expand_x=True, expand_y=True)]]
+
+    tooltip_where_find_psg = 'Where did you learn about PySimpleGUI?'
+    frame_where_you_found_psg = [[Multiline(size=(65, 10), font='Courier 10', k='-ML FOUND PSG-', expand_x=True, expand_y=True, tooltip=tooltip_where_find_psg)]]
+
+    tooltip_code = 'A short program that can be immediately run will considerably speed up getting you quality help.'
+    frame_code = [[Multiline(size=(80, 10), font='Courier 8', k='-ML CODE-', expand_x=True, expand_y=True, tooltip=tooltip_code)]]
+
     frame_markdown = [[Multiline(size=(80, 10), font='Courier 8', k='-ML MARKDOWN-', expand_x=True, expand_y=True)]]
 
     top_layout = [[Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
@@ -22499,10 +22516,11 @@ def main_open_github_issue():
         [HorizontalSeparator()],
         [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
-    bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0, 0)),
-                                 Tab('SHORT Code to duplicate Program *', frame_code, pad=(0, 0)),
-                                 Tab('Your Project Details (optional)', frame_project_details, pad=(0, 0)),
-                                 Tab('Markdown Output', frame_markdown, pad=(0, 0)),
+    bottom_layout = [[TabGroup([[Tab('Details *\n', frame_details, pad=(0, 0)),
+                                 Tab('SHORT Program\nto duplicate problem *', frame_code, pad=(0, 0)),
+                                 Tab('Your Project Details\n(optional)', frame_project_details, pad=(0, 0)),
+                                 Tab('Where you found us?\n(optional)', frame_where_you_found_psg, pad=(0, 0)),
+                                 Tab('Markdown Output\n', frame_markdown, pad=(0, 0)),
                                  ]], k='-TABGROUP-', expand_x=True, expand_y=True),
                       ]]
 
@@ -22586,7 +22604,8 @@ def main_open_github_issue():
             cb_dict = {'cb_docs': checkboxes[0], 'cb_demos': checkboxes[1], 'cb_demo_port': checkboxes[2], 'cb_readme_other': checkboxes[3],
                        'cb_command_line': checkboxes[4], 'cb_issues': checkboxes[5], 'cb_github': checkboxes[6], 'detailed_desc': values['-ML DETAILS-'],
                        'code': values['-ML CODE-'],
-                       'project_details': values['-ML PROJECT DETAILS-'].rstrip()}
+                       'project_details': values['-ML PROJECT DETAILS-'].rstrip(),
+                       'where_found': values['-ML FOUND PSG-']}
 
             markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'],
                                                         values['-VER PYTHON-'],
