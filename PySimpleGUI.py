@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.5 Unreleased"
+version = __version__ = "4.57.0.6 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -14,6 +14,8 @@ _change_log = """
         ButtonMenu.update - addition of button_text parameter. Enables changing text displayed on the ButtonMenu. Should have been an original feature.
     4.57.0.5
         Open GitHub Issue GUI - Tabs use 2 lines now. Added tab asking where found PSG.
+    4.57.0.6
+        New symbols SYMBOL_CHECKMARK_SMALL & SYMBOL_X_SMALL
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -631,6 +633,8 @@ SYMBOL_LEFT = '◄'
 SYMBOL_DOWN = '▼'
 SYMBOL_X = '❎'
 SYMBOL_CHECK = '✅'
+SYMBOL_CHECK_SMALL = '✓'
+SYMBOL_X_SMALL = '✗'
 SYMBOL_BALLOT_X = '☒'
 SYMBOL_BALLOT_CHECK = '☑'
 SYMBOL_LEFT_DOUBLE = '«'
