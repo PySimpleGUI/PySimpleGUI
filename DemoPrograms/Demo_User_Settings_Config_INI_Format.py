@@ -79,4 +79,13 @@ if __name__ == '__main__':
     SETTINGS_PATH = '.'
     # create the settings object and use ini format
     settings = sg.UserSettings(path=SETTINGS_PATH, use_config_file=True, convert_bools_and_none=True)
+    # sg.popup(settings)
+    # settings['My Section1'].delete_entry(key='test')
+    # settings.delete_entry(section='My Section1', key='test')
+    # settings['My Section1'].delete_section()
+    # del settings['My Section1']
+    # settings.delete_section(section='My Section1')
+    settings['Section 2'].set('var1', 'Default')
+    settings['Section 2']['var'] = 'New Value'
+    settings['NEW SECTION']['a'] = 'brand new section'
     save_previous_filename_demo()
