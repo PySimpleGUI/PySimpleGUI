@@ -1741,9 +1741,9 @@ The debug window acts like a virtual console.  There are 2 operating modes for t
 
 ### `Print` - Print to the Debug Window
 
-The functions `Print`, `eprint`, `EasyPrint` all refer to the same funtion.   There is no difference whic hyou use as they point to identical code.  The one you'll see used in Demo Programs is `Print`.
+The functions `Print`, `eprint`, `EasyPrint` all refer to the same funtion.   There is no difference which you use as they point to identical code.  The one you'll see used in Demo Programs is `Print`.
 
-One method for routing your print statements to the debuyg window is to reassign the `print` keyword to be the PySimpleGUI function `Print`.  This can be done through simple assignment.  
+One method for routing your print statements to the debug window is to reassign the `print` keyword to be the PySimpleGUI function `Print`.  This can be done through simple assignment.  
 
 `print = sg.Print`
 
@@ -1831,7 +1831,7 @@ Since you may not be able to always have access to the window when printing, esp
 
 Let's try the first option, adding the element onto the front of an existing `print` statement as well as using the color parameters.
 
-The most basic form of converting your exiting `print` into a `Multline` based `print` is to add the same element-lookup code that you would use when calling an element's `update` method.  Generically, that conversion looks like this:
+The most basic form of converting your exiting `print` into a `Multiline` based `print` is to add the same element-lookup code that you would use when calling an element's `update` method.  Generically, that conversion looks like this:
 
 ```python
 print('Testing 1 2 3')
@@ -1842,12 +1842,12 @@ If our Multiline's key is '-ML-' then the expression to look the element up is:
 window['-ML-']
 ```
 
-Combing the two transforms the original print to a `Multline` element print:
+Combing the two transforms the original print to a `Multiline` element print:
 ```python
 window['-ML-'].print('Testing 1 2 3')
 ```
 
-Because we're using these `Multilne` elements as output only elements, we don't want to have their contents returned in the values dictionary when we call `window.read()`.  To make any element not be included in the values dictionary, add the constant `WRITE_ONLY_KEY` onto the end of your key.  This would change our previous example to:
+Because we're using these `Multiline` elements as output only elements, we don't want to have their contents returned in the values dictionary when we call `window.read()`.  To make any element not be included in the values dictionary, add the constant `WRITE_ONLY_KEY` onto the end of your key.  This would change our previous example to:
 
 ```python
 window['-ML-'+sg.WRITE_ONLY_KEY].print('Testing 1 2 3')
@@ -1890,7 +1890,7 @@ It produces this window:
 ![image](https://user-images.githubusercontent.com/46163555/78400036-fbb16180-75c3-11ea-8261-f8b80a38d2e4.png)
 
 
-There are a number of tricks and techniques burried in this Recpie so study it closely as there are a lot of options being used.
+There are a number of tricks and techniques burried in this Recipe so study it closely as there are a lot of options being used.
 
 
 
