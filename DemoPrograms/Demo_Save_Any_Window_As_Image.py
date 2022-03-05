@@ -1,8 +1,6 @@
 import PySimpleGUI as sg
 import win32gui
-import cv2
 from PIL import ImageGrab
-import numpy as np
 
 """
     Demo - Save Window screenshot
@@ -10,7 +8,7 @@ import numpy as np
     Saves a window as an image file.  Tested saving as PNG and JPG.  Input the title of the Window and it will be
     saved in the format indicated by the filename.
 
-    Copyright 2020 PySimpleGUI.org
+    Copyright 2020, 2022 PySimpleGUI.org
 """
 
 # --------------------------------- Function to Save Window as JPG ---------------------------------
@@ -41,9 +39,8 @@ def save_win(filename=None, title=None):
         fceuxHWND = win32gui.FindWindow(None, title)
         rect = win32gui.GetWindowRect(fceuxHWND)
         rect_cropped = (rect[0]+C, rect[1], rect[2]-C, rect[3]-C)
-        frame = np.array(ImageGrab.grab(bbox=rect_cropped), dtype=np.uint8)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        cv2.imwrite(filename, frame)
+        grab = ImageGrab.grab(bbox=rect_cropped)
+        grab.save(filename)
         sg.popup('Wrote image to file:',filename)
     except Exception as e:
         sg.popup('Error trying to save screenshot file', e)

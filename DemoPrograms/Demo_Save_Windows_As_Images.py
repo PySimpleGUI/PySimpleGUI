@@ -6,10 +6,19 @@ import win32api
 import win32con
 import win32gui
 import win32process
-import cv2
 from PIL import ImageGrab
-import numpy as np
 
+"""
+    Demo - Save Windows as Images
+    
+    Works on WINDOWS only.
+    Saves a window as an image file.  Tested saving as PNG and JPG.
+    saved in the format indicated by the filename.
+    The window needs to be on the primary display.
+    2022 update was to remove OpenCV requirement.
+
+    Copyright 2020, 2022 PySimpleGUI.org
+"""
 
 def convert_string_to_tuple(string):
     """
@@ -67,7 +76,6 @@ def get_window_list():
     titles = sorted(titles, key=lambda x: x[0].lower())
     return titles
 
-
 def save_win(filename=None, title=None, crop=True):
     """
     Saves a window with the title provided as a file using the provided filename.
@@ -82,9 +90,8 @@ def save_win(filename=None, title=None, crop=True):
         fceuxHWND = win32gui.FindWindow(None, title)
         rect = win32gui.GetWindowRect(fceuxHWND)
         rect_cropped = (rect[0] + C, rect[1], rect[2] - C, rect[3] - C)
-        frame = np.array(ImageGrab.grab(bbox=rect_cropped), dtype=np.uint8)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        cv2.imwrite(filename, frame)
+        grab = ImageGrab.grab(bbox=rect_cropped)
+        grab.save(filename)
         sg.cprint('Wrote image to file:')
         sg.cprint(filename, c='white on purple')
     except Exception as e:
