@@ -17,7 +17,7 @@
 
 import PySimpleGUI as sg
 
-# Settings for you to modify are the size of the element, the circle width & color and the foht for the % complete
+# Settings for you to modify are the size of the element, the circle width & color and the font for the % complete
 GRAPH_SIZE = (300 , 300)          # this one setting drives the other settings
 CIRCLE_LINE_WIDTH, LINE_COLOR = 20, 'yellow'
 TEXT_FONT = 'Courier'
