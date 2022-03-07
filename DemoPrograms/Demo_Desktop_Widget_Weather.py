@@ -24,7 +24,7 @@ import webbrowser
 
     This widget is an early version of a PSG Widget so it may not share the same names / constructs as the templates. 
 
-    Copyright 2020 PySimpleGUI - www.PySimpleGUI.com
+    Copyright 2020, 2022 PySimpleGUI - www.PySimpleGUI.com
 
 """
 
@@ -76,7 +76,9 @@ def change_settings(settings, window_location=(None, None)):
 
     layout = [[sg.T('Enter Zipcode or City for your location')],
               [sg.I(settings.get('-location-', nearest_postal), size=(15, 1), key='-LOCATION-')],
+              [sg.I(settings.get('-country-', 'US'), size=(15, 1), key='-COUNTRY-')],
               [sg.I(settings.get('-api key-', ''), size=(32, 1), key='-API KEY-')],
+              [sg.CBox('Use Metric For Temperatures', default=settings.get('-celsius-', False),key='-CELSIUS-')],
               [sg.B('Ok', border_width=0, bind_return_key=True),  sg.B('Register For a Key', border_width=0, k='-REGISTER-'), sg.B('Cancel', border_width=0)], ]
 
     window = sg.Window('Settings', layout, location=window_location, no_titlebar=True, keep_on_top=True, border_depth=0)
@@ -91,7 +93,9 @@ def change_settings(settings, window_location=(None, None)):
 
     if event == 'Ok':
         user_location = settings['-location-'] = values['-LOCATION-']
+        settings['-country-'] = values['-COUNTRY-']
         API_KEY = settings['-api key-'] = values['-API KEY-']
+        settings['-celsius-'] = values['-CELSIUS-']
     else:
         API_KEY = settings['-api key-']
         user_location = settings['-location-']
@@ -103,6 +107,11 @@ def change_settings(settings, window_location=(None, None)):
         else:
             APP_DATA['City'] = user_location
             APP_DATA['Postal'] = ''
+    APP_DATA['Country'] = settings['-country-']
+    if settings['-celsius-']:
+        APP_DATA['Units'] = 'metric'
+    else:
+        APP_DATA['Units'] = 'imperial'
 
     return settings
 
@@ -119,13 +128,14 @@ def create_endpoint(endpoint_type=0):
     {0: default, 1: zipcode, 2: city_name}"""
     if endpoint_type == 1:
         try:
-            endpoint = f"http://api.openweathermap.org/data/2.5/weather?zip={APP_DATA['Postal']},us&appid={API_KEY}&units={APP_DATA['Units']}"
+            endpoint = f"http://api.openweathermap.org/data/2.5/weather?zip={APP_DATA['Postal']},{APP_DATA['Country']}&appid={API_KEY}&units={APP_DATA['Units']}"
             return endpoint
         except ConnectionError:
             return
     elif endpoint_type == 2:
         try:
-            endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},us&APPID={API_KEY}&units={APP_DATA['Units']}"
+            # endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},us&APPID={API_KEY}&units={APP_DATA['Units']}"
+            endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},{APP_DATA['Country']}&APPID={API_KEY}&units={APP_DATA['Units']}"
             return endpoint
         except ConnectionError:
             return
@@ -148,16 +158,19 @@ def request_weather_data(endpoint):
                            'Is your API Key set correctly?',
                            API_KEY, keep_on_top=True, location=win_location)
             return
-
+    if APP_DATA['Units'] == 'metric':
+        temp_units, speed_units = '°C', 'm/sec'
+    else:
+        temp_units, speed_units = '°F', 'miles/hr'
     if response.reason == 'OK':
         weather = json.loads(response.read())
         APP_DATA['City'] = weather['name'].title()
         APP_DATA['Description'] = weather['weather'][0]['description']
-        APP_DATA['Temp'] = "{:,.0f}°F".format(weather['main']['temp'])
+        APP_DATA['Temp'] = "{:,.0f}{}".format(weather['main']['temp'], temp_units)
         APP_DATA['Humidity'] = "{:,d}%".format(weather['main']['humidity'])
         APP_DATA['Pressure'] = "{:,d} hPa".format(weather['main']['pressure'])
-        APP_DATA['Feels Like'] = "{:,.0f}°F".format(weather['main']['feels_like'])
-        APP_DATA['Wind'] = "{:,.1f} m/h".format(weather['wind']['speed'])
+        APP_DATA['Feels Like'] = "{:,.0f}{}".format(weather['main']['feels_like'], temp_units)
+        APP_DATA['Wind'] = "{:,.1f}{}".format(weather['wind']['speed'], speed_units)
         APP_DATA['Precip 1hr'] = None if not weather.get('rain') else "{:2} mm".format(weather['rain']['1h'])
         APP_DATA['Updated'] = 'Updated: ' + datetime.datetime.now().strftime("%B %d %I:%M:%S %p")
         APP_DATA['Lon'] = weather['coord']['lon']
@@ -246,6 +259,12 @@ def main(refresh_rate, win_location):
     # Load settings from config file. If none found will create one
     settings = load_settings()
     location = settings['-location-']
+    APP_DATA['Country'] = settings.get('-country-', 'US')
+    if settings.get('-celsius-'):
+        APP_DATA['Units'] = 'metric'
+    else:
+        APP_DATA['Units'] = 'imperial'
+
     if location is not None:
         if location.isnumeric() and len(location) == 5 and location is not None:
             APP_DATA['Postal'] = location
