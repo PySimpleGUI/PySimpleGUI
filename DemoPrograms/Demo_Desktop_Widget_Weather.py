@@ -24,7 +24,7 @@ import webbrowser
 
     This widget is an early version of a PSG Widget so it may not share the same names / constructs as the templates. 
 
-    Copyright 2020 PySimpleGUI - www.PySimpleGUI.com
+    Copyright 2020, 2022 PySimpleGUI - www.PySimpleGUI.com
 
 """
 
@@ -76,6 +76,7 @@ def change_settings(settings, window_location=(None, None)):
 
     layout = [[sg.T('Enter Zipcode or City for your location')],
               [sg.I(settings.get('-location-', nearest_postal), size=(15, 1), key='-LOCATION-')],
+              [sg.I(settings.get('-country-', 'US'), size=(15, 1), key='-COUNTRY-')],
               [sg.I(settings.get('-api key-', ''), size=(32, 1), key='-API KEY-')],
               [sg.B('Ok', border_width=0, bind_return_key=True),  sg.B('Register For a Key', border_width=0, k='-REGISTER-'), sg.B('Cancel', border_width=0)], ]
 
@@ -91,6 +92,7 @@ def change_settings(settings, window_location=(None, None)):
 
     if event == 'Ok':
         user_location = settings['-location-'] = values['-LOCATION-']
+        settings['-country-'] = values['-COUNTRY-']
         API_KEY = settings['-api key-'] = values['-API KEY-']
     else:
         API_KEY = settings['-api key-']
@@ -103,6 +105,7 @@ def change_settings(settings, window_location=(None, None)):
         else:
             APP_DATA['City'] = user_location
             APP_DATA['Postal'] = ''
+    APP_DATA['Country'] = settings['-country-']
 
     return settings
 
@@ -119,13 +122,14 @@ def create_endpoint(endpoint_type=0):
     {0: default, 1: zipcode, 2: city_name}"""
     if endpoint_type == 1:
         try:
-            endpoint = f"http://api.openweathermap.org/data/2.5/weather?zip={APP_DATA['Postal']},us&appid={API_KEY}&units={APP_DATA['Units']}"
+            endpoint = f"http://api.openweathermap.org/data/2.5/weather?zip={APP_DATA['Postal']},{APP_DATA['Country']}&appid={API_KEY}&units={APP_DATA['Units']}"
             return endpoint
         except ConnectionError:
             return
     elif endpoint_type == 2:
         try:
-            endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},us&APPID={API_KEY}&units={APP_DATA['Units']}"
+            # endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},us&APPID={API_KEY}&units={APP_DATA['Units']}"
+            endpoint = f"http://api.openweathermap.org/data/2.5/weather?q={APP_DATA['City'].replace(' ', '%20')},{APP_DATA['Country']}&APPID={API_KEY}&units={APP_DATA['Units']}"
             return endpoint
         except ConnectionError:
             return
@@ -246,6 +250,7 @@ def main(refresh_rate, win_location):
     # Load settings from config file. If none found will create one
     settings = load_settings()
     location = settings['-location-']
+    APP_DATA['Country'] = settings.get('-country-', 'US')
     if location is not None:
         if location.isnumeric() and len(location) == 5 and location is not None:
             APP_DATA['Postal'] = location
