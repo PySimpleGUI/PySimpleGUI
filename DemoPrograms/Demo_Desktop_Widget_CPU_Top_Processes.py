@@ -2,104 +2,79 @@
 import PySimpleGUI as sg
 import psutil
 import time
-from threading import Thread
 import operator
 import sys
 
 """
-    PSUTIL Desktop Widget
-    Creates a floating CPU utilization window that is always on top of other windows
-    You move it by grabbing anywhere on the window
-    Good example of how to do a non-blocking, polling program using PySimpleGUI
-    Use the spinner to adjust the number of seconds between readings of the CPU utilizaiton
+    PSUTIL "Top" CPU Processes - Desktop Widget
+    
+    Creates a floating CPU utilization window running something similar to a "top" command.
 
-    NOTE - you will get a warning message printed when you exit using exit button.
-    It will look something like:
-            invalid command name "1616802625480StopMove"
+    Use the spinner to adjust the number of seconds between readings of the CPU utilizaiton
+    Rather than calling the threading module this program uses the PySimpleGUI perform_long_operation method.
+        The result is similar.  The function is run as a thread... the call is simply wrapped.
+            
+    Copyright 2022 PySimpleGUI
 """
 
-# globale used to communicate with thread.. yea yea... it's working fine
-g_interval = 1
-g_cpu_percent = 0
-g_procs = None
-g_exit = False
+# global used to communicate with thread.
+g_interval = 1      # how often to poll for CPU usage
 
-def CPU_thread(args):
-    global g_interval, g_cpu_percent, g_procs, g_exit
+def CPU_thread(window:sg.Window):
 
-    while not g_exit:
-        try:
-            g_cpu_percent = psutil.cpu_percent(interval=g_interval)
-            g_procs = psutil.process_iter()
-        except:
-            pass
+    while True:
+        cpu_percent = psutil.cpu_percent(interval=g_interval)
+        procs = psutil.process_iter()
+        window.write_event_value('-CPU UPDATE-', (cpu_percent, procs))
 
 
-def main(location):
-    global g_interval,  g_procs, g_exit
+def main():
+    global g_interval
+
+    location =  sg.user_settings_get_entry('-location-', (None, None))
+
 
     # ----------------  Create Form  ----------------
     sg.theme('Black')
-    layout = [
-        [sg.Text('', size=(8, 1), font=('Helvetica', 20),
-              text_color=sg.YELLOWS[0], justification='center', key='text')],
-        [sg.Text('', size=(30, 8), font=('Courier New', 12),
+    layout = [[sg.Text('', size=(8, 1), font=('Helvetica', 20),
+              text_color=sg.YELLOWS[0], justification='center', key='text'), sg.Push(), sg.Text('❎', enable_events=True, key='Exit')],
+              [sg.Text('', size=(30, 8), font=('Courier New', 12),
               text_color='white', justification='left', key='processes')],
-        [sg.Text('Update every '),
-         sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds       '),
-         sg.Text('❎', enable_events=True, key='Exit')
-         ]
-    ]
+              [sg.Text('Update every '), sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds       ')]]
 
-    window = sg.Window('Top CPU Processes', layout,
-                       no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
+    window = sg.Window('Top CPU Processes', layout, no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
 
     # start cpu measurement thread
-    thread = Thread(target=CPU_thread, args=(None,))
-    thread.start()
-    timeout_value = 1             # make first read really quick
+    # using the PySimpleGUI call to start and manage the thread
+    window.perform_long_operation(lambda: CPU_thread(window), '-THREAD FINISHED-')
     g_interval = 1
     # ----------------  main loop  ----------------
     while True:
         # --------- Read and update window --------
-        event, values = window.read(timeout_value)
+        event, values = window.read()
         # --------- Do Button Operations --------
-        if event in (sg.WIN_CLOSED, 'Exit'):
+        if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-location-', window.current_location())     # save window location before exiting
             break
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
-        timeout_value = int(values['spin']) * 1000      # for now on, use spinner for timeout
+        elif event == '-CPU UPDATE-':                   # indicates data from the thread has arrived
+            cpu_percent, procs = values[event]          # the thread sends a tuple
+            if procs:
+                # --------- Create dictionary of top % CPU processes.  Format is name:cpu_percent --------
+                top = {proc.name(): proc.cpu_percent() for proc in procs}
+
+                top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)  # reverse sort to get highest CPU usage on top
+                if top_sorted:
+                    top_sorted.pop(0)           # remove the idle process
+                display_string =  '\n'.join([f'{cpu/10:2.2f} {proc}' for proc, cpu in top_sorted])
+                # --------- Display timer and proceses in window --------
+                window['text'].update(f'CPU {cpu_percent}')
+                window['processes'].update(display_string)
+        # get the timeout from the spinner
         g_interval = int(values['spin'])
-        cpu_percent = g_cpu_percent
-        display_string = ''
-        if g_procs:
-            # --------- Create list of top % CPU porocesses --------
-            try:
-                top = {proc.name(): proc.cpu_percent() for proc in g_procs}
-            except:
-                pass
-
-            top_sorted = sorted(
-                top.items(), key=operator.itemgetter(1), reverse=True)
-            if top_sorted:
-                top_sorted.pop(0)
-            display_string = ''
-            for proc, cpu in top_sorted:
-                display_string += '{:2.2f} {}\n'.format(cpu/10, proc)
-
-        # --------- Display timer and proceses in window --------
-        window['text'].update('CPU ' + str(cpu_percent))
-        window['processes'].update(display_string)
-
-    g_exit = True
-    thread.join()
 
     window.close()
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        location = sys.argv[1].split(',')
-        location = (int(location[0]), int(location[1]))
-    else:
-        location = (None, None)
-    main(location)
+    main()
