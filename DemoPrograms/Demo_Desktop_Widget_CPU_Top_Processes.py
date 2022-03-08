@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
 import psutil
-import time
 import operator
-import sys
 
 """
     PSUTIL "Top" CPU Processes - Desktop Widget
@@ -25,7 +23,7 @@ def CPU_thread(window:sg.Window):
     while True:
         cpu_percent = psutil.cpu_percent(interval=g_interval)
         procs = psutil.process_iter()
-        window.write_event_value('-CPU UPDATE-', (cpu_percent, procs))
+        window.write_event_value('-CPU UPDATE FROM THREAD-', (cpu_percent, procs))
 
 
 def main():
@@ -33,14 +31,12 @@ def main():
 
     location =  sg.user_settings_get_entry('-location-', (None, None))
 
-
     # ----------------  Create Form  ----------------
     sg.theme('Black')
-    layout = [[sg.Text('', size=(8, 1), font=('Helvetica', 20),
-              text_color=sg.YELLOWS[0], justification='center', key='text'), sg.Push(), sg.Text('❎', enable_events=True, key='Exit')],
-              [sg.Text('', size=(30, 8), font=('Courier New', 12),
-              text_color='white', justification='left', key='processes')],
-              [sg.Text('Update every '), sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds       ')]]
+
+    layout = [[sg.Text(font=('Helvetica', 20), text_color=sg.YELLOWS[0], key='-CPU PERCENT-'), sg.Push(), sg.Text(sg.SYMBOL_X, enable_events=True, key='Exit')],
+              [sg.Text(size=(35, 12), font=('Courier New', 12), key='-PROCESSES-')],     # size will determine how many processes shown
+              [sg.Text('Update every '), sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds')]]
 
     window = sg.Window('Top CPU Processes', layout, no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
 
@@ -58,7 +54,7 @@ def main():
             break
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
-        elif event == '-CPU UPDATE-':                   # indicates data from the thread has arrived
+        elif event == '-CPU UPDATE FROM THREAD-':                   # indicates data from the thread has arrived
             cpu_percent, procs = values[event]          # the thread sends a tuple
             if procs:
                 # --------- Create dictionary of top % CPU processes.  Format is name:cpu_percent --------
@@ -67,10 +63,10 @@ def main():
                 top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)  # reverse sort to get highest CPU usage on top
                 if top_sorted:
                     top_sorted.pop(0)           # remove the idle process
-                display_string =  '\n'.join([f'{cpu/10:2.2f} {proc}' for proc, cpu in top_sorted])
+                display_string =  '\n'.join([f'{cpu/10:2.2f} {proc:23}' for proc, cpu in top_sorted])
                 # --------- Display timer and proceses in window --------
-                window['text'].update(f'CPU {cpu_percent}')
-                window['processes'].update(display_string)
+                window['-CPU PERCENT-'].update(f'CPU {cpu_percent}')
+                window['-PROCESSES-'].update(display_string)
         # get the timeout from the spinner
         g_interval = int(values['spin'])
 
