@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.6 Unreleased"
+version = __version__ = "4.57.0.8 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -16,6 +16,10 @@ _change_log = """
         Open GitHub Issue GUI - Tabs use 2 lines now. Added tab asking where found PSG.
     4.57.0.6
         New symbols SYMBOL_CHECKMARK_SMALL & SYMBOL_X_SMALL
+    4.57.0.7
+        Added click - PEP8 alias for ButtonMenu.Click
+    4.57.0.8
+        Automatically add timeouts to user reads if a debugger window is opened. Need to add support for multi-window applications still.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4820,6 +4824,7 @@ class ButtonMenu(Element):
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
         self.Tearoff = tearoff
 
+
     def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
         """
         Not a user callable function.  Called by tkinter when an item is chosen from the menu.
@@ -4834,6 +4839,7 @@ class ButtonMenu(Element):
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
+
 
     def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, button_text=None):
         """
@@ -4917,7 +4923,7 @@ class ButtonMenu(Element):
         if visible is not None:
             self._visible = visible
 
-    def Click(self):
+    def click(self):
         """
         Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -4928,7 +4934,7 @@ class ButtonMenu(Element):
             print('Exception clicking button')
 
     Update = update
-
+    Click = click
 
 BMenu = ButtonMenu
 BM = ButtonMenu
@@ -9615,6 +9621,11 @@ class Window:
         if not Window._read_call_from_debugger:
             _refresh_debugger()
 
+        # if the user has not added timeout and a debug window is open, then set a timeout for them so the debugger continuously refreshes
+        if _debugger_window_is_open() and not Window._read_call_from_debugger:
+            if timeout is None or timeout > 3000:
+                timeout = 200
+
         Window._root_running_mainloop = self.TKroot
 
         while True:
@@ -10831,22 +10842,28 @@ class Window:
     def _callback_main_debugger_window_create_keystroke(self, event):
         """
         Called when user presses the key that creates the main debugger window
-
+        March 2022 - now causes the user reads to return timeout events automatically
         :param event: (event) not used. Passed in event info
         :type event:
         """
         Window._main_debug_window_build_needed = True
-        # _Debugger.debugger._build_main_debugger_window()
+        # exit the event loop in a way that resembles a timeout occurring
+        self.LastButtonClicked = self.TimeoutKey
+        self.FormRemainedOpen = True
+        self.TKroot.quit()  # kick the users out of the mainloop
 
     def _callback_popout_window_create_keystroke(self, event):
         """
         Called when user presses the key that creates the floating debugger window
-
+        March 2022 - now causes the user reads to return timeout events automatically
         :param event: (event) not used. Passed in event info
         :type event:
         """
         Window._floating_debug_window_build_needed = True
-        # _Debugger.debugger._build_floating_window()
+        # exit the event loop in a way that resembles a timeout occurring
+        self.LastButtonClicked = self.TimeoutKey
+        self.FormRemainedOpen = True
+        self.TKroot.quit()  # kick the users out of the mainloop
 
     def enable_debugger(self):
         """
@@ -21951,18 +21968,37 @@ def _refresh_debugger():
         _Debugger.debugger = _Debugger()
     debugger = _Debugger.debugger
     Window._read_call_from_debugger = True
+    rc = None
     # frame = inspect.currentframe()
     # frame = inspect.currentframe().f_back
+
     frame, *others = inspect.stack()[1]
     try:
         debugger.locals = frame.f_back.f_locals
         debugger.globals = frame.f_back.f_globals
     finally:
         del frame
-    debugger._refresh_floating_window() if debugger.popout_window else None
-    rc = debugger._refresh_main_debugger_window(debugger.locals, debugger.globals) if debugger.watcher_window else False
+    if debugger.popout_window:
+        rc = debugger._refresh_floating_window()
+    if debugger.watcher_window:
+        rc = debugger._refresh_main_debugger_window(debugger.locals, debugger.globals)
     Window._read_call_from_debugger = False
     return rc
+
+
+def _debugger_window_is_open():
+    """
+    Determines if one of the debugger window is currently open
+    :return: returns True if the popout window or the main debug window is open
+    :rtype: (bool)
+    """
+
+    if _Debugger.debugger is None:
+        return False
+    debugger = _Debugger.debugger
+    if debugger.popout_window or debugger.watcher_window:
+        return True
+    return False
 
 
 def get_versions():
