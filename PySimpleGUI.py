@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.8 Unreleased"
+version = __version__ = "4.57.0.9 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -20,6 +20,9 @@ _change_log = """
         Added click - PEP8 alias for ButtonMenu.Click
     4.57.0.8
         Automatically add timeouts to user reads if a debugger window is opened. Need to add support for multi-window applications still.
+    4.57.0.9
+        start_thread - a simple alias for perform_long_operation.  It's clearer what's happening with this alias.
+        Added bind_return_key to Spin element.  If element has focus and the return key is pressed, then an event is generated.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1192,10 +1195,13 @@ class Element():
         self._generic_callback_handler('')
 
 
-    def _SpinboxSelectHandler(self):
+    def _SpinboxSelectHandler(self, event=None):
         """
-        Internal callback function for when an entry is selected in a Combobox.
-
+        Internal callback function for when an entry is selected in a Spinbox.
+        Note that the parm is optional because it's not used if arrows are used to change the value
+        but if the return key is pressed, it will include the event parm
+        :param event: Event data passed in by tkinter (not used)
+        :type event:
         """
         self._generic_callback_handler('')
 
@@ -2775,7 +2781,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
-                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, p=None,
+                 size=(None, None), s=(None, None), auto_size_text=None, bind_return_key=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, p=None,
                  tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:           List of valid values
@@ -2796,6 +2802,8 @@ class Spin(Element):
         :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
+        :param bind_return_key:  If True, then the return key will cause a the element to generate an event
+        :type bind_return_key:   (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              (str or (str, int[, str]) or None)
         :param background_color: color of background
@@ -2832,6 +2840,7 @@ class Spin(Element):
         self.Disabled = disabled
         self.Readonly = readonly
         self.RightClickMenu = right_click_menu
+        self.BindReturnKey = bind_return_key
 
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -11085,6 +11094,9 @@ class Window:
         """
         Call your function that will take a long time to execute.  When it's complete, send an event
         specified by the end_key.
+
+        Starts a thread on your behalf.
+
         This is a way for you to "ease into" threading without learning the details of threading.
         Your function will run, and when it returns 2 things will happen:
         1. The value you provide for end_key will be returned to you when you call window.read()
@@ -11092,7 +11104,6 @@ class Window:
 
         IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleGUI calls from
         the function you provide with the exception of one function, Window.write_event_value.
-
 
         :param func:    A lambda or a function name with no parms
         :type func:     Any
@@ -11207,7 +11218,7 @@ class Window:
     VisibilityChanged = visibility_changed
     CloseNonBlocking = close
     CloseNonBlockingForm = close
-
+    start_thread = perform_long_operation
     #
     # def __exit__(self, *a):
     #     """
@@ -15111,6 +15122,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                if element.BindReturnKey:
+                    element.TKSpinBox.bind('<Return>', element._SpinboxSelectHandler)
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
                 _add_right_click_menu_and_grab(element)
