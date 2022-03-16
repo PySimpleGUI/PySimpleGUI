@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.9 Unreleased"
+version = __version__ = "4.57.0.10 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -23,6 +23,8 @@ _change_log = """
     4.57.0.9
         start_thread - a simple alias for perform_long_operation.  It's clearer what's happening with this alias.
         Added bind_return_key to Spin element.  If element has focus and the return key is pressed, then an event is generated.
+    4.57.0.10
+        If an element is disabled, then don't generate events (fixed specifically for Input element)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -953,13 +955,14 @@ class Element():
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.pad_used = (0, 0)  # the amount of pad used when was inserted into the layout
         self._popup_menu_location = (None, None)
-
         if not hasattr(self, 'DisabledTextColor'):
             self.DisabledTextColor = None
         if not hasattr(self, 'ItemFont'):
             self.ItemFont = None
         if not hasattr(self, 'RightClickMenu'):
             self.RightClickMenu = None
+        if not hasattr(self, 'Disabled'):
+            self.Disabled = None        # in case the element hasn't defined this, add it here
 
     @property
     def visible(self):
@@ -1147,6 +1150,10 @@ class Element():
         :type event:
 
         """
+        # if the element is disabled, ignore the event
+        if self.Disabled:
+            return
+
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
@@ -1233,6 +1240,10 @@ class Element():
         :param event: Event data passed in by tkinter (not used)
         :type event:
         """
+
+        # if the element is disabled, ignore the event
+        if self.Disabled:
+            return
         self._generic_callback_handler('')
 
     def _ClickHandler(self, event):
@@ -4438,7 +4449,7 @@ class Button(Element):
             except:
                 pass
             try:
-                if target_element.ChangeSubmits:
+                if target_element.ChangeSubmits and not target_element.Disabled:
                     should_submit_window = True
             except:
                 pass
