@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.12 Unreleased"
+version = __version__ = "4.57.0.13 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -28,7 +28,9 @@ _change_log = """
     4.57.0.11
         Added event generation back for disabled elements if the event was a browse button filling in the element
     4.57.0.12
-        Don's generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
+        Don't generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
+    4.57.0.13
+        Fix docstring for image in the Titlebar element. Incorrectly said an ICO file can be used. Must be PNG or GIF
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11827,17 +11829,17 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
     NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
     should have no problem and it should function as a normal window would.
 
-    This titlebar is created from a row of elements that is then encapulated into a
-    single Column element which is what the Titlebar returns to you.
+    This titlebar is created from a row of elements that is then encapsulated into a
+    one Column element which is what this Titlebar function returns to you.
 
-    A custom titlebar removes the margins from your window.  Ify ou want the  remainder
+    A custom titlebar removes the margins from your window.  If you want the  remainder
     of your Window to have margins, place the layout after the Titlebar into a Column and
     set the pad of that Column to the dimensions you would like your margins to have.
 
     The Titlebar is a COLUMN element.  You can thus call the update method for the column and
     perform operations such as making the column visible/invisible
 
-    :param icon:             Can be either a filename or Base64 byte string of a PNG. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :param icon:             Can be either a filename or Base64 byte string of a PNG or GIF. This is used in an Image element to create the titlebar
     :type icon:              str or bytes or None
     :param title:            The "title" to show in the titlebar
     :type title:             str
