@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.10 Unreleased"
+version = __version__ = "4.57.0.11 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -25,6 +25,8 @@ _change_log = """
         Added bind_return_key to Spin element.  If element has focus and the return key is pressed, then an event is generated.
     4.57.0.10
         If an element is disabled, then don't generate events (fixed specifically for Input element)
+    4.57.0.11
+        Added event generation back for disabled elements if the event was a browse button filling in the element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4449,7 +4451,7 @@ class Button(Element):
             except:
                 pass
             try:
-                if target_element.ChangeSubmits and not target_element.Disabled:
+                if target_element.ChangeSubmits:
                     should_submit_window = True
             except:
                 pass
