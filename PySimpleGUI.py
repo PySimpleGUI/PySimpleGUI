@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.11 Unreleased"
+version = __version__ = "4.57.0.12 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -27,6 +27,8 @@ _change_log = """
         If an element is disabled, then don't generate events (fixed specifically for Input element)
     4.57.0.11
         Added event generation back for disabled elements if the event was a browse button filling in the element
+    4.57.0.12
+        Don's generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4513,6 +4515,8 @@ class Button(Element):
                     self.TKStringVar.set(folder_name)
                 except:
                     pass
+            else:  # if "cancel" button clicked, don't generate an event
+                should_submit_window = False
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             if running_mac():
                 file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
@@ -4522,6 +4526,8 @@ class Button(Element):
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
+            else:           # if "cancel" button clicked, don't generate an event
+                should_submit_window = False
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             color = color[1]  # save only the #RRGGBB portion
@@ -4536,6 +4542,8 @@ class Button(Element):
                 file_name = self._files_delimiter.join(file_name)  # normally a ';'
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
+            else:           # if "cancel" button clicked, don't generate an event
+                should_submit_window = False
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             # show the 'get file' dialog box
             if running_mac():
@@ -4546,6 +4554,8 @@ class Button(Element):
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
+            else:           # if "cancel" button clicked, don't generate an event
+                should_submit_window = False
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
