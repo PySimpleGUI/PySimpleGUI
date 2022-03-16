@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "4.57.0.13 Unreleased"
+from builtins import Exception
+
+version = __version__ = "4.57.0.14 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -31,6 +33,8 @@ _change_log = """
         Don't generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
     4.57.0.13
         Fix docstring for image in the Titlebar element. Incorrectly said an ICO file can be used. Must be PNG or GIF
+    4.57.0.14
+        Windows-specific code that enables the PySimpleGUI supplied icon to be shown rather than the python.exe logo (thank you Jason)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23711,6 +23715,14 @@ if running_trinket():
 
 if tclversion_detailed.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}. You cannot use PNG formatted images for example.  Please upgrade to 8.6.x'.format(tclversion_detailed), UserWarning)
+
+# Enables the correct application icon to be shown on the Windows taskbar
+if running_windows():
+    try:
+        myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except Exception as e:
+        print('Error using the taskbar icon patch', e)
 
 _read_mac_global_settings()
 # if running_mac():
