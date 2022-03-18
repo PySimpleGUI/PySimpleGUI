@@ -26,15 +26,15 @@ def number(max_val=1000):
 
 def make_table(num_rows, num_cols):
     data = [[j for j in range(num_cols)] for i in range(num_rows)]
-    data[0] = [word() for __ in range(num_cols)]
+    data[0] = [word() for _ in range(num_cols)]
     for i in range(1, num_rows):
-        data[i] = [i, word(), *[number() for i in range(num_cols - 1)]]
+        data[i] = [i, word(), *[number() for i in range(num_cols - 2)]]
     return data
 
 # ------ Make the Table Data ------
 data = make_table(num_rows=15, num_cols=6)
 # headings = [str(data[0][x])+'     ..' for x in range(len(data[0]))]
-headings = [f'Col {col}' for col in range(len(data[0]))]
+headings = [f'Col {col}' for col in range(1,len(data[0])+1)]
 
 def sort_table(table, cols):
     """ sort a table by multiple columns
@@ -51,9 +51,9 @@ def sort_table(table, cols):
     return table
 
 # ------ Window Layout ------
-layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
+layout = [[sg.Table(values=data[1:][:], headings=headings + ['Extra'], max_col_width=25,
                     auto_size_columns=True,
-                    display_row_numbers=True,
+                    display_row_numbers=False,
                     justification='right',
                     num_rows=20,
                     alternating_row_color='lightyellow',
