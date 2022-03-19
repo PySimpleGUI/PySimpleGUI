@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from builtins import Exception
 
-version = __version__ = "4.57.0.14 Unreleased"
+version = __version__ = "4.57.0.15 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -35,6 +35,10 @@ _change_log = """
         Fix docstring for image in the Titlebar element. Incorrectly said an ICO file can be used. Must be PNG or GIF
     4.57.0.14
         Windows-specific code that enables the PySimpleGUI supplied icon to be shown rather than the python.exe logo (thank you Jason)
+    4.57.0.15
+        Removed all temporary Tk() window creation and instead create the hidden master root. These were required for operations like getting 
+            the list of fonts from tkinter, the screensize, character width and height. This way one and only one Tk window will ever be creeated.
+            The reason for the change is that the Mac crashes if multiple Tk() objects are created, even if only 1 at a time is active.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3523,16 +3527,12 @@ class Text(Element):
         :return:          List of the installed font names
         :rtype:           List[str]
         """
-        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
-        if Window.hidden_master_root is None:
-            root = tk.Tk()
-        else:
-            root = Window.hidden_master_root
+        # A window must exist before can perform this operation. Create the hidden master root if it doesn't exist
+        _get_hidden_master_root()
 
         fonts = list(tkinter.font.families())
         fonts.sort()
-        if Window.hidden_master_root is None:
-            root.destroy()
+
         return fonts
 
 
@@ -3550,20 +3550,14 @@ class Text(Element):
         :return:          Width in pixels of "A"
         :rtype:           (int)
         """
-        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
-        if Window.NumOpenWindows == 0:
-            root = tk.Tk()
-        else:
-            root = None
+        # A window must exist before can perform this operation. Create the hidden master root if it doesn't exist
+        _get_hidden_master_root()
 
         size = 0
         try:
             size = tkinter.font.Font(font=font).measure(character)  # single character width
         except Exception as e:
             _error_popup_with_traceback('Exception retrieving char width in pixels', e)
-
-        if root is not None:
-            root.destroy()
 
         return size
 
@@ -3579,19 +3573,15 @@ class Text(Element):
         :rtype:      (int)
         """
 
-        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
-        if Window.NumOpenWindows == 0:
-            root = tk.Tk()
-        else:
-            root = None
+        # A window must exist before can perform this operation. Create the hidden master root if it doesn't exist
+        _get_hidden_master_root()
+
 
         size = 0
         try:
             size = tkinter.font.Font(font=font).metrics('linespace')
         except Exception as e:
             _error_popup_with_traceback('Exception retrieving char height in pixels', e)
-        if root is not None:
-            root.destroy()
 
         return size
 
@@ -3608,20 +3598,14 @@ class Text(Element):
         :rtype:        (int)
         """
 
-        # if no windows have been created (there is no hidden master root to rely on) then temporarily make a window so the measurement can happen
-        if Window.NumOpenWindows == 0:
-            root = tk.Tk()
-        else:
-            root = None
+        # A window must exist before can perform this operation. Create the hidden master root if it doesn't exist
+        _get_hidden_master_root()
 
         size = 0
         try:
             size = tkinter.font.Font(font=font).measure(string)  # string's  width
         except Exception as e:
             _error_popup_with_traceback('Exception retrieving string width in pixels', e)
-
-        if root is not None:
-            root.destroy()
 
         return size
 
@@ -9248,10 +9232,9 @@ class Window:
         :return: Size of the screen in pixels as determined by tkinter
         :rtype:  (int, int)
         """
-        root = tk.Tk()
+        root = _get_hidden_master_root()
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
-        root.destroy()
         return screen_width, screen_height
 
     @property
@@ -15932,6 +15915,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     return
 
 
+def _get_hidden_master_root():
+    """
+    Creates the hidden master root window.  This window is never visible and represents the overall "application"
+    """
+
+    # if one is already made, then skip making another
+    if Window.hidden_master_root is None:
+        Window._IncrementOpenCount()
+        Window.hidden_master_root = tk.Tk()
+        Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
+        # if not running_mac():
+        try:
+            Window.hidden_master_root.wm_overrideredirect(True)
+        except Exception as e:
+            if not running_mac():
+                print('* Error performing wm_overrideredirect while hiding the hidden master root*', e)
+        Window.hidden_master_root.withdraw()
+    return Window.hidden_master_root
+
+
 def _no_titlebar_setup(window):
     """
     Does the operations required to turn off the titlebar for the window.
@@ -16032,22 +16035,10 @@ def StartupTK(window):
         root = tk.Tk()
     elif not ow and not window.ForceTopLevel:
         # if first window being created, make a throwaway, hidden master root.  This stops one user
-        # window from becoming the child of another user window. All windows are children of this
-        # hidden window
-        Window._IncrementOpenCount()
-        Window.hidden_master_root = tk.Tk()
-        Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-        # if not running_mac():
-        try:
-            Window.hidden_master_root.wm_overrideredirect(True)
-        except Exception as e:
-            if not running_mac():
-                print('* Error performing wm_overrideredirect while hiding the hidden master root*', e)
-        Window.hidden_master_root.withdraw()
-        # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
+        # window from becoming the child of another user window. All windows are children of this hidden window
+        _get_hidden_master_root()
         root = tk.Toplevel(class_=window.Title)
     else:
-        # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
         root = tk.Toplevel(class_=window.Title)
     if window.DebuggerEnabled:
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
@@ -18270,14 +18261,10 @@ def clipboard_set(new_value):
     :param new_value: value to set the clipboard to. Will be converted to a string
     :type new_value:  (str | bytes)
     """
-    # Create and use a temp window
-    root = tk.Tk()
-    root.withdraw()
+    root = _get_hidden_master_root()
     root.clipboard_clear()
     root.clipboard_append(str(new_value))
     root.update()
-    root.destroy()
-
 
 def clipboard_get():
     """
@@ -18286,15 +18273,13 @@ def clipboard_get():
     :return: The current value of the clipboard
     :rtype:  (str)
     """
-    # Create and use a temp window
-    root = tk.Tk()
-    root.withdraw()
+    root = _get_hidden_master_root()
+
     try:
         value = root.clipboard_get()
     except:
         value = ''
     root.update()
-    root.destroy()
     return value
 
 
@@ -19249,21 +19234,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 
     # global _my_windows
     if no_window:
-        if not Window.hidden_master_root:
-            # if first window being created, make a throwaway, hidden master root.  This stops one user
-            # window from becoming the child of another user window. All windows are children of this
-            # hidden window
-            Window._IncrementOpenCount()
-            Window.hidden_master_root = tk.Tk()
-            Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-
-            # if not running_mac():
-            try:
-                Window.hidden_master_root.wm_overrideredirect(True)
-            except Exception as e:
-                print('* Error performing wm_overrideredirect while hiding hidden master root in get folder *', e)
-
-            Window.hidden_master_root.withdraw()
+        _get_hidden_master_root()
         root = tk.Toplevel()
 
         try:
@@ -19422,19 +19393,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     if icon is None:
         icon = Window._user_defined_icon or DEFAULT_BASE64_ICON
     if no_window:
-        if not Window.hidden_master_root:
-            # if first window being created, make a throwaway, hidden master root.  This stops one user
-            # window from becoming the child of another user window. All windows are children of this
-            # hidden window
-            Window._IncrementOpenCount()
-            Window.hidden_master_root = tk.Tk()
-            Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            # if not running_mac():
-            try:
-                Window.hidden_master_root.wm_overrideredirect(True)
-            except Exception as e:
-                print('* Error performing wm_overrideredirect in get file hiding the master root *', e)
-            Window.hidden_master_root.withdraw()
+        _get_hidden_master_root()
         root = tk.Toplevel()
 
         try:
@@ -19544,7 +19503,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                     history_settings.set('-PSG file list-', list_of_entries)
             break
 
-    window.close();
+    window.close()
     del window
     if event in ('Cancel', WIN_CLOSED):
         return None
@@ -22975,13 +22934,6 @@ def main_get_debug_data(suppress_popup=False):
         PySimpleGUI filename: {}""".format(sys.version, tclversion_detailed, ver, __file__)
 
     clipboard_set(message)
-    # create a temp window so that the clipboard can be set
-    # root = tk.Tk()
-    # root.withdraw()
-    # root.clipboard_clear()
-    # root.clipboard_append(message)
-    # root.update()
-    # root.destroy()
 
     if not suppress_popup:
         popup_scrolled('*** Version information copied to your clipboard. Paste into your GitHub Issue. ***\n',
