@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from builtins import Exception
 
-version = __version__ = "4.57.0.15 Unreleased"
+version = __version__ = "4.57.0.16 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -39,6 +39,9 @@ _change_log = """
         Removed all temporary Tk() window creation and instead create the hidden master root. These were required for operations like getting 
             the list of fonts from tkinter, the screensize, character width and height. This way one and only one Tk window will ever be creeated.
             The reason for the change is that the Mac crashes if multiple Tk() objects are created, even if only 1 at a time is active.
+    4.57.0.16
+        Addition of image_source parm to Button. It can be either a filename or a base64 string. This is like the Image elements parms
+        Graph element doc string improvement. Describes the mouse up event.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4210,7 +4213,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=FILE_TYPES_ALL_FILES, initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
+                 image_subsample=None, image_source=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
                  highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None,
                  k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
@@ -4235,6 +4238,8 @@ class Button(Element):
         :type change_submits:         (bool)
         :param enable_events:         Turns on the element specific events. If this button is a target, should it generate an event when filled in
         :type enable_events:          (bool)
+        :param image_source:          Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
+        :type image_source:           (str | bytes)
         :param image_filename:        image filename if there is a button image. GIFs and PNGs only.
         :type image_filename:         (str)
         :param image_data:            Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -4318,6 +4323,11 @@ class Button(Element):
         #     except:
         #         print('* Problem computing disabled button color *')
         self.DisabledButtonColor = button_color_to_tuple(disabled_button_color) if disabled_button_color is not None else (None, None)
+        if image_source is not None:
+            if isinstance(image_source, bytes):
+                image_data = image_source
+            elif isinstance(image_source, str):
+                image_filename = image_source
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -5497,11 +5507,11 @@ class Graph(Element):
         :type p:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param change_submits:    * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:     (bool)
-        :param drag_submits:      if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
+        :param drag_submits:      if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down.  When the mouse button is released, you'll get an event = graph key + '+UP' (if key is a string.. if not a string, it'll be made into a tuple)
         :type drag_submits:       (bool)
         :param enable_events:     If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
         :type enable_events:      (bool)
-        :param motion_events:     If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string)
+        :param motion_events:     If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string, it not a string then a tuple is returned)
         :type motion_events:      (bool)
         :param key:               Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                str | int | tuple | object
