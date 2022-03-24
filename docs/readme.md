@@ -9,11 +9,13 @@
       <img src="https://www.dropbox.com/s/6wzf3ebmj97v4zs/PySimpleGUI-GitHub-Udemy-Course.png?raw=1" width=200 alt="PySimpleGUI Udemy Course">
     </td>
     <td>
-      <h5>apply coupon for discount:<br>0D50D92ADEDA243A4A4B</h6>
-      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=0D50D92ADEDA243A4A4B">click here to visit course page</a>
+      <h5>apply coupon for discount:<br>BE7BDF4D74791CDC1BF6</h6>
+      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=BE7BDF4D74791CDC1BF6">click here to visit course page</a>
     </td>
   </tr>
 </table>
+
+
 
 Transforms the tkinter, Qt, WxPython, and Remi (browser-based) GUI frameworks into a simpler interface.  The window definition is simplified by using Python core data types understood by beginners (lists and dictionaries). Further simplification happens by changing event handling from a callback-based model to a message passing one.  
 
@@ -61,10 +63,12 @@ PySimpleGUI needs your support.  If you find PySimpleGUI useful, please consider
 
 
 
+
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api/?username=PySimpleGUI&bg_color=3e7bac&title_color=ffdd55&icon_color=ffdd55&text_color=ffdd55&show_icons=true&count_private=true">
+  
+  
 </p>
-
 
 
 <hr>
