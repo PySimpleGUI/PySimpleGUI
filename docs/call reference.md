@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    5C14671AABA040B06FDC
+                    BE7BDF4D74791CDC1BF6
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=5C14671AABA040B06FDC','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=BE7BDF4D74791CDC1BF6','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -12283,6 +12283,33 @@ Return the current size of the window in pixels
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[(int), (int)] or Tuple[None, None]| **return** | (width, height) of the window |
+
+### start_thread
+
+Call your function that will take a long time to execute.  When it's complete, send an event
+specified by the end_key.
+
+Starts a thread on your behalf.
+
+This is a way for you to "ease into" threading without learning the details of threading.
+Your function will run, and when it returns 2 things will happen:
+1. The value you provide for end_key will be returned to you when you call window.read()
+2. If your function returns a value, then the value returned will also be included in your windows.read call in the values dictionary
+
+IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleGUI calls from
+the function you provide with the exception of one function, Window.write_event_value.
+
+```
+start_thread(func, end_key)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |  func   | A lambda or a function name with no parms |
+| Any | end_key | The key that will be generated when the function returns |
+| threading.Thread | **RETURN** | The id of the thread
 
 ### un_hide
 
