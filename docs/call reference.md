@@ -86,6 +86,7 @@ Button(button_text = "",
     image_data = None,
     image_size = (None, None),
     image_subsample = None,
+    image_source = None,
     border_width = None,
     size = (None, None),
     s = (None, None),
@@ -123,6 +124,7 @@ Parameter Descriptions:
 |                                 (bool or str)                                  |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinter |
 |                                      bool                                      |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
+|                                 (str or bytes)                                 |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
 |                                      str                                       |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
 |                                  bytes or str                                  |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                                   (int, int)                                   |      image_size       | Size of the image in pixels (width, height) |
@@ -782,7 +784,8 @@ update(menu_definition = None,
     visible = None,
     image_source = None,
     image_size = (None, None),
-    image_subsample = None)
+    image_subsample = None,
+    button_text = None)
 ```
 
 Parameter Descriptions:
@@ -794,6 +797,7 @@ Parameter Descriptions:
 | (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
 |  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
 |      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|      str      |   button_text   | Text to be shown on the button |
 
 ### visible
 
@@ -863,7 +867,8 @@ Update(menu_definition = None,
     visible = None,
     image_source = None,
     image_size = (None, None),
-    image_subsample = None)
+    image_subsample = None,
+    button_text = None)
 ```
 
 Parameter Descriptions:
@@ -875,6 +880,7 @@ Parameter Descriptions:
 | (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
 |  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
 |      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|      str      |   button_text   | Text to be shown on the button |
 
 ---------
 
@@ -2755,9 +2761,9 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                      bool                                      |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
+|                                      bool                                      |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down. When the mouse button is released, you'll get an event = graph key + '+UP' (if key is a string.. if not a string, it'll be made into a tuple) |
 |                                      bool                                      |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
-|                                      bool                                      |   motion_events   | If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string) |
+|                                      bool                                      |   motion_events   | If True then if no button is down and the mouse is moved, an event is generated with key = graph key + '+MOVE' (if key is a string, it not a string then a tuple is returned) |
 |                         str or int or tuple or object                          |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
@@ -8532,6 +8538,7 @@ Spin(values,
     size = (None, None),
     s = (None, None),
     auto_size_text = None,
+    bind_return_key = None,
     font = None,
     background_color = None,
     text_color = None,
@@ -8560,6 +8567,7 @@ Parameter Descriptions:
 |                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
+|                                      bool                                      | bind_return_key  | If True, then the return key will cause a the element to generate an event |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       | background_color | color of background |
 |                                      str                                       |    text_color    | color of the text |
@@ -10786,10 +10794,10 @@ the is not possible using the OS provided titlebar such as the color.
 NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
 should have no problem and it should function as a normal window would.
 
-This titlebar is created from a row of elements that is then encapulated into a
-single Column element which is what the Titlebar returns to you.
+This titlebar is created from a row of elements that is then encapsulated into a
+one Column element which is what this Titlebar function returns to you.
 
-A custom titlebar removes the margins from your window.  Ify ou want the  remainder
+A custom titlebar removes the margins from your window.  If you want the  remainder
 of your Window to have margins, place the layout after the Titlebar into a Column and
 set the pad of that Column to the dimensions you would like your margins to have.
 
@@ -10810,7 +10818,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        str or bytes or None        |       icon       | Can be either a filename or Base64 byte string of a PNG. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|        str or bytes or None        |       icon       | Can be either a filename or Base64 byte string of a PNG or GIF. This is used in an Image element to create the titlebar |
 |                str                 |      title       | The "title" to show in the titlebar |
 |            str or None             |    text_color    | Text color for titlebar |
 |            str or None             | background_color | Background color for titlebar |
@@ -12087,6 +12095,9 @@ normal()
 
 Call your function that will take a long time to execute.  When it's complete, send an event
 specified by the end_key.
+
+Starts a thread on your behalf.
+
 This is a way for you to "ease into" threading without learning the details of threading.
 Your function will run, and when it returns 2 things will happen:
 1. The value you provide for end_key will be returned to you when you call window.read()
