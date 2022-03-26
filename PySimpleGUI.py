@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-from builtins import Exception
 
-version = __version__ = "4.57.0.17 Unreleased"
+version = __version__ = "4.57.0.18 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -44,6 +43,14 @@ _change_log = """
         Graph element doc string improvement. Describes the mouse up event.
     4.57.0.17
         New coupon code
+    4.57.0.18
+        Element.get_next_focus added. Returns the element that should get the focus after the indicated element
+        Element.get_previous_focus added. Returns the element that should get the focus after the indicated element
+        Window.widget_to_element - returns the element that a tkinter widget is used to implement (it's a reverse lookup)
+        Element.widget - Property that's PEP8 compliant that returns Element.Widget
+        Element.key - Property that's PEP8 compliant that returns Element.Key
+        Better exception error reporting for the Element focus methods.  Uses popups with tracebacks now instead of prints
+        Simplified docstring for Window[] to show Element and None as return values
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -205,7 +212,6 @@ except Exception as e:
 
 import threading
 import itertools
-import os
 import json
 import configparser
 import queue
@@ -1010,6 +1016,31 @@ class Element():
         """
         self._metadata = value
 
+    @property
+    def key(self):
+        """
+        Returns key for the element.  This is a READONLY property.
+        Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+        :return: The window's Key
+        :rtype:  (Any)
+        """
+        return self.Key
+
+
+
+    @property
+    def widget(self):
+        """
+        Returns tkinter widget for the element.  This is a READONLY property.
+        The implementation is that the Widget member variable is returned. This is a backward compatible addition
+        :return:    The element's underlying tkinter widget
+        :rtype:     (tkinter.Widget)
+        """
+        return self.Widget
+
+
+
+
     def _RightClickMenuCallback(self, event):
         """
         Callback function that's called when a right click happens. Shows right click menu as result
@@ -1347,14 +1378,16 @@ class Element():
         :param force: if True will call focus_force otherwise calls focus_set
         :type force:  bool
         """
-
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
         try:
             if force:
                 self.Widget.focus_force()
             else:
                 self.Widget.focus_set()
-        except:
-            print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
+        except Exception as e:
+            _error_popup_with_traceback("Exception blocking focus. Check your element's Widget", e)
+
 
     def block_focus(self, block=True):
         """
@@ -1374,8 +1407,42 @@ class Element():
                 self.Widget.configure(takefocus=0)
             else:
                 self.Widget.configure(takefocus=1)
-        except:
-            print('Was unable to block the focus. Check your elements .Widget property')
+        except Exception as e:
+            _error_popup_with_traceback("Exception blocking focus. Check your element's Widget", e)
+
+
+    def get_next_focus(self):
+        """
+        Gets the next element that should get focus after this element.
+
+        :return:    Element that will get focus after this one
+        :rtype:     (Element)
+        """
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return None
+
+        try:
+            next_widget_focus = self.widget.tk_focusNext()
+            return self.ParentForm.widget_to_element(next_widget_focus)
+        except Exception as e:
+            _error_popup_with_traceback("Exception getting next focus. Check your element's Widget", e)
+
+
+    def get_previous_focus(self):
+        """
+        Gets the element that should get focus previous to this element.
+
+        :return:    Element that should get the focus before this one
+        :rtype:     (Element)
+        """
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return None
+        try:
+            next_widget_focus = self.widget.tk_focusPrev()      # tkinter.Widget
+            return self.ParentForm.widget_to_element(next_widget_focus)
+        except Exception as e:
+            _error_popup_with_traceback("Exception getting previous focus. Check your element's Widget", e)
+
 
     def set_size(self, size=(None, None)):
         """
@@ -9139,6 +9206,8 @@ class Window:
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window._GetAContainerNumber()
+        # The dictionary containing all elements and keys for the window
+        # The keys are the keys for the elements and the values are the elements themselves.
         self.AllKeysDict = {}
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
@@ -10035,6 +10104,24 @@ class Window:
         """
         element = _FindElementWithFocusInSubForm(self)
         return element
+
+
+    def widget_to_element(self, widget):
+        """
+        Returns the element that matches a supplied tkinter widget.
+        If no matching element is found, then None is returned.
+
+
+        :return:    Element that uses the specified widget
+        :rtype:     Element | None
+        """
+        if self.AllKeysDict is None or len(self.AllKeysDict) == 0:
+            return None
+        for key, element in self.AllKeysDict.items():
+            if element.Widget == widget:
+                return element
+        return None
+
 
     def _BuildKeyDict(self):
         """
@@ -11168,7 +11255,7 @@ class Window:
 
         :param key: The key to find
         :type key:  str | int | tuple | object
-        :rtype:     Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
+        :rtype:     Element | None
         """
 
         return self.find_element(key)
