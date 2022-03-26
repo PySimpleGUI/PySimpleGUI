@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.18 Unreleased"
+version = __version__ = "4.57.0.19 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -51,6 +51,9 @@ _change_log = """
         Element.key - Property that's PEP8 compliant that returns Element.Key
         Better exception error reporting for the Element focus methods.  Uses popups with tracebacks now instead of prints
         Simplified docstring for Window[] to show Element and None as return values
+    4.57.0.19
+        Oops... added back the rtype docstring for Window __getitem__ so that PyCharm doesn't generate warnings.  
+            Using Element by itself isn't enough.  The entire list of possible elements is needed to that the code completion /error checking works
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11255,7 +11258,7 @@ class Window:
 
         :param key: The key to find
         :type key:  str | int | tuple | object
-        :rtype:     Element | None
+        :rtype:     Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
         """
 
         return self.find_element(key)
