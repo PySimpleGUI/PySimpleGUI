@@ -54,6 +54,8 @@ _change_log = """
     4.57.0.19
         Oops... added back the rtype docstring for Window __getitem__ so that PyCharm doesn't generate warnings.  
             Using Element by itself isn't enough.  The entire list of possible elements is needed to that the code completion /error checking works
+    4.57.0.20
+        Simplified Radio, Combo
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15085,17 +15087,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(default_value if default_value is not None else 0)
-                if element.ChangeSubmits:
-                    element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW,
-                                                                            text=element.Text, width=width,
-                                                                            variable=element.TKIntVar, bd=border_depth,
-                                                                            font=font,
-                                                                            command=element._CheckboxHandler)
-                else:
-                    element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW,
+
+                element.TKCheckbutton = element.Widget = tk.Checkbutton(tk_row_frame, anchor=tk.NW,
                                                                             text=element.Text, width=width,
                                                                             variable=element.TKIntVar, bd=border_depth,
                                                                             font=font)
+                if element.ChangeSubmits:
+                    element.TKCheckbutton.configure(command=element._CheckboxHandler)
                 if element.Disabled:
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -15169,17 +15167,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKIntVar = RadVar  # store the RadVar in Radio object
                 if default_value:  # if this radio is the one selected, set RadVar to match
                     element.TKIntVar.set(value)
+                element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text,
+                                                                  width=width, variable=element.TKIntVar, value=value,
+                                                                  bd=border_depth, font=font)
                 if element.ChangeSubmits:
-                    element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text,
-                                                                      width=width,
-                                                                      variable=element.TKIntVar, value=value,
-                                                                      bd=border_depth, font=font,
-                                                                      command=element._RadioHandler)
-                else:
-                    element.TKRadio = element.Widget = tk.Radiobutton(tk_row_frame, anchor=tk.NW, text=element.Text,
-                                                                      width=width,
-                                                                      variable=element.TKIntVar, value=value,
-                                                                      bd=border_depth, font=font)
+                    element.TKRadio.configure(command=element._RadioHandler)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
                     element.TKRadio.configure(selectcolor=element.CircleBackgroundColor)
@@ -15562,17 +15554,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     range_from = element.Range[0]
                     range_to = element.Range[1]
-                if element.ChangeSubmits:
-                    tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation,
-                                                        variable=element.TKIntVar,
-                                                        from_=range_from, to_=range_to, resolution=element.Resolution,
-                                                        length=slider_length, width=slider_width,
-                                                        bd=element.BorderWidth,
-                                                        relief=element.Relief, font=font,
-                                                        tickinterval=element.TickInterval,
-                                                        command=element._SliderChangedHandler)
-                else:
-                    tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation,
+                tkscale = element.Widget = tk.Scale(tk_row_frame, orient=element.Orientation,
                                                         variable=element.TKIntVar,
                                                         from_=range_from, to_=range_to, resolution=element.Resolution,
                                                         length=slider_length, width=slider_width,
@@ -15580,6 +15562,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                         relief=element.Relief, font=font,
                                                         tickinterval=element.TickInterval)
                 tkscale.config(highlightthickness=0)
+                if element.ChangeSubmits:
+                    tkscale.config(command=element._SliderChangedHandler)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
                 if element.TroughColor != COLOR_SYSTEM_DEFAULT:
@@ -23459,8 +23443,8 @@ def _create_main_window():
     ]
 
     frame3 = [
-        [Checkbox('Checkbox1', True), Checkbox('Checkbox1')],
-        [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True, tooltip='Radio 2')],
+        [Checkbox('Checkbox1', True, k='-CB1-'), Checkbox('Checkbox2', k='-CB2-')],
+        [Radio('Radio Button1', 1, key='-R1-'), Radio('Radio Button2', 1, default=True, key='-R2-', tooltip='Radio 2')],
         [T('', size=(1, 4))],
     ]
 
