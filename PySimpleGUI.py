@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.19 Unreleased"
+version = __version__ = "4.57.0.20 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -55,7 +55,7 @@ _change_log = """
         Oops... added back the rtype docstring for Window __getitem__ so that PyCharm doesn't generate warnings.  
             Using Element by itself isn't enough.  The entire list of possible elements is needed to that the code completion /error checking works
     4.57.0.20
-        Simplified Radio, Combo
+        Simplified Radio, Checkbox, Slider creation. Moved the command parm outside the creation and instead made a config call.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
