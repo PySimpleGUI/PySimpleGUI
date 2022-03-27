@@ -86,6 +86,12 @@ This section of the documentation is generated directly from the source code.  A
 ### expand
 <!-- <+Button.expand+> -->
 
+### get_next_focus
+<!-- <+Button.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Button.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Button.get_size+> -->
 
@@ -100,6 +106,9 @@ This section of the documentation is generated directly from the source code.  A
 
 ### hide_row
 <!-- <+Button.hide_row+> -->
+
+### key
+<!-- <+Button.key+> -->
 
 ### metadata
 <!-- <+Button.metadata+> -->
@@ -130,6 +139,9 @@ This section of the documentation is generated directly from the source code.  A
 
 ### visible
 <!-- <+Button.visible+> -->
+
+### widget
+<!-- <+Button.widget+> -->
 
 ---------
 
@@ -167,6 +179,12 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### expand
 <!-- <+ButtonMenu.expand+> -->
+
+### get_next_focus
+<!-- <+ButtonMenu.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+ButtonMenu.get_previous_focus+> -->
 
 ### get_size
 <!-- <+ButtonMenu.get_size+> -->
@@ -210,6 +228,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### visible
 <!-- <+ButtonMenu.visible+> -->
 
+### widget
+<!-- <+ButtonMenu.widget+> -->
+
 
 ---------
 
@@ -244,6 +265,12 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### expand
 <!-- <+Canvas.expand+> -->
+
+### get_next_focus
+<!-- <+Canvas.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Canvas.get_previous_focus+> -->
 
 ### get_size
 <!-- <+Canvas.get_size+> -->
@@ -284,6 +311,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### visible
 <!-- <+Canvas.visible+> -->
 
+### widget
+<!-- <+Canvas.widget+> -->
+
 ---------
 
 ### These are non-PEP8 Compliant Methods - do NOT use
@@ -318,6 +348,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Checkbox.get+> -->
 
+### get_next_focus
+<!-- <+Checkbox.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Checkbox.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Checkbox.get_size+> -->
 
@@ -329,6 +365,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Checkbox.hide_row+> -->
+
+### key
+<!-- <+Checkbox.key+> -->
 
 ### metadata
 <!-- <+Checkbox.metadata+> -->
@@ -356,6 +395,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Checkbox.visible+> -->
+
+### widget
+<!-- <+Checkbox.widget+> -->
 
 ---------
 
@@ -398,6 +440,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Column.expand+> -->
 
+### get_next_focus
+<!-- <+Column.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Column.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Column.get_size+> -->
 
@@ -412,6 +460,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### layout
 <!-- <+Column.layout+> -->
+
+### key
+<!-- <+Column.key+> -->
 
 ### metadata
 <!-- <+Column.metadata+> -->
@@ -442,6 +493,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Column.visible+> -->
+
+### widget
+<!-- <+Column.widget+> -->
 
 
 ---------
@@ -486,6 +540,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Combo.get+> -->
 
+### get_next_focus
+<!-- <+Combo.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Combo.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Combo.get_size+> -->
 
@@ -497,6 +557,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Combo.hide_row+> -->
+
+### key
+<!-- <+Combo.key+> -->
 
 ### metadata
 <!-- <+Combo.metadata+> -->
@@ -524,6 +587,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Combo.visible+> -->
+
+### widget
+<!-- <+Combo.widget+> -->
 
 
 ---------
@@ -564,6 +630,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Frame.expand+> -->
 
+### get_next_focus
+<!-- <+Frame.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Frame.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Frame.get_size+> -->
 
@@ -578,6 +650,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### layout
 <!-- <+Frame.layout+> -->
+
+### key
+<!-- <+Frame.key+> -->
 
 ### metadata
 <!-- <+Frame.metadata+> -->
@@ -605,6 +680,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Frame.visible+> -->
+
+### widget
+<!-- <+Frame.widget+> -->
 
 
 ---------
@@ -692,6 +770,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_figures_at_location
 <!-- <+Graph.get_figures_at_location+> -->
 
+### get_next_focus
+<!-- <+Graph.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Graph.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Graph.get_size+> -->
 
@@ -715,6 +799,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### send_figure_to_back
 <!-- <+Graph.send_figure_to_back+> -->
+
+### key
+<!-- <+Graph.key+> -->
 
 ### metadata
 <!-- <+Graph.metadata+> -->
@@ -745,6 +832,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Graph.visible+> -->
+
+### widget
+<!-- <+Graph.widget+> -->
 
 
 ---------
@@ -833,6 +923,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+HorizontalSeparator.expand+> -->
 
+### get_next_focus
+<!-- <+HorizontalSeparator.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+HorizontalSeparator.get_previous_focus+> -->
+
 ### get_size
 <!-- <+HorizontalSeparator.get_size+> -->
 
@@ -844,6 +940,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+HorizontalSeparator.hide_row+> -->
+
+### key
+<!-- <+HorizontalSeparator.key+> -->
 
 ### metadata
 <!-- <+HorizontalSeparator.metadata+> -->
@@ -868,6 +967,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+HorizontalSeparator.visible+> -->
+
+### widget
+<!-- <+HorizontalSeparator.widget+> -->
 
 
 ---------
@@ -899,6 +1001,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Image.expand+> -->
 
+### get_next_focus
+<!-- <+Image.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Image.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Image.get_size+> -->
 
@@ -910,6 +1018,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Image.hide_row+> -->
+
+### key
+<!-- <+Image.key+> -->
 
 ### metadata
 <!-- <+Image.metadata+> -->
@@ -943,6 +1054,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Image.visible+> -->
+
+### widget
+<!-- <+Image.widget+> -->
 
 
 ---------
@@ -983,6 +1097,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Input.get+> -->
 
+### get_next_focus
+<!-- <+Input.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Input.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Input.get_size+> -->
 
@@ -994,6 +1114,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Input.hide_row+> -->
+
+### key
+<!-- <+Input.key+> -->
 
 ### metadata
 <!-- <+Input.metadata+> -->
@@ -1024,6 +1147,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Input.visible+> -->
+
+### widget
+<!-- <+Input.widget+> -->
 
 
 ---------
@@ -1070,6 +1196,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_list_values
 <!-- <+Listbox.get_list_values+> -->
 
+### get_next_focus
+<!-- <+Listbox.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Listbox.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Listbox.get_size+> -->
 
@@ -1081,6 +1213,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Listbox.hide_row+> -->
+
+### key
+<!-- <+Listbox.key+> -->
 
 ### metadata
 <!-- <+Listbox.metadata+> -->
@@ -1114,6 +1249,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Listbox.visible+> -->
+
+### widget
+<!-- <+Listbox.widget+> -->
 
 
 ---------
@@ -1156,6 +1294,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Menu.expand+> -->
 
+### get_next_focus
+<!-- <+Menu.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Menu.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Menu.get_size+> -->
 
@@ -1167,6 +1311,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Menu.hide_row+> -->
+
+### key
+<!-- <+Menu.key+> -->
 
 ### metadata
 <!-- <+Menu.metadata+> -->
@@ -1194,6 +1341,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Menu.visible+> -->
+
+### widget
+<!-- <+Menu.widget+> -->
 
 
 ---------
@@ -1242,6 +1392,12 @@ See the Column element to get a list of method calls available.  The function re
 ### get
 <!-- <+Multiline.get+> -->
 
+### get_next_focus
+<!-- <+Multiline.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Multiline.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Multiline.get_size+> -->
 
@@ -1268,6 +1424,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### restore_stdout
 <!-- <+Multiline.restore_stdout+> -->
+
+### key
+<!-- <+Multiline.key+> -->
 
 ### metadata
 <!-- <+Multiline.metadata+> -->
@@ -1298,6 +1457,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### visible
 <!-- <+Multiline.visible+> -->
+
+### widget
+<!-- <+Multiline.widget+> -->
 
 
 ---------
@@ -1336,6 +1498,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+OptionMenu.expand+> -->
 
+### get_next_focus
+<!-- <+OptionMenu.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+OptionMenu.get_previous_focus+> -->
+
 ### get_size
 <!-- <+OptionMenu.get_size+> -->
 
@@ -1347,6 +1515,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+OptionMenu.hide_row+> -->
+
+### key
+<!-- <+OptionMenu.key+> -->
 
 ### metadata
 <!-- <+OptionMenu.metadata+> -->
@@ -1377,6 +1548,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+OptionMenu.visible+> -->
+
+### widget
+<!-- <+OptionMenu.widget+> -->
 
 
 ---------
@@ -1417,6 +1591,12 @@ You can control which Multiline Element receives your stdout output as well as u
 ### expand
 <!-- <+Output.expand+> -->
 
+### get_next_focus
+<!-- <+Output.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Output.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Output.get_size+> -->
 
@@ -1428,6 +1608,9 @@ You can control which Multiline Element receives your stdout output as well as u
 
 ### hide_row
 <!-- <+Output.hide_row+> -->
+
+### key
+<!-- <+Output.key+> -->
 
 ### metadata
 <!-- <+Output.metadata+> -->
@@ -1461,6 +1644,9 @@ You can control which Multiline Element receives your stdout output as well as u
 
 ### visible
 <!-- <+Output.visible+> -->
+
+### widget
+<!-- <+Output.widget+> -->
 
 
 ---------
@@ -1502,6 +1688,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Pane.expand+> -->
 
+### get_next_focus
+<!-- <+Pane.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Pane.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Pane.get_size+> -->
 
@@ -1513,6 +1705,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Pane.hide_row+> -->
+
+### key
+<!-- <+Pane.key+> -->
 
 ### metadata
 <!-- <+Pane.metadata+> -->
@@ -1541,6 +1736,8 @@ The following methods are here for backwards compatibility reference.  You will 
 ### visible
 <!-- <+Pane.visible+> -->
 
+### widget
+<!-- <+Pane.widget+> -->
 
 ---------
 
@@ -1573,6 +1770,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+ProgressBar.expand+> -->
 
+### get_next_focus
+<!-- <+ProgressBar.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+ProgressBar.get_previous_focus+> -->
+
 ### get_size
 <!-- <+ProgressBar.get_size+> -->
 
@@ -1584,6 +1787,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+ProgressBar.hide_row+> -->
+
+### key
+<!-- <+ProgressBar.key+> -->
 
 ### metadata
 <!-- <+ProgressBar.metadata+> -->
@@ -1614,6 +1820,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+ProgressBar.visible+> -->
+
+### widget
+<!-- <+ProgressBar.widget+> -->
 
 
 ---------
@@ -1683,6 +1892,12 @@ A `Push` element will "push" elements on the row away from it.  If you have 1 `P
 ### get
 <!-- <+Radio.get+> -->
 
+### get_next_focus
+<!-- <+Radio.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Radio.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Radio.get_size+> -->
 
@@ -1697,6 +1912,9 @@ A `Push` element will "push" elements on the row away from it.  If you have 1 `P
 
 ### reset_group
 <!-- <+Radio.reset_group+> -->
+
+### key
+<!-- <+Radio.key+> -->
 
 ### metadata
 <!-- <+Radio.metadata+> -->
@@ -1724,6 +1942,9 @@ A `Push` element will "push" elements on the row away from it.  If you have 1 `P
 
 ### visible
 <!-- <+Radio.visible+> -->
+
+### widget
+<!-- <+Radio.widget+> -->
 
 
 ---------
@@ -1771,6 +1992,12 @@ This element is used to add more space.... more size...to a Container Element or
 ### expand
 <!-- <+Sizegrip.expand+> -->
 
+### get_next_focus
+<!-- <+Sizegrip.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Sizegrip.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Sizegrip.get_size+> -->
 
@@ -1782,6 +2009,9 @@ This element is used to add more space.... more size...to a Container Element or
 
 ### hide_row
 <!-- <+Sizegrip.hide_row+> -->
+
+### key
+<!-- <+Sizegrip.key+> -->
 
 ### metadata
 <!-- <+Sizegrip.metadata+> -->
@@ -1813,6 +2043,9 @@ This element is used to add more space.... more size...to a Container Element or
 ### visible
 <!-- <+Sizegrip.visible+> -->
 
+### widget
+<!-- <+Sizegrip.widget+> -->
+
 
 ---------
 
@@ -1830,6 +2063,12 @@ This element is used to add more space.... more size...to a Container Element or
 ### expand
 <!-- <+Slider.expand+> -->
 
+### get_next_focus
+<!-- <+Slider.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Slider.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Slider.get_size+> -->
 
@@ -1841,6 +2080,9 @@ This element is used to add more space.... more size...to a Container Element or
 
 ### hide_row
 <!-- <+Slider.hide_row+> -->
+
+### key
+<!-- <+Slider.key+> -->
 
 ### metadata
 <!-- <+Slider.metadata+> -->
@@ -1868,6 +2110,9 @@ This element is used to add more space.... more size...to a Container Element or
 
 ### visible
 <!-- <+Slider.visible+> -->
+
+### widget
+<!-- <+Slider.widget+> -->
 
 
 ---------
@@ -1905,6 +2150,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Spin.get+> -->
 
+### get_next_focus
+<!-- <+Spin.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Spin.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Spin.get_size+> -->
 
@@ -1916,6 +2167,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Spin.hide_row+> -->
+
+### key
+<!-- <+Spin.key+> -->
 
 ### metadata
 <!-- <+Spin.metadata+> -->
@@ -1943,6 +2197,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Spin.visible+> -->
+
+### widget
+<!-- <+Spin.widget+> -->
 
 ---------
 
@@ -1979,6 +2236,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+StatusBar.expand+> -->
 
+### get_next_focus
+<!-- <+StatusBar.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+StatusBar.get_previous_focus+> -->
+
 ### get_size
 <!-- <+StatusBar.get_size+> -->
 
@@ -1990,6 +2253,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+StatusBar.hide_row+> -->
+
+### key
+<!-- <+StatusBar.key+> -->
 
 ### metadata
 <!-- <+StatusBar.metadata+> -->
@@ -2017,6 +2283,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+StatusBar.visible+> -->
+
+### widget
+<!-- <+StatusBar.widget+> -->
 
 
 ---------
@@ -2053,6 +2322,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+Tab.expand+> -->
 
+### get_next_focus
+<!-- <+Tab.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Tab.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Tab.get_size+> -->
 
@@ -2070,6 +2345,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### select
 <!-- <+Tab.select+> -->
+
+### key
+<!-- <+Tab.key+> -->
 
 ### metadata
 <!-- <+Tab.metadata+> -->
@@ -2097,6 +2375,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Tab.visible+> -->
+
+### widget
+<!-- <+Tab.widget+> -->
 
 
 ---------
@@ -2150,6 +2431,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+TabGroup.get+> -->
 
+### get_next_focus
+<!-- <+TabGroup.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+TabGroup.get_previous_focus+> -->
+
 ### get_size
 <!-- <+TabGroup.get_size+> -->
 
@@ -2161,6 +2448,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+TabGroup.hide_row+> -->
+
+### key
+<!-- <+TabGroup.key+> -->
 
 ### metadata
 <!-- <+TabGroup.metadata+> -->
@@ -2188,6 +2478,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+TabGroup.visible+> -->
+
+### widget
+<!-- <+TabGroup.widget+> -->
 
 
 ---------
@@ -2229,6 +2522,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Table.get+> -->
 
+### get_next_focus
+<!-- <+Table.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Table.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Table.get_size+> -->
 
@@ -2240,6 +2539,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Table.hide_row+> -->
+
+### key
+<!-- <+Table.key+> -->
 
 ### metadata
 <!-- <+Table.metadata+> -->
@@ -2267,6 +2569,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Table.visible+> -->
+
+### widget
+<!-- <+Table.widget+> -->
 
 
 ---------
@@ -2306,6 +2611,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get
 <!-- <+Text.get+> -->
 
+### get_next_focus
+<!-- <+Text.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Text.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Text.get_size+> -->
 
@@ -2317,6 +2628,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+Text.hide_row+> -->
+
+### key
+<!-- <+Text.key+> -->
 
 ### metadata
 <!-- <+Text.metadata+> -->
@@ -2344,6 +2658,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+Text.visible+> -->
+
+### widget
+<!-- <+Text.widget+> -->
 
 
 ---------
@@ -2395,6 +2712,12 @@ See the Column element to get a list of method calls available.  The function re
 ### expand
 <!-- <+Tree.expand+> -->
 
+### get_next_focus
+<!-- <+Tree.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+Tree.get_previous_focus+> -->
+
 ### get_size
 <!-- <+Tree.get_size+> -->
 
@@ -2406,6 +2729,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### hide_row
 <!-- <+Tree.hide_row+> -->
+
+### key
+<!-- <+Tree.key+> -->
 
 ### metadata
 <!-- <+Tree.metadata+> -->
@@ -2436,6 +2762,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### visible
 <!-- <+Tree.visible+> -->
+
+### widget
+<!-- <+Tree.widget+> -->
 
 
 ---------
@@ -2485,6 +2814,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ### expand
 <!-- <+VerticalSeparator.expand+> -->
 
+### get_next_focus
+<!-- <+VerticalSeparator.get_next_focus+> -->
+
+### get_previous_focus
+<!-- <+VerticalSeparator.get_previous_focus+> -->
+
 ### get_size
 <!-- <+VerticalSeparator.get_size+> -->
 
@@ -2496,6 +2831,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide_row
 <!-- <+VerticalSeparator.hide_row+> -->
+
+### key
+<!-- <+VerticalSeparator.key+> -->
 
 ### metadata
 <!-- <+VerticalSeparator.metadata+> -->
@@ -2520,6 +2858,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+VerticalSeparator.visible+> -->
+
+### widget
+<!-- <+VerticalSeparator.widget+> -->
 
 ------------------------------
 
@@ -2648,6 +2989,9 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### maximize
 <!-- <+Window.maximize+> -->
 
+### key
+<!-- <+Button.key+> -->
+
 ### metadata
 <!-- <+Window.metadata+> -->
 
@@ -2713,6 +3057,9 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 
 ### was_closed
 <!-- <+Window.was_closed+> -->
+
+### widget_to_element
+<!-- <+Window.widget_to_element+> -->
 
 ### write_event_value
 <!-- <+Window.write_event_value+> -->

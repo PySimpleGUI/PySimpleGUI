@@ -211,6 +211,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -257,6 +277,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -412,6 +443,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -623,6 +665,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -809,6 +871,17 @@ Returns visibility state for the element.  This is a READONLY property
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
+
 ---------
 
 ### These are non-PEP8 Compliant Methods - do NOT use
@@ -975,6 +1048,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -1126,6 +1219,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -1290,6 +1394,26 @@ Return the current state of this checkbox
 |---|---|---|
 |(bool)| **return** | Current state of checkbox |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -1326,6 +1450,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -1463,6 +1598,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -1667,6 +1813,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -1718,6 +1884,17 @@ Parameter Descriptions:
 |--|--|--|
 | List[List[Element]] | rows | The rows of Elements |
 | (Column) | **RETURN** | Used for chaining
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -1857,6 +2034,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -2065,6 +2253,26 @@ You should be using values from your call to window.read instead.  Know what you
 |---|---|---|
 |Any | None| **return** | Returns the value of what is currently chosen |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -2101,6 +2309,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -2243,6 +2462,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -2451,6 +2681,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -2502,6 +2752,17 @@ Parameter Descriptions:
 |--|--|--|
 | List[List[Element]] | rows | The rows of Elements |
 | (Frame) | **RETURN** | Used for chaining
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -2628,6 +2889,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -3131,6 +3403,26 @@ Parameter Descriptions:
 | (int, int) or Tuple[float, float] | location | point to check |
 | List[int] | **RETURN** | a list of previously drawn "Figures" (returned from the drawing primitives)
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -3233,6 +3525,17 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -3369,6 +3672,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -3823,6 +4137,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -3859,6 +4193,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -3964,6 +4309,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -4100,6 +4456,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -4136,6 +4512,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -4305,6 +4692,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -4519,6 +4917,26 @@ Read and return the current value of the input element. Must call `Window.Read` 
 |---|---|---|
 |(str)| **return** | current value of Input field or '' if error encountered |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -4555,6 +4973,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -4709,6 +5138,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -4940,6 +5380,26 @@ Returns list of Values provided by the user in the user's format
 |---|---|---|
 |List[Any]| **return** | List of values. Can be any / mixed types -> [] |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -4976,6 +5436,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -5138,6 +5609,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -5342,6 +5824,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -5378,6 +5880,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -5504,6 +6017,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -5754,6 +6278,26 @@ Return current contents of the Multiline Element
 |---|---|---|
 |(str)| **return** | current contents of the Multiline Element (used as an input type of Multiline |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -5872,6 +6416,17 @@ Restore a previously re-reouted stdout back to the original destination
 ```python
 restore_stdout()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -6033,6 +6588,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -6222,6 +6788,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -6258,6 +6844,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -6405,6 +7002,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -6575,6 +7183,26 @@ Parameter Descriptions:
 | bool | expand_x | If True Element will expand in the Horizontal directions |
 | bool | expand_y | If True Element will expand in the Vertical directions |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -6611,6 +7239,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -6761,6 +7400,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -6936,6 +7586,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -6972,6 +7642,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -7097,6 +7778,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -7238,6 +7930,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -7274,6 +7986,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -7423,6 +8146,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -7658,6 +8392,26 @@ A snapshot of the value of Radio Button -> (bool)
 |---|---|---|
 |(bool)| **return** | True if this radio button is selected |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -7702,6 +8456,17 @@ Sets all Radio Buttons in the group to not selected
 ```python
 reset_group()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -7839,6 +8604,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -8008,6 +8784,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -8044,6 +8840,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -8177,6 +8984,17 @@ Returns visibility state for the element.  This is a READONLY property
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
+
 ---------
 
 ## Slider Element 
@@ -8294,6 +9112,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -8330,6 +9168,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -8461,6 +9310,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -8645,6 +9505,26 @@ item returned will be an int (not a string)
 |---|---|---|
 |(Any)| **return** | The currently visible entry |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -8681,6 +9561,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -8817,6 +9708,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -9002,6 +9904,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -9038,6 +9960,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -9171,6 +10104,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -9354,6 +10298,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -9413,6 +10377,17 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 ```python
 select()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -9542,6 +10517,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -9799,6 +10785,26 @@ are using this method correctly?
 |---|---|---|
 |Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -9835,6 +10841,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -9954,6 +10971,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -10171,6 +11199,26 @@ user when Table was created or Updated.
 |---|---|---|
 |List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -10207,6 +11255,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -10342,6 +11401,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -10537,6 +11607,26 @@ Gets the current value of the displayed text
 |---|---|---|
 |(str)| **return** | The current value |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -10573,6 +11663,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -10706,6 +11807,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -10973,6 +12085,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -11009,6 +12141,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -11158,6 +12301,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ---------
 
@@ -11354,6 +12508,26 @@ Parameter Descriptions:
 | bool |  expand_y  | If True Element will expand in the Vertical directions |
 | bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
+### get_next_focus
+
+Gets the next element that should get focus after this element.
+
+`get_next_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that will get focus after this one |
+
+### get_previous_focus
+
+Gets the element that should get focus previous to this element.
+
+`get_previous_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Element)| **return** | Element that should get the focus before this one |
+
 ### get_size
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -11390,6 +12564,17 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
 
 ### metadata
 
@@ -11495,6 +12680,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+### widget
+
+#### property: widget
+
+Returns tkinter widget for the element.  This is a READONLY property.
+The implementation is that the Widget member variable is returned. This is a backward compatible addition
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tkinter.Widget)| **return** | The element's underlying tkinter widget |
 
 ------------------------------
 
@@ -12039,6 +13235,17 @@ Maximize the window. This is done differently on a windows system versus a linux
 maximize()
 ```
 
+### key
+
+#### property: key
+
+Returns key for the element.  This is a READONLY property.
+Keys can be any hashable object (basically anything except a list... tuples are ok, but not lists)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The window's Key |
+
 ### metadata
 
 #### property: metadata
@@ -12337,6 +13544,21 @@ Returns True if the window was closed
 |Type|Name|Meaning|
 |---|---|---|
 |bool| **return** | True if the window is closed |
+
+### widget_to_element
+
+Returns the element that matches a supplied tkinter widget.
+If no matching element is found, then None is returned.
+
+```
+widget_to_element(widget)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Element or None | **RETURN** | Element that uses the specified widget
 
 ### write_event_value
 
