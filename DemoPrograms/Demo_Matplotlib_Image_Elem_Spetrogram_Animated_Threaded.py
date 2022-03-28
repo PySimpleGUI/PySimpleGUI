@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.pyplot as plt
 import io
-import threading
 import time
 
 """
@@ -25,7 +24,7 @@ import time
     The example static graph can be found in the matplotlib gallery:
     https://matplotlib.org/stable/gallery/images_contours_and_fields/specgram_demo.html        
 
-    Copyright 2021 PySimpleGUI
+    Copyright 2021, 2022 PySimpleGUI
 """
 
 np.random.seed(19801)
@@ -141,7 +140,7 @@ def main():
     # define the window layout
     layout = [[sg.Text('Spectrogram Animated - Threaded', font='Helvetica 24')],
               [sg.pin(sg.Image(key='-IMAGE-'))],
-              [sg.T(size=(50, 1), k='-STATS-')],
+              [sg.T(k='-STATS-')],
               [sg.B('Animate', focus=True, k='-ANIMATE-')]]
 
     # create the form and show it without the plot
@@ -156,7 +155,7 @@ def main():
         if event == '-ANIMATE-':
             window['-IMAGE-'].update(visible=True)
             start_time = time.time()
-            threading.Thread(target=the_thread, args=(window,), daemon=True).start()
+            window.start_thread(lambda: the_thread(window), '-THEAD FINISHED-')
         elif event == '-THREAD-':
             plt.close('all')  # close all plots... unclear if this is required
             window['-IMAGE-'].update(data=values[event].read())
@@ -170,4 +169,7 @@ def main():
 
 
 if __name__ == '__main__':
+    # Newer versions of PySimpleGUI have an alias for this method that's called "start_thread" so that it's clearer what's happening
+    # In case you don't have that version installed this line of code creates the alias for you
+    sg.Window.start_thread = sg.Window.perform_long_operation
     main()
