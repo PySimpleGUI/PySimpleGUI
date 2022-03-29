@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.20 Unreleased"
+version = __version__ = "4.57.0.21 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -56,6 +56,8 @@ _change_log = """
             Using Element by itself isn't enough.  The entire list of possible elements is needed to that the code completion /error checking works
     4.57.0.20
         Simplified Radio, Checkbox, Slider creation. Moved the command parm outside the creation and instead made a config call.
+    4.57.0.21
+        Another coupon code.  Udemy makes it difficult by only giving a valid period of 5 days for some coupons
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23635,7 +23637,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'BE7BDF4D74791CDC1BF6',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'AC62C193CF7E9F51EA79',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE)
 
         elif event == 'Themes':
