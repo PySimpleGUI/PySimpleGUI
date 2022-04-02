@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.25 Unreleased"
+version = __version__ = "4.57.0.26 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -68,6 +68,8 @@ _change_log = """
         Fixed crach in the update method for Text element when making inivisible
     4.57.0.25
         Added propagate parameter to the bind methods.  Used to tell tkinter whether or not to propagate the event to the element / or window (thank you Jason!)
+    4.57.0.26
+        Completed the new way of saving the element's settings for visible/invisible. Was losing expand and other settings. Now all elements use this new scheme
          
     """
 
@@ -996,7 +998,7 @@ class Element():
         self.metadata = metadata
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
-        self.pad_used = (0, 0)  # the amount of pad used when was inserted into the layout
+        # self.pad_used = (0, 0)  # the amount of pad used when was inserted into the layout
         self._popup_menu_location = (None, None)
         self.pack_settings = None
         if not hasattr(self, 'DisabledTextColor'):
@@ -2281,9 +2283,11 @@ class OptionMenu(Element):
         elif disabled == False:
             self.TKOptionMenu['state'] = 'normal'
         if visible is False:
-            self.TKOptionMenu.pack_forget()
+            self._pack_forget_save_settings()
+            # self.TKOptionMenu.pack_forget()
         elif visible is True:
-            self.TKOptionMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+            # self.TKOptionMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
             self._visible = visible
 
@@ -2450,9 +2454,9 @@ class Listbox(Element):
                 except:
                     warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
-            self.element_frame.pack_forget()
+            self._pack_forget_save_settings(self.element_frame)
         elif visible is True:
-            self.element_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings(self.element_frame)
         if scroll_to_index is not None and len(self.Values):
             self.TKListbox.yview_moveto(scroll_to_index / len(self.Values))
         if select_mode is not None:
@@ -2694,9 +2698,9 @@ class Radio(Element):
         elif disabled is False:
             self.TKRadio['state'] = 'normal'
         if visible is False:
-            self.TKRadio.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKRadio.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
         if visible is not None:
             self._visible = visible
 
@@ -2895,9 +2899,10 @@ class Checkbox(Element):
                 self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
 
         if visible is False:
-            self.TKCheckbutton.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKCheckbutton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         if visible is not None:
             self._visible = visible
 
@@ -3050,9 +3055,9 @@ class Spin(Element):
                 self.TKSpinBox['state'] = 'normal'
 
         if visible is False:
-            self.TKSpinBox.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKSpinBox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
         if visible is not None:
             self._visible = visible
 
@@ -4269,9 +4274,10 @@ class Output(Element):
             self._TKOut.output.delete('1.0', tk.END)
             self._TKOut.output.insert(tk.END, value)
         if visible is False:
-            self._TKOut.frame.pack_forget()
+            self._pack_forget_save_settings(self._TKOut.frame)
         elif visible is True:
-            self._TKOut.frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings(self._TKOut.frame)
+
         if visible is not None:
             self._visible = visible
 
@@ -4813,9 +4819,9 @@ class Button(Element):
                 self.TKButton.config(highlightthickness=0, image=image, width=width, height=height)
             self.TKButton.image = image
         if visible is False:
-            self.TKButton.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKButton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
         if disabled_button_color != (None, None) and disabled_button_color != COLOR_SYSTEM_DEFAULT:
             if not self.UseTtkButtons:
                 self.TKButton['disabledforeground'] = disabled_button_color[0]
@@ -5065,9 +5071,9 @@ class ButtonMenu(Element):
             self.TKButtonMenu.configure(text=button_text)
             self.ButtonText = button_text
         if visible is False:
-            self.TKButtonMenu.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKButtonMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
         if visible is not None:
             self._visible = visible
 
@@ -5220,9 +5226,10 @@ class ProgressBar(Element):
             return False
 
         if visible is False:
-            self.TKProgressBar.TKProgressBarForReal.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         if visible is not None:
             self._visible = visible
         if bar_color is not None:
@@ -5398,9 +5405,10 @@ class Image(Element):
                 _error_popup_with_traceback('Exception updating Image element', e)
             self.tktext_label.image = image
         if visible is False:
-            self.tktext_label.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.tktext_label.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         # if everything is set to None, then delete the image
         if filename is None and image is None and visible is None and size == (None, None):
             # Using a try because the image may have been previously deleted and don't want an error if that's happened
@@ -6085,10 +6093,12 @@ class Graph(Element):
 
         if background_color is not None and background_color != COLOR_SYSTEM_DEFAULT:
             self._TKCanvas2.configure(background=background_color)
+
         if visible is False:
-            self._TKCanvas2.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self._TKCanvas2.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         if visible is not None:
             self._visible = visible
 
@@ -7348,10 +7358,12 @@ class Slider(Element):
             self.TKScale['state'] = 'disabled'
         elif disabled == False:
             self.TKScale['state'] = 'normal'
+
         if visible is False:
-            self.TKScale.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.TKScale.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         if visible is not None:
             self._visible = visible
 
@@ -7720,12 +7732,14 @@ class Column(Element):
 
         if visible is False:
             if self.TKColFrame:
-                self.TKColFrame.pack_forget()
+                self._pack_forget_save_settings()
+                # self.TKColFrame.pack_forget()
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.remove(self.TKColFrame)
         elif visible is True:
             if self.TKColFrame:
-                self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1], fill=expand)
+                self._pack_restore_settings()
+                # self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1], fill=expand)
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
         if visible is not None:
@@ -7837,11 +7851,11 @@ class Pane(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
-
         if visible is False:
-            self.PanedWindow.pack_forget()
+            self._pack_forget_save_settings()
         elif visible is True:
-            self.PanedWindow.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings()
+
         if visible is not None:
             self._visible = visible
 
@@ -8429,9 +8443,10 @@ class Table(Element):
             self.Values = values
             self.SelectedRows = []
         if visible is False:
-            self.TKTreeview.pack_forget()
+            self._pack_forget_save_settings(self.element_frame)
         elif visible is True:
-            self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings(self.element_frame)
+
         if num_rows is not None:
             self.TKTreeview.config(height=num_rows)
         if select_rows is not None:
@@ -8837,9 +8852,10 @@ class Tree(Element):
                     pass
             # item = self.TKTreeview.item(id)
         if visible is False:
-            self.TKTreeview.pack_forget()
+            self._pack_forget_save_settings(self.element_frame)
         elif visible is True:
-            self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self._pack_restore_settings(self.element_frame)
+
         if visible is not None:
             self._visible = visible
 
@@ -14267,7 +14283,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # Set foreground color
             text_color = element.TextColor
             elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
-            element.pad_used = elementpad  # store the value used back into the element
+            # element.pad_used = elementpad  # store the value used back into the element
             # Determine Element size
             element_size = element.Size
             if (element_size == (None, None) and element_type not in (
