@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.26 Unreleased"
+version = __version__ = "4.57.0.27 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -70,7 +70,9 @@ _change_log = """
         Added propagate parameter to the bind methods.  Used to tell tkinter whether or not to propagate the event to the element / or window (thank you Jason!)
     4.57.0.26
         Completed the new way of saving the element's settings for visible/invisible. Was losing expand and other settings. Now all elements use this new scheme
-         
+    4.57.0.27
+        Fixed bug in Tree and Table elements when using visible in the layout
+        Added an update method to Canvas
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5568,7 +5570,7 @@ class Canvas(Element):
 
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self._TKCanvas = canvas
+        self._TKCanvas = self.Widget = canvas
         self.RightClickMenu = right_click_menu
         self.BorderWidth = border_width
         key = key if key is not None else k
@@ -5580,6 +5582,29 @@ class Canvas(Element):
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=sz, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
+
+
+    def update(self,  background_color=None, visible=None):
+        """
+
+        :param background_color: color of background
+        :type background_color:  (str)
+        :param visible:          set visibility state of the element
+        :type visible:           (bool)
+        """
+
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+            self._TKCanvas.configure(background=background_color)
+        if visible is False:
+            self._pack_forget_save_settings()
+        elif visible is True:
+            self._pack_restore_settings()
+        if visible is not None:
+            self._visible = visible
+
 
     @property
     def tk_canvas(self):
@@ -15799,7 +15824,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element_frame)       # seems like it should be the frame if following other elements conventions
+                    element._pack_forget_save_settings(optional_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
                     # element.TKTreeview.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -15931,7 +15956,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element_frame)       # seems like it should be the frame if following other elements conventions
+                    element._pack_forget_save_settings(optional_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
                     # element.TKTreeview.pack_forget()
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
