@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.23 Unreleased"
+version = __version__ = "4.57.0.24 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -64,6 +64,8 @@ _change_log = """
         Fix for expand and other settings being lost when element is made invisible and visible again.
             Not ALL elements have been converted over to handle correctly... checking in to get the ball rolling and will complete the others today
             So far Text, Input, Multiline, Frame, Statusbar, Combo are done
+    4.57.0.24
+        Fixed crach in the update method for Text element when making inivisible
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3044,6 +3046,7 @@ class Spin(Element):
         if visible is not None:
             self._visible = visible
 
+
     def _SpinChangedHandler(self, event):
         """
         Callback function. Used internally only. Called by tkinter when Spinbox Widget changes.  Results in Window.Read() call returning
@@ -3601,7 +3604,7 @@ class Text(Element):
         if font is not None:
             self.TKText.configure(font=font)
         if visible is False:
-            element._pack_forget_save_settings()
+            self._pack_forget_save_settings()
             # self.TKText.pack_forget()
         elif visible is True:
             self._pack_restore_settings()
@@ -15239,9 +15242,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 width, height = element_size
                 width = 0 if auto_size_text else element_size[0]
                 element.TKStringVar = tk.StringVar()
-                element.TKSpinBox = element.Widget = tk.Spinbox(tk_row_frame, values=element.Values,
-                                                                textvariable=element.TKStringVar,
-                                                                width=width, bd=border_depth)
+                element.TKSpinBox = element.Widget = tk.Spinbox(tk_row_frame, values=element.Values, textvariable=element.TKStringVar, width=width, bd=border_depth)
                 if element.DefaultValue is not None:
                     element.TKStringVar.set(element.DefaultValue)
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
@@ -15272,7 +15273,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
                 _add_right_click_menu_and_grab(element)
-
                 # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 element = element  # type: Output
