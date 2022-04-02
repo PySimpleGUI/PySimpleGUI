@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.24 Unreleased"
+version = __version__ = "4.57.0.25 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -66,6 +66,9 @@ _change_log = """
             So far Text, Input, Multiline, Frame, Statusbar, Combo are done
     4.57.0.24
         Fixed crach in the update method for Text element when making inivisible
+    4.57.0.25
+        Added propagate parameter to the bind methods.  Used to tell tkinter whether or not to propagate the event to the element / or window (thank you Jason!)
+         
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1321,7 +1324,7 @@ class Element():
         """
         self._generic_callback_handler('')
 
-    def _user_bind_callback(self, bind_string, event):
+    def _user_bind_callback(self, bind_string, event, propagate=True):
         """
         Used when user binds a tkinter event directly to an element
 
@@ -1329,6 +1332,8 @@ class Element():
         :type bind_string:  (str)
         :param event:       Event data passed in by tkinter (not used)
         :type event:        (Any)
+        :param propagate:   If True then tkinter will be told to propagate the event to the element
+        :type propagate:    (bool)
         """
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
@@ -1345,7 +1350,10 @@ class Element():
 
         self._generic_callback_handler(force_key_to_be=key)
 
-    def bind(self, bind_string, key_modifier):
+        return 'break' if propagate is not True else None
+
+
+    def bind(self, bind_string, key_modifier, propagate=True):
         """
         Used to add tkinter events to an Element.
         The tkinter specific data is in the Element's member variable user_bind_event
@@ -1353,11 +1361,13 @@ class Element():
         :type bind_string:   (str)
         :param key_modifier: Additional data to be added to the element's key when event is returned
         :type key_modifier:  (str)
+        :param propagate:    If True then tkinter will be told to propagate the event to the element
+        :type propagate:     (bool)
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
-        self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
+        self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
         self.user_bind_dict[bind_string] = key_modifier
 
     def unbind(self, bind_string):
@@ -10963,7 +10973,7 @@ class Window:
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
 
-    def _user_bind_callback(self, bind_string, event):
+    def _user_bind_callback(self, bind_string, event, propagate=True):
         """
         Used when user binds a tkinter event directly to an element
 
@@ -10971,6 +10981,8 @@ class Window:
         :type bind_string:  (str)
         :param event:       Event data passed in by tkinter (not used)
         :type event:
+        :param propagate:   If True then tkinter will be told to propagate the event
+        :type propagate:    (bool)
         """
         # print('bind callback', bind_string, event)
         key = self.user_bind_dict.get(bind_string, '')
@@ -10983,8 +10995,10 @@ class Window:
         # if self.CurrentlyRunningMainloop:
         #     self.TKroot.quit()
         _exit_mainloop(self)
+        return 'break' if propagate is not True else None
 
-    def bind(self, bind_string, key):
+
+    def bind(self, bind_string, key, propagate=True):
         """
         Used to add tkinter events to a Window.
         The tkinter specific data is in the Window's member variable user_bind_event
@@ -10992,10 +11006,12 @@ class Window:
         :type bind_string:  (str)
         :param key:         The event that will be generated when the tkinter event occurs
         :type key:          str | int | tuple | object
+        :param propagate:   If True then tkinter will be told to propagate the event
+        :type propagate:    (bool)
         """
         if not self._is_window_created('tried Window.bind'):
             return
-        self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
+        self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
         self.user_bind_dict[bind_string] = key
 
     def _callback_main_debugger_window_create_keystroke(self, event):
@@ -16102,27 +16118,33 @@ def _convert_window_to_tk(window):
     :type window: (Window)
 
     """
-    master = window.TKroot
-    master.title(window.Title)
+    root = window.TKroot
+    root.title(window.Title)
     InitializeResults(window)
-
-    PackFormIntoFrame(window, master, window)
+    # Ubuntu 2022 hack... window manager stopped responding to Alpha of 0 during window creation
+    if running_linux():
+        root.withdraw()
+    PackFormIntoFrame(window, root, window)
 
     window.TKroot.configure(padx=window.Margins[0], pady=window.Margins[1])
 
     # ....................................... DONE creating and laying out window ..........................#
     if window._Size != (None, None):
-        master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
-    screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
-    screen_height = master.winfo_screenheight()
+        root.geometry("%sx%s" % (window._Size[0], window._Size[1]))
+    screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
+    screen_height = root.winfo_screenheight()
     if window.Location != (None, None):
         x, y = window.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x, y = DEFAULT_WINDOW_LOCATION
     else:
-        master.update_idletasks()  # don't forget to do updates or values are bad
-        win_width = master.winfo_width()
-        win_height = master.winfo_height()
+        root.update_idletasks()  # don't forget to do updates or values are bad
+        if running_linux():
+            root.deiconify()
+        win_width = root.winfo_width()
+        win_height = root.winfo_height()
+        if running_linux():
+            root.withdrawal()
         x = screen_width / 2 - win_width / 2
         y = screen_height / 2 - win_height / 2
         if y + win_height > screen_height:
@@ -16135,15 +16157,16 @@ def _convert_window_to_tk(window):
         y += window.RelativeLoction[1]
 
     move_string = '+%i+%i' % (int(x), int(y))
-    master.geometry(move_string)
+    root.geometry(move_string)
     window.config_last_location = (int(x), (int(y)))
     window.TKroot.x = int(x)
     window.TKroot.y = int(y)
     window.starting_window_position = (int(x), (int(y)))
-    master.update_idletasks()  # don't forget
-    master.geometry(move_string)
-    master.update_idletasks()  # don't forget
-
+    root.update_idletasks()  # don't forget
+    root.geometry(move_string)
+    root.update_idletasks()  # don't forget
+    if running_linux():
+        root.deiconify()
     _no_titlebar_setup(window)
 
     return
