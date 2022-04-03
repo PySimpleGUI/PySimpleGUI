@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.27 Unreleased"
+version = __version__ = "4.57.0.28 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -73,6 +73,9 @@ _change_log = """
     4.57.0.27
         Fixed bug in Tree and Table elements when using visible in the layout
         Added an update method to Canvas
+    4.57.0.28
+        Fixed bug in new pack_forget code. If the element has already been made invisible then can't attempt the operation again because the pack_info call will crash
+        Removed the need for tk.scrolledtext.ScrolledText by adding a vertical scrollbar to a Text widget.  Getting ready for addtion of ttk scrollbars!  
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -196,7 +199,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter.colorchooser import askcolor
 from tkinter import ttk
-import tkinter.scrolledtext as tkst
+# import tkinter.scrolledtext as tkst
 import tkinter.font
 from uuid import uuid4
 
@@ -620,7 +623,7 @@ TEXT_LOCATION_BOTTOM_LEFT = tk.SW
 TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
-GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox, tk.OptionMenu)
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox, tk.OptionMenu)
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
@@ -1706,25 +1709,43 @@ class Element():
 
 
 
-    def _pack_forget_save_settings(self, optional_widget=None):
+    def _pack_forget_save_settings(self, alternate_widget=None):
         """
         Performs a pack_forget which will make a widget invisible.
         This method saves the pack settings so that they can be restored if the element is made visible again
 
-        :return:
+        :param alternate_widget:   Widget to use that's different than the one defined in Element.Widget. These are usually Frame widgets
+        :type alternate_widget:    (tk.Widget)
         """
-        if optional_widget is not None and self.widget is None:
+
+        if alternate_widget is not None and self.Widget is None:
             return
-        widget = optional_widget if optional_widget is not None else self.widget
 
-        self.pack_settings = widget.pack_info()
-        widget.pack_forget()
+        widget = alternate_widget if alternate_widget is not None else self.Widget
+        # if the widget is already invisible (i.e. not packed) then will get an error
+        try:
+            pack_settings = widget.pack_info()
+            self.pack_settings = pack_settings
+            widget.pack_forget()
+        except:
+            pass
 
-    def _pack_restore_settings(self, optional_widget=None):
+    def _pack_restore_settings(self, alternate_widget=None):
+        """
+        Restores a previously packated widget which will make it visible again.
+        If no settings were saved, then the widget is assumed to have not been unpacked and will not try to pack it again
+
+        :param alternate_widget:   Widget to use that's different than the one defined in Element.Widget. These are usually Frame widgets
+        :type alternate_widget:    (tk.Widget)
+        """
+
+        # if there are no saved pack settings, then assume it hasnb't been packaed before. The request will be ignored
         if self.pack_settings is None:
             return
-        widget = optional_widget if optional_widget is not None else self.widget
-        widget.pack(**self.pack_settings)
+
+        widget = alternate_widget if alternate_widget is not None else self.Widget
+        if widget is not None:
+            widget.pack(**self.pack_settings)
 
 
     def update(self, *args, **kwargs):
@@ -3203,7 +3224,7 @@ class Multiline(Element):
         self.RightClickMenu = right_click_menu
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TagCounter = 0
-        self.TKText = self.Widget = None  # type: tkst.ScrolledText
+        self.TKText = self.Widget = None  # type: tk.Text
         self.element_frame = None  # type: tk.Frame
         self.HorizontalScroll = horizontal_scroll
         self.tags = set()
@@ -3337,10 +3358,10 @@ class Multiline(Element):
 
 
         if visible is False:
-            self._pack_forget_save_settings(optional_widget=self.element_frame)
+            self._pack_forget_save_settings(alternate_widget=self.element_frame)
             # self.element_frame.pack_forget()
         elif visible is True:
-            self._pack_restore_settings(optional_widget=self.element_frame)
+            self._pack_restore_settings(alternate_widget=self.element_frame)
             # self.element_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
         if self.AutoRefresh and self.ParentForm:
@@ -15082,7 +15103,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
                 element.TKListbox.pack(side=tk.LEFT, fill=fill, expand=expand)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element_frame)
+                    element._pack_forget_save_settings(alternate_widget=element_frame)
                     # element_frame.pack_forget()
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element._ListboxSelectHandler)
@@ -15101,10 +15122,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 bd = element.BorderWidth
                 element.element_frame = element_frame = tk.Frame(tk_row_frame)
 
-                if element.no_scrollbar:
-                    element.TKText = element.Widget = tk.Text(element_frame, width=width, height=height,  bd=bd, font=font, relief=RELIEF_SUNKEN)
-                else:
-                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(element_frame, width=width, height=height, bd=bd, font=font, relief=RELIEF_SUNKEN)
+                # if element.no_scrollbar:
+                element.TKText = element.Widget = tk.Text(element_frame, width=width, height=height,  bd=bd, font=font, relief=RELIEF_SUNKEN)
+                # else:
+                #     element.TKText = element.Widget = tk.scrolledtext.ScrolledText(element_frame, width=width, height=height, bd=bd, font=font, relief=RELIEF_SUNKEN)
+
+                if not element.no_scrollbar:
+                    element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKText.yview)
+                    element.TKText.configure(yscrollcommand=element.vsb.set)
+                    element.vsb.pack(side=tk.RIGHT, fill='y')
 
                 # Horizontal scrollbar
                 if element.HorizontalScroll:
@@ -15114,12 +15140,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     hscrollbar.config(command=element.Widget.xview)
                     element.Widget.configure(xscrollcommand=hscrollbar.set)
                     element.hscrollbar = hscrollbar
+                else:
+                    element.TKText.config(wrap='word')
 
+                if not element.no_scrollbar or element.HorizontalScroll:
                     # Chr0nic
                     element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
                     element.TKText.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
-                else:
-                    element.TKText.config(wrap='word')
+
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
@@ -15147,7 +15175,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.pack(side=tk.LEFT, fill=fill, expand=expand)
 
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element_frame)
+                    element._pack_forget_save_settings(alternate_widget=element_frame)
                     # element.element_frame.pack_forget()
                 else:
                     # Chr0nic
@@ -15242,7 +15270,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element.TKProgressBar.TKProgressBarForReal)
+                    element._pack_forget_save_settings(alternate_widget=element.TKProgressBar.TKProgressBarForReal)
                     # element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 _add_right_click_menu_and_grab(element)
 
@@ -15342,7 +15370,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element._TKOut.pack(side=tk.LEFT, expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element._TKOut.frame)
+                    element._pack_forget_save_settings(alternate_widget=element._TKOut.frame)
                     # element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -15824,7 +15852,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
+                    element._pack_forget_save_settings(alternate_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
                     # element.TKTreeview.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -15956,7 +15984,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
-                    element._pack_forget_save_settings(optional_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
+                    element._pack_forget_save_settings(alternate_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
                     # element.TKTreeview.pack_forget()
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
