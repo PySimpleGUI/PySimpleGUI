@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.28 Unreleased"
+version = __version__ = "4.57.0.29 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -76,6 +76,8 @@ _change_log = """
     4.57.0.28
         Fixed bug in new pack_forget code. If the element has already been made invisible then can't attempt the operation again because the pack_info call will crash
         Removed the need for tk.scrolledtext.ScrolledText by adding a vertical scrollbar to a Text widget.  Getting ready for addtion of ttk scrollbars!  
+    4.57.0.29
+        Backed out changes accidently checked in that will crash on Linux (DOH! SORRY!!!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16190,9 +16192,7 @@ def _convert_window_to_tk(window):
     root = window.TKroot
     root.title(window.Title)
     InitializeResults(window)
-    # Ubuntu 2022 hack... window manager stopped responding to Alpha of 0 during window creation
-    if running_linux():
-        root.withdraw()
+
     PackFormIntoFrame(window, root, window)
 
     window.TKroot.configure(padx=window.Margins[0], pady=window.Margins[1])
@@ -16208,12 +16208,8 @@ def _convert_window_to_tk(window):
         x, y = DEFAULT_WINDOW_LOCATION
     else:
         root.update_idletasks()  # don't forget to do updates or values are bad
-        if running_linux():
-            root.deiconify()
         win_width = root.winfo_width()
         win_height = root.winfo_height()
-        if running_linux():
-            root.withdrawal()
         x = screen_width / 2 - win_width / 2
         y = screen_height / 2 - win_height / 2
         if y + win_height > screen_height:
@@ -16234,8 +16230,6 @@ def _convert_window_to_tk(window):
     root.update_idletasks()  # don't forget
     root.geometry(move_string)
     root.update_idletasks()  # don't forget
-    if running_linux():
-        root.deiconify()
     _no_titlebar_setup(window)
 
     return
