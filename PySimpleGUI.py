@@ -1,87 +1,10 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.31 Unreleased"
+version = __version__ = "4.58.0 Released 4-Apr-2022"
 
 _change_log = """
-    Changelog since 4.57.0 released to PyPI on 13-Feb-2022
+    Changelog since 4.58.0 released to PyPI on 4-Apr-2022
     
-    4.57.0.1
-        Added checking for timeout error to execute_get_results instead of showing an error popup as it's not truly an error in this case
-    4.57.0.2
-        Added cast to bool of default parm for Checkbox element in case user passes in an incorrect type
-    4.57.0.3
-        Coupon... for 30 days this time....
-    4.57.0.4
-        ButtonMenu.update - addition of button_text parameter. Enables changing text displayed on the ButtonMenu. Should have been an original feature.
-    4.57.0.5
-        Open GitHub Issue GUI - Tabs use 2 lines now. Added tab asking where found PSG.
-    4.57.0.6
-        New symbols SYMBOL_CHECKMARK_SMALL & SYMBOL_X_SMALL
-    4.57.0.7
-        Added click - PEP8 alias for ButtonMenu.Click
-    4.57.0.8
-        Automatically add timeouts to user reads if a debugger window is opened. Need to add support for multi-window applications still.
-    4.57.0.9
-        start_thread - a simple alias for perform_long_operation.  It's clearer what's happening with this alias.
-        Added bind_return_key to Spin element.  If element has focus and the return key is pressed, then an event is generated.
-    4.57.0.10
-        If an element is disabled, then don't generate events (fixed specifically for Input element)
-    4.57.0.11
-        Added event generation back for disabled elements if the event was a browse button filling in the element
-    4.57.0.12
-        Don't generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
-    4.57.0.13
-        Fix docstring for image in the Titlebar element. Incorrectly said an ICO file can be used. Must be PNG or GIF
-    4.57.0.14
-        Windows-specific code that enables the PySimpleGUI supplied icon to be shown rather than the python.exe logo (thank you Jason)
-    4.57.0.15
-        Removed all temporary Tk() window creation and instead create the hidden master root. These were required for operations like getting 
-            the list of fonts from tkinter, the screensize, character width and height. This way one and only one Tk window will ever be creeated.
-            The reason for the change is that the Mac crashes if multiple Tk() objects are created, even if only 1 at a time is active.
-    4.57.0.16
-        Addition of image_source parm to Button. It can be either a filename or a base64 string. This is like the Image elements parms
-        Graph element doc string improvement. Describes the mouse up event.
-    4.57.0.17
-        New coupon code
-    4.57.0.18
-        Element.get_next_focus added. Returns the element that should get the focus after the indicated element
-        Element.get_previous_focus added. Returns the element that should get the focus after the indicated element
-        Window.widget_to_element - returns the element that a tkinter widget is used to implement (it's a reverse lookup)
-        Element.widget - Property that's PEP8 compliant that returns Element.Widget
-        Element.key - Property that's PEP8 compliant that returns Element.Key
-        Better exception error reporting for the Element focus methods.  Uses popups with tracebacks now instead of prints
-        Simplified docstring for Window[] to show Element and None as return values
-    4.57.0.19
-        Oops... added back the rtype docstring for Window __getitem__ so that PyCharm doesn't generate warnings.  
-            Using Element by itself isn't enough.  The entire list of possible elements is needed to that the code completion /error checking works
-    4.57.0.20
-        Simplified Radio, Checkbox, Slider creation. Moved the command parm outside the creation and instead made a config call.
-    4.57.0.21
-        Another coupon code.  Udemy makes it difficult by only giving a valid period of 5 days for some coupons
-    4.57.0.22
-        Another coupon - changed base price 
-    4.57.0.23
-        Fix for expand and other settings being lost when element is made invisible and visible again.
-            Not ALL elements have been converted over to handle correctly... checking in to get the ball rolling and will complete the others today
-            So far Text, Input, Multiline, Frame, Statusbar, Combo are done
-    4.57.0.24
-        Fixed crach in the update method for Text element when making inivisible
-    4.57.0.25
-        Added propagate parameter to the bind methods.  Used to tell tkinter whether or not to propagate the event to the element / or window (thank you Jason!)
-    4.57.0.26
-        Completed the new way of saving the element's settings for visible/invisible. Was losing expand and other settings. Now all elements use this new scheme
-    4.57.0.27
-        Fixed bug in Tree and Table elements when using visible in the layout
-        Added an update method to Canvas
-    4.57.0.28
-        Fixed bug in new pack_forget code. If the element has already been made invisible then can't attempt the operation again because the pack_info call will crash
-        Removed the need for tk.scrolledtext.ScrolledText by adding a vertical scrollbar to a Text widget.  Getting ready for addtion of ttk scrollbars!  
-    4.57.0.29
-        Backed out changes accidently checked in that will crash on Linux (DOH! SORRY!!!)
-    4.57.0.30
-        Withdraw window during creation in addition to setting alpha to 0
-    4.57.0.31
-        Added tooltip_offset parameter to set_options as a way to hack around the 8.6.12 problem of missing events following a tooltip
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -629,7 +552,7 @@ TEXT_LOCATION_BOTTOM_LEFT = tk.SW
 TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
-GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox, tk.OptionMenu)
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow, tk.Listbox, tk.OptionMenu, ttk.Treeview)
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
@@ -8298,8 +8221,8 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
-                 alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None,
-                 row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
+                 alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
+                 row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False, border_width=None,
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, right_click_selects=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
@@ -8343,12 +8266,18 @@ class Table(Element):
         :type header_background_color:  (str)
         :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type header_font:              (str or (str, int[, str]) or None)
+        :param header_border_width:     Border width for the header portion
+        :type header_border_width:      (int | None)
+        :param header_relief:           Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :type header_relief:            (str | None)
         :param row_colors:              list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
         :type row_colors:               List[Tuple[int, str] | Tuple[Int, str, str]]
         :param vertical_scroll_only:    if True only the vertical scrollbar will be visible
         :type vertical_scroll_only:     (bool)
         :param hide_vertical_scroll:    if True vertical scrollbar will be hidden
         :type hide_vertical_scroll:     (bool)
+        :param border_width:            Border width/depth in pixels
+        :type border_width:             (int)
         :param size:                    DO NOT USE! Use num_rows instead
         :type size:                     (int, int)
         :param change_submits:          DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -8414,6 +8343,9 @@ class Table(Element):
         self.enable_click_events = enable_click_events
         self.right_click_selects = right_click_selects
         self.last_clicked_position = (None, None)
+        self.HeaderBorderWidth = header_border_width
+        self.BorderWidth = border_width
+        self.HeaderRelief = header_relief
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
             selected_row_colors = theme_button_color()
@@ -8658,8 +8590,8 @@ class Tree(Element):
 
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, col0_heading='',
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
-                 change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
-                 background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, num_rows=None,
+                 change_submits=False, enable_events=False, font=None, justification='right', text_color=None, border_width=None,
+                 background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None, num_rows=None,
                  row_height=None, pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
@@ -8695,6 +8627,8 @@ class Tree(Element):
         :type justification:            (str)
         :param text_color:              color of the text
         :type text_color:               (str)
+        :param border_width:            Border width/depth in pixels
+        :type border_width:             (int)
         :param background_color:        color of background
         :type background_color:         (str)
         :param selected_row_colors:     Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color
@@ -8705,6 +8639,10 @@ class Tree(Element):
         :type header_background_color:  (str)
         :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type header_font:              (str or (str, int[, str]) or None)
+        :param header_border_width:     Border width for the header portion
+        :type header_border_width:      (int | None)
+        :param header_relief:           Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :type header_relief:            (str | None)
         :param num_rows:                The number of rows of the table to display at a time
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
@@ -8744,6 +8682,9 @@ class Tree(Element):
         self.TextColor = text_color
         self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
         self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
+        self.HeaderBorderWidth = header_border_width
+        self.BorderWidth = border_width
+        self.HeaderRelief = header_relief
 
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
@@ -15827,7 +15768,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     table_style.configure(style_name + '.Heading', font=element.HeaderFont)
                 else:
                     table_style.configure(style_name + '.Heading', font=font)
+                if element.HeaderBorderWidth is not None:
+                    table_style.configure(style_name + '.Heading', borderwidth=element.HeaderBorderWidth)
+                if element.HeaderRelief is not None:
+                    table_style.configure(style_name + '.Heading', relief=element.HeaderRelief)
                 table_style.configure(style_name, font=font)
+                if element.BorderWidth is not None:
+                    table_style.configure(style_name, borderwidth=element.BorderWidth)
                 treeview.configure(style=style_name)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.enable_click_events is True:
@@ -15976,11 +15923,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tree_style.configure(style_name + '.Heading', font=element.HeaderFont)
                 else:
                     tree_style.configure(style_name + '.Heading', font=font)
+                if element.HeaderBorderWidth is not None:
+                    tree_style.configure(style_name + '.Heading', borderwidth=element.HeaderBorderWidth)
+                if element.HeaderRelief is not None:
+                    tree_style.configure(style_name + '.Heading', relief=element.HeaderRelief)
                 tree_style.configure(style_name, font=font)
                 if element.RowHeight:
                     tree_style.configure(style_name, rowheight=element.RowHeight)
                 else:
                     tree_style.configure(style_name, rowheight=_char_height_in_pixels(font))
+                if element.BorderWidth is not None:
+                    tree_style.configure(style_name, borderwidth=element.BorderWidth)
+
                 treeview.configure(style=style_name)  # IMPORTANT! Be sure and set the style name for this widget
                 element.scrollbar = scrollbar = tk.Scrollbar(element_frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
@@ -23599,12 +23553,12 @@ def _create_main_window():
 
     frame5 = [[
         Table(values=matrix, headings=matrix[0],
-              auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',
+              auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',  header_border_width=4, header_relief=RELIEF_GROOVE,
               num_rows=10, alternating_row_color='lightblue', key='-TABLE-',
-              col_widths=[5, 5, 5, 5], size=(400, 200), ),
+              col_widths=[5, 5, 5, 5], size=(400, 200)),
         T('  '),
-        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
-             num_rows=10, col0_width=10, key='-TREE-', show_expanded=True, )],[VStretch()]]
+        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True, header_border_width=4, header_relief=RELIEF_GROOVE,
+             num_rows=10, col0_width=10, key='-TREE-', show_expanded=True )],[VStretch()]]
     frame7 = [[Image(EMOJI_BASE64_HAPPY_HEARTS, enable_events=True, k='-EMOJI-HEARTS-'), T('Do you'), Image(HEART_3D_BASE64, subsample=3, enable_events=True, k='-HEART-'), T('so far?')],
               [T('Want to be taught PySimpleGUI?  Then maybe the "Official PySimpleGUI Course" on Udemy is for you.')],
               [T('Coupon codes are sometimes around so check docs, announcements, easter eggs on this page, to see specials.')],
@@ -23696,7 +23650,7 @@ def _create_main_window():
                     finalize=True,
                     grab_anywhere=True,
                     enable_close_attempted_event=True,
-                    # ttk_theme=THEME_ALT,
+                    ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
                     )

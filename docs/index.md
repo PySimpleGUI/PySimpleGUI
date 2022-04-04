@@ -9879,6 +9879,55 @@ New Emojis for 2022... collect them all!
 - Fix for Listbox scrollbar not behaving correctly when making element invisible / visible
 - Docstring update for Window.perform_long_operation warns users that Thread are used and thus no PySimpleGUI calls are allowed. Also added description of exactly what happens when the user's function completes. 
 
+## 4.58.0 PySimpleGUI 3-Apr-2022
+
+A little of this and that release  
+More focus on focus  
+`bind` methods improved with `propagate` parm  
+Visibility losing settings fix
+
+- `execute_get_results` Added checking for timeout error to  instead of showing an error popup as it's not truly an error in this case
+- `Checkbox` Added cast to bool of default parm in case user passes in an incorrect type
+- `ButtonMenu.update` addition of button_text parameter. Enables changing text displayed on the ButtonMenu. Should have been an original feature.
+- Open GitHub Issue GUI Tabs use 2 lines now. Added tab asking where found PSG.
+- New symbols `SYMBOL_CHECKMARK_SMALL` & `SYMBOL_X_SMALL`
+- `ButtonMenu.Click` - Added click PEP8 alias `ButtonMenu.click`
+- Automatically add timeouts to user reads if a debugger window is opened. Debugger for multi-window applications still needs to be added
+- `Window.start_thread` a simple alias for `Window.perform_long_operation`.  It's clearer what's happening with this alias.
+- `bind_return_key` parm added to Spin element.  If element has focus and the return key is pressed, then an event is generated.
+- Event generation for disabled elements
+	- If an element is disabled, then don't generate events (fixed specifically for Input element). However, if a Browse button fills in a disabled element, then an event should still be generated
+	- Don't generate events if no files / folders selected using File or Folder Browse buttons. If cancel is clicked then no longer generates an event. 
+- Fix docstring for image in the Titlebar element. Incorrectly said an ICO file can be used. Must be PNG or GIF
+- Windows-specific code that enables the PySimpleGUI supplied icon to be shown rather than the python.exe logo
+- Removed all temporary Tk() window creation calls
+	- Instead create the hidden master root. 
+	- These were required for operations like getting the list of fonts from tkinter, the screensize, character width and height. This way one and only one Tk window will ever be creeated
+	- The reason for the change is that the Mac crashes if multiple Tk() objects are created, even if only 1 at a time is active.
+- `image_source` parm added to `Button`
+	- It can be either a filename or a base64 string. 
+	- This is like the Image elements parms
+- Graph element doc string improvement. Describes the mouse up event.
+- Improved support for focus
+	- `Element.get_next_focus` added. Returns the element that should get the focus after the indicated element
+	- `Element.get_previous_focus` added. Returns the element that should get the focus after the indicated element
+	- Better exception error reporting for the Element focus methods.  Uses popups with tracebacks now instead of prints
+- `Window.widget_to_element` returns the element that a tkinter widget is used to implement (it's a reverse lookup)
+- `Element.widget` added.  It's a PEP8 compliant property  that returns `Element.Widget`
+- `Element.key` added. It's a PEP8 compliant property that returns `Element.Key`
+- Simplified Radio, Checkbox, Slider creation. Moved the command parm outside the creation and instead made a config call.
+- Visibility fix
+	- Expand and other settings were being lost when element is made invisible and visible again.
+- `propagate` parameter to the bind methods.  Used to tell tkinter whether or not to propagate the event to the element / or window
+- `Canvas.update` method added so that a `Canvas` can be made visible/invisible
+- Removed the need for `tk.scrolledtext.ScrolledText` by adding a vertical scrollbar to a Text widget.  Getting ready for addition of ttk scrollbars!  
+- `tooltip_offset` parm added to `set_options` as a way to set tooltip location (a hack to get around an 8.6.12 bug)
+- `Table` and `Tree` elements new parameters
+	- `border_width` -  the border width for the element
+	- `header_border_width` - the width of the border for the header
+	- `header_relief` - the type of header relief to use
+- `Table` and `Tree` elements are now excluded from grab-anywhere so that headers can be resized without moving the window
+
 ## Code Condition
 
     Make it run
