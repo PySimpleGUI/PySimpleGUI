@@ -146,7 +146,7 @@ Since the above packages each have a similar license clause, I'm listing them he
 
 You all have my respect and admiration.  You're enabling bigger things. What a special kind of thing to make. Who knows what you've enabled. I believe more people are getting over to your creations and getting to experience them.
 
-tkinter team - PySimpleGUI would be nowhere without your lengthy work & continuous dedication. ONE GUI API for 3 different OS's? Really? With no code changes to move between? That's a huge accomplishment. You're #1 to me.  Thank you for your hard work 🙏.
+tkinter team - PySimpleGUI would be nowhere without your lengthy work & continuous dedication. ONE GUI API for 3 different OS's? Really? With no code changes to move between? That's a huge accomplishment. You're #1 to me.  Thank you for your hard work.
 
 ## Getting Over "The Bar"
 

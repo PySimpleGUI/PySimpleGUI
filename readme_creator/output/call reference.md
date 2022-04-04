@@ -157,15 +157,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -620,15 +623,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -1003,15 +1009,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -1339,15 +1348,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -1758,15 +1770,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -2197,15 +2212,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -2636,15 +2654,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -3074,15 +3095,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -4092,15 +4116,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -4411,15 +4438,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -4862,15 +4892,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -5304,15 +5337,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -5779,15 +5815,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -6223,15 +6262,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -6743,15 +6785,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -7139,15 +7184,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -7541,15 +7589,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -7902,15 +7953,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### expand
 
@@ -8337,15 +8391,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -8756,15 +8813,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### expand
 
@@ -9067,15 +9127,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -9448,15 +9511,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -9859,15 +9925,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -10253,15 +10322,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -10712,15 +10784,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -11070,9 +11145,12 @@ Table(values,
     header_text_color = None,
     header_background_color = None,
     header_font = None,
+    header_border_width = None,
+    header_relief = None,
     row_colors = None,
     vertical_scroll_only = True,
     hide_vertical_scroll = False,
+    border_width = None,
     size = (None, None),
     s = (None, None),
     change_submits = False,
@@ -11116,9 +11194,12 @@ Parameter Descriptions:
 |                                      str                                       |    header_text_color    | sets the text color for the header |
 |                                      str                                       | header_background_color | sets the background color for the header |
 |                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 (int or None)                                  |   header_border_width   | Border width for the header portion |
+|                                 (str or None)                                  |      header_relief      | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
 |                 List[Tuple[int, str] or Tuple[Int, str, str]]                  |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
 |                                      bool                                      |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
 |                                      bool                                      |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
+|                                      int                                       |      border_width       | Border width/depth in pixels |
 |                                   (int, int)                                   |          size           | DO NOT USE! Use num_rows instead |
 |                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
@@ -11142,15 +11223,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -11555,15 +11639,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### expand
 
@@ -11963,11 +12050,14 @@ Tree(data = None,
     font = None,
     justification = "right",
     text_color = None,
+    border_width = None,
     background_color = None,
     selected_row_colors = (None, None),
     header_text_color = None,
     header_background_color = None,
     header_font = None,
+    header_border_width = None,
+    header_relief = None,
     num_rows = None,
     row_height = None,
     pad = None,
@@ -12002,11 +12092,14 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
 |                                      str                                       |       text_color        | color of the text |
+|                                      int                                       |      border_width       | Border width/depth in pixels |
 |                                      str                                       |    background_color     | color of background |
 |                               str or (str, str)                                |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
 |                                      str                                       |    header_text_color    | sets the text color for the header |
 |                                      str                                       | header_background_color | sets the background color for the header |
 |                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 (int or None)                                  |   header_border_width   | Border width for the header portion |
+|                                 (str or None)                                  |      header_relief      | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
 |                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
 |                                      int                                       |       row_height        | height of a single row in pixels |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
@@ -12040,15 +12133,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### block_focus
 
@@ -12480,15 +12576,18 @@ Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-bind(bind_string, key_modifier)
+bind(bind_string,
+    key_modifier,
+    propagate = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | bind_string  | The string tkinter expected in its bind function |
-| str | key_modifier | Additional data to be added to the element's key when event is returned |
+| str  | bind_string  | The string tkinter expected in its bind function |
+| str  | key_modifier | Additional data to be added to the element's key when event is returned |
+| bool |  propagate   | If True then tkinter will be told to propagate the event to the element |
 
 ### expand
 
@@ -12881,7 +12980,9 @@ Used to add tkinter events to a Window.
 The tkinter specific data is in the Window's member variable user_bind_event
 
 ```
-bind(bind_string, key)
+bind(bind_string,
+    key,
+    propagate = True)
 ```
 
 Parameter Descriptions:
@@ -12890,6 +12991,7 @@ Parameter Descriptions:
 |--|--|--|
 |            str             | bind_string | The string tkinter expected in its bind function |
 | str or int or tuple or object |     key     | The event that will be generated when the tkinter event occurs |
+|            bool            |  propagate  | If True then tkinter will be told to propagate the event |
 
 ### bring_to_front
 
@@ -19360,7 +19462,8 @@ set_options(icon = None,
     keep_on_top = None,
     dpi_awareness = None,
     scaling = None,
-    disable_modal_windows = None)
+    disable_modal_windows = None,
+    tooltip_offset = (None, None))
 ```
 
 Parameter Descriptions:
@@ -19421,6 +19524,7 @@ Parameter Descriptions:
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
 |                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
+|          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -19492,7 +19596,8 @@ SetOptions(icon = None,
     keep_on_top = None,
     dpi_awareness = None,
     scaling = None,
-    disable_modal_windows = None)
+    disable_modal_windows = None,
+    tooltip_offset = (None, None))
 ```
 
 Parameter Descriptions:
@@ -19553,6 +19658,7 @@ Parameter Descriptions:
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
 |                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
+|          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
