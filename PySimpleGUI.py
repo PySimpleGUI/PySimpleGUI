@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.57.0.29 Unreleased"
+version = __version__ = "4.57.0.31 Unreleased"
 
 _change_log = """
     Changelog since 4.57.0 released to PyPI on 13-Feb-2022
@@ -78,6 +78,10 @@ _change_log = """
         Removed the need for tk.scrolledtext.ScrolledText by adding a vertical scrollbar to a Text widget.  Getting ready for addtion of ttk scrollbars!  
     4.57.0.29
         Backed out changes accidently checked in that will crash on Linux (DOH! SORRY!!!)
+    4.57.0.30
+        Withdraw window during creation in addition to setting alpha to 0
+    4.57.0.31
+        Added tooltip_offset parameter to set_options as a way to hack around the 8.6.12 problem of missing events following a tooltip
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16189,27 +16193,27 @@ def _convert_window_to_tk(window):
     :type window: (Window)
 
     """
-    root = window.TKroot
-    root.title(window.Title)
+    master = window.TKroot
+    master.title(window.Title)
     InitializeResults(window)
 
-    PackFormIntoFrame(window, root, window)
+    PackFormIntoFrame(window, master, window)
 
     window.TKroot.configure(padx=window.Margins[0], pady=window.Margins[1])
 
     # ....................................... DONE creating and laying out window ..........................#
     if window._Size != (None, None):
-        root.geometry("%sx%s" % (window._Size[0], window._Size[1]))
-    screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
-    screen_height = root.winfo_screenheight()
+        master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
+    screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
+    screen_height = master.winfo_screenheight()
     if window.Location != (None, None):
         x, y = window.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x, y = DEFAULT_WINDOW_LOCATION
     else:
-        root.update_idletasks()  # don't forget to do updates or values are bad
-        win_width = root.winfo_width()
-        win_height = root.winfo_height()
+        master.update_idletasks()  # don't forget to do updates or values are bad
+        win_width = master.winfo_width()
+        win_height = master.winfo_height()
         x = screen_width / 2 - win_width / 2
         y = screen_height / 2 - win_height / 2
         if y + win_height > screen_height:
@@ -16222,14 +16226,15 @@ def _convert_window_to_tk(window):
         y += window.RelativeLoction[1]
 
     move_string = '+%i+%i' % (int(x), int(y))
-    root.geometry(move_string)
+    master.geometry(move_string)
     window.config_last_location = (int(x), (int(y)))
     window.TKroot.x = int(x)
     window.TKroot.y = int(y)
     window.starting_window_position = (int(x), (int(y)))
-    root.update_idletasks()  # don't forget
-    root.geometry(move_string)
-    root.update_idletasks()  # don't forget
+    master.update_idletasks()  # don't forget
+    master.geometry(move_string)
+    master.update_idletasks()  # don't forget
+
     _no_titlebar_setup(window)
 
     return
@@ -17117,8 +17122,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None,
-                disable_modal_windows=None):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, tooltip_offset=(None, None)):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -17228,6 +17232,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type scaling:                          (float)
     :param disable_modal_windows:           If True then all windows, including popups, will not be modal windows
     :type disable_modal_windows:            (bool)
+    :param tooltip_offset:                  Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered.
+    :type tooltip_offset:                   ((None, None) | (int, int))
     :return:                                None
     :rtype:                                 None
     """
@@ -17284,6 +17290,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_KEEP_ON_TOP
     global DEFAULT_SCALING
     global DEFAULT_MODAL_WINDOWS_ENABLED
+    global DEFAULT_TOOLTIP_OFFSET
     global _pysimplegui_user_settings
     # global _my_windows
 
@@ -17462,6 +17469,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if disable_modal_windows is not None:
         DEFAULT_MODAL_WINDOWS_ENABLED = not disable_modal_windows
 
+    if tooltip_offset != (None, None):
+        DEFAULT_TOOLTIP_OFFSET = tooltip_offset
 
     return True
 
