@@ -1,10 +1,14 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.58.0 Released 4-Apr-2022"
+version = __version__ = "4.58.0.2 Unreleased"
 
 _change_log = """
     Changelog since 4.58.0 released to PyPI on 4-Apr-2022
     
+    4.58.0.1
+        Removed ttk theme from the test harness. Forgot that I had changed it for testing.
+    4.58.0.2
+        Fixed bug where disabled state was not corretly saved in update methods, causing events to not be generated (Thank you Jason, again!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1841,6 +1845,8 @@ class Input(Element):
             self.TKEntry['state'] = 'readonly' if self.UseReadonlyForDisable else 'disabled'
         elif disabled is False:
             self.TKEntry['state'] = 'readonly' if self.ReadOnly else 'normal'
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKEntry.configure(background=background_color)
         if text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -2230,10 +2236,11 @@ class OptionMenu(Element):
             self.DefaultValue = value
             self.TKStringVar.set(value)
 
-        if disabled == True:
+        if disabled is True:
             self.TKOptionMenu['state'] = 'disabled'
-        elif disabled == False:
+        elif disabled is False:
             self.TKOptionMenu['state'] = 'normal'
+        self.Disabled = disabled if disabled is not None else self.Disabled
         if visible is False:
             self._pack_forget_save_settings()
             # self.TKOptionMenu.pack_forget()
@@ -2386,6 +2393,8 @@ class Listbox(Element):
             self.TKListbox.configure(state='disabled')
         elif disabled is False:
             self.TKListbox.configure(state='normal')
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if values is not None:
             self.TKListbox.delete(0, 'end')
             for item in list(values):
@@ -2649,6 +2658,8 @@ class Radio(Element):
             self.TKRadio['state'] = 'disabled'
         elif disabled is False:
             self.TKRadio['state'] = 'normal'
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
@@ -2819,10 +2830,12 @@ class Checkbox(Element):
                 self.InitialState = value
             except:
                 print('Checkbox update failed')
-        if disabled == True:
+        if disabled is True:
             self.TKCheckbutton.configure(state='disabled')
-        elif disabled == False:
+        elif disabled is False:
             self.TKCheckbutton.configure(state='normal')
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if text is not None:
             self.Text = str(text)
             self.TKCheckbutton.configure(text=self.Text)
@@ -3005,6 +3018,7 @@ class Spin(Element):
                 self.TKSpinBox['state'] = 'readonly'
             else:
                 self.TKSpinBox['state'] = 'normal'
+        self.Disabled = disabled if disabled is not None else self.Disabled
 
         if visible is False:
             self._pack_forget_save_settings()
@@ -3274,10 +3288,10 @@ class Multiline(Element):
             self.TKText.see(tk.END)
         if disabled is True:
             self.TKText.configure(state='disabled')
-            self.Disabled = True
         elif disabled is False:
             self.TKText.configure(state='normal')
-            self.Disabled = False
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(background=background_color)
         if text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -4737,13 +4751,12 @@ class Button(Element):
             self.ButtonColor = bc
         if disabled is True:
             self.TKButton['state'] = 'disabled'
-            self.Disabled = True
         elif disabled is False:
             self.TKButton['state'] = 'normal'
-            self.Disabled = False
         elif disabled == BUTTON_DISABLED_MEANS_IGNORE:
             self.TKButton['state'] = 'normal'
-            self.Disabled = BUTTON_DISABLED_MEANS_IGNORE
+        self.Disabled = disabled if disabled is not None else self.Disabled
+
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
             if image_subsample:
@@ -7329,10 +7342,11 @@ class Slider(Element):
             except:
                 pass
             self.DefaultValue = value
-        if disabled == True:
+        if disabled is True:
             self.TKScale['state'] = 'disabled'
-        elif disabled == False:
+        elif disabled is False:
             self.TKScale['state'] = 'normal'
+        self.Disabled = disabled if disabled is not None else self.Disabled
 
         if visible is False:
             self._pack_forget_save_settings()
@@ -17157,7 +17171,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param suppress_key_guessing:           If True then key errors won't try and find closest matches for you
     :type suppress_key_guessing:            (bool)
     :param warn_button_key_duplicates:      If True then duplicate Button Keys generate warnings (not recommended as they're expected)
-    :type warn_button_key_duplicates:       (bool)    
+    :type warn_button_key_duplicates:       (bool)
     :param enable_treeview_869_patch:       If True, then will use the treeview color patch for tk 8.6.9
     :type enable_treeview_869_patch:        (bool)
     :param enable_mac_notitlebar_patch:     If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10
@@ -23650,7 +23664,7 @@ def _create_main_window():
                     finalize=True,
                     grab_anywhere=True,
                     enable_close_attempted_event=True,
-                    ttk_theme=THEME_ALT,
+                    # ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
                     )
@@ -23878,4 +23892,4 @@ if __name__ == '__main__':
         main_sdk_help()
         exit(0)
     main()
-    exit(0) 
+    exit(0)
