@@ -1,10 +1,14 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0 Released 5-Apr-2022"
+version = __version__ = "4.59.0.1 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
     
+    4.59.0.1
+        Addition of the blocking parameter to the Print function. Enables using Print through an entire program with the last
+            Print call setting the blocking parameter so that the window doesn't close until user interacts with the Debug Output Window
+            
 
     """
 
@@ -16673,7 +16677,7 @@ class _DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True):
+                 grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True, blocking=False):
         """
 
         :param size:                  (w,h) w=characters-wide, h=rows-high
@@ -16698,6 +16702,8 @@ class _DebugWin():
         :type echo_stdout:            (bool)
         :param resizable:             if True, makes the window resizble
         :type resizable:              (bool)
+        :param blocking:              if True, makes the window block instead of returning immediately
+        :type blocking:               (bool)
         """
 
         # Show a form that's a running counter
@@ -16712,14 +16718,19 @@ class _DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
         self.echo_stdout = echo_stdout
         self.resizable = resizable
+        self.blocking = blocking
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
         self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, echo_stdout_stderr=self.echo_stdout, reroute_stderr=False if do_not_reroute_stdout else True, expand_x=True, expand_y=True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
         else:
+            if blocking:
+                self.quit_button = Button('Quit', key='Quit')
+            else:
+                self.quit_button = DummyButton('Quit', key='Quit')
             self.layout = [[self.output_element],
-                           [DummyButton('Quit'), Stretch()]]
+                           [self.quit_button, Stretch()]]
 
         self.layout[-1] += [Sizegrip()]
 
@@ -16727,22 +16738,21 @@ class _DebugWin():
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False, resizable=resizable)
         return
 
-    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None):
+    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None, blocking=None):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
-
         if self.window is None:  # if window was destroyed already re-open it
             self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
 
+        timeout  = 0 if not blocking else None
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
             self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
-            event, values = self.window.read(timeout=0)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
         if erase_all:
             self.window['-MULTILINE-'].update('')
         if self.do_not_reroute_stdout:
@@ -16757,10 +16767,20 @@ class _DebugWin():
                     outstring += sep_str
             outstring += end_str
 
-            self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color,
-                                       font_for_value=font)
+            self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
         else:
             print(*args, sep=sepchar, end=endchar)
+        # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
+        if blocking:
+            self.quit_button.BType = BUTTON_TYPE_READ_FORM
+            self.quit_button.update(text='More')
+        else:
+            self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
+            self.quit_button.update(text='Quit')
+
+        event, values = self.window.read(timeout=timeout)
+        if event == WIN_CLOSED or (not blocking and event == 'Quit'):
+            self.Close()
 
     def Close(self):
         if self.window.XFound:  # increment the number of open windows to get around a bug with debug windows
@@ -16771,7 +16791,7 @@ class _DebugWin():
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), font=None, no_titlebar=False,
                no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
-               erase_all=False, resizable=True):
+               erase_all=False, resizable=True, blocking=None):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -16822,16 +16842,18 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type resizable:              (bool)
     :param erase_all:             If True when erase the output before printing
     :type erase_all:              (bool)
+    :param blocking:              if True, makes the window block instead of returning immediately. The "Quit" button changers to "More"
+    :type blocking:               (bool | None)
     :return:
     :rtype:
     """
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable)
+                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable, blocking=blocking)
     txt_color, bg_color = _parse_colors_parm(c or colors)
     _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color,
-                                 erase_all=erase_all, font=font)
+                                 erase_all=erase_all, font=font, blocking=blocking)
 
 
 def easy_print_close():
