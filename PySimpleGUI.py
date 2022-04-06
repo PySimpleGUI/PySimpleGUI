@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.1 Released 5-Apr-2022"
+version = __version__ = "4.59.0.2 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -8,7 +8,10 @@ _change_log = """
     4.59.0.1
         Addition of the blocking parameter to the Print function. Enables using Print through an entire program with the last
             Print call setting the blocking parameter so that the window doesn't close until user interacts with the Debug Output Window
-            
+    4.59.0.2
+        Added SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS as a way to turn off checking for widgets to be finalized. Needed to get around some race conditions.
+            It's possible (likely) that a debug window is closed while printing to the debug window. This would normally generate an error. Use this flag to
+            turn off this error checking temporarily            
 
     """
 
@@ -606,7 +609,7 @@ CUSTOM_MENUBAR_METADATA_MARKER = 'This is a custom menubar'
 SUPPRESS_ERROR_POPUPS = False
 SUPPRESS_RAISE_KEY_ERRORS = True
 SUPPRESS_KEY_GUESSING = False
-
+SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = False
 ENABLE_TREEVIEW_869_PATCH = True
 
 # These are now set based on the global settings file
@@ -1549,8 +1552,10 @@ class Element():
         if self.Widget is not None:
             return True
         else:
-            warnings.warn('You cannot Update element with key = {} until the window.read() is called or finalized=True when creating window'.format(self.Key),
-                          UserWarning)
+            if SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS:
+                return False
+
+            warnings.warn('You cannot Update element with key = {} until the window.read() is called or finalized=True when creating window'.format(self.Key), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
                 _error_popup_with_traceback('Unable to complete operation on element with key {}'.format(self.Key),
                                             'You cannot perform operations (such as calling update) on an Element until:',
@@ -16739,6 +16744,9 @@ class _DebugWin():
         return
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None, blocking=None):
+        global SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS
+        suppress = SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS
+        SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = True
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
         if self.window is None:  # if window was destroyed already re-open it
@@ -16753,7 +16761,7 @@ class _DebugWin():
             self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
-        if erase_all:
+        if  erase_all:
             self.window['-MULTILINE-'].update('')
         if self.do_not_reroute_stdout:
             end_str = str(end) if end is not None else '\n'
@@ -16771,16 +16779,18 @@ class _DebugWin():
         else:
             print(*args, sep=sepchar, end=endchar)
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
-        if blocking:
+        if blocking and blocking != self.blocking:
             self.quit_button.BType = BUTTON_TYPE_READ_FORM
             self.quit_button.update(text='More')
-        else:
+        elif blocking != self.blocking:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             self.quit_button.update(text='Quit')
 
         event, values = self.window.read(timeout=timeout)
         if event == WIN_CLOSED or (not blocking and event == 'Quit'):
             self.Close()
+
+        SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = suppress
 
     def Close(self):
         if self.window.XFound:  # increment the number of open windows to get around a bug with debug windows
@@ -16790,8 +16800,7 @@ class _DebugWin():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), font=None, no_titlebar=False,
-               no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
-               erase_all=False, resizable=True, blocking=None):
+               no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None, erase_all=False, resizable=True, blocking=None):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
