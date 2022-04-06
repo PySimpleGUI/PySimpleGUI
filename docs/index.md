@@ -9928,6 +9928,24 @@ Visibility losing settings fix
 	- `header_relief` - the type of header relief to use
 - `Table` and `Tree` elements are now excluded from grab-anywhere so that headers can be resized without moving the window
 
+## 4.59.0 PySimpleGUI 4-Apr-2022
+
+An oh sh*t release due to yesterday's bug
+New force modal Windows option
+Test harness forces all windows to be modal and is no longer keep-on-top
+
+- Removed ttk theme from the test harness. Forgot that I had changed it for testing.
+- Fixed bug where disabled state was not correctly saved in update methods, causing events to not be generated (Thank you Jason, again!)
+	- Changed numerous elements, not just the `Input` element that demonstrated the problem
+- New `force_modal_windows` parm added to `set_options`
+	- Forces all windows to be modal
+	- Overrides the `disable_modal_windows` option
+	- Used in the `main()` test harness to ensure all windows are modal so no window is accidentally lost 
+- Test Harness changes
+	- Set `keep_on_top=True` for all popups and windows created by test harness
+	- Set the main window `keep_on_top=False`. Ensures that all windows created by it should never be hidden.  This is a somewhat experimental change.  Let's hope for the best!
+	- Forced all windows except for 1 non-modal popup to be modal. This also should ensure no windows are "lost" behind the main window
+
 ## Code Condition
 
     Make it run

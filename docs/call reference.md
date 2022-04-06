@@ -19463,6 +19463,7 @@ set_options(icon = None,
     dpi_awareness = None,
     scaling = None,
     disable_modal_windows = None,
+    force_modal_windows = None,
     tooltip_offset = (None, None))
 ```
 
@@ -19523,7 +19524,8 @@ Parameter Descriptions:
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
-|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
+|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows (unless they've been set to FORCED using another option) |
+|                      bool                      |       force_modal_windows       | If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal) |
 |          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
 | None | **RETURN** | None
 
@@ -19597,6 +19599,7 @@ SetOptions(icon = None,
     dpi_awareness = None,
     scaling = None,
     disable_modal_windows = None,
+    force_modal_windows = None,
     tooltip_offset = (None, None))
 ```
 
@@ -19657,7 +19660,8 @@ Parameter Descriptions:
 |                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 |                      bool                      |          dpi_awareness          | If True then will turn on DPI awareness (Windows only at the moment) |
 |                     float                      |             scaling             | Sets the default scaling for all windows including popups, etc. |
-|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows |
+|                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows (unless they've been set to FORCED using another option) |
+|                      bool                      |       force_modal_windows       | If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal) |
 |          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
 | None | **RETURN** | None
 
