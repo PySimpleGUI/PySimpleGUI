@@ -1,14 +1,11 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.58.0.2 Unreleased"
+version = __version__ = "4.59.0 Released 5-Apr-2022"
 
 _change_log = """
-    Changelog since 4.58.0 released to PyPI on 4-Apr-2022
+    Changelog since 4.59.0 released to PyPI on 5-Apr-2022
     
-    4.58.0.1
-        Removed ttk theme from the test harness. Forgot that I had changed it for testing.
-    4.58.0.2
-        Fixed bug where disabled state was not corretly saved in update methods, causing events to not be generated (Thank you Jason, again!)
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -522,6 +519,7 @@ TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
 DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
 TABLE_CLICKED_INDICATOR = '+CLICKED+'           # Part of the tuple returned as an event when a Table element has click events enabled
 DEFAULT_MODAL_WINDOWS_ENABLED = True
+DEFAULT_MODAL_WINDOWS_FORCED = False
 
 TAB_LOCATION_TOP = 'top'
 TAB_LOCATION_TOP_LEFT = 'topleft'
@@ -11108,7 +11106,8 @@ class Window:
             return
 
         # if modal windows have been disabled globally
-        if not DEFAULT_MODAL_WINDOWS_ENABLED:
+        if not DEFAULT_MODAL_WINDOWS_ENABLED and not DEFAULT_MODAL_WINDOWS_FORCED:
+        # if not DEFAULT_MODAL_WINDOWS_ENABLED:
             return
 
         try:
@@ -16332,7 +16331,7 @@ def StartupTK(window):
         window.TKroot.protocol("WM_DESTROY_WINDOW", window._OnClosingCallback)
         window.TKroot.protocol("WM_DELETE_WINDOW", window._OnClosingCallback)
 
-        if window.modal:
+        if window.modal or DEFAULT_MODAL_WINDOWS_FORCED:
             window.make_modal()
 
         # window.TKroot.bind("<Configure>", window._config_callback)
@@ -17090,7 +17089,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, tooltip_offset=(None, None)):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None)):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -17198,8 +17197,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type dpi_awareness:                    (bool)
     :param scaling:                         Sets the default scaling for all windows including popups, etc.
     :type scaling:                          (float)
-    :param disable_modal_windows:           If True then all windows, including popups, will not be modal windows
+    :param disable_modal_windows:           If True then all windows, including popups, will not be modal windows (unless they've been set to FORCED using another option)
     :type disable_modal_windows:            (bool)
+    :param force_modal_windows:             If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal)
+    :type force_modal_windows:              (bool)
     :param tooltip_offset:                  Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered.
     :type tooltip_offset:                   ((None, None) | (int, int))
     :return:                                None
@@ -17258,6 +17259,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_KEEP_ON_TOP
     global DEFAULT_SCALING
     global DEFAULT_MODAL_WINDOWS_ENABLED
+    global DEFAULT_MODAL_WINDOWS_FORCED
     global DEFAULT_TOOLTIP_OFFSET
     global _pysimplegui_user_settings
     # global _my_windows
@@ -17436,6 +17438,11 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if disable_modal_windows is not None:
         DEFAULT_MODAL_WINDOWS_ENABLED = not disable_modal_windows
+
+    if force_modal_windows is not None:
+        DEFAULT_MODAL_WINDOWS_FORCED = force_modal_windows
+
+
 
     if tooltip_offset != (None, None):
         DEFAULT_TOOLTIP_OFFSET = tooltip_offset
@@ -19908,7 +19915,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
                     prev_choice = (week, day)
                     break
 
-    if modal:
+    if modal or DEFAULT_MODAL_WINDOWS_FORCED:
         window.make_modal()
 
     while True:  # Event Loop
@@ -22569,7 +22576,7 @@ def _github_issue_post_validate(values, checklist, issue_types):
             issue_type = itype
             break
     if issue_type is None:
-        popup_error('Must choose issue type')
+        popup_error('Must choose issue type', keep_on_top=True)
         return False
     if values['-OS WIN-']:
         os_ver = values['-OS WIN VER-']
@@ -22580,28 +22587,28 @@ def _github_issue_post_validate(values, checklist, issue_types):
     elif values['-OS OTHER-']:
         os_ver = values['-OS OTHER VER-']
     else:
-        popup_error('Must choose Operating System')
+        popup_error('Must choose Operating System', keep_on_top=True)
         return False
 
     if os_ver == '':
-        popup_error('Must fill in an OS Version')
+        popup_error('Must fill in an OS Version', keep_on_top=True)
         return False
 
     checkboxes = any([values[('-CB-', i)] for i in range(len(checklist))])
     if not checkboxes:
-        popup_error('None of the checkboxes were checked.... you need to have tried something...anything...')
+        popup_error('None of the checkboxes were checked.... you need to have tried something...anything...', keep_on_top=True)
         return False
 
     title = values['-TITLE-'].strip()
     if len(title) == 0:
-        popup_error("Title can't be blank")
+        popup_error("Title can't be blank", keep_on_top=True)
         return False
     elif title[1:len(title) - 1] == issue_type:
-        popup_error("Title can't be blank (only the type of issue isn't enough)")
+        popup_error("Title can't be blank (only the type of issue isn't enough)", keep_on_top=True)
         return False
 
     if len(values['-ML DETAILS-']) < 4:
-        popup_error("A little more details would be awesome")
+        popup_error("A little more details would be awesome", keep_on_top=True)
         return False
 
     return True
@@ -22791,7 +22798,7 @@ def main_open_github_issue():
                             'the markdown, copying it to a text file, and then using it later to manually paste into a new issue '
                             '\n'
                             'Are you sure you want to quit?',
-                            image=EMOJI_BASE64_PONDER,
+                            image=EMOJI_BASE64_PONDER, keep_on_top=True
                             ) == 'Yes':
                 break
         if event == WIN_CLOSED:
@@ -22817,7 +22824,7 @@ def main_open_github_issue():
                     issue_type = itype
                     break
             if issue_type is None:
-                popup_error('Must choose issue type')
+                popup_error('Must choose issue type', keep_on_top=True)
                 continue
             if values['-OS WIN-']:
                 operating_system = 'Windows'
@@ -22832,7 +22839,7 @@ def main_open_github_issue():
                 operating_system = 'Other'
                 os_ver = values['-OS OTHER VER-']
             else:
-                popup_error('Must choose Operating System')
+                popup_error('Must choose Operating System', keep_on_top=True)
                 continue
             checkboxes = ['X' if values[('-CB-', i)] else ' ' for i in range(len(checklist))]
 
@@ -23233,7 +23240,7 @@ def main_global_pysimplegui_settings():
               [B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')],
               ]
 
-    window = Window('Settings', layout, keep_on_top=True)
+    window = Window('Settings', layout, keep_on_top=True, modal=True)
     while True:
         event, values = window.read()
         if event in ('Cancel', WIN_CLOSED):
@@ -23624,7 +23631,7 @@ def _create_main_window():
         VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
         VerLine(tclversion_detailed, 'detailed tkinter version'),
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, 2)),
-        VerLine(sys.version, 'Python Version', size=(40,2)) +[Image(PYTHON_COLORED_HEARTS_BASE64, subsample=3)]], pad=0)
+        VerLine(sys.version, 'Python Version', size=(40,2)) +[Image(PYTHON_COLORED_HEARTS_BASE64, subsample=3, k='-PYTHON HEARTS-', enable_events=True)]], pad=0)
 
     layout_bottom = [
         [B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE TABS-'),
@@ -23658,7 +23665,7 @@ def _create_main_window():
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
-                    keep_on_top=True,
+                    keep_on_top=False,
                     element_justification='left',  # justify contents to the left
                     metadata='My window metadata',
                     finalize=True,
@@ -23686,6 +23693,8 @@ def main():
     """
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
     """
+    forced_modal = DEFAULT_MODAL_WINDOWS_FORCED
+    set_options(force_modal_windows=True)
     window = _create_main_window()
     set_options(keep_on_top=True)
     graph_elem = window['+GRAPH+']
@@ -23727,15 +23736,15 @@ def main():
         elif event == '-INSTALL-':
             _upgrade_gui()
         elif event == 'Popup':
-            popup('This is your basic popup')
+            popup('This is your basic popup', keep_on_top=True)
         elif event == 'Get File':
-            popup_scrolled('Returned:', popup_get_file('Get File'))
+            popup_scrolled('Returned:', popup_get_file('Get File', keep_on_top=True))
         elif event == 'Get Folder':
-            popup_scrolled('Returned:', popup_get_folder('Get Folder'))
+            popup_scrolled('Returned:', popup_get_folder('Get Folder', keep_on_top=True))
         elif event == 'Get Date':
-            popup_scrolled('Returned:', popup_get_date())
+            popup_scrolled('Returned:', popup_get_date(keep_on_top=True))
         elif event == 'Get Text':
-            popup_scrolled('Returned:', popup_get_text('Enter some text'))
+            popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
                 webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
         elif event.startswith('-SPONSOR-'):
@@ -23745,9 +23754,9 @@ def main():
             if webbrowser_available:
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
-        elif event in  ('-EMOJI-HEARTS-', '-HEART-'):
+        elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
             popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'BDC40CE5211BD258C767',
-                           'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE)
+                           'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
@@ -23778,8 +23787,10 @@ def main():
             elif event == 'P NoTitle':
                 popup_no_titlebar('No titlebar', keep_on_top=True)
             elif event == 'P NoModal':
+                set_options(force_modal_windows=False)
                 popup('Normal Popup - Not Modal', 'You can interact with main window menubar ',
                       'but will have no effect immediately', 'button clicks will happen after you close this popup', modal=False, keep_on_top=True)
+                set_options(force_modal_windows=True)
             elif event == 'P NoBlock':
                 popup_non_blocking('Non-blocking', 'The background window should still be running', keep_on_top=True)
             elif event == 'P AutoClose':
@@ -23794,7 +23805,7 @@ def main():
         # _refresh_debugger()
     print('event = ', event)
     window.close()
-
+    set_options(force_modal_windows=forced_modal)
 
 # ------------------------ PEP8-ify The SDK ------------------------#
 
