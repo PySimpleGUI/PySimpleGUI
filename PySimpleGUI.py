@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.2 Released 5-Apr-2022"
+version = __version__ = "4.59.0.3 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -12,6 +12,9 @@ _change_log = """
         Added SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS as a way to turn off checking for widgets to be finalized. Needed to get around some race conditions.
             It's possible (likely) that a debug window is closed while printing to the debug window. This would normally generate an error. Use this flag to
             turn off this error checking temporarily            
+    4.59.0.3
+        NEW ttk scrollbars added to Multiline, Listbox, Table and Tree
+        Tree 
 
     """
 
@@ -870,7 +873,8 @@ class Element():
     """ The base class for all Elements. Holds the basic description of an Element like size and colors """
 
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
-                 visible=True, metadata=None):
+                 visible=True, metadata=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
@@ -944,6 +948,59 @@ class Element():
         # self.pad_used = (0, 0)  # the amount of pad used when was inserted into the layout
         self._popup_menu_location = (None, None)
         self.pack_settings = None
+        ## TTK Scrollbar Settings
+        if sbar_trough_color is not None:
+            self.scroll_trough_color = sbar_trough_color
+        else:
+            self.scroll_trough_color = theme_slider_color()
+
+        if sbar_background_color is not None:
+            self.scroll_background_color = sbar_background_color
+        else:
+            self.scroll_background_color = theme_button_color()[1]
+
+        if sbar_thumb_color is not None:
+            self.scroll_thumb_color = sbar_thumb_color
+        else:
+            self.scroll_thumb_color = theme_button_color()[1]
+
+        if sbar_thumb_depressed is not None:
+            self.scroll_thumb_color_depressed = sbar_thumb_depressed
+        else:
+            self.scroll_thumb_color_depressed = theme_button_color()[0]
+
+        if sbar_arrow_color is not None:
+            self.scroll_arrow_color = sbar_arrow_color
+        else:
+            self.scroll_arrow_color = theme_button_color()[0]
+
+        if sbar_arrow_background_color is not None:
+            self.scroll_arrow_background_color = sbar_arrow_background_color
+        else:
+            self.scroll_arrow_background_color = theme_button_color()[1]
+
+        if sbar_width is not None:
+            self.scroll_width = sbar_width
+        else:
+            self.scroll_width = 10
+
+        if sbar_arrow_width is not None:
+            self.scroll_arrow_width = sbar_arrow_width
+        else:
+            self.scroll_arrow_width = self.scroll_width
+
+        if sbar_frame_color is not None:
+            self.scroll_frame_color = sbar_frame_color
+        else:
+            self.scroll_frame_color = theme_background_color()
+
+        if sbar_relief is not None:
+            self.scroll_relief = sbar_relief
+        else:
+            self.scroll_relief = RELIEF_RAISED
+
+
+
         if not hasattr(self, 'DisabledTextColor'):
             self.DisabledTextColor = None
         if not hasattr(self, 'ItemFont'):
@@ -2276,6 +2333,8 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
         :param values:                     list of values to display. Can be any type including mixed types as long as they have __str__ method
@@ -2368,7 +2427,8 @@ class Listbox(Element):
         self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
-                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
+                         background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
     def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
@@ -3088,79 +3148,102 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
-        :param default_text:       Initial text to show
-        :type default_text:        (Any)
-        :param enter_submits:      if True, the Window.Read call will return is enter key is pressed in this element
-        :type enter_submits:       (bool)
-        :param disabled:           set disable state
-        :type disabled:            (bool)
-        :param autoscroll:         If True the contents of the element will automatically scroll as more data added to the end
-        :type autoscroll:          (bool)
-        :param border_width:       width of border around element in pixels
-        :type border_width:        (int)
-        :param size:               (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:                (int, int)  | (None, None) | int
-        :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                   (int, int)  | (None, None) | int
-        :param auto_size_text:     if True will size the element to match the length of the text
-        :type auto_size_text:      (bool)
-        :param background_color:   color of background
-        :type background_color:    (str)
-        :param text_color:         color of the text
-        :type text_color:          (str)
-        :param horizontal_scroll:  Controls if a horizontal scrollbar should be shown.  If True a horizontal scrollbar will be shown in addition to vertical
-        :type horizontal_scroll:   (bool)
-        :param change_submits:     DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :type change_submits:      (bool)
-        :param enable_events:      Turns on the element specific events. Spin events happen when an item changes
-        :type enable_events:       (bool)
-        :param do_not_clear:       if False the element will be cleared any time the Window.Read call returns
-        :type do_not_clear:        (bool)
-        :param key:                Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
-        :type key:                 str | int | tuple | object
-        :param k:                  Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                   str | int | tuple | object
-        :param write_only:         If True then no entry will be added to the values dictionary when the window is read
-        :type write_only:          bool
-        :param auto_refresh:       If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed
-        :type auto_refresh:        (bool)
-        :param reroute_stdout:     If True then all output to stdout will be output to this element
-        :type reroute_stdout:      (bool)
-        :param reroute_stderr:     If True then all output to stderr will be output to this element
-        :type reroute_stderr:      (bool)
-        :param reroute_cprint:     If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination
-        :type reroute_cprint:      (bool)
-        :param echo_stdout_stderr: If True then output to stdout and stderr will be output to this element AND also to the normal console location
-        :type echo_stdout_stderr:  (bool)
-        :param focus:              if True initial focus will go to this element
-        :type focus:               (bool)
-        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                (str or (str, int[, str]) or None)
-        :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                  Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param tooltip:            text, that will appear when mouse hovers over the element
-        :type tooltip:             (str)
-        :param justification:      text justification. left, right, center. Can use single characters l, r, c.
-        :type justification:       (str)
-        :param no_scrollbar:       If False then a vertical scrollbar will be shown (the default)
-        :type no_scrollbar:        (bool)
-        :param expand_x:           If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:            (bool)
-        :param expand_y:           If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:            (bool)
-        :param rstrip:             If True the value returned in will have whitespace stripped from the right side
-        :type rstrip:              (bool)
-        :param right_click_menu:   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :type right_click_menu:    List[List[ List[str] | str ]]
-        :param visible:            set visibility state of the element
-        :type visible:             (bool)
-        :param metadata:           User metadata that can be set to ANYTHING
-        :type metadata:            (Any)
+        :param default_text:                 Initial text to show
+        :type default_text:                  (Any)
+        :param enter_submits:                if True, the Window.Read call will return is enter key is pressed in this element
+        :type enter_submits:                 (bool)
+        :param disabled:                     set disable state
+        :type disabled:                      (bool)
+        :param autoscroll:                   If True the contents of the element will automatically scroll as more data added to the end
+        :type autoscroll:                    (bool)
+        :param border_width:                 width of border around element in pixels
+        :type border_width:                  (int)
+        :param size:                         (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
+        :type size:                          (int, int)  | (None, None) | int
+        :param s:                            Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                             (int, int)  | (None, None) | int
+        :param auto_size_text:               if True will size the element to match the length of the text
+        :type auto_size_text:                (bool)
+        :param background_color:             color of background
+        :type background_color:              (str)
+        :param text_color:                   color of the text
+        :type text_color:                    (str)
+        :param horizontal_scroll:            Controls if a horizontal scrollbar should be shown.  If True a horizontal scrollbar will be shown in addition to vertical
+        :type horizontal_scroll:             (bool)
+        :param change_submits:               DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits:                (bool)
+        :param enable_events:                Turns on the element specific events. Spin events happen when an item changes
+        :type enable_events:                 (bool)
+        :param do_not_clear:                 if False the element will be cleared any time the Window.Read call returns
+        :type do_not_clear:                  (bool)
+        :param key:                          Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
+        :type key:                           str | int | tuple | object
+        :param k:                            Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                             str | int | tuple | object
+        :param write_only:                   If True then no entry will be added to the values dictionary when the window is read
+        :type write_only:                    bool
+        :param auto_refresh:                 If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed
+        :type auto_refresh:                  (bool)
+        :param reroute_stdout:               If True then all output to stdout will be output to this element
+        :type reroute_stdout:                (bool)
+        :param reroute_stderr:               If True then all output to stderr will be output to this element
+        :type reroute_stderr:                (bool)
+        :param reroute_cprint:               If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination
+        :type reroute_cprint:                (bool)
+        :param echo_stdout_stderr:           If True then output to stdout and stderr will be output to this element AND also to the normal console location
+        :type echo_stdout_stderr:            (bool)
+        :param focus:                        if True initial focus will go to this element
+        :type focus:                         (bool)
+        :param font:                         specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                          (str or (str, int[, str]) or None)
+        :param pad:                          Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                           (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                            Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                             (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param tooltip:                      text, that will appear when mouse hovers over the element
+        :type tooltip:                       (str)
+        :param justification:                text justification. left, right, center. Can use single characters l, r, c.
+        :type justification:                 (str)
+        :param no_scrollbar:                 If False then a vertical scrollbar will be shown (the default)
+        :type no_scrollbar:                  (bool)
+        :param sbar_trough_color:            Scrollbar color of the trough
+        :type sbar_trough_color:             (str)
+        :param sbar_background_color:        Scrollbar
+        :type sbar_background_color:         (str)
+        :param sbar_thumb_color:             Scrollbar
+        :type sbar_thumb_color:              (str)
+        :param sbar_thumb_depressed:         Scrollbar
+        :type sbar_thumb_depressed:          (str)
+        :param sbar_arrow_color:             Scrollbar
+        :type sbar_arrow_color:              (str)
+        :param sbar_arrow_background_color: Scrollbar
+        :type sbar_arrow_background_color:  (str)
+        :param sbar_width:                   Scrollbar
+        :type sbar_width:                    (int)
+        :param sbar_arrow_width:             Scrollbar
+        :type sbar_arrow_width:              (int)
+        :param sbar_frame_color:             Scrollbar
+        :type sbar_frame_color:              (str)
+        :param sbar_relief:                  Scrollbar
+        :type sbar_relief:                   (str)
+        :param expand_x:                     If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                      (bool)
+        :param expand_y:                     If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                      (bool)
+        :param rstrip:                       If True the value returned in will have whitespace stripped from the right side
+        :type rstrip:                        (bool)
+        :param right_click_menu:             A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:              List[List[ List[str] | str ]]
+        :param visible:                      set visibility state of the element
+        :type visible:                       (bool)
+        :param metadata:                     User metadata that can be set to ANYTHING
+        :type metadata:                      (Any)
         """
+
 
         self.DefaultText = str(default_text)
         self.EnterSubmits = enter_submits
@@ -3200,7 +3283,8 @@ class Multiline(Element):
         sz = size if size != (None, None) else s
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
-                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
+                         text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
@@ -8244,6 +8328,8 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False, border_width=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, right_click_selects=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
@@ -8299,6 +8385,26 @@ class Table(Element):
         :type hide_vertical_scroll:     (bool)
         :param border_width:            Border width/depth in pixels
         :type border_width:             (int)
+        :param sbar_trough_color:            Scrollbar color of the trough
+        :type sbar_trough_color:             (str)
+        :param sbar_background_color:        Scrollbar
+        :type sbar_background_color:         (str)
+        :param sbar_thumb_color:             Scrollbar
+        :type sbar_thumb_color:              (str)
+        :param sbar_thumb_depressed:         Scrollbar
+        :type sbar_thumb_depressed:          (str)
+        :param sbar_arrow_color:             Scrollbar
+        :type sbar_arrow_color:              (str)
+        :param sbar_arrow_background_color: Scrollbar
+        :type sbar_arrow_background_color:  (str)
+        :param sbar_width:                   Scrollbar
+        :type sbar_width:                    (int)
+        :param sbar_arrow_width:             Scrollbar
+        :type sbar_arrow_width:              (int)
+        :param sbar_frame_color:             Scrollbar
+        :type sbar_frame_color:              (str)
+        :param sbar_relief:                  Scrollbar
+        :type sbar_relief:                   (str)
         :param size:                    DO NOT USE! Use num_rows instead
         :type size:                     (int, int)
         :param change_submits:          DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -8388,7 +8494,8 @@ class Table(Element):
         self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+                         size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
@@ -8613,7 +8720,9 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None, border_width=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None, num_rows=None,
-                 row_height=None, pad=None, p=None, key=None, k=None, tooltip=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 row_height=None, vertical_scroll_only=True, hide_vertical_scroll=False, pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param data:                    The data represented using a PySimpleGUI provided TreeData class
@@ -8668,6 +8777,30 @@ class Tree(Element):
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
         :type row_height:               (int)
+        :param vertical_scroll_only:    if True only the vertical scrollbar will be visible
+        :type vertical_scroll_only:     (bool)
+        :param hide_vertical_scroll:    if True vertical scrollbar will be hidden
+        :type hide_vertical_scroll:     (bool)
+        :param sbar_trough_color:            Scrollbar color of the trough
+        :type sbar_trough_color:             (str)
+        :param sbar_background_color:        Scrollbar
+        :type sbar_background_color:         (str)
+        :param sbar_thumb_color:             Scrollbar
+        :type sbar_thumb_color:              (str)
+        :param sbar_thumb_depressed:         Scrollbar
+        :type sbar_thumb_depressed:          (str)
+        :param sbar_arrow_color:             Scrollbar
+        :type sbar_arrow_color:              (str)
+        :param sbar_arrow_background_color: Scrollbar
+        :type sbar_arrow_background_color:  (str)
+        :param sbar_width:                   Scrollbar
+        :type sbar_width:                    (int)
+        :param sbar_arrow_width:             Scrollbar
+        :type sbar_arrow_width:              (int)
+        :param sbar_frame_color:             Scrollbar
+        :type sbar_frame_color:              (str)
+        :param sbar_relief:                  Scrollbar
+        :type sbar_relief:                   (str)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
@@ -8728,6 +8861,8 @@ class Tree(Element):
         self.col0_heading = col0_heading
         self.TKTreeview = None  # type: ttk.Treeview
         self.element_frame = None  # type: tk.Frame
+        self.VerticalScrollOnly = vertical_scroll_only
+        self.HideVerticalScroll = hide_vertical_scroll
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
@@ -8741,7 +8876,8 @@ class Tree(Element):
         self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad, key=key, tooltip=tooltip,
-                         visible=visible, metadata=metadata)
+                         visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def _treeview_selected(self, event):
@@ -14166,6 +14302,61 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         element.ttk_style_name = style_name
         return style_name
 
+
+    def _make_ttk_scrollbar(element, orientation):
+        """
+        Creates a ttk scrollbar for elements as they are being added to the layout
+
+        :param element:     The element
+        :type element:      (Element)
+        :param orientation: The orientation vertical ('v') or horizontal ('h')
+        :type orientation:  (str)
+        """
+
+        style = ttk.Style()
+        style.theme_use(toplevel_form.TtkTheme)
+        if orientation[0].lower() == 'v':
+            orient = 'vertical'
+            style_name = _make_ttk_style_name('.Vertical.TScrollbar', element)
+            # style_name_thumb = _make_ttk_style_name('.Vertical.TScrollbar.thumb', element)
+            element.vsb_style = style
+            element.vsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.yview, style=style_name)
+        else:
+            orient = 'horizontal'
+            style_name = _make_ttk_style_name('.Horizontal.TScrollbar', element)
+            element.hsb_style = style
+            element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
+
+        # print(Stylist.get_options(style_name, 'default'))
+
+        style.configure(style_name, troughcolor=element.scroll_trough_color)
+        # style.configure(style_name, darkcolor='red')
+        # style.configure(style_name, lightcolor='red')
+        style.configure(style_name, relief=element.scroll_relief)
+        style.configure(style_name, framecolor=element.scroll_frame_color)
+        style.configure(style_name, bordercolor=element.scroll_frame_color)
+        # style.configure(style_name, thumb='red')
+        # style.configure(style_name, gripcount=16)
+        style.configure(style_name, width=element.scroll_width)
+        style.configure(style_name, arrowsize=element.scroll_arrow_width)
+        # style.configure(style_name, foreground=element.scroll_trough_color)
+        # style.configure(style_name_thumb, arrowsize=40)
+        # style.map(style_name_thumb, background=[("selected", 'red'), ('active', 'red'), ('background', 'red'), ('!focus', 'red')])
+        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
+        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
+        # style.map(style_name, arrowcolor=[("selected", 'red'), ('active', 'red'), ('background', 'red'),('!focus', 'red')])
+        # style.map(style_name, uparrow=[("selected", element.scroll_arrow_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
+        # style.map(style_name, foreground=[("selected", element.scroll_arrow_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_arrow_color), ('!focus', element.scroll_arrow_color)])
+        #
+        # foreground=[('disabled', 'yellow'),
+        #             ('pressed', 'red'),
+        #             ('active', 'blue')],
+        # background=[('disabled', 'magenta'),
+        #             ('pressed', '!focus', 'cyan'),
+        #             ('active', 'green')],
+        # highlightcolor=[('focus', 'green'),
+        #                 ('!focus', 'red')],
+
     def _add_grab(element):
 
         try:
@@ -15028,6 +15219,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     width = max_line_len
                 element_frame = tk.Frame(tk_row_frame)
+                element.element_frame = element_frame
+
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox = element.Widget = tk.Listbox(element_frame, height=element_size[1], width=width,
                                                                 selectmode=element.SelectMode, font=font, exportselection=False)
@@ -15046,25 +15239,50 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.config(selectforeground=element.HighlightTextColor)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
+
+
+
+
                 if not element.NoScrollbar:
-                    # Vertical scrollbar
-                    element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKListbox.yview)
-                    element.TKListbox.configure(yscrollcommand=element.vsb.set)
+                    _make_ttk_scrollbar(element, 'v')
+
+                    element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
 
-                    # Horizontal scrollbar
-                    if element.HorizontalScroll:
-                        hscrollbar = tk.Scrollbar(element_frame, orient=tk.HORIZONTAL)
-                        hscrollbar.pack(side=tk.BOTTOM, fill='x')
-                        hscrollbar.config(command=element.Widget.xview)
-                        element.Widget.configure(xscrollcommand=hscrollbar.set)
-                        element.hsb = hscrollbar
+                # Horizontal scrollbar
+                if element.HorizontalScroll:
+                    element.TKText.config(wrap='none')
+                    _make_ttk_scrollbar(element, 'h')
+                    element.hsb.pack(side=tk.BOTTOM, fill='x')
+                    element.Widget.configure(xscrollcommand=element.hsb.set)
 
+                if not element.NoScrollbar or element.HorizontalScroll:
                     # Chr0nic
-                    element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
-                    element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+                    element.Widget.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.Widget.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
 
+                # else:
+                #     element.TKText.config(wrap='word')
 
+                # if not element.NoScrollbar:
+                #     # Vertical scrollbar
+                #     element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKListbox.yview)
+                #     element.TKListbox.configure(yscrollcommand=element.vsb.set)
+                #     element.vsb.pack(side=tk.RIGHT, fill='y')
+
+                # Horizontal scrollbar
+                # if element.HorizontalScroll:
+                #     hscrollbar = tk.Scrollbar(element_frame, orient=tk.HORIZONTAL)
+                #     hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                #     hscrollbar.config(command=element.Widget.xview)
+                #     element.Widget.configure(xscrollcommand=hscrollbar.set)
+                #     element.hsb = hscrollbar
+                #
+                #     # Chr0nic
+                #     element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                #     element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+                #
+                #
 
 
 
@@ -15082,7 +15300,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                element.element_frame = element_frame
                 _add_right_click_menu_and_grab(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -15097,18 +15314,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText = element.Widget = tk.scrolledtext.ScrolledText(element_frame, width=width, height=height, bd=bd, font=font, relief=RELIEF_SUNKEN)
 
                 if not element.no_scrollbar:
-                    element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKText.yview)
-                    element.TKText.configure(yscrollcommand=element.vsb.set)
+                    _make_ttk_scrollbar(element, 'v')
+
+                    element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
 
                 # Horizontal scrollbar
                 if element.HorizontalScroll:
                     element.TKText.config(wrap='none')
-                    hscrollbar = tk.Scrollbar(element_frame, orient=tk.HORIZONTAL)
-                    hscrollbar.pack(side=tk.BOTTOM, fill='x')
-                    hscrollbar.config(command=element.Widget.xview)
-                    element.Widget.configure(xscrollcommand=hscrollbar.set)
-                    element.hscrollbar = hscrollbar
+                    _make_ttk_scrollbar(element, 'h')
+                    element.hsb.pack(side=tk.BOTTOM, fill='x')
+                    element.Widget.configure(xscrollcommand=element.hsb.set)
                 else:
                     element.TKText.config(wrap='word')
 
@@ -15811,17 +16027,45 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     treeview.bind('<Return>', element._treeview_double_click)
                     treeview.bind('<Double-Button-1>', element._treeview_double_click)
 
-                if not element.HideVerticalScroll:
-                    scrollbar = tk.Scrollbar(frame)
-                    scrollbar.pack(side=tk.RIGHT, fill='y')
-                    scrollbar.config(command=treeview.yview)
-                    treeview.configure(yscrollcommand=scrollbar.set)
 
+
+
+                if not element.HideVerticalScroll:
+                    _make_ttk_scrollbar(element, 'v')
+
+                    element.Widget.configure(yscrollcommand=element.vsb.set)
+                    element.vsb.pack(side=tk.RIGHT, fill='y')
+
+                # Horizontal scrollbar
                 if not element.VerticalScrollOnly:
-                    hscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
-                    hscrollbar.pack(side=tk.BOTTOM, fill='x')
-                    hscrollbar.config(command=treeview.xview)
-                    treeview.configure(xscrollcommand=hscrollbar.set)
+                    # element.Widget.config(wrap='none')
+                    _make_ttk_scrollbar(element, 'h')
+                    element.hsb.pack(side=tk.BOTTOM, fill='x')
+                    element.Widget.configure(xscrollcommand=element.hsb.set)
+
+                if not element.HideVerticalScroll or not element.VerticalScrollOnly:
+                    # Chr0nic
+                    element.Widget.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.Widget.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+
+
+
+                # if not element.HideVerticalScroll:
+                #     scrollbar = tk.Scrollbar(frame)
+                #     scrollbar.pack(side=tk.RIGHT, fill='y')
+                #     scrollbar.config(command=treeview.yview)
+                #     treeview.configure(yscrollcommand=scrollbar.set)
+
+                # if not element.VerticalScrollOnly:
+                #     hscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
+                #     hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                #     hscrollbar.config(command=treeview.xview)
+                #     treeview.configure(xscrollcommand=hscrollbar.set)
+
+
+
+
+
 
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
@@ -15958,10 +16202,50 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tree_style.configure(style_name, borderwidth=element.BorderWidth)
 
                 treeview.configure(style=style_name)  # IMPORTANT! Be sure and set the style name for this widget
-                element.scrollbar = scrollbar = tk.Scrollbar(element_frame)
-                scrollbar.pack(side=tk.RIGHT, fill='y')
-                scrollbar.config(command=treeview.yview)
-                treeview.configure(yscrollcommand=scrollbar.set)
+
+
+
+                if not element.HideVerticalScroll:
+                    _make_ttk_scrollbar(element, 'v')
+
+                    element.Widget.configure(yscrollcommand=element.vsb.set)
+                    element.vsb.pack(side=tk.RIGHT, fill='y')
+
+                # Horizontal scrollbar
+                if not element.VerticalScrollOnly:
+                    # element.Widget.config(wrap='none')
+                    _make_ttk_scrollbar(element, 'h')
+                    element.hsb.pack(side=tk.BOTTOM, fill='x')
+                    element.Widget.configure(xscrollcommand=element.hsb.set)
+
+                if not element.HideVerticalScroll or not element.VerticalScrollOnly:
+                    # Chr0nic
+                    element.Widget.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.Widget.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+
+
+                # Horizontal scrollbar
+                # if not element.VerticalScrollOnly:
+                #     element.TKText.config(wrap='none')
+                #     _make_ttk_scrollbar(element, 'h')
+                #     element.hsb.pack(side=tk.BOTTOM, fill='x')
+                #     element.Widget.configure(xscrollcommand=element.hsb.set)
+
+                # if not element.HideVerticalScroll or not element.VerticalScrollOnly:
+                    # Chr0nic
+                # element.Widget.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                # element.Widget.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+
+
+
+
+
+                # element.scrollbar = scrollbar = tk.Scrollbar(element_frame)
+                # scrollbar.pack(side=tk.RIGHT, fill='y')
+                # scrollbar.config(command=treeview.yview)
+                # treeview.configure(yscrollcommand=scrollbar.set)
+
+
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
