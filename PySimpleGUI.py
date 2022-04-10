@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.5 Released 5-Apr-2022"
+version = __version__ = "4.59.0.6 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -26,6 +26,8 @@ _change_log = """
             The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
     4.59.0.5
         Fixed the font and sizing of the "Editor Settings" section
+    4.59.0.6
+        Added exception handing to the bind methods
         
     """
 
@@ -1399,7 +1401,14 @@ class Element():
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
-        self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
+        if not self._is_window_created('tried Window.bind'):
+            return
+        try:
+            self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
+        except Exception as e:
+            self.Widget.unbind_all(bind_string)
+            return
+
         self.user_bind_dict[bind_string] = key_modifier
 
     def unbind(self, bind_string):
@@ -11210,7 +11219,12 @@ class Window:
         """
         if not self._is_window_created('tried Window.bind'):
             return
-        self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
+        try:
+            self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
+        except Exception as e:
+            self.TKroot.unbind_all(bind_string)
+            return
+            # _error_popup_with_traceback('Window.bind error', e)
         self.user_bind_dict[bind_string] = key
 
     def _callback_main_debugger_window_create_keystroke(self, event):
