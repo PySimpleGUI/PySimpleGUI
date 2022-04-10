@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.3 Released 5-Apr-2022"
+version = __version__ = "4.59.0.4 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -14,8 +14,17 @@ _change_log = """
             turn off this error checking temporarily            
     4.59.0.3
         NEW ttk scrollbars added to Multiline, Listbox, Table and Tree
-        Tree 
-
+        Tree element - added new horizontal scrollbar (also uses the new ttk scrollbar)
+        Parameters added to Mulitline, Listbox, Table and Tree to control the scrollbar styling 
+        NOTE - the positioning methods have not been tested for the new ttk scrollbars. They are being releaseed just to get some feedback on the look of these scrollbars
+    4.59.0.4
+        New Window screencapture that uses PIL if you've got PIL installed.
+            It does NOT require POL be installed in order to use PySimpleGUI.  ONLY when a capture is attempted does PySimpleGUI try to import PIL
+            It's the first step of building the larger "Catalog" feature
+            The alignment is not perfect and  the whole thing needs more work
+            The keystrokes used to perform the cpature, the locatoin the file is stored and the filename are al in the PySimpleGUI global settings
+            The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -199,6 +208,9 @@ import re
 import tempfile
 import ctypes
 import platform
+
+
+pil_import_attempted = pil_imported = False
 
 warnings.simplefilter('always', UserWarning)
 
@@ -755,6 +767,22 @@ POPUP_BUTTONS_ERROR = 3
 POPUP_BUTTONS_OK_CANCEL = 4
 POPUP_BUTTONS_OK = 0
 POPUP_BUTTONS_NO_BUTTONS = 5
+
+
+
+
+
+
+# -------------------------  tkinter key codes for bindings  ------------------------- #
+
+# The keycode that when pressed will take a snapshot of the current window
+DEFAULT_WINDOW_SNAPSHOT_KEY_CODE = None
+DEFAULT_WINDOW_SNAPSHOT_KEY = '--SCREENSHOT THIS WINDOW--'
+
+tkinter_keysyms = ('space', 'exclam', 'quotedbl', 'numbersign', 'dollar', 'percent', 'ampersand', 'quoteright', 'parenleft', 'parenright', 'asterisk', 'plus', 'comma', 'minus', 'period', 'slash', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'colon', 'semicolon', 'less', 'equal', 'greater', 'question', 'at', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'bracketleft', 'backslash', 'bracketright', 'asciicircum', 'underscore', 'quoteleft', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'braceleft', 'bar', 'braceright', 'asciitilde', 'nobreakspace', 'exclamdown', 'cent', 'sterling', 'currency', 'yen', 'brokenbar', 'section', 'diaeresis', 'copyright', 'ordfeminine', 'guillemotleft', 'notsign', 'hyphen', 'registered', 'macron', 'degree', 'plusminus', 'twosuperior', 'threesuperior', 'acute', 'mu', 'paragraph', 'periodcentered', 'cedilla', 'onesuperior', 'masculine', 'guillemotright', 'onequarter', 'onehalf', 'threequarters', 'questiondown', 'Agrave', 'Aacute', 'Acircumflex', 'Atilde', 'Adiaeresis', 'Aring', 'AE', 'Ccedilla', 'Egrave', 'Eacute', 'Ecircumflex', 'Ediaeresis', 'Igrave', 'Iacute', 'Icircumflex', 'Idiaeresis', 'Eth', 'Ntilde', 'Ograve', 'Oacute', 'Ocircumflex', 'Otilde', 'Odiaeresis', 'multiply', 'Ooblique', 'Ugrave', 'Uacute', 'Ucircumflex', 'Udiaeresis', 'Yacute', 'Thorn', 'ssharp', 'agrave', 'aacute', 'acircumflex', 'atilde', 'adiaeresis', 'aring', 'ae', 'ccedilla', 'egrave', 'eacute', 'ecircumflex', 'ediaeresis', 'igrave', 'iacute', 'icircumflex', 'idiaeresis', 'eth', 'ntilde', 'ograve', 'oacute', 'ocircumflex', 'otilde', 'odiaeresis', 'division', 'oslash', 'ugrave', 'uacute', 'ucircumflex', 'udiaeresis', 'yacute', 'thorn', 'ydiaeresis', 'Aogonek', 'breve', 'Lstroke', 'Lcaron', 'Sacute', 'Scaron', 'Scedilla', 'Tcaron', 'Zacute', 'Zcaron', 'Zabovedot', 'aogonek', 'ogonek', 'lstroke', 'lcaron', 'sacute', 'caron', 'scaron', 'scedilla', 'tcaron', 'zacute', 'doubleacute', 'zcaron', 'zabovedot', 'Racute', 'Abreve', 'Cacute', 'Ccaron', 'Eogonek', 'Ecaron', 'Dcaron', 'Nacute', 'Ncaron', 'Odoubleacute', 'Rcaron', 'Uring', 'Udoubleacute', 'Tcedilla', 'racute', 'abreve', 'cacute', 'ccaron', 'eogonek', 'ecaron', 'dcaron', 'nacute', 'ncaron', 'odoubleacute', 'rcaron', 'uring', 'udoubleacute', 'tcedilla', 'abovedot', 'Hstroke', 'Hcircumflex', 'Iabovedot', 'Gbreve', 'Jcircumflex', 'hstroke', 'hcircumflex', 'idotless', 'gbreve', 'jcircumflex', 'Cabovedot', 'Ccircumflex', 'Gabovedot', 'Gcircumflex', 'Ubreve', 'Scircumflex', 'cabovedot', 'ccircumflex', 'gabovedot', 'gcircumflex', 'ubreve', 'scircumflex', 'kappa', 'Rcedilla', 'Itilde', 'Lcedilla', 'Emacron', 'Gcedilla', 'Tslash', 'rcedilla', 'itilde', 'lcedilla', 'emacron', 'gacute', 'tslash', 'ENG', 'eng', 'Amacron', 'Iogonek', 'Eabovedot', 'Imacron', 'Ncedilla', 'Omacron', 'Kcedilla', 'Uogonek', 'Utilde', 'Umacron', 'amacron', 'iogonek', 'eabovedot', 'imacron', 'ncedilla', 'omacron', 'kcedilla', 'uogonek', 'utilde', 'umacron', 'overline', 'kana_fullstop', 'kana_openingbracket', 'kana_closingbracket', 'kana_comma', 'kana_middledot', 'kana_WO', 'kana_a', 'kana_i', 'kana_u', 'kana_e', 'kana_o', 'kana_ya', 'kana_yu', 'kana_yo', 'kana_tu', 'prolongedsound', 'kana_A', 'kana_I', 'kana_U', 'kana_E', 'kana_O', 'kana_KA', 'kana_KI', 'kana_KU', 'kana_KE', 'kana_KO', 'kana_SA', 'kana_SHI', 'kana_SU', 'kana_SE', 'kana_SO', 'kana_TA', 'kana_TI', 'kana_TU', 'kana_TE', 'kana_TO', 'kana_NA', 'kana_NI', 'kana_NU', 'kana_NE', 'kana_NO', 'kana_HA', 'kana_HI', 'kana_HU', 'kana_HE', 'kana_HO', 'kana_MA', 'kana_MI', 'kana_MU', 'kana_ME', 'kana_MO', 'kana_YA', 'kana_YU', 'kana_YO', 'kana_RA', 'kana_RI', 'kana_RU', 'kana_RE', 'kana_RO', 'kana_WA', 'kana_N', 'voicedsound', 'semivoicedsound', 'Arabic_comma', 'Arabic_semicolon', 'Arabic_question_mark', 'Arabic_hamza', 'Arabic_maddaonalef', 'Arabic_hamzaonalef', 'Arabic_hamzaonwaw', 'Arabic_hamzaunderalef', 'Arabic_hamzaonyeh', 'Arabic_alef', 'Arabic_beh', 'Arabic_tehmarbuta', 'Arabic_teh', 'Arabic_theh', 'Arabic_jeem', 'Arabic_hah', 'Arabic_khah', 'Arabic_dal', 'Arabic_thal', 'Arabic_ra', 'Arabic_zain', 'Arabic_seen', 'Arabic_sheen', 'Arabic_sad', 'Arabic_dad', 'Arabic_tah', 'Arabic_zah', 'Arabic_ain', 'Arabic_ghain', 'Arabic_tatweel', 'Arabic_feh', 'Arabic_qaf', 'Arabic_kaf', 'Arabic_lam', 'Arabic_meem', 'Arabic_noon', 'Arabic_heh', 'Arabic_waw', 'Arabic_alefmaksura', 'Arabic_yeh', 'Arabic_fathatan', 'Arabic_dammatan', 'Arabic_kasratan', 'Arabic_fatha', 'Arabic_damma', 'Arabic_kasra', 'Arabic_shadda', 'Arabic_sukun', 'Serbian_dje', 'Macedonia_gje', 'Cyrillic_io', 'Ukranian_je', 'Macedonia_dse', 'Ukranian_i', 'Ukranian_yi', 'Serbian_je', 'Serbian_lje', 'Serbian_nje', 'Serbian_tshe', 'Macedonia_kje', 'Byelorussian_shortu', 'Serbian_dze', 'numerosign', 'Serbian_DJE', 'Macedonia_GJE', 'Cyrillic_IO', 'Ukranian_JE', 'Macedonia_DSE', 'Ukranian_I', 'Ukranian_YI', 'Serbian_JE', 'Serbian_LJE', 'Serbian_NJE', 'Serbian_TSHE', 'Macedonia_KJE', 'Byelorussian_SHORTU', 'Serbian_DZE', 'Cyrillic_yu', 'Cyrillic_a', 'Cyrillic_be', 'Cyrillic_tse', 'Cyrillic_de', 'Cyrillic_ie', 'Cyrillic_ef', 'Cyrillic_ghe', 'Cyrillic_ha', 'Cyrillic_i', 'Cyrillic_shorti', 'Cyrillic_ka', 'Cyrillic_el', 'Cyrillic_em', 'Cyrillic_en', 'Cyrillic_o', 'Cyrillic_pe', 'Cyrillic_ya', 'Cyrillic_er', 'Cyrillic_es', 'Cyrillic_te', 'Cyrillic_u', 'Cyrillic_zhe', 'Cyrillic_ve', 'Cyrillic_softsign', 'Cyrillic_yeru', 'Cyrillic_ze', 'Cyrillic_sha', 'Cyrillic_e', 'Cyrillic_shcha', 'Cyrillic_che', 'Cyrillic_hardsign', 'Cyrillic_YU', 'Cyrillic_A', 'Cyrillic_BE', 'Cyrillic_TSE', 'Cyrillic_DE', 'Cyrillic_IE', 'Cyrillic_EF', 'Cyrillic_GHE', 'Cyrillic_HA', 'Cyrillic_I', 'Cyrillic_SHORTI', 'Cyrillic_KA', 'Cyrillic_EL', 'Cyrillic_EM', 'Cyrillic_EN', 'Cyrillic_O', 'Cyrillic_PE', 'Cyrillic_YA', 'Cyrillic_ER', 'Cyrillic_ES', 'Cyrillic_TE', 'Cyrillic_U', 'Cyrillic_ZHE', 'Cyrillic_VE', 'Cyrillic_SOFTSIGN', 'Cyrillic_YERU', 'Cyrillic_ZE', 'Cyrillic_SHA', 'Cyrillic_E', 'Cyrillic_SHCHA', 'Cyrillic_CHE', 'Cyrillic_HARDSIGN', 'Greek_ALPHAaccent', 'Greek_EPSILONaccent', 'Greek_ETAaccent', 'Greek_IOTAaccent', 'Greek_IOTAdiaeresis', 'Greek_IOTAaccentdiaeresis', 'Greek_OMICRONaccent', 'Greek_UPSILONaccent', 'Greek_UPSILONdieresis', 'Greek_UPSILONaccentdieresis', 'Greek_OMEGAaccent', 'Greek_alphaaccent', 'Greek_epsilonaccent', 'Greek_etaaccent', 'Greek_iotaaccent', 'Greek_iotadieresis', 'Greek_iotaaccentdieresis', 'Greek_omicronaccent', 'Greek_upsilonaccent', 'Greek_upsilondieresis', 'Greek_upsilonaccentdieresis', 'Greek_omegaaccent', 'Greek_ALPHA', 'Greek_BETA', 'Greek_GAMMA', 'Greek_DELTA', 'Greek_EPSILON', 'Greek_ZETA', 'Greek_ETA', 'Greek_THETA', 'Greek_IOTA', 'Greek_KAPPA', 'Greek_LAMBDA', 'Greek_MU', 'Greek_NU', 'Greek_XI', 'Greek_OMICRON', 'Greek_PI', 'Greek_RHO', 'Greek_SIGMA', 'Greek_TAU', 'Greek_UPSILON', 'Greek_PHI', 'Greek_CHI', 'Greek_PSI', 'Greek_OMEGA', 'Greek_alpha', 'Greek_beta', 'Greek_gamma', 'Greek_delta', 'Greek_epsilon', 'Greek_zeta', 'Greek_eta', 'Greek_theta', 'Greek_iota', 'Greek_kappa', 'Greek_lambda', 'Greek_mu', 'Greek_nu', 'Greek_xi', 'Greek_omicron', 'Greek_pi', 'Greek_rho', 'Greek_sigma', 'Greek_finalsmallsigma', 'Greek_tau', 'Greek_upsilon', 'Greek_phi', 'Greek_chi', 'Greek_psi', 'Greek_omega', 'leftradical', 'topleftradical', 'horizconnector', 'topintegral', 'botintegral', 'vertconnector', 'topleftsqbracket', 'botleftsqbracket', 'toprightsqbracket', 'botrightsqbracket', 'topleftparens', 'botleftparens', 'toprightparens', 'botrightparens', 'leftmiddlecurlybrace', 'rightmiddlecurlybrace', 'topleftsummation', 'botleftsummation', 'topvertsummationconnector', 'botvertsummationconnector', 'toprightsummation', 'botrightsummation', 'rightmiddlesummation', 'lessthanequal', 'notequal', 'greaterthanequal', 'integral', 'therefore', 'variation', 'infinity', 'nabla', 'approximate', 'similarequal', 'ifonlyif', 'implies', 'identical', 'radical', 'includedin', 'includes', 'intersection', 'union', 'logicaland', 'logicalor', 'partialderivative', 'function', 'leftarrow', 'uparrow', 'rightarrow', 'downarrow', 'blank', 'soliddiamond', 'checkerboard', 'ht', 'ff', 'cr', 'lf', 'nl', 'vt', 'lowrightcorner', 'uprightcorner', 'upleftcorner', 'lowleftcorner', 'crossinglines', 'horizlinescan1', 'horizlinescan3', 'horizlinescan5', 'horizlinescan7', 'horizlinescan9', 'leftt', 'rightt', 'bott', 'topt', 'vertbar', 'emspace', 'enspace', 'em3space', 'em4space', 'digitspace', 'punctspace', 'thinspace', 'hairspace', 'emdash', 'endash', 'signifblank', 'ellipsis', 'doubbaselinedot', 'onethird', 'twothirds', 'onefifth', 'twofifths', 'threefifths', 'fourfifths', 'onesixth', 'fivesixths', 'careof', 'figdash', 'leftanglebracket', 'decimalpoint', 'rightanglebracket', 'marker', 'oneeighth', 'threeeighths', 'fiveeighths', 'seveneighths', 'trademark', 'signaturemark', 'trademarkincircle', 'leftopentriangle', 'rightopentriangle', 'emopencircle', 'emopenrectangle', 'leftsinglequotemark', 'rightsinglequotemark', 'leftdoublequotemark', 'rightdoublequotemark', 'prescription', 'minutes', 'seconds', 'latincross', 'hexagram', 'filledrectbullet', 'filledlefttribullet', 'filledrighttribullet', 'emfilledcircle', 'emfilledrect', 'enopencircbullet', 'enopensquarebullet', 'openrectbullet', 'opentribulletup', 'opentribulletdown', 'openstar', 'enfilledcircbullet', 'enfilledsqbullet', 'filledtribulletup', 'filledtribulletdown', 'leftpointer', 'rightpointer', 'club', 'diamond', 'heart', 'maltesecross', 'dagger', 'doubledagger', 'checkmark', 'ballotcross', 'musicalsharp', 'musicalflat', 'malesymbol', 'femalesymbol', 'telephone', 'telephonerecorder', 'phonographcopyright', 'caret', 'singlelowquotemark', 'doublelowquotemark', 'cursor', 'leftcaret', 'rightcaret', 'downcaret', 'upcaret', 'overbar', 'downtack', 'upshoe', 'downstile', 'underbar', 'jot', 'quad', 'uptack', 'circle', 'upstile', 'downshoe', 'rightshoe', 'leftshoe', 'lefttack', 'righttack', 'hebrew_aleph', 'hebrew_beth', 'hebrew_gimmel', 'hebrew_daleth', 'hebrew_he', 'hebrew_waw', 'hebrew_zayin', 'hebrew_het', 'hebrew_teth', 'hebrew_yod', 'hebrew_finalkaph', 'hebrew_kaph', 'hebrew_lamed', 'hebrew_finalmem', 'hebrew_mem', 'hebrew_finalnun', 'hebrew_nun', 'hebrew_samekh', 'hebrew_ayin', 'hebrew_finalpe', 'hebrew_pe', 'hebrew_finalzadi', 'hebrew_zadi', 'hebrew_kuf', 'hebrew_resh', 'hebrew_shin', 'hebrew_taf', 'BackSpace', 'Tab', 'Linefeed', 'Clear', 'Return', 'Pause', 'Scroll_Lock', 'Sys_Req', 'Escape', 'Multi_key', 'Kanji', 'Home', 'Left', 'Up', 'Right', 'Down', 'Prior', 'Next', 'End', 'Begin', 'Win_L', 'Win_R', 'App', 'Select', 'Print', 'Execute', 'Insert', 'Undo', 'Redo', 'Menu', 'Find', 'Cancel', 'Help', 'Break', 'Hebrew_switch', 'Num_Lock', 'KP_Space', 'KP_Tab', 'KP_Enter', 'KP_F1', 'KP_F2', 'KP_F3', 'KP_F4', 'KP_Multiply', 'KP_Add', 'KP_Separator', 'KP_Subtract', 'KP_Decimal', 'KP_Divide', 'KP_0', 'KP_1', 'KP_2', 'KP_3', 'KP_4', 'KP_5', 'KP_6', 'KP_7', 'KP_8', 'KP_9', 'KP_Equal', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'F33', 'R14', 'R15', 'Shift_L', 'Shift_R', 'Control_L', 'Control_R', 'Caps_Lock', 'Shift_Lock', 'Meta_L', 'Meta_R', 'Alt_L', 'Alt_R', 'Super_L', 'Super_R', 'Hyper_L', 'Hyper_R', 'Delete')
+
+
+
 
 
 # ------------------------------------------------------------------------- #
@@ -9964,6 +9992,9 @@ class Window:
             except:
                 break  # wasn't a calendar button for sure
 
+        if results is not None:
+            if results[0] == DEFAULT_WINDOW_SNAPSHOT_KEY:
+                save_window_to_disk(self)
         if close:
             self.close()
 
@@ -16602,6 +16633,13 @@ def StartupTK(window):
         root.bind("<Button-4>", window._MouseWheelCallback)
         root.bind("<Button-5>", window._MouseWheelCallback)
 
+    DEFAULT_WINDOW_SNAPSHOT_KEY_CODE = main_global_get_screen_snapshot_symcode()
+
+    if DEFAULT_WINDOW_SNAPSHOT_KEY_CODE:
+        # print('**** BINDING THE SNAPSHOT!', DEFAULT_WINDOW_SNAPSHOT_KEY_CODE, DEFAULT_WINDOW_SNAPSHOT_KEY)
+        window.bind(DEFAULT_WINDOW_SNAPSHOT_KEY_CODE, DEFAULT_WINDOW_SNAPSHOT_KEY, propagate=False)
+        # window.bind('<Win_L><F12>', DEFAULT_WINDOW_SNAPSHOT_KEY, )
+
     if window.NoTitleBar:
         window.TKroot.focus_force()
 
@@ -17214,7 +17252,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     colors -(str, str) or str.  A combined text/background color definition in a single parameter
 
     There are also "aliases" for text_color, background_color and colors (t, b, c)
-    t - An alias for color of the text (makes for shorter calls)
+     t - An alias for color of the text (makes for shorter calls)
     b - An alias for the background_color parameter
     c - (str, str) - "shorthand" way of specifying color. (foreground, backgrouned)
     c - str - can also be a string of the format "foreground on background"  ("white on red")
@@ -22703,7 +22741,102 @@ RED_X_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAQ5ElEQVR4nO1ca3S
 GREEN_CHECK_BASE64 = b'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'
 
 
-# ==========================================================================#
+# =========================================================================#
+# MP""""""`MM                                                                dP                  dP
+# M  mmmmm..M                                                                88                  88
+# M.      `YM .d8888b. 88d888b. .d8888b. .d8888b. .d8888b. 88d888b. .d8888b. 88d888b. .d8888b. d8888P
+# MMMMMMM.  M 88'  `"" 88'  `88 88ooood8 88ooood8 88ooood8 88'  `88 Y8ooooo. 88'  `88 88'  `88   88
+# M. .MMM'  M 88.  ... 88       88.  ... 88.  ... 88.  ... 88    88       88 88    88 88.  .88   88
+# Mb.     .dM `88888P' dP       `88888P' `88888P' `88888P' dP    dP `88888P' dP    dP `88888P'   dP
+# MMMMMMMMMMM
+#
+# M"""""`'"""`YM                   oo
+# M  mm.  mm.  M
+# M  MMM  MMM  M .d8888b. .d8888b. dP .d8888b.
+# M  MMM  MMM  M 88'  `88 88'  `88 88 88'  `""
+# M  MMM  MMM  M 88.  .88 88.  .88 88 88.  ...
+# M  MMM  MMM  M `88888P8 `8888P88 dP `88888P'
+# MMMMMMMMMMMMMM               .88
+#                          d8888P
+# M#"""""""'M                    oo                      M""MMMMM""MM
+# ##  mmmm. `M                                           M  MMMMM  MM
+# #'        .M .d8888b. .d8888b. dP 88d888b. .d8888b.    M         `M .d8888b. 88d888b. .d8888b.
+# M#  MMMb.'YM 88ooood8 88'  `88 88 88'  `88 Y8ooooo.    M  MMMMM  MM 88ooood8 88'  `88 88ooood8
+# M#  MMMM'  M 88.  ... 88.  .88 88 88    88       88    M  MMMMM  MM 88.  ... 88       88.  ...
+# M#       .;M `88888P' `8888P88 dP dP    dP `88888P'    M  MMMMM  MM `88888P' dP       `88888P'
+# M#########M                .88                         MMMMMMMMMMMM
+#                        d8888P
+# =========================================================================#
+
+
+def _import_pil():
+    """
+    Remain calm!  No one panic!
+    PIL is NOT required for PySimpleGUI to operate!!!
+    It's being used IF and only IF it's already installed.
+    And it's only being imported when the screen captuure command has been attempted
+
+    :return:
+    """
+
+
+def save_window_to_disk(window):
+    """
+    Saves an image of the PySimpleGUI window provided into the filename provided
+
+    :param window:          The window to save a screencapture of
+    :type window:           (sg.Window)
+    :param filename:        The name of the file to output the scaed screengrab to. The entension determines the file type
+    :type filename:         (str)
+    :return:                A PIL ImageGrab object that can be saved or manipulated
+    :rtype:                 (Image | Any)
+    """
+    global pil_import_attempted, pil_imported
+
+    if not pil_import_attempted:
+        try:
+            import PIL
+            from PIL import ImageGrab
+            from PIL import Image
+            pil_imported = True
+            pil_import_attempted = True
+        except:
+            pil_imported = False
+            pil_import_attempted = True
+            print('FAILED TO IMPORT PIL!')
+    try:
+        # Get location of window to save
+        pos = window.current_location()
+        # Add 7 pixels to the X position to correct the location
+        pos = (pos[0], pos[1])
+        # Get size of wiondow
+        size = window.current_size_accurate()
+        # Get size of the titlebar
+        titlebar_height = window.TKroot.winfo_rooty()-window.TKroot.winfo_y()
+        # Add titlebar to size of window so that titlebar and window will be saved
+        size = (size[0], size[1]+titlebar_height)
+        # Make the "Bounding rectangle" used by PLK to do the screen grap "operation
+        rect = (pos[0], pos[1], pos[0]+size[0], pos[1]+size[1])
+        # Grab the image
+        grab = ImageGrab.grab(bbox=rect)
+        # Save the grabbed image to disk
+    except Exception as e:
+        print(e)
+    # return grab
+
+
+    folder = pysimplegui_user_settings.get('-screenshots folder-', '')
+    filename = pysimplegui_user_settings.get('-screenshots filename-', '')
+    full_filename = os.path.join(folder, filename)
+    if full_filename:
+        try:
+            grab.save(full_filename)
+        except Exception as e:
+            popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
+    else:
+        popup_error_with_traceback('Screen capture failure', 'You have attempted a screen capture but have not set up a good filename to save to')
+
+# =========================================================================#
 
 # MP""""""`MM   dP                       dP               .8888b
 # M  mmmmm..M   88                       88               88   "
@@ -23477,6 +23610,26 @@ def main_get_debug_data(suppress_popup=False):
 # ..######..########....##.......##.......##....####.##....##..######....######.
 
 
+def main_global_get_screen_snapshot_symcode():
+    pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
+
+    settings = pysimplegui_user_settings.read()
+
+    screenshot_keysym = ''
+    for i in range(4):
+        keysym = settings.get(json.dumps(('-snapshot keysym-', i)), '')
+        if keysym:
+            screenshot_keysym += f"<{keysym}>"
+
+    screenshot_keysym_manual = settings.get('-snapshot keysym manual-', '')
+
+    # print('BINDING INFO!', screenshot_keysym, screenshot_keysym_manual)
+    if screenshot_keysym_manual:
+        return screenshot_keysym_manual
+    elif screenshot_keysym:
+        return screenshot_keysym
+    return ''
+
 def main_global_pysimplegui_settings_erase():
     """
     *** WARNING ***
@@ -23496,6 +23649,9 @@ def main_global_pysimplegui_settings():
     :return: True if settings were changed
     :rtype:  (bool)
     """
+    global DEFAULT_WINDOW_SNAPSHOT_KEY_CODE
+
+    key_choices = tuple(sorted(tkinter_keysyms))
 
     settings = pysimplegui_user_settings.read()
 
@@ -23533,29 +23689,51 @@ def main_global_pysimplegui_settings():
                     'This setting allows you to set the theme that PySimpleGUI will use for ALL of your programs that\n' + \
                     'do not set a theme specifically.'
 
-    layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
+    layout = [[T('Global PySimpleGUI Settings', text_color=theme_button_color()[0], background_color=theme_button_color()[1],font='_ 18', expand_x=True, justification='c')]]
 
-              [T('Python Interpreter (normally leave blank)', font='_ 16')],
-              [T('Command to run a python program:'), In(settings.get('-python command-', ''), k='-PYTHON COMMAND-', enable_events=True), FileBrowse()],
-              [T('Editor Settings', font='_ 16')],
-              [T('Command to invoke your editor:'), In(settings.get('-editor program-', ''), k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
+    interpreter_frame = Frame('Python Interpreter (normally leave blank)',
+              [[T('Command to run a python program:'), In(settings.get('-python command-', ''), k='-PYTHON COMMAND-', enable_events=True), FileBrowse()]], font='_ 16', expand_x=True)
+
+    layout += [[interpreter_frame]]
+
+    editor_frame = Frame('Editor Settings',
+              [[T('Command to invoke your editor:'), In(settings.get('-editor program-', ''), k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
               [T('String to launch your editor to edit at a particular line #.')],
               [T('Use tags <editor> <file> <line> to specify the string')],
               [T('that will be executed to edit python files using your editor')],
               [T('Edit Format String (hover for tooltip)', tooltip=tooltip),
-               In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)],
-              [T('File Explorer Program', font='_ 16', tooltip=tooltip_file_explorer)],
-              [In(settings.get('-explorer program-', ''), k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)],
-              [T('Theme', font='_ 16')],
-              [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
+               In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)]])
+
+    layout += [[editor_frame]]
+
+    explorer_frame = Frame('Explorder Program',
+              [[In(settings.get('-explorer program-', ''), k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)]], font='_ 16', expand_x=True,  tooltip=tooltip_file_explorer)
+
+    layout += [[explorer_frame]]
+
+
+    snapshots_frame = Frame('Window Snapshots',
+              [[Combo(('',)+key_choices, default_value=settings.get(json.dumps(('-snapshot keysym-', i)), ''), readonly=True, k=('-SNAPSHOT KEYSYM-', i), s=(None, 30)) for i in range(4)],
+              [T('Manually Entered Bind String:'), Input(settings.get('-snapshot keysym manual-', ''),k='-SNAPSHOT KEYSYM MANUAL-')],
+              [T('Folder to store screenshots:'), Push(), In(settings.get('-screenshots folder-', ''), k='-SCREENSHOTS FOLDER-'), FolderBrowse()],
+              [T('Screenshots Filename or Prefix:'), Push(), In(settings.get('-screenshots filename-', ''), k='-SCREENSHOTS FILENAME-'), FileBrowse()],
+              [Checkbox('Auto-number Images', k='-SCREENSHOTS AUTONUMBER-')]], font='_ 16', expand_x=True,)
+
+    layout += [[snapshots_frame]]
+
+
+    theme_frame = Frame('Theme',
+              [[T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
               [T('Default Theme For All Programs:'),
-               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
+               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)]], font='_ 16', expand_x=True)
+
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
-              [B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')],
-              ]
+    layout += [[theme_frame]]
+    layout += [[B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')]]
 
     window = Window('Settings', layout, keep_on_top=True, modal=True)
+
     while True:
         event, values = window.read()
         if event in ('Cancel', WIN_CLOSED):
@@ -23567,9 +23745,25 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-editor format string-', values['-EDITOR FORMAT-'])
             pysimplegui_user_settings.set('-python command-', values['-PYTHON COMMAND-'])
             pysimplegui_user_settings.set('-theme-', new_theme)
+
+            # Snapshots portion
+            screenshot_keysym_manual = values['-SNAPSHOT KEYSYM MANUAL-']
+            pysimplegui_user_settings.set('-snapshot keysym manual-', values['-SNAPSHOT KEYSYM MANUAL-'])
+            screenshot_keysym = ''
+            for i in range(4):
+                pysimplegui_user_settings.set(json.dumps(('-snapshot keysym-',i)), values[('-SNAPSHOT KEYSYM-', i)])
+                if values[('-SNAPSHOT KEYSYM-', i)]:
+                    screenshot_keysym += f"<{values[('-SNAPSHOT KEYSYM-', i)]}>"
+            if screenshot_keysym_manual:
+                DEFAULT_WINDOW_SNAPSHOT_KEY_CODE = screenshot_keysym_manual
+            elif screenshot_keysym:
+                DEFAULT_WINDOW_SNAPSHOT_KEY_CODE = screenshot_keysym
+
+            pysimplegui_user_settings.set('-screenshots folder-', values['-SCREENSHOTS FOLDER-'])
+            pysimplegui_user_settings.set('-screenshots filename-', values['-SCREENSHOTS FILENAME-'])
+
             theme(new_theme)
             window.close()
-            return True
         elif event == '-EDITOR PROGRAM-':
             for key in editor_format_dict.keys():
                 if key in values['-EDITOR PROGRAM-'].lower():
@@ -24198,6 +24392,7 @@ if running_windows():
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except Exception as e:
         print('Error using the taskbar icon patch', e)
+
 
 _read_mac_global_settings()
 # if running_mac():
