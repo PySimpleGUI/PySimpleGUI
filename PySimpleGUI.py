@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.4 Released 5-Apr-2022"
+version = __version__ = "4.59.0.5 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -24,6 +24,8 @@ _change_log = """
             The alignment is not perfect and  the whole thing needs more work
             The keystrokes used to perform the cpature, the locatoin the file is stored and the filename are al in the PySimpleGUI global settings
             The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
+    4.59.0.5
+        Fixed the font and sizing of the "Editor Settings" section
         
     """
 
@@ -23702,7 +23704,7 @@ def main_global_pysimplegui_settings():
               [T('Use tags <editor> <file> <line> to specify the string')],
               [T('that will be executed to edit python files using your editor')],
               [T('Edit Format String (hover for tooltip)', tooltip=tooltip),
-               In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)]])
+               In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)]], font='_ 16', expand_x=True)
 
     layout += [[editor_frame]]
 
