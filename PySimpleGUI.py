@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.7 Released 5-Apr-2022"
+version = __version__ = "4.59.0.8 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -19,18 +19,28 @@ _change_log = """
         NOTE - the positioning methods have not been tested for the new ttk scrollbars. They are being releaseed just to get some feedback on the look of these scrollbars
     4.59.0.4
         New Window screencapture that uses PIL if you've got PIL installed.
-            It does NOT require POL be installed in order to use PySimpleGUI.  ONLY when a capture is attempted does PySimpleGUI try to import PIL
+            It does NOT require PIL be installed in order to use PySimpleGUI.  ONLY when a capture is attempted does PySimpleGUI try to import PIL
             It's the first step of building the larger "Catalog" feature
             The alignment is not perfect and  the whole thing needs more work
             The keystrokes used to perform the cpature, the locatoin the file is stored and the filename are al in the PySimpleGUI global settings
             The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
     4.59.0.5
         Fixed the font and sizing of the "Editor Settings" section
+        Niocer abnner at the top of the window
     4.59.0.6
         Added exception handing to the bind methods
     4.59.0.7
         More exception handling
-        
+    4.59.0.8
+        New Debug Print capability - The "Pause/Resume" option enables printing to be paused.  This will block the caller
+        Added ability to control use of Custom Titlebar from the system settings. Turn on Customer Titlebar setting in the
+            Global System Settings and that will cause all windows to automatically use a custom titlebar and custom menubar
+            New theme call to determine if a custom titlebar shoue be used - theme_use_custom_titlebar returns True if should use one
+        Main test harness 
+            Fixed freeing up the graphic lines being drawn as they scrolled off the screen.  Now as each lines if scrolled off the screen, tit is feed up
+            Window is not modal so can interact the debug Print window
+            Grab anywhere turned off - Remember can always use CONTROL + LEFT CLICK & DRAG to move ANY PySimpleGUI as if grab anywhere is enabled
+    
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -618,7 +628,7 @@ MENU_RIGHT_CLICK_DISABLED = ['', []]
 _MENU_RIGHT_CLICK_TABGROUP_DEFAULT = ['TABGROUP DEFAULT', []]
 ENABLE_TK_WINDOWS = False
 
-USE_CUSTOM_TITLEBAR = False
+USE_CUSTOM_TITLEBAR = None
 CUSTOM_TITLEBAR_BACKGROUND_COLOR = None
 CUSTOM_TITLEBAR_TEXT_COLOR = None
 CUSTOM_TITLEBAR_ICON = None
@@ -9498,7 +9508,7 @@ class Window:
         self.finalize_in_progress = False
         self.close_destroys_window = not enable_close_attempted_event if enable_close_attempted_event is not None else None
         self.override_custom_titlebar = False
-        self.use_custom_titlebar = use_custom_titlebar or USE_CUSTOM_TITLEBAR
+        self.use_custom_titlebar = use_custom_titlebar or theme_use_custom_titlebar()
         self.titlebar_background_color = titlebar_background_color
         self.titlebar_text_color = titlebar_text_color
         self.titlebar_font = titlebar_font
@@ -17075,7 +17085,7 @@ class _DebugWin():
             else:
                 self.quit_button = DummyButton('Quit', key='Quit')
             self.layout = [[self.output_element],
-                           [self.quit_button, Stretch()]]
+                           [pin(self.quit_button), B('Pause', key='-PAUSE-'), Stretch()]]
 
         self.layout[-1] += [Sizegrip()]
 
@@ -17126,9 +17136,24 @@ class _DebugWin():
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             self.quit_button.update(text='Quit')
 
-        event, values = self.window.read(timeout=timeout)
-        if event == WIN_CLOSED or (not blocking and event == 'Quit'):
-            self.Close()
+        paused = False
+        while True:
+            if event == WIN_CLOSED or (not blocking and event == 'Quit'):
+                paused = False
+                self.Close()
+                break
+            elif not paused and event == TIMEOUT_EVENT:
+                break
+            elif event == '-PAUSE-':
+                if paused:
+                    self.window['-PAUSE-'].update(text='Pause')
+                    self.quit_button.update(visible=True)
+                    break
+                paused = True
+                self.window['-PAUSE-'].update(text='Resume')
+                self.quit_button.update(visible=False)
+                timeout = None
+            event, values = self.window.read(timeout=timeout)
 
         SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = suppress
 
@@ -18473,6 +18498,13 @@ def theme_add_new(new_theme_name, new_theme_dict):
         LOOK_AND_FEEL_TABLE[new_theme_name] = new_theme_dict
     except Exception as e:
         print('Exception during adding new theme {}'.format(e))
+
+
+def theme_use_custom_titlebar():
+    if USE_CUSTOM_TITLEBAR is False:
+        return False
+
+    return USE_CUSTOM_TITLEBAR or pysimplegui_user_settings.get('-custom titlebar-', False)
 
 
 def theme_global(new_theme=None):
@@ -23747,7 +23779,8 @@ def main_global_pysimplegui_settings():
     theme_frame = Frame('Theme',
               [[T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
               [T('Default Theme For All Programs:'),
-               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)]], font='_ 16', expand_x=True)
+               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')]],
+                        font='_ 16', expand_x=True)
 
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
@@ -23766,6 +23799,7 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-explorer program-', values['-EXPLORER PROGRAM-'])
             pysimplegui_user_settings.set('-editor format string-', values['-EDITOR FORMAT-'])
             pysimplegui_user_settings.set('-python command-', values['-PYTHON COMMAND-'])
+            pysimplegui_user_settings.set('-custom titlebar-', values['-CUSTOM TITLEBAR-'])
             pysimplegui_user_settings.set('-theme-', new_theme)
 
             # Snapshots portion
@@ -23786,6 +23820,7 @@ def main_global_pysimplegui_settings():
 
             theme(new_theme)
             window.close()
+            return True
         elif event == '-EDITOR PROGRAM-':
             for key in editor_format_dict.keys():
                 if key in values['-EDITOR PROGRAM-'].lower():
@@ -24123,8 +24158,8 @@ def _create_main_window():
         [T('Popup tests... good idea!'),Image(EMOJI_BASE64_HAPPY_IDEA), Push(), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
         [T('Get popups too!'), Push(), B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
 
-
-    graph_elem = Graph((600, 250), (0, 0), (800, 300), key='+GRAPH+')
+    GRAPH_SIZE=(650, 250)
+    graph_elem = Graph(GRAPH_SIZE, (0, 0), GRAPH_SIZE, key='+GRAPH+')
 
     frame6 = [[graph_elem]]
 
@@ -24181,7 +24216,7 @@ def _create_main_window():
 
     layout = [[]]
 
-    if not USE_CUSTOM_TITLEBAR:
+    if not theme_use_custom_titlebar():
         layout += [[Menu(menu_def, key='-MENU-', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow', tearoff=True)]]
     else:
         layout += [[MenubarCustom(menu_def, key='-MENU-', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),
@@ -24200,8 +24235,9 @@ def _create_main_window():
                     element_justification='left',  # justify contents to the left
                     metadata='My window metadata',
                     finalize=True,
-                    grab_anywhere=True,
+                    # grab_anywhere=True,
                     enable_close_attempted_event=True,
+                    modal=False,
                     # ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
@@ -24225,11 +24261,12 @@ def main():
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
     """
     forced_modal = DEFAULT_MODAL_WINDOWS_FORCED
-    set_options(force_modal_windows=True)
+    # set_options(force_modal_windows=True)
     window = _create_main_window()
     set_options(keep_on_top=True)
     graph_elem = window['+GRAPH+']
     i = 0
+    graph_figures = []
     # Don't use the debug window
     # Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     # print(window.element_list())
@@ -24241,14 +24278,19 @@ def main():
             # Print(values)
         if event == WIN_CLOSED or event == WIN_CLOSE_ATTEMPTED_EVENT or event == 'Exit' or (event == '-BMENU-' and values['-BMENU-'] == 'Exit'):
             break
-        if i < 800:
-            graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
+        if i < graph_elem.CanvasSize[0]:
+            x = i % graph_elem.CanvasSize[0]
+            fig = graph_elem.draw_line((x, 0), (x, random.randint(0, graph_elem.CanvasSize[1])), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
+            graph_figures.append(fig)
         else:
-            graph_elem.Move(-1, 0)
-            graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
+            x = graph_elem.CanvasSize[0]
+            graph_elem.move(-1, 0)
+            fig = graph_elem.draw_line((x, 0), (x, random.randint(0, graph_elem.CanvasSize[1])), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
+            graph_figures.append(fig)
+            graph_elem.delete_figure(graph_figures[0])
+            del graph_figures[0]
         window['+PROGRESS+'].UpdateBar(i % 800)
         window.Element('-IMAGE-').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
-        i += 1
         if event == 'Button':
             window.Element('-TEXT1-').SetTooltip('NEW TEXT')
             window.Element('-MENU-').Update(visible=True)
