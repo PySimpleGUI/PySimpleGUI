@@ -7917,14 +7917,14 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :return: Text entered or None if window was closed
     """
 
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
+    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [CloseButton('Ok', size=(60, 20), bind_return_key=True), CloseButton('Cancel', size=(60, 20))]]
 
     _title = title if title is not None else message
 
     window = Window(title=_title, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, font=font,
                     location=location)
 
     button, values = window.Read()

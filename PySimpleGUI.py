@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.6 Released 5-Apr-2022"
+version = __version__ = "4.59.0.7 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -28,6 +28,8 @@ _change_log = """
         Fixed the font and sizing of the "Editor Settings" section
     4.59.0.6
         Added exception handing to the bind methods
+    4.59.0.7
+        More exception handling
         
     """
 
@@ -22820,6 +22822,7 @@ def save_window_to_disk(window):
             pil_imported = False
             pil_import_attempted = True
             print('FAILED TO IMPORT PIL!')
+            return
     try:
         # Get location of window to save
         pos = window.current_location()
@@ -22837,7 +22840,10 @@ def save_window_to_disk(window):
         grab = ImageGrab.grab(bbox=rect)
         # Save the grabbed image to disk
     except Exception as e:
-        print(e)
+        # print(e)
+        popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
+
+        return
     # return grab
 
 
@@ -23635,7 +23641,7 @@ def main_global_get_screen_snapshot_symcode():
     for i in range(4):
         keysym = settings.get(json.dumps(('-snapshot keysym-', i)), '')
         if keysym:
-            screenshot_keysym += f"<{keysym}>"
+            screenshot_keysym += "<{}>".format(keysym)
 
     screenshot_keysym_manual = settings.get('-snapshot keysym manual-', '')
 
@@ -23769,7 +23775,7 @@ def main_global_pysimplegui_settings():
             for i in range(4):
                 pysimplegui_user_settings.set(json.dumps(('-snapshot keysym-',i)), values[('-SNAPSHOT KEYSYM-', i)])
                 if values[('-SNAPSHOT KEYSYM-', i)]:
-                    screenshot_keysym += f"<{values[('-SNAPSHOT KEYSYM-', i)]}>"
+                    screenshot_keysym += "<{}>".format(values[('-SNAPSHOT KEYSYM-', i)])
             if screenshot_keysym_manual:
                 DEFAULT_WINDOW_SNAPSHOT_KEY_CODE = screenshot_keysym_manual
             elif screenshot_keysym:
