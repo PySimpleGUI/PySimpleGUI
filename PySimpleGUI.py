@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.8 Released 5-Apr-2022"
+version = __version__ = "4.59.0.9 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -40,7 +40,10 @@ _change_log = """
             Fixed freeing up the graphic lines being drawn as they scrolled off the screen.  Now as each lines if scrolled off the screen, tit is feed up
             Window is not modal so can interact the debug Print window
             Grab anywhere turned off - Remember can always use CONTROL + LEFT CLICK & DRAG to move ANY PySimpleGUI as if grab anywhere is enabled
-    
+    4.59.0.9
+        Made the save window as image into a Window method - Window.save_window_screenshot_to_disk
+        Show a popup message when a window save is performed using the keys specified in the system settings
+        Debug Print still has some problems so be warned for the time being... it's being worked on...
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9984,7 +9987,6 @@ class Window:
             Window._main_debug_window_build_needed = False
             _Debugger.debugger._build_main_debugger_window()
 
-
         # ensure called only 1 time through a single read cycle
         if not Window._read_call_from_debugger:
             _refresh_debugger()
@@ -9994,10 +9996,15 @@ class Window:
             if timeout is None or timeout > 3000:
                 timeout = 200
 
-        Window._root_running_mainloop = self.TKroot
 
         while True:
+            Window._root_running_mainloop = self.TKroot
             results = self._read(timeout=timeout, timeout_key=timeout_key)
+            if results is not None:
+                if results[0] == DEFAULT_WINDOW_SNAPSHOT_KEY:
+                    self.save_window_screenshot_to_disk()
+                    popup_quick_message('Saved window screenshot to disk', background_color='#1c1e23', text_color='white', keep_on_top=True, font='_ 30')
+                    continue
             # Post processing for Calendar Chooser Button
             try:
                 if results[0] == timeout_key:  # if a timeout, then not a calendar button
@@ -10015,9 +10022,7 @@ class Window:
             except:
                 break  # wasn't a calendar button for sure
 
-        if results is not None:
-            if results[0] == DEFAULT_WINDOW_SNAPSHOT_KEY:
-                save_window_to_disk(self)
+
         if close:
             self.close()
 
@@ -11480,6 +11485,67 @@ class Window:
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
 
+
+    def save_window_screenshot_to_disk(self):
+        """
+        Saves an image of the PySimpleGUI window provided into the filename provided
+
+        :return:                A PIL ImageGrab object that can be saved or manipulated
+        :rtype:                 (PIL.ImageGrab | None)
+        """
+        global pil_import_attempted, pil_imported, PIL, ImageGrab, Image
+
+        if not pil_import_attempted:
+            try:
+                import PIL as PIL
+                from PIL import ImageGrab
+                from PIL import Image
+                pil_imported = True
+                pil_import_attempted = True
+            except:
+                pil_imported = False
+                pil_import_attempted = True
+                print('FAILED TO IMPORT PIL!')
+                return None
+        try:
+            # Get location of window to save
+            pos = self.current_location()
+            # Add a little to the X direction if window has a titlebar
+            if not self.NoTitleBar:
+                pos = (pos[0]+7, pos[1])
+            # Get size of wiondow
+            size = self.current_size_accurate()
+            # Get size of the titlebar
+            titlebar_height = self.TKroot.winfo_rooty() - self.TKroot.winfo_y()
+            # Add titlebar to size of window so that titlebar and window will be saved
+            size = (size[0], size[1] + titlebar_height)
+            if not self.NoTitleBar:
+                size_adjustment = (2,1)
+            else:
+                size_adjustment = (0,0)
+            # Make the "Bounding rectangle" used by PLK to do the screen grap "operation
+            rect = (pos[0], pos[1], pos[0] + size[0]+size_adjustment[0], pos[1] + size[1]+size_adjustment[1])
+            # Grab the image
+            grab = ImageGrab.grab(bbox=rect)
+            # Save the grabbed image to disk
+        except Exception as e:
+            # print(e)
+            popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
+
+            return None
+        # return grab
+
+        folder = pysimplegui_user_settings.get('-screenshots folder-', '')
+        filename = pysimplegui_user_settings.get('-screenshots filename-', '')
+        full_filename = os.path.join(folder, filename)
+        if full_filename:
+            try:
+                grab.save(full_filename)
+            except Exception as e:
+                popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
+        else:
+            popup_error_with_traceback('Screen capture failure', 'You have attempted a screen capture but have not set up a good filename to save to')
+        return grab
 
 
     def perform_long_operation(self, func, end_key):
@@ -17136,13 +17202,13 @@ class _DebugWin():
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             self.quit_button.update(text='Quit')
 
-        paused = False
+        paused = None
         while True:
             if event == WIN_CLOSED or (not blocking and event == 'Quit'):
                 paused = False
                 self.Close()
                 break
-            elif not paused and event == TIMEOUT_EVENT:
+            elif not paused and event == TIMEOUT_EVENT and not blocking:
                 break
             elif event == '-PAUSE-':
                 if paused:
@@ -22819,76 +22885,6 @@ GREEN_CHECK_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAJV0lEQVR4n
 # =========================================================================#
 
 
-def _import_pil():
-    """
-    Remain calm!  No one panic!
-    PIL is NOT required for PySimpleGUI to operate!!!
-    It's being used IF and only IF it's already installed.
-    And it's only being imported when the screen captuure command has been attempted
-
-    :return:
-    """
-
-
-def save_window_to_disk(window):
-    """
-    Saves an image of the PySimpleGUI window provided into the filename provided
-
-    :param window:          The window to save a screencapture of
-    :type window:           (sg.Window)
-    :param filename:        The name of the file to output the scaed screengrab to. The entension determines the file type
-    :type filename:         (str)
-    :return:                A PIL ImageGrab object that can be saved or manipulated
-    :rtype:                 (Image | Any)
-    """
-    global pil_import_attempted, pil_imported
-
-    if not pil_import_attempted:
-        try:
-            import PIL
-            from PIL import ImageGrab
-            from PIL import Image
-            pil_imported = True
-            pil_import_attempted = True
-        except:
-            pil_imported = False
-            pil_import_attempted = True
-            print('FAILED TO IMPORT PIL!')
-            return
-    try:
-        # Get location of window to save
-        pos = window.current_location()
-        # Add 7 pixels to the X position to correct the location
-        pos = (pos[0], pos[1])
-        # Get size of wiondow
-        size = window.current_size_accurate()
-        # Get size of the titlebar
-        titlebar_height = window.TKroot.winfo_rooty()-window.TKroot.winfo_y()
-        # Add titlebar to size of window so that titlebar and window will be saved
-        size = (size[0], size[1]+titlebar_height)
-        # Make the "Bounding rectangle" used by PLK to do the screen grap "operation
-        rect = (pos[0], pos[1], pos[0]+size[0], pos[1]+size[1])
-        # Grab the image
-        grab = ImageGrab.grab(bbox=rect)
-        # Save the grabbed image to disk
-    except Exception as e:
-        # print(e)
-        popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
-
-        return
-    # return grab
-
-
-    folder = pysimplegui_user_settings.get('-screenshots folder-', '')
-    filename = pysimplegui_user_settings.get('-screenshots filename-', '')
-    full_filename = os.path.join(folder, filename)
-    if full_filename:
-        try:
-            grab.save(full_filename)
-        except Exception as e:
-            popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
-    else:
-        popup_error_with_traceback('Screen capture failure', 'You have attempted a screen capture but have not set up a good filename to save to')
 
 # =========================================================================#
 
