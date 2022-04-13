@@ -525,6 +525,7 @@ THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnati
 
 # The theme to use by default for all windows
 DEFAULT_TTK_THEME = THEME_DEFAULT
+ttk_theme_in_use = None
 TTK_THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 
 
@@ -4134,7 +4135,9 @@ class TKProgressBar():
 
         if orientation.lower().startswith('h'):
             s = ttk.Style()
-            s.theme_use(ttk_theme)
+            _change_ttk_theme(s, ttk_theme)
+
+            # s.theme_use(ttk_theme)
 
             # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Horizontal.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
@@ -4146,7 +4149,8 @@ class TKProgressBar():
             self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max, style=self.style_name, length=length, orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = ttk.Style()
-            s.theme_use(ttk_theme)
+            _change_ttk_theme(s, ttk_theme)
+            # s.theme_use(ttk_theme)
             # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Vertical.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
 
@@ -11486,10 +11490,11 @@ class Window:
         self.TKRightClickMenu.grab_release()
 
 
-    def save_window_screenshot_to_disk(self):
+    def save_window_screenshot_to_disk(self, filename=None):
         """
         Saves an image of the PySimpleGUI window provided into the filename provided
 
+        :param filename:        Optional filename to save screenshot to. If not included, the User Settinds are used to get the filename
         :return:                A PIL ImageGrab object that can be saved or manipulated
         :rtype:                 (PIL.ImageGrab | None)
         """
@@ -11534,10 +11539,12 @@ class Window:
 
             return None
         # return grab
-
-        folder = pysimplegui_user_settings.get('-screenshots folder-', '')
-        filename = pysimplegui_user_settings.get('-screenshots filename-', '')
-        full_filename = os.path.join(folder, filename)
+        if filename is None:
+            folder = pysimplegui_user_settings.get('-screenshots folder-', '')
+            filename = pysimplegui_user_settings.get('-screenshots filename-', '')
+            full_filename = os.path.join(folder, filename)
+        else:
+            full_filename = filename
         if full_filename:
             try:
                 grab.save(full_filename)
@@ -14280,6 +14287,19 @@ def _add_right_click_menu(element, toplevel_form):
             element.Widget.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
 
 
+def _change_ttk_theme(style, theme_name):
+    global ttk_theme_in_use
+
+    if theme_name in style.theme_names() and (ttk_theme_in_use != theme_name and ttk_theme_in_use is not None):
+        _error_popup_with_traceback('You are trying to change the TTK theme that has already been set',
+                                        'This is not a positive thing to do for your mood nor your application',
+                                        'Theme previously in use {}'.format(ttk_theme_in_use),
+                                        'New theme you are trying to set {}'.format(theme_name))
+        return False
+    style.theme_use(theme_name)
+    ttk_theme_in_use = theme_name
+    return True
+
 class Stylist:
 
     @staticmethod
@@ -14408,17 +14428,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _string_width_in_pixels(font, string):
         return tkinter.font.Font(font=font).measure(string)  # single character width
 
-    def _valid_theme(style, theme_name):
-        if theme_name in style.theme_names():
-            return True
-        _error_popup_with_traceback('Your Window has an invalid ttk theme specified',
-                                    'The traceback will show you the Window with the problem layout',
-                                    '** Invalid ttk theme specified {} **'.format(theme_name),
-                                    '\nValid choices include: {}'.format(style.theme_names()))
 
-        # print('** Invalid ttk theme specified {} **'.format(theme_name),
-        #       '\nValid choices include: {}'.format(style.theme_names()))
-        return False
+
+
+    # def _valid_theme(style, theme_name):
+    #     if theme_name in style.theme_names():
+    #         return True
+    #     _error_popup_with_traceback('Your Window has an invalid ttk theme specified',
+    #                                 'The traceback will show you the Window with the problem layout',
+    #                                 '** Invalid ttk theme specified {} **'.format(theme_name),
+    #                                 '\nValid choices include: {}'.format(style.theme_names()))
+    #
+    #     # print('** Invalid ttk theme specified {} **'.format(theme_name),
+    #     #       '\nValid choices include: {}'.format(style.theme_names()))
+    #     return False
 
 
     def _make_ttk_style_name(base_style, element):
@@ -14439,7 +14462,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         """
 
         style = ttk.Style()
-        style.theme_use(toplevel_form.TtkTheme)
+        _change_ttk_theme(style, toplevel_form.TtkTheme)
+        # style.theme_use(toplevel_form.TtkTheme)
         if orientation[0].lower() == 'v':
             orient = 'vertical'
             style_name = _make_ttk_style_name('.Vertical.TScrollbar', element)
@@ -14997,8 +15021,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + 'custombutton.TButton'
                 style_name = _make_ttk_style_name('.custombutton.TButton', element)
                 button_style = ttk.Style()
-                if _valid_theme(button_style, toplevel_form.TtkTheme):
-                    button_style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(button_style, toplevel_form.TtkTheme)
                 button_style.configure(style_name, font=font)
 
                 if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
@@ -15235,8 +15258,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 combostyle = ttk.Style()
                 element.ttk_style = combostyle
-                if _valid_theme(combostyle, toplevel_form.TtkTheme):
-                    combostyle.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(combostyle, toplevel_form.TtkTheme)
 
                 # Creates a unique name for each field element(Sure there is a better way to do this)
                 unique_field = _make_ttk_style_name('.TCombobox.field', element)
@@ -15930,7 +15952,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # custom_style = str(element.Key) + 'customtab.TNotebook'
                 custom_style = _make_ttk_style_name('.customtab.TNotebook', element)
                 style = ttk.Style()
-                style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(style, toplevel_form.TtkTheme)
+                # style.theme_use(toplevel_form.TtkTheme)
                 if element.TabLocation is not None:
                     position_dict = {'left': 'w', 'right': 'e', 'top': 'n', 'bottom': 's', 'lefttop': 'wn',
                                      'leftbottom': 'ws', 'righttop': 'en', 'rightbottom': 'es', 'bottomleft': 'sw',
@@ -16110,7 +16133,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 table_style = ttk.Style()
                 element.ttk_style = table_style
 
-                table_style.theme_use(toplevel_form.TtkTheme)
+                # table_style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(table_style, toplevel_form.TtkTheme)
+
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor, )
                     if element.SelectedRowColors[1] is not None:
@@ -16297,7 +16322,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # style_name = str(element.Key) + '.Treeview'
                 style_name = _make_ttk_style_name('.Treeview', element)
                 tree_style = ttk.Style()
-                tree_style.theme_use(toplevel_form.TtkTheme)
+                # tree_style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(tree_style, toplevel_form.TtkTheme)
+
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
                     if element.SelectedRowColors[1] is not None:
@@ -16395,7 +16422,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # style_name = str(element.Key) + "Line.TSeparator"
                 style_name = _make_ttk_style_name(".Line.TSeparator", element)
                 style = ttk.Style()
-                style.theme_use(toplevel_form.TtkTheme)
+                # style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(style, toplevel_form.TtkTheme)
+
                 if element.color is not None:
                     style.configure(style_name, background=element.color)
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
@@ -16412,7 +16441,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Sizegrip
                 style_name = "Sizegrip.TSizegrip"
                 style = ttk.Style()
-                style.theme_use(toplevel_form.TtkTheme)
+                # style.theme_use(toplevel_form.TtkTheme)
+                _change_ttk_theme(style, toplevel_form.TtkTheme)
+
                 size_grip = element.Widget = ttk.Sizegrip(tk_row_frame)
                 toplevel_form.sizegrip_widget = size_grip
                 # if no size is specified, then use the background color for the window
@@ -24136,11 +24167,13 @@ def _create_main_window():
 
     frame5 = [[
         Table(values=matrix, headings=matrix[0],
-              auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',  header_border_width=4, header_relief=RELIEF_GROOVE,
+              auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',  header_border_width=4,
+              # header_relief=RELIEF_GROOVE,
               num_rows=10, alternating_row_color='lightblue', key='-TABLE-',
               col_widths=[5, 5, 5, 5], size=(400, 200)),
         T('  '),
-        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True, header_border_width=4, header_relief=RELIEF_GROOVE,
+        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True, header_border_width=4,
+             # header_relief=RELIEF_GROOVE,
              num_rows=10, col0_width=10, key='-TREE-', show_expanded=True )],[VStretch()]]
     frame7 = [[Image(EMOJI_BASE64_HAPPY_HEARTS, enable_events=True, k='-EMOJI-HEARTS-'), T('Do you'), Image(HEART_3D_BASE64, subsample=3, enable_events=True, k='-HEART-'), T('so far?')],
               [T('Want to be taught PySimpleGUI?  Then maybe the "Official PySimpleGUI Course" on Udemy is for you.')],
@@ -24234,7 +24267,7 @@ def _create_main_window():
                     # grab_anywhere=True,
                     enable_close_attempted_event=True,
                     modal=False,
-                    # ttk_theme=THEME_ALT,
+                    ttk_theme='alt'
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
                     )
