@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.10 Released 5-Apr-2022"
+version = __version__ = "4.59.0.11 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -46,6 +46,8 @@ _change_log = """
         Debug Print still has some problems so be warned for the time being... it's being worked on...
     4.59.0.10
         Ugh .... terrible ttk theme bug!  Sorry!!!
+    4.59.0.11
+        Improved TTK theme error reporting
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -14291,12 +14293,12 @@ def _add_right_click_menu(element, toplevel_form):
 
 def _change_ttk_theme(style, theme_name):
     global ttk_theme_in_use, DEFAULT_TTK_THEME
-    if theme_name in style.theme_names() and (ttk_theme_in_use != theme_name and ttk_theme_in_use is not None):
-        _error_popup_with_traceback('You are trying to change the TTK theme that has already been set',
-                                        'This is not a positive thing to do for your mood nor your application',
-                                        'Theme previously in use {}'.format(ttk_theme_in_use),
-                                        'New theme you are trying to set {}'.format(theme_name))
+    if theme_name not in style.theme_names():
+        _error_popup_with_traceback('You are trying to use TTK theme "{}"'.format(theme_name),
+                                        'This is not legal for your system',
+                                        'The valid themes to choose from are: {}'.format(', '.join(style.theme_names())))
         return False
+
     style.theme_use(theme_name)
     ttk_theme_in_use = theme_name
     DEFAULT_TTK_THEME = theme_name
@@ -24269,7 +24271,8 @@ def _create_main_window():
                     # grab_anywhere=True,
                     enable_close_attempted_event=True,
                     modal=False,
-                    ttk_theme='alt'
+                    # ttk_theme=THEME_CLASSIC,
+                    # scaling=2,
                     # icon=PSG_DEBUGGER_LOGO,
                     # icon=PSGDebugLogo,
                     )
