@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.9 Released 5-Apr-2022"
+version = __version__ = "4.59.0.10 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -44,6 +44,8 @@ _change_log = """
         Made the save window as image into a Window method - Window.save_window_screenshot_to_disk
         Show a popup message when a window save is performed using the keys specified in the system settings
         Debug Print still has some problems so be warned for the time being... it's being worked on...
+    4.59.0.10
+        Ugh .... terrible ttk theme bug!  Sorry!!!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -14288,8 +14290,7 @@ def _add_right_click_menu(element, toplevel_form):
 
 
 def _change_ttk_theme(style, theme_name):
-    global ttk_theme_in_use
-
+    global ttk_theme_in_use, DEFAULT_TTK_THEME
     if theme_name in style.theme_names() and (ttk_theme_in_use != theme_name and ttk_theme_in_use is not None):
         _error_popup_with_traceback('You are trying to change the TTK theme that has already been set',
                                         'This is not a positive thing to do for your mood nor your application',
@@ -14298,6 +14299,7 @@ def _change_ttk_theme(style, theme_name):
         return False
     style.theme_use(theme_name)
     ttk_theme_in_use = theme_name
+    DEFAULT_TTK_THEME = theme_name
     return True
 
 class Stylist:
