@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.12 Released 5-Apr-2022"
+version = __version__ = "4.59.0.13 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -50,6 +50,10 @@ _change_log = """
         Improved TTK theme error reporting
     4.59.0.12
         user_settings_delete_filename - added report_error parm giving ability to turn off the error popup (now off by default).  The UserSettings object also got this parm
+        Big rework is in progress for the global settings.  Converted to entirely use TABS now.  It's getting closer!!!  Can almost taste the new tastey ttk scrollbars
+    4.59.0.13
+        theme_global - added error checking and reporting about non-standard theme names being attempted
+        Dark Grey 15 - NEW theme! (inspired by the theme_global issue :-)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -18366,6 +18370,8 @@ LOOK_AND_FEEL_TABLE = {
                    "BUTTON": ("#8b9fde", "#313641"), "PROGRESS": ("#cccdcf", "#272a31"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
     "DarkGrey14": {"BACKGROUND": "#24292e", "TEXT": "#fafbfc", "INPUT": "#1d2125", "TEXT_INPUT": "#fafbfc", "SCROLL": "#1d2125",
                    "BUTTON": ("#fafbfc", "#155398"), "PROGRESS": ("#155398", "#1d2125"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
+    "DarkGrey15": {'BACKGROUND': '#121212', 'TEXT': '#dddddd', 'INPUT': '#1e1e1e', 'TEXT_INPUT': '#69b1ef', 'SCROLL': '#272727',
+                  'BUTTON': ('#69b1ef', '#2e2e2e'), 'PROGRESS': ('#69b1ef', '#2e2e2e'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,},
     "DarkBrown7": {"BACKGROUND": "#2c2417", "TEXT": "#baa379", "INPUT": "#baa379", "TEXT_INPUT": "#000000", "SCROLL": "#392e1c",
                    "BUTTON": ("#000000", "#baa379"), "PROGRESS": ("#baa379", "#453923"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
     "Python": {"BACKGROUND": "#3d7aab", "TEXT": "#ffde56", "INPUT": "#295273", "TEXT_INPUT": "#ffde56", "SCROLL": "#295273", "BUTTON": ("#ffde56", "#295273"),
@@ -18612,7 +18618,8 @@ def theme_use_custom_titlebar():
 
 def theme_global(new_theme=None):
     """
-    Sets / Gets the global PySimpleGUI Theme.  If none is specified then returns the global theme from user settings
+    Sets / Gets the global PySimpleGUI Theme.  If none is specified then returns the global theme from user settings.
+    Note the theme must be a standard, built-in PySimpleGUI theme... not a user-created theme.
 
     :param new_theme: the new theme name to use
     :type new_theme:  (str)
@@ -18620,6 +18627,12 @@ def theme_global(new_theme=None):
     :rtype:           (str)
     """
     if new_theme is not None:
+        if new_theme not in theme_list():
+            popup_error_with_traceback('Cannot use custom themes with theme_global call',
+                                       'Your request to use theme {} cannot be performed.'.format(new_theme),
+                                       'The PySimpleGUI Global User Settings are meant for PySimpleGUI standard items, not user config items',
+                                       'You can use any of the many built-in themes instead or use your own UserSettings file to store your custom theme')
+            return pysimplegui_user_settings.get('-theme-', CURRENT_LOOK_AND_FEEL)
         pysimplegui_user_settings.set('-theme-', new_theme)
         theme(new_theme)
         return new_theme
