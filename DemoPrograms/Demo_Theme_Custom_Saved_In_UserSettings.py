@@ -12,6 +12,9 @@ import PySimpleGUI as sg
     Copyright 2022 PySimpleGUI.org
 """
 
+MY_APPS_SETTING_FILENAME = 'my_awesome_apps.json'
+
+
 def init_your_settings():
     DarkGrey20 = {'BACKGROUND': '#19232D',
                  'TEXT': '#ffffff',
@@ -33,17 +36,17 @@ def init_your_settings():
                  'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                  }
     # Set up my app settings file... start with an empty one to be sure
-    sg.user_settings_delete_filename('my_awesome_apps')
-    sg.user_settings_filename('my_awesome_apps')
+    sg.user_settings_delete_filename(MY_APPS_SETTING_FILENAME)
+    sg.user_settings_filename(MY_APPS_SETTING_FILENAME)
     # Add the theme dictionaries
     sg.user_settings_set_entry('Dark Gray 20', DarkGrey20)
     sg.user_settings_set_entry('Dark Gray 21', DarkGrey21)
     sg.user_settings_set_entry('-theme list-', ('Dark Gray 20', 'Dark Gray 21'))
-    sg.popup_quick_message('Your settings file has been created and is ready to be used', background_color='#1c1e23', text_color='white', keep_on_top=True, font='_ 30')
+    sg.popup_quick_message('Your settings file has been created and is ready to be used', background_color='#1c1e23', text_color='white', keep_on_top=True, font='_ 30', non_blocking=False)
 
 
 def use_your_settings():
-    sg.user_settings_filename('my_awesome_apps')
+    sg.user_settings_filename(MY_APPS_SETTING_FILENAME)
 
     default_theme_name = sg.user_settings_get_entry('-theme default-', None)
 
