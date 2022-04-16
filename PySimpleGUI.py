@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.14 Released 5-Apr-2022"
+version = __version__ = "4.59.0.15 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -59,6 +59,9 @@ _change_log = """
         Removed the "Thumb Color" and "Thumb Depressed" ttk slider parms... it's not a settable option generally speaking so it had to go.
         Two new theme calls - theme_button_color_background and theme_button_color_text. They are read-only calls and are simply the button color (theme_button_color) TUPLE split apart
         Completed the first draft of the TTK Scrollbar settings in the Global settings window... was a LOT more work than I estimated!
+    4.59.0.15
+        TTK Theme added to the System Settings :-)  
+        Made the ttk scrollbar settings tab look nicer
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23771,10 +23774,12 @@ def main_get_debug_data(suppress_popup=False):
 
 
 def _global_settings_get_ttk_scrollbar_info():
-    global ttk_part_mapping_dict
+    global ttk_part_mapping_dict, DEFAULT_TTK_THEME
     for ttk_part in TTK_SCROLLBAR_PART_LIST:
         value = pysimplegui_user_settings.get(json.dumps(('-ttk scroll-', ttk_part)), None)
         ttk_part_mapping_dict[ttk_part] = value
+
+    DEFAULT_TTK_THEME = pysimplegui_user_settings.get('-ttk theme-', DEFAULT_TTK_THEME)
 
 def main_global_get_screen_snapshot_symcode():
     pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
@@ -23815,7 +23820,7 @@ def main_global_pysimplegui_settings():
     :return: True if settings were changed
     :rtype:  (bool)
     """
-    global DEFAULT_WINDOW_SNAPSHOT_KEY_CODE, ttk_part_mapping_dict
+    global DEFAULT_WINDOW_SNAPSHOT_KEY_CODE, ttk_part_mapping_dict, DEFAULT_TTK_THEME
 
     key_choices = tuple(sorted(tkinter_keysyms))
 
@@ -23905,20 +23910,20 @@ def main_global_pysimplegui_settings():
         style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
         style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
     """
-    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True))]]
+    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(TTK_THEME_LIST, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
 
     # ttk_layout = [[]]
     # for key, item in scrollbar_components.items():
     #     ttk_layout += [[T(key, s=15), Combo(theme_choices, default_value=settings.get('-ttk scroll-'+key, item))]]
-
+    t_len = max([len(l) for l in TTK_SCROLLBAR_PART_LIST])
     ttk_layout = [[]]
     for key, item in ttk_part_mapping_dict.items():
         if key in TTK_SCROLLBAR_PART_THEME_BASED_LIST:
-            ttk_layout += [[T(key, s=15), Combo(PSG_THEME_PART_LIST, default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
+            ttk_layout += [[T(key, s=t_len, justification='r'), Combo(PSG_THEME_PART_LIST, default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
         elif key in (TTK_SCROLLBAR_PART_ARROW_WIDTH, TTK_SCROLLBAR_PART_SCROLL_WIDTH):
-            ttk_layout += [[T(key, s=15), Combo(list(range(100)), default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
+            ttk_layout += [[T(key, s=t_len, justification='r'), Combo(list(range(100)), default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
         elif key == TTK_SCROLLBAR_PART_RELIEF:
-            ttk_layout += [[T(key, s=15), Combo(RELIEF_LIST, default_value=settings.get(('-ttk scroll-', key), item), readonly=True, key=('-TTK SCROLL-', key))]]
+            ttk_layout += [[T(key, s=t_len, justification='r'), Combo(RELIEF_LIST, default_value=settings.get(('-ttk scroll-', key), item), readonly=True, key=('-TTK SCROLL-', key))]]
 
     ttk_scrollbar_tab_layout += ttk_layout
     ttk_scrollbar_tab_layout += [[Button('Reset Scrollbar Settings')]]
@@ -23977,6 +23982,10 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-python command-', values['-PYTHON COMMAND-'])
             pysimplegui_user_settings.set('-custom titlebar-', values['-CUSTOM TITLEBAR-'])
             pysimplegui_user_settings.set('-theme-', new_theme)
+
+            # TTK SETTINGS
+            pysimplegui_user_settings.set('-ttk theme-', values['-TTK THEME-'])
+            DEFAULT_TTK_THEME = values['-TTK THEME-']
 
             # Snapshots portion
             screenshot_keysym_manual = values['-SNAPSHOT KEYSYM MANUAL-']
