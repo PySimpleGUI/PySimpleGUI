@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.11 Released 5-Apr-2022"
+version = __version__ = "4.59.0.12 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -48,6 +48,8 @@ _change_log = """
         Ugh .... terrible ttk theme bug!  Sorry!!!
     4.59.0.11
         Improved TTK theme error reporting
+    4.59.0.12
+        user_settings_delete_filename - added report_error parm giving ability to turn off the error popup (now off by default).  The UserSettings object also got this parm
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21223,7 +21225,7 @@ class UserSettings:
         self.read()
         return self.dict
 
-    def delete_file(self, filename=None, path=None):
+    def delete_file(self, filename=None, path=None, report_error=False):
         """
         Deltes the filename and path for your settings file.  Either paramter can be optional.
         If you don't choose a path, one is provided for you that is OS specific
@@ -21231,19 +21233,21 @@ class UserSettings:
         If you don't choose a filename, your application's filename + '.json' will be used
         Also sets your current dictionary to a blank one.
 
-        :param filename: The name of the file to use. Can be a full path and filename or just filename
-        :type filename:  (str or None)
-        :param path:     The folder that the settings file will be stored in. Do not include the filename.
-        :type path:      (str or None)
+        :param filename:     The name of the file to use. Can be a full path and filename or just filename
+        :type filename:      (str or None)
+        :param path:         The folder that the settings file will be stored in. Do not include the filename.
+        :type path:          (str or None)
+        :param report_error: Determines if an error should be shown if a delete error happen (i.e. file isn't present)
+        :type report_error:  (bool)
         """
+
         if filename is not None or path is not None or (filename is None and path is None):
             self.set_location(filename=filename, path=path)
         try:
             os.remove(self.full_filename)
         except Exception as e:
-            if not self.silent_on_error:
+            if report_error:
                 _error_popup_with_traceback('UserSettings delete_file warning ***', 'Exception trying to perform os.remove', e)
-                # print(_create_error_message())
         self.dict = {}
 
     def write_new_dictionary(self, settings_dict):
@@ -21512,7 +21516,7 @@ def user_settings_filename(filename=None, path=None):
     return settings.get_filename(filename, path)
 
 
-def user_settings_delete_filename(filename=None, path=None):
+def user_settings_delete_filename(filename=None, path=None, report_error=False):
     """
     Deltes the filename and path for your settings file.  Either paramter can be optional.
     If you don't choose a path, one is provided for you that is OS specific
@@ -21526,7 +21530,7 @@ def user_settings_delete_filename(filename=None, path=None):
     :type path:      (str)
     """
     settings = UserSettings._default_for_function_interface
-    settings.delete_file(filename, path)
+    settings.delete_file(filename, path, report_error=report_error)
 
 
 def user_settings_set_entry(key, value):
@@ -22464,8 +22468,7 @@ class _Debugger:
                 self.custom_watch = values['-CUSTOM_WATCH-']
                 break
             elif event == 'Clear All':
-                popup_quick_message('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True,
-                                    text_color='red', font='ANY 18')
+                popup_quick_message('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True, text_color='red', font='ANY 18')
                 for key in sorted_dict:
                     window.Element(key).Update(False)
                 window.Element('-CUSTOM_WATCH-').Update('')
@@ -23773,15 +23776,76 @@ def main_global_pysimplegui_settings():
                     'If you do not call theme("theme name") by your program to change the theme, then the default is used.\n' + \
                     'This setting allows you to set the theme that PySimpleGUI will use for ALL of your programs that\n' + \
                     'do not set a theme specifically.'
+    """
+    if sbar_trough_color is not None:
+        self.scroll_trough_color = sbar_trough_color
+    else:
+        self.scroll_trough_color = theme_slider_color()
+
+    if sbar_background_color is not None:
+        self.scroll_background_color = sbar_background_color
+    else:
+        self.scroll_background_color = theme_button_color()[1]
+
+
+    if sbar_arrow_color is not None:
+        self.scroll_arrow_color = sbar_arrow_color
+    else:
+        self.scroll_arrow_color = theme_button_color()[0]
+
+    if sbar_arrow_background_color is not None:
+        self.scroll_arrow_background_color = sbar_arrow_background_color
+    else:
+        self.scroll_arrow_background_color = theme_button_color()[1]
+
+    if sbar_width is not None:
+        self.scroll_width = sbar_width
+    else:
+        self.scroll_width = 10
+
+    if sbar_arrow_width is not None:
+        self.scroll_arrow_width = sbar_arrow_width
+    else:
+        self.scroll_arrow_width = self.scroll_width
+
+    if sbar_frame_color is not None:
+        self.scroll_frame_color = sbar_frame_color
+    else:
+        self.scroll_frame_color = theme_background_color()
+
+    if sbar_relief is not None:
+        self.scroll_relief = sbar_relief
+    else:
+        self.scroll_relief = RELIEF_RAISED
+
+        style.configure(style_name, troughcolor=element.scroll_trough_color)
+        style.configure(style_name, relief=element.scroll_relief)
+        style.configure(style_name, framecolor=element.scroll_frame_color)
+        style.configure(style_name, bordercolor=element.scroll_frame_color)
+        style.configure(style_name, width=element.scroll_width)
+        style.configure(style_name, arrowsize=element.scroll_arrow_width)
+        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
+        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
+    """
+    theme_choices = ('Slider Color', 'Button Background Color', 'Button Text Color', 'Background Color', 'Input Background Color', 'Input Text Color', 'Text Color')
+    scrollbar_components = {'Trough Color':'Slider Color', 'Background Color':'Button Background Color', 'Frame Color':'Background Color', 'Arrow Color':'Button Text Color', 'Scroll Width':10, 'Arrow Width':10, 'Relief':RELIEF_RAISED}
+    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True))]]
+
+    ttk_layout = [[]]
+    for key, item in scrollbar_components.items():
+        ttk_layout += [[T(key, s=15), Combo(theme_choices, default_value=settings.get('-ttk scroll-'+key, item))]]
+
+    ttk_scrollbar_tab_layout += ttk_layout
+    ttk_tab = Tab('TTK Scrollbar', ttk_scrollbar_tab_layout)
 
     layout = [[T('Global PySimpleGUI Settings', text_color=theme_button_color()[0], background_color=theme_button_color()[1],font='_ 18', expand_x=True, justification='c')]]
 
-    interpreter_frame = Frame('Python Interpreter (normally leave blank)',
-              [[T('Command to run a python program:'), In(settings.get('-python command-', ''), k='-PYTHON COMMAND-', enable_events=True), FileBrowse()]], font='_ 16', expand_x=True)
+    interpreter_tab = Tab('Python Interpreter',
+              [[T('Normally leave this blank')],
+                [T('Command to run a python program:'), In(settings.get('-python command-', ''), k='-PYTHON COMMAND-', enable_events=True), FileBrowse()]], font='_ 16', expand_x=True)
 
-    layout += [[interpreter_frame]]
 
-    editor_frame = Frame('Editor Settings',
+    editor_tab = Tab('Editor Settings',
               [[T('Command to invoke your editor:'), In(settings.get('-editor program-', ''), k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
               [T('String to launch your editor to edit at a particular line #.')],
               [T('Use tags <editor> <file> <line> to specify the string')],
@@ -23789,33 +23853,28 @@ def main_global_pysimplegui_settings():
               [T('Edit Format String (hover for tooltip)', tooltip=tooltip),
                In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)]], font='_ 16', expand_x=True)
 
-    layout += [[editor_frame]]
 
-    explorer_frame = Frame('Explorder Program',
+    explorer_tab = Tab('Explorer Program',
               [[In(settings.get('-explorer program-', ''), k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)]], font='_ 16', expand_x=True,  tooltip=tooltip_file_explorer)
 
-    layout += [[explorer_frame]]
-
-
-    snapshots_frame = Frame('Window Snapshots',
+    snapshots_tab = Tab('Window Snapshots',
               [[Combo(('',)+key_choices, default_value=settings.get(json.dumps(('-snapshot keysym-', i)), ''), readonly=True, k=('-SNAPSHOT KEYSYM-', i), s=(None, 30)) for i in range(4)],
               [T('Manually Entered Bind String:'), Input(settings.get('-snapshot keysym manual-', ''),k='-SNAPSHOT KEYSYM MANUAL-')],
               [T('Folder to store screenshots:'), Push(), In(settings.get('-screenshots folder-', ''), k='-SCREENSHOTS FOLDER-'), FolderBrowse()],
               [T('Screenshots Filename or Prefix:'), Push(), In(settings.get('-screenshots filename-', ''), k='-SCREENSHOTS FILENAME-'), FileBrowse()],
               [Checkbox('Auto-number Images', k='-SCREENSHOTS AUTONUMBER-')]], font='_ 16', expand_x=True,)
 
-    layout += [[snapshots_frame]]
 
-
-    theme_frame = Frame('Theme',
+    theme_tab = Tab('Theme',
               [[T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
               [T('Default Theme For All Programs:'),
                Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')]],
                         font='_ 16', expand_x=True)
 
+    settings_tab_group = TabGroup([[theme_tab, interpreter_tab, explorer_tab, editor_tab, ttk_tab, snapshots_tab ]])
+    layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
-    layout += [[theme_frame]]
     layout += [[B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')]]
 
     window = Window('Settings', layout, keep_on_top=True, modal=True)
