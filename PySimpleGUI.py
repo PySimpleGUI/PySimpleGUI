@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.13 Released 5-Apr-2022"
+version = __version__ = "4.59.0.14 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -54,6 +54,11 @@ _change_log = """
     4.59.0.13
         theme_global - added error checking and reporting about non-standard theme names being attempted
         Dark Grey 15 - NEW theme! (inspired by the theme_global issue :-)
+    4.59.0.14
+        Made default TTK scrollbar width 12 pixels instead of 10.  They're still smaller than the old tk scrollbars that are about 17 pixels wide
+        Removed the "Thumb Color" and "Thumb Depressed" ttk slider parms... it's not a settable option generally speaking so it had to go.
+        Two new theme calls - theme_button_color_background and theme_button_color_text. They are read-only calls and are simply the button color (theme_button_color) TUPLE split apart
+        Completed the first draft of the TTK Scrollbar settings in the Global settings window... was a LOT more work than I estimated!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -522,6 +527,7 @@ RELIEF_FLAT = 'flat'
 RELIEF_RIDGE = 'ridge'
 RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
+RELIEF_LIST = (RELIEF_RAISED, RELIEF_FLAT, RELIEF_SUNKEN, RELIEF_RIDGE, RELIEF_SOLID, RELIEF_GROOVE)
 
 # These are the spepific themes that tkinter offers
 THEME_DEFAULT = 'default'  # this is a TTK theme, not a PSG theme!!!
@@ -800,8 +806,39 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 
 
 
+PSG_THEME_PART_BUTTON_TEXT = 'Button Text Color'
+PSG_THEME_PART_BUTTON_BACKGROUND = 'Button Background Color'
+PSG_THEME_PART_BACKGROUND = 'Background Color'
+PSG_THEME_PART_INPUT_BACKGROUND = 'Input Element Background Color'
+PSG_THEME_PART_INPUT_TEXT = 'Input Element Text Color'
+PSG_THEME_PART_TEXT = 'Text Color'
+PSG_THEME_PART_SLIDER = 'Slider Color'
+PSG_THEME_PART_LIST = [PSG_THEME_PART_BACKGROUND, PSG_THEME_PART_BUTTON_BACKGROUND, PSG_THEME_PART_BUTTON_TEXT,PSG_THEME_PART_INPUT_BACKGROUND, PSG_THEME_PART_INPUT_TEXT, PSG_THEME_PART_TEXT, PSG_THEME_PART_SLIDER ]
 
+# theme_button
 
+TTK_SCROLLBAR_PART_TROUGH_COLOR = 'Trough Color'
+TTK_SCROLLBAR_PART_BACKGROUND_COLOR = 'Background Color'
+TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR = 'Arrow Button Backround Color'
+TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR = 'Arrow Button Arrow Color'
+TTK_SCROLLBAR_PART_FRAME_COLOR = 'Frame Color'
+TTK_SCROLLBAR_PART_SCROLL_WIDTH = 'Frame Width'
+TTK_SCROLLBAR_PART_ARROW_WIDTH = 'Arrow Width'
+TTK_SCROLLBAR_PART_RELIEF = 'Relief'
+TTK_SCROLLBAR_PART_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
+                           TTK_SCROLLBAR_PART_FRAME_COLOR, TTK_SCROLLBAR_PART_SCROLL_WIDTH, TTK_SCROLLBAR_PART_ARROW_WIDTH, TTK_SCROLLBAR_PART_RELIEF]
+TTK_SCROLLBAR_PART_THEME_BASED_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
+                           TTK_SCROLLBAR_PART_FRAME_COLOR]
+DEFAULT_TTK_PART_MAPPING_DICT = {TTK_SCROLLBAR_PART_TROUGH_COLOR: PSG_THEME_PART_SLIDER,
+                                 TTK_SCROLLBAR_PART_BACKGROUND_COLOR : PSG_THEME_PART_BUTTON_BACKGROUND,
+                                 TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR : PSG_THEME_PART_BUTTON_BACKGROUND,
+                                 TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR :PSG_THEME_PART_BUTTON_TEXT,
+                                 TTK_SCROLLBAR_PART_FRAME_COLOR : PSG_THEME_PART_BACKGROUND,
+                                 TTK_SCROLLBAR_PART_SCROLL_WIDTH : 12,
+                                 TTK_SCROLLBAR_PART_ARROW_WIDTH: 12,
+                                 TTK_SCROLLBAR_PART_RELIEF: RELIEF_RAISED}
+
+ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
 
 # -------------------------  tkinter key codes for bindings  ------------------------- #
 
@@ -932,7 +969,7 @@ class Element():
 
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
                  visible=True, metadata=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
@@ -1007,56 +1044,69 @@ class Element():
         self._popup_menu_location = (None, None)
         self.pack_settings = None
         ## TTK Scrollbar Settings
+
+        PSG_THEME_PART_FUNC_MAP = {PSG_THEME_PART_BACKGROUND: theme_background_color,
+                                       PSG_THEME_PART_BUTTON_BACKGROUND: theme_button_color_background,
+                                       PSG_THEME_PART_BUTTON_TEXT: theme_button_color_text,
+                                       PSG_THEME_PART_INPUT_BACKGROUND: theme_input_background_color,
+                                       PSG_THEME_PART_INPUT_TEXT: theme_input_text_color,
+                                       PSG_THEME_PART_TEXT: theme_text_color,
+                                       PSG_THEME_PART_SLIDER: theme_slider_color}
+
+        # class Theme_Parts():
+        #     PSG_THEME_PART_FUNC_MAP = {PSG_THEME_PART_BACKGROUND: theme_background_color,
         if sbar_trough_color is not None:
             self.scroll_trough_color = sbar_trough_color
         else:
-            self.scroll_trough_color = theme_slider_color()
+            self.scroll_trough_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_TROUGH_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_TROUGH_COLOR])
+            if callable(self.scroll_trough_color):
+                self.scroll_trough_color = self.scroll_trough_color()
+
 
         if sbar_background_color is not None:
             self.scroll_background_color = sbar_background_color
         else:
-            self.scroll_background_color = theme_button_color()[1]
+            self.scroll_background_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_BACKGROUND_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_BACKGROUND_COLOR])
+            if callable(self.scroll_background_color):
+                    self.scroll_background_color = self.scroll_background_color()
 
-        if sbar_thumb_color is not None:
-            self.scroll_thumb_color = sbar_thumb_color
-        else:
-            self.scroll_thumb_color = theme_button_color()[1]
-
-        if sbar_thumb_depressed is not None:
-            self.scroll_thumb_color_depressed = sbar_thumb_depressed
-        else:
-            self.scroll_thumb_color_depressed = theme_button_color()[0]
 
         if sbar_arrow_color is not None:
             self.scroll_arrow_color = sbar_arrow_color
         else:
-            self.scroll_arrow_color = theme_button_color()[0]
+            self.scroll_arrow_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR])
+            if callable(self.scroll_arrow_color):
+                self.scroll_arrow_color = self.scroll_arrow_color()
 
         if sbar_arrow_background_color is not None:
             self.scroll_arrow_background_color = sbar_arrow_background_color
         else:
-            self.scroll_arrow_background_color = theme_button_color()[1]
+            self.scroll_arrow_background_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR])
+            if callable(self.scroll_arrow_background_color):
+                self.scroll_arrow_background_color = self.scroll_arrow_background_color()
 
-        if sbar_width is not None:
-            self.scroll_width = sbar_width
-        else:
-            self.scroll_width = 10
-
-        if sbar_arrow_width is not None:
-            self.scroll_arrow_width = sbar_arrow_width
-        else:
-            self.scroll_arrow_width = self.scroll_width
 
         if sbar_frame_color is not None:
             self.scroll_frame_color = sbar_frame_color
         else:
-            self.scroll_frame_color = theme_background_color()
+            self.scroll_frame_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_FRAME_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_FRAME_COLOR])
+            if callable(self.scroll_frame_color):
+                self.scroll_frame_color = self.scroll_frame_color()
 
         if sbar_relief is not None:
             self.scroll_relief = sbar_relief
         else:
-            self.scroll_relief = RELIEF_RAISED
+            self.scroll_relief = ttk_part_mapping_dict[TTK_SCROLLBAR_PART_RELIEF]
 
+        if sbar_width is not None:
+            self.scroll_width = sbar_width
+        else:
+            self.scroll_width = ttk_part_mapping_dict[TTK_SCROLLBAR_PART_SCROLL_WIDTH]
+
+        if sbar_arrow_width is not None:
+            self.scroll_arrow_width = sbar_arrow_width
+        else:
+            self.scroll_arrow_width = ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_WIDTH]
 
 
         if not hasattr(self, 'DisabledTextColor'):
@@ -2398,7 +2448,7 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
                  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
@@ -2493,7 +2543,7 @@ class Listbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
     def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
@@ -3214,7 +3264,7 @@ class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                 Initial text to show
@@ -3279,10 +3329,6 @@ class Multiline(Element):
         :type sbar_trough_color:             (str)
         :param sbar_background_color:        Scrollbar
         :type sbar_background_color:         (str)
-        :param sbar_thumb_color:             Scrollbar
-        :type sbar_thumb_color:              (str)
-        :param sbar_thumb_depressed:         Scrollbar
-        :type sbar_thumb_depressed:          (str)
         :param sbar_arrow_color:             Scrollbar
         :type sbar_arrow_color:              (str)
         :param sbar_arrow_background_color: Scrollbar
@@ -3349,7 +3395,7 @@ class Multiline(Element):
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
@@ -8396,7 +8442,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False, border_width=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
                  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, right_click_selects=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
@@ -8457,10 +8503,6 @@ class Table(Element):
         :type sbar_trough_color:             (str)
         :param sbar_background_color:        Scrollbar
         :type sbar_background_color:         (str)
-        :param sbar_thumb_color:             Scrollbar
-        :type sbar_thumb_color:              (str)
-        :param sbar_thumb_depressed:         Scrollbar
-        :type sbar_thumb_depressed:          (str)
         :param sbar_arrow_color:             Scrollbar
         :type sbar_arrow_color:              (str)
         :param sbar_arrow_background_color: Scrollbar
@@ -8563,7 +8605,7 @@ class Table(Element):
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
@@ -8788,7 +8830,7 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None, border_width=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None, num_rows=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_thumb_color=None, sbar_thumb_depressed=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
                  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  row_height=None, vertical_scroll_only=True, hide_vertical_scroll=False, pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
@@ -8853,10 +8895,6 @@ class Tree(Element):
         :type sbar_trough_color:             (str)
         :param sbar_background_color:        Scrollbar
         :type sbar_background_color:         (str)
-        :param sbar_thumb_color:             Scrollbar
-        :type sbar_thumb_color:              (str)
-        :param sbar_thumb_depressed:         Scrollbar
-        :type sbar_thumb_depressed:          (str)
         :param sbar_arrow_color:             Scrollbar
         :type sbar_arrow_color:              (str)
         :param sbar_arrow_background_color: Scrollbar
@@ -8945,7 +8983,7 @@ class Tree(Element):
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad, key=key, tooltip=tooltip,
                          visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_thumb_color=sbar_thumb_color, sbar_thumb_depressed=sbar_thumb_depressed, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def _treeview_selected(self, event):
@@ -14473,7 +14511,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         style = ttk.Style()
         _change_ttk_theme(style, toplevel_form.TtkTheme)
-        # style.theme_use(toplevel_form.TtkTheme)
         if orientation[0].lower() == 'v':
             orient = 'vertical'
             style_name = _make_ttk_style_name('.Vertical.TScrollbar', element)
@@ -18508,6 +18545,28 @@ def theme_button_color(color=None):
         else:
             set_options(button_color=color_tuple)
     return DEFAULT_BUTTON_COLOR
+
+
+def theme_button_color_background():
+    """
+    Returns the button color background currently in use. Note this function simple calls the theme_button_color
+    function and splits apart the tuple
+
+    :return: color string of the button color background currently in use
+    :rtype:  (str)
+    """
+    return theme_button_color()[1]
+
+
+def theme_button_color_text():
+    """
+    Returns the button color text currently in use.  Note this function simple calls the theme_button_color
+    function and splits apart the tuple
+
+    :return: color string of the button color text currently in use
+    :rtype:  (str)
+    """
+    return theme_button_color()[0]
 
 
 def theme_progress_bar_color(color=None):
@@ -23711,6 +23770,12 @@ def main_get_debug_data(suppress_popup=False):
 # ..######..########....##.......##.......##....####.##....##..######....######.
 
 
+def _global_settings_get_ttk_scrollbar_info():
+    global ttk_part_mapping_dict
+    for ttk_part in TTK_SCROLLBAR_PART_LIST:
+        value = pysimplegui_user_settings.get(json.dumps(('-ttk scroll-', ttk_part)), None)
+        ttk_part_mapping_dict[ttk_part] = value
+
 def main_global_get_screen_snapshot_symcode():
     pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 
@@ -23750,7 +23815,7 @@ def main_global_pysimplegui_settings():
     :return: True if settings were changed
     :rtype:  (bool)
     """
-    global DEFAULT_WINDOW_SNAPSHOT_KEY_CODE
+    global DEFAULT_WINDOW_SNAPSHOT_KEY_CODE, ttk_part_mapping_dict
 
     key_choices = tuple(sorted(tkinter_keysyms))
 
@@ -23840,15 +23905,23 @@ def main_global_pysimplegui_settings():
         style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
         style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
     """
-    theme_choices = ('Slider Color', 'Button Background Color', 'Button Text Color', 'Background Color', 'Input Background Color', 'Input Text Color', 'Text Color')
-    scrollbar_components = {'Trough Color':'Slider Color', 'Background Color':'Button Background Color', 'Frame Color':'Background Color', 'Arrow Color':'Button Text Color', 'Scroll Width':10, 'Arrow Width':10, 'Relief':RELIEF_RAISED}
     ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True))]]
 
+    # ttk_layout = [[]]
+    # for key, item in scrollbar_components.items():
+    #     ttk_layout += [[T(key, s=15), Combo(theme_choices, default_value=settings.get('-ttk scroll-'+key, item))]]
+
     ttk_layout = [[]]
-    for key, item in scrollbar_components.items():
-        ttk_layout += [[T(key, s=15), Combo(theme_choices, default_value=settings.get('-ttk scroll-'+key, item))]]
+    for key, item in ttk_part_mapping_dict.items():
+        if key in TTK_SCROLLBAR_PART_THEME_BASED_LIST:
+            ttk_layout += [[T(key, s=15), Combo(PSG_THEME_PART_LIST, default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
+        elif key in (TTK_SCROLLBAR_PART_ARROW_WIDTH, TTK_SCROLLBAR_PART_SCROLL_WIDTH):
+            ttk_layout += [[T(key, s=15), Combo(list(range(100)), default_value=settings.get(('-ttk scroll-', key), item), key=('-TTK SCROLL-', key))]]
+        elif key == TTK_SCROLLBAR_PART_RELIEF:
+            ttk_layout += [[T(key, s=15), Combo(RELIEF_LIST, default_value=settings.get(('-ttk scroll-', key), item), readonly=True, key=('-TTK SCROLL-', key))]]
 
     ttk_scrollbar_tab_layout += ttk_layout
+    ttk_scrollbar_tab_layout += [[Button('Reset Scrollbar Settings')]]
     ttk_tab = Tab('TTK Scrollbar', ttk_scrollbar_tab_layout)
 
     layout = [[T('Global PySimpleGUI Settings', text_color=theme_button_color()[0], background_color=theme_button_color()[1],font='_ 18', expand_x=True, justification='c')]]
@@ -23921,7 +23994,16 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-screenshots folder-', values['-SCREENSHOTS FOLDER-'])
             pysimplegui_user_settings.set('-screenshots filename-', values['-SCREENSHOTS FILENAME-'])
 
+            # TTK Scrollbar portion
+            for key, value in values.items():
+                if isinstance(key, tuple):
+                    if key[0] == '-TTK SCROLL-':
+                        pysimplegui_user_settings.set(json.dumps(('-ttk scroll-', key[1])), value)
+
             theme(new_theme)
+
+            _global_settings_get_ttk_scrollbar_info()
+
             window.close()
             return True
         elif event == '-EDITOR PROGRAM-':
@@ -23932,6 +24014,11 @@ def main_global_pysimplegui_settings():
             main_mac_feature_control()
             # re-read the settings in case they changed
             _read_mac_global_settings()
+        elif event == 'Reset Scrollbar Settings':
+            ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
+            for key, item in ttk_part_mapping_dict.items():
+                window[('-TTK SCROLL-', key)].update(item)
+
     window.close()
     return False
 
@@ -24547,6 +24634,8 @@ pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLE
 
 
 theme(theme_global())
+# ------------------------ Read the ttk scrollbar info ------------------------
+_global_settings_get_ttk_scrollbar_info()
 
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
 if running_trinket():
