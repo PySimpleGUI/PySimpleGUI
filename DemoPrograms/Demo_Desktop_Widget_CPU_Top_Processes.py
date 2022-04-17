@@ -34,11 +34,11 @@ def main():
     # ----------------  Create Form  ----------------
     sg.theme('Black')
 
-    layout = [[sg.Text(font=('Helvetica', 20), text_color=sg.YELLOWS[0], key='-CPU PERCENT-'), sg.Push(), sg.Text(sg.SYMBOL_X, enable_events=True, key='Exit')],
+    layout = [[sg.Text(font=('Helvetica', 20), text_color=sg.YELLOWS[0], key='-CPU PERCENT-')],
               [sg.Text(size=(35, 12), font=('Courier New', 12), key='-PROCESSES-')],     # size will determine how many processes shown
-              [sg.Text('Update every '), sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds')]]
+              [sg.Text('Update every '), sg.Spin([x+1 for x in range(10)], 3, key='-SPIN-'), sg.T('seconds')]]
 
-    window = sg.Window('Top CPU Processes', layout, no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
+    window = sg.Window('Top CPU Processes', layout, no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True)
 
     # start cpu measurement thread
     # using the PySimpleGUI call to start and manage the thread
@@ -48,14 +48,17 @@ def main():
     while True:
         # --------- Read and update window --------
         event, values = window.read()
+        # print(event, values)
         # --------- Do Button Operations --------
         if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
             sg.user_settings_set_entry('-location-', window.current_location())     # save window location before exiting
             break
-        elif event == 'Edit Me':
-            sg.execute_editor(__file__)
+        if event == 'Edit Me':
+            sp = sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location())
         elif event == '-CPU UPDATE FROM THREAD-':                   # indicates data from the thread has arrived
-            cpu_percent, procs = values[event]          # the thread sends a tuple
+            cpu_percent, procs = values[event]                      # the thread sends a tuple
             if procs:
                 # --------- Create dictionary of top % CPU processes.  Format is name:cpu_percent --------
                 top = {proc.name(): proc.cpu_percent() for proc in procs}
@@ -68,7 +71,7 @@ def main():
                 window['-CPU PERCENT-'].update(f'CPU {cpu_percent}')
                 window['-PROCESSES-'].update(display_string)
         # get the timeout from the spinner
-        g_interval = int(values['spin'])
+        g_interval = int(values['-SPIN-'])
 
     window.close()
 

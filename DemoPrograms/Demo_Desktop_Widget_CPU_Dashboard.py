@@ -15,7 +15,7 @@ import psutil
       Grab anywhere, making window easy to move around
     Note that the keys are tuples, with a tuple as the second item
         ('-KEY-', (row, col))      
-    Copyright 2020 PySimpleGUI
+    Copyright 2020, 2022 PySimpleGUI
 """
 
 GRAPH_WIDTH = 120       # each individual graph size in pixels
@@ -65,8 +65,7 @@ def main(location):
 
     sg.theme('Black')
 
-    layout = [[ sg.Text(sg.SYMBOL_X, enable_events=True, key='Exit', tooltip='Closes window'),
-                sg.Text('     CPU Core Usage')] ]
+    layout = [[sg.Text('CPU Core Usage', justification='c', expand_x=True)] ]
 
     # add on the graphs
     for rows in range(num_cores//NUM_COLS+1):
@@ -86,7 +85,8 @@ def main(location):
                        element_padding=(0,0),
                        border_depth=0,
                        location=location,
-                       right_click_menu=[[''], ['Edit Me', 'Exit',]])
+                       enable_close_attempted_event=True,
+                       right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
 
     graphs = []
@@ -101,10 +101,15 @@ def main(location):
     while True :
         # --------- Read and update window once every Polling Frequency --------
         event, values = window.read(timeout=POLL_FREQUENCY)
-        if event in (sg.WIN_CLOSED, 'Exit'):         # Be nice and give an exit
+        if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):         # Be nice and give an exit
+            sg.user_settings_set_entry('-location-', window.current_location())     # save window location before exiting
+            break
+        elif event == sg.WIN_CLOSED:
             break
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location())
         # read CPU for each core
         stats = psutil.cpu_percent(percpu=True)
 
@@ -121,5 +126,6 @@ if __name__ == "__main__":
         location = sys.argv[1].split(',')
         location = (int(location[0]), int(location[1]))
     else:
-        location = (None, None)
+        location = sg.user_settings_get_entry('-location-', (None, None))
+
     main(location)

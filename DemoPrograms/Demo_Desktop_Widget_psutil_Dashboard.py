@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
 import psutil
-import sys
 
 """
     Desktop floating widget - System status dashboard
@@ -11,6 +10,7 @@ import sys
         CPU Used
         Mem Used
     Information is updated once a second and is shown as an area graph that scrolls
+    Copyright 2022 PySimpleGUI
 """
 
 GRAPH_WIDTH, GRAPH_HEIGHT = 120, 40       # each individual graph size in pixels
@@ -53,10 +53,11 @@ def human_size(bytes, units=(' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB')):
     return str(bytes) + units[0] if bytes < 1024 else human_size(bytes >> 10, units[1:])
 
 
-def main(location):
+def main():
     # ----------------  Create Window  ----------------
     sg.theme('Black')
     sg.set_options(element_padding=(0, 0), margins=(1, 1), border_width=0)
+    location =  sg.user_settings_get_entry('-location-', (None, None))
 
     def GraphColumn(name, key):
         layout = [
@@ -68,10 +69,8 @@ def main(location):
                       key=key+'GRAPH_')]]
         return sg.Col(layout, pad=(2, 2))
 
-    red_x = b"R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
     layout = [
-        [sg.Text('System Status Dashboard'+' '*18),
-         sg.Button('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window')],
+        [sg.Text('System Status Dashboard'+' '*18)],
         [GraphColumn('Net Out', '_NET_OUT_'),
          GraphColumn('Net In', '_NET_IN_')],
         [GraphColumn('Disk Read', '_DISK_READ_'),
@@ -82,8 +81,8 @@ def main(location):
     window = sg.Window('PSG System Dashboard', layout,
              keep_on_top=True,
              grab_anywhere=True, no_titlebar=True,
-             return_keyboard_events=True, alpha_channel=ALPHA,
-             use_default_focus=False, finalize=True, location=location)
+             return_keyboard_events=True, alpha_channel=ALPHA, enable_close_attempted_event=True,
+             use_default_focus=False, finalize=True, location=location,right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT,)
 
     # setup graphs & initial values
     netio = psutil.net_io_counters()
@@ -104,9 +103,14 @@ def main(location):
     while True :
         # --------- Read and update window once a second--------
         event, values = window.read(timeout=1000)
-        # Be nice and give an exit, expecially since there is no titlebar
-        if event in (sg.WIN_CLOSED, 'Exit'):
+        if event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-location-', window.current_location())     # save window location before exiting
             break
+        elif event == 'Edit Me':
+            sp = sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location())
+
         # ----- Network Graphs -----
         netio = psutil.net_io_counters()
         write_bytes = net_graph_out.graph_value(netio.bytes_sent)
@@ -129,10 +133,5 @@ def main(location):
         window['_MEM_TXT_'].update('{}% Memory Used'.format(mem_used))
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        location = sys.argv[1].split(',')
-        location = (int(location[0]), int(location[1]))
-    else:
-        location = (None, None)
-    main(location)
+    main()
 
