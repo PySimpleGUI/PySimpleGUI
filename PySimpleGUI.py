@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.15 Released 5-Apr-2022"
+version = __version__ = "4.59.0.16 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -62,6 +62,8 @@ _change_log = """
     4.59.0.15
         TTK Theme added to the System Settings :-)  
         Made the ttk scrollbar settings tab look nicer
+    4.59.0.16
+        Added button to test ttk scrollbar settings within the System Settings window. Aids in changing the design if scrollbar colors, sizes, etc.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23781,6 +23783,7 @@ def _global_settings_get_ttk_scrollbar_info():
 
     DEFAULT_TTK_THEME = pysimplegui_user_settings.get('-ttk theme-', DEFAULT_TTK_THEME)
 
+
 def main_global_get_screen_snapshot_symcode():
     pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 
@@ -23926,7 +23929,7 @@ def main_global_pysimplegui_settings():
             ttk_layout += [[T(key, s=t_len, justification='r'), Combo(RELIEF_LIST, default_value=settings.get(('-ttk scroll-', key), item), readonly=True, key=('-TTK SCROLL-', key))]]
 
     ttk_scrollbar_tab_layout += ttk_layout
-    ttk_scrollbar_tab_layout += [[Button('Reset Scrollbar Settings')]]
+    ttk_scrollbar_tab_layout += [[Button('Reset Scrollbar Settings'), Button('Test Scrollbar Settings')]]
     ttk_tab = Tab('TTK Scrollbar', ttk_scrollbar_tab_layout)
 
     layout = [[T('Global PySimpleGUI Settings', text_color=theme_button_color()[0], background_color=theme_button_color()[1],font='_ 18', expand_x=True, justification='c')]]
@@ -23968,7 +23971,7 @@ def main_global_pysimplegui_settings():
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
     layout += [[B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')]]
 
-    window = Window('Settings', layout, keep_on_top=True, modal=True)
+    window = Window('Settings', layout, keep_on_top=True, modal=False)
 
     while True:
         event, values = window.read()
@@ -24027,8 +24030,20 @@ def main_global_pysimplegui_settings():
             ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
             for key, item in ttk_part_mapping_dict.items():
                 window[('-TTK SCROLL-', key)].update(item)
-
+        elif event == 'Test Scrollbar Settings':
+            for ttk_part in TTK_SCROLLBAR_PART_LIST:
+                value = values[('-TTK SCROLL-', ttk_part)]
+                ttk_part_mapping_dict[ttk_part] = value
+            DEFAULT_TTK_THEME = values['-TTK THEME-']
+            for i in range(100):
+                Print(i)
+            Print('Close this window to continue...', keep_on_top=True)
     window.close()
+    # In case some of the settings were modified and tried out, reset the ttk info to be what's in the config file
+    style = ttk.Style(Window.hidden_master_root)
+    _change_ttk_theme(style, DEFAULT_TTK_THEME)
+    _global_settings_get_ttk_scrollbar_info()
+
     return False
 
 
@@ -24556,6 +24571,8 @@ def main():
                 window.close()
                 window = _create_main_window()
                 graph_elem = window['+GRAPH+']
+            else:
+                Window('', layout=[[Multiline()]], alpha_channel=0).read(timeout=1, close=True)
         elif event.startswith('P '):
             if event == 'P ':
                 popup('Normal Popup - Modal', keep_on_top=True)
