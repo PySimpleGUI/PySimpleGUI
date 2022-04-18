@@ -18416,9 +18416,12 @@ LOOK_AND_FEEL_TABLE = {
                   'BUTTON': ('#69b1ef', '#2e2e2e'), 'PROGRESS': ('#69b1ef', '#2e2e2e'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,},
     "DarkBrown7": {"BACKGROUND": "#2c2417", "TEXT": "#baa379", "INPUT": "#baa379", "TEXT_INPUT": "#000000", "SCROLL": "#392e1c",
                    "BUTTON": ("#000000", "#baa379"), "PROGRESS": ("#baa379", "#453923"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
-    "Python": {"BACKGROUND": "#3d7aab", "TEXT": "#ffde56", "INPUT": "#295273", "TEXT_INPUT": "#ffde56", "SCROLL": "#295273", "BUTTON": ("#ffde56", "#295273"),
-               "PROGRESS": ("#ffde56", "#295273"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
+    "Python": {"BACKGROUND": "#3d7aab", "TEXT": "#ffde56", "INPUT": "#295273", "TEXT_INPUT": "#ffde56", "SCROLL": "#295273",
+               "BUTTON": ("#ffde56", "#295273"), "PROGRESS": ("#ffde56", "#295273"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
+    "PythonPlus": {"BACKGROUND": "#001d3c", "TEXT": "#ffffff", "INPUT": "#015bbb", "TEXT_INPUT": "#fed500", "SCROLL": "#015bbb",
+               "BUTTON": ("#fed500", "#015bbb"), "PROGRESS": ("#015bbb", "#fed500"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
 }
+
 
 
 def list_of_look_and_feel_values():
