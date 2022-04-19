@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.17 Released 5-Apr-2022"
+version = __version__ = "4.59.0.18 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -69,6 +69,10 @@ _change_log = """
             That means using the MenubarCustom instaed of Menu. For now, user will have to handle this. Will come back to it to fix up later
         Made MenubarCustom have a pad=0 by default so that it's snug under the titlebar and extends to edges correctly.
         Renamed ttk scrollbar system settings tab to ttk
+    4.59.0.18
+        Got the Debug Print stuff working right!  YES!
+            Added new parm "wait" which is an alias for the "blocking" parm.  Some may like it better.  Take your choice
+            Changed button text to "Click to continue" if the blocking/wait parm is set so that it's obvious that your program is waiting on you
         
     """
 
@@ -17258,12 +17262,12 @@ class _DebugWin():
                           do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
 
         timeout  = 0 if not blocking else None
-        event, values = self.window.read(timeout=0)
-        if event == 'Quit' or event is None:
-            self.Close()
-            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
-                          no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
+        # event, values = self.window.read(timeout=0)
+        # if event == 'Quit' or event is None:
+        #     self.Close()
+        #     self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
+        #                   no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
+        #                   do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
         if  erase_all:
             self.window['-MULTILINE-'].update('')
         if self.do_not_reroute_stdout:
@@ -17284,20 +17288,26 @@ class _DebugWin():
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
         if blocking and blocking != self.blocking:
             self.quit_button.BType = BUTTON_TYPE_READ_FORM
-            self.quit_button.update(text='More')
+            self.quit_button.update(text='Click to continue...')
         elif blocking != self.blocking:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             self.quit_button.update(text='Quit')
 
+        if blocking:
+            self.window['-PAUSE-'].update(visible=False)
+
         paused = None
         while True:
-            if event == WIN_CLOSED or (not blocking and event == 'Quit'):
-                paused = False
+            event, values = self.window.read(timeout=timeout)
+
+            if event == WIN_CLOSED or (blocking and event == 'Quit'):
                 self.Close()
                 break
             elif not paused and event == TIMEOUT_EVENT and not blocking:
                 break
             elif event == '-PAUSE-':
+                if blocking:            # if blocking, ignore the pause button entirely
+                    continue
                 if paused:
                     self.window['-PAUSE-'].update(text='Pause')
                     self.quit_button.update(visible=True)
@@ -17306,7 +17316,6 @@ class _DebugWin():
                 self.window['-PAUSE-'].update(text='Resume')
                 self.quit_button.update(visible=False)
                 timeout = None
-            event, values = self.window.read(timeout=timeout)
 
         SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = suppress
 
@@ -17318,7 +17327,7 @@ class _DebugWin():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), font=None, no_titlebar=False,
-               no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None, erase_all=False, resizable=True, blocking=None):
+               no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None, erase_all=False, resizable=True, blocking=None, wait=None):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -17371,9 +17380,13 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type erase_all:              (bool)
     :param blocking:              if True, makes the window block instead of returning immediately. The "Quit" button changers to "More"
     :type blocking:               (bool | None)
+    :param wait:                  Same as the "blocking" parm. It's an alias.  if True, makes the window block instead of returning immediately. The "Quit" button changers to "More"
+    :type wait:                   (bool | None)
     :return:
     :rtype:
     """
+
+    blocking = blocking or wait
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
