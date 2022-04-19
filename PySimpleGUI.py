@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.20 Released 5-Apr-2022"
+version = __version__ = "4.59.0.21 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -77,6 +77,8 @@ _change_log = """
         OK... this time got the Debug Prit stuff working right for real!  YES?  ;-)
     4.59.0.20
         irony - when you accidently leave debug prints in your debug print code
+    4.59.0.21
+        Additional exception handling needed for debug window closure at any point 
         
     """
 
@@ -17246,7 +17248,7 @@ class _DebugWin():
             else:
                 self.quit_button = DummyButton('Quit', key='Quit')
             self.layout = [[self.output_element],
-                           [pin(self.quit_button), B('Pause', key='-PAUSE-'), Stretch()]]
+                           [pin(self.quit_button), pin(B('Pause', key='-PAUSE-')), Stretch()]]
 
         self.layout[-1] += [Sizegrip()]
 
@@ -17266,14 +17268,7 @@ class _DebugWin():
                           do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
 
         timeout  = 0 if not blocking else None
-        # event, values = self.window.read(timeout=0)
-        # if event == 'Quit' or event is None:
-        #     self.Close()
-        #     self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
-        #                   no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-        #                   do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
         if  erase_all:
-            # self.window['-MULTILINE-'].update('')
             self.output_element.update('')
 
         if self.do_not_reroute_stdout:
@@ -17293,13 +17288,24 @@ class _DebugWin():
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
         if blocking:
             self.quit_button.BType = BUTTON_TYPE_READ_FORM
-            self.quit_button.update(text='Click to continue...')
+            try:                    # The window may be closed by user at any time, so have to protect
+                self.quit_button.update(text='Click to continue...')
+            except:
+                pass
         else:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
-            self.quit_button.update(text='Quit')
+            try:                    # The window may be closed by user at any time, so have to protect
+                self.quit_button.update(text='Quit')
+            except:
+                pass
 
-        if blocking:
-            self.window['-PAUSE-'].update(visible=False)
+        try:                        # The window may be closed by user at any time, so have to protect
+            if blocking:
+                self.window['-PAUSE-'].update(visible=False)
+            else:
+                self.window['-PAUSE-'].update(visible=True)
+        except:
+            pass
 
         paused = None
         while True:
