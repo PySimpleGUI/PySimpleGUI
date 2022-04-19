@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.19 Released 5-Apr-2022"
+version = __version__ = "4.59.0.20 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -75,6 +75,8 @@ _change_log = """
             Changed button text to "Click to continue" if the blocking/wait parm is set so that it's obvious that your program is waiting on you
     4.59.0.19
         OK... this time got the Debug Prit stuff working right for real!  YES?  ;-)
+    4.59.0.20
+        irony - when you accidently leave debug prints in your debug print code
         
     """
 
@@ -17285,7 +17287,6 @@ class _DebugWin():
                 if i != num_args - 1:
                     outstring += sep_str
             outstring += end_str
-            print('outstring = ', outstring)
             self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
         else:
             print(*args, sep=sepchar, end=endchar)
