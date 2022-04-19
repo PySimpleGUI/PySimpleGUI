@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.18 Released 5-Apr-2022"
+version = __version__ = "4.59.0.19 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -73,6 +73,8 @@ _change_log = """
         Got the Debug Print stuff working right!  YES!
             Added new parm "wait" which is an alias for the "blocking" parm.  Some may like it better.  Take your choice
             Changed button text to "Click to continue" if the blocking/wait parm is set so that it's obvious that your program is waiting on you
+    4.59.0.19
+        OK... this time got the Debug Prit stuff working right for real!  YES?  ;-)
         
     """
 
@@ -17247,7 +17249,7 @@ class _DebugWin():
         self.layout[-1] += [Sizegrip()]
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location, relative_location=relative_location,
-                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False, resizable=resizable)
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True, resizable=resizable)
         return
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None, blocking=None):
@@ -17269,7 +17271,9 @@ class _DebugWin():
         #                   no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
         #                   do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
         if  erase_all:
-            self.window['-MULTILINE-'].update('')
+            # self.window['-MULTILINE-'].update('')
+            self.output_element.update('')
+
         if self.do_not_reroute_stdout:
             end_str = str(end) if end is not None else '\n'
             sep_str = str(sep) if sep is not None else ' '
@@ -17281,15 +17285,15 @@ class _DebugWin():
                 if i != num_args - 1:
                     outstring += sep_str
             outstring += end_str
-
+            print('outstring = ', outstring)
             self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
         else:
             print(*args, sep=sepchar, end=endchar)
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
-        if blocking and blocking != self.blocking:
+        if blocking:
             self.quit_button.BType = BUTTON_TYPE_READ_FORM
             self.quit_button.update(text='Click to continue...')
-        elif blocking != self.blocking:
+        else:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             self.quit_button.update(text='Quit')
 
@@ -17300,8 +17304,10 @@ class _DebugWin():
         while True:
             event, values = self.window.read(timeout=timeout)
 
-            if event == WIN_CLOSED or (blocking and event == 'Quit'):
+            if event == WIN_CLOSED:
                 self.Close()
+                break
+            elif blocking and event == 'Quit':
                 break
             elif not paused and event == TIMEOUT_EVENT and not blocking:
                 break
