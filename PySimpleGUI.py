@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.16 Released 5-Apr-2022"
+version = __version__ = "4.59.0.17 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -64,6 +64,12 @@ _change_log = """
         Made the ttk scrollbar settings tab look nicer
     4.59.0.16
         Added button to test ttk scrollbar settings within the System Settings window. Aids in changing the design if scrollbar colors, sizes, etc.
+    4.59.0.17
+        Noted tricky problem - if "always use custom titlebar" is set in system settings, then USER still needs to account for this in their layout
+            That means using the MenubarCustom instaed of Menu. For now, user will have to handle this. Will come back to it to fix up later
+        Made MenubarCustom have a pad=0 by default so that it's snug under the titlebar and extends to edges correctly.
+        Renamed ttk scrollbar system settings tab to ttk
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8337,7 +8343,6 @@ class Menu(Element):
         :param metadata:            User metadata that can be set to ANYTHING
         :type metadata:             (Any)
         """
-
         self.BackgroundColor = background_color if background_color is not None else theme_input_background_color()
         self.TextColor = text_color if text_color is not None else theme_input_text_color()
 
@@ -11888,22 +11893,22 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
 
     return window, event, values
 
-
-######  ##    ##  ######  ######## ######## ##     ##
-##    ##  ##  ##  ##    ##    ##    ##       ###   ###
-##         ####   ##          ##    ##       #### ####
-######     ##     ######     ##    ######   ## ### ##
-##    ##          ##    ##    ##       ##     ##
-##    ##    ##    ##    ##    ##    ##       ##     ##
-######     ##     ######     ##    ######## ##     ##
-
-######## ########     ###    ##    ##
-##    ##     ##   ## ##    ##  ##
-##    ##     ##  ##   ##    ####
-##    ########  ##     ##    ##
-##    ##   ##   #########    ##
-##    ##    ##  ##     ##    ##
-##    ##     ## ##     ##    ##
+# MP""""""`MM                     dP
+# M  mmmmm..M                     88
+# M.      `YM dP    dP .d8888b. d8888P .d8888b. 88d8b.d8b.
+# MMMMMMM.  M 88    88 Y8ooooo.   88   88ooood8 88'`88'`88
+# M. .MMM'  M 88.  .88       88   88   88.  ... 88  88  88
+# Mb.     .dM `8888P88 `88888P'   dP   `88888P' dP  dP  dP
+# MMMMMMMMMMM      .88
+#              d8888P
+# M""""""""M
+# Mmmm  mmmM
+# MMMM  MMMM 88d888b. .d8888b. dP    dP
+# MMMM  MMMM 88'  `88 88'  `88 88    88
+# MMMM  MMMM 88       88.  .88 88.  .88
+# MMMM  MMMM dP       `88888P8 `8888P88
+# MMMMMMMMMM                        .88
+#                               d8888P
 
 # ------------------------------------------------------------------------- #
 #                       SystemTray - class for implementing a psyeudo tray  #
@@ -12378,8 +12383,7 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
                   background_color=bc, pad=(0, 0), metadata=TITLEBAR_METADATA_MARKER, key=key)
 
 
-# Not ready for prime time
-def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, p=None, background_color=None, text_color=None,
+def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=0, p=None, background_color=None, text_color=None,
                   bar_background_color=None, bar_text_color=None, key=None, k=None):
     """
     A custom Menubar that replaces the OS provided Menubar
@@ -12397,7 +12401,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :type font:                  (str or (str, int[, str]) or None)
     :param tearoff:              if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
     :type tearoff:               (bool)
-    :param pad:                  Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+    :param pad:                  Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int).  TIP - 0 will make flush with titlebar
     :type pad:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param p:                    Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
     :type p:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
@@ -23916,11 +23920,9 @@ def main_global_pysimplegui_settings():
         style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
         style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
     """
+    # ------------------------- TTK Tab -------------------------
     ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(TTK_THEME_LIST, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
 
-    # ttk_layout = [[]]
-    # for key, item in scrollbar_components.items():
-    #     ttk_layout += [[T(key, s=15), Combo(theme_choices, default_value=settings.get('-ttk scroll-'+key, item))]]
     t_len = max([len(l) for l in TTK_SCROLLBAR_PART_LIST])
     ttk_layout = [[]]
     for key, item in ttk_part_mapping_dict.items():
@@ -23933,14 +23935,18 @@ def main_global_pysimplegui_settings():
 
     ttk_scrollbar_tab_layout += ttk_layout
     ttk_scrollbar_tab_layout += [[Button('Reset Scrollbar Settings'), Button('Test Scrollbar Settings')]]
-    ttk_tab = Tab('TTK Scrollbar', ttk_scrollbar_tab_layout)
+    ttk_tab = Tab('TTK', ttk_scrollbar_tab_layout)
 
     layout = [[T('Global PySimpleGUI Settings', text_color=theme_button_color()[0], background_color=theme_button_color()[1],font='_ 18', expand_x=True, justification='c')]]
+
+    # ------------------------- Interpreter Tab -------------------------
+
 
     interpreter_tab = Tab('Python Interpreter',
               [[T('Normally leave this blank')],
                 [T('Command to run a python program:'), In(settings.get('-python command-', ''), k='-PYTHON COMMAND-', enable_events=True), FileBrowse()]], font='_ 16', expand_x=True)
 
+    # ------------------------- Editor Tab -------------------------
 
     editor_tab = Tab('Editor Settings',
               [[T('Command to invoke your editor:'), In(settings.get('-editor program-', ''), k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
@@ -23950,9 +23956,12 @@ def main_global_pysimplegui_settings():
               [T('Edit Format String (hover for tooltip)', tooltip=tooltip),
                In(settings.get('-editor format string-', '<editor> <file>'), k='-EDITOR FORMAT-', tooltip=tooltip)]], font='_ 16', expand_x=True)
 
+    # ------------------------- Explorer Tab -------------------------
 
     explorer_tab = Tab('Explorer Program',
               [[In(settings.get('-explorer program-', ''), k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)]], font='_ 16', expand_x=True,  tooltip=tooltip_file_explorer)
+
+    # ------------------------- Snapshots Tab -------------------------
 
     snapshots_tab = Tab('Window Snapshots',
               [[Combo(('',)+key_choices, default_value=settings.get(json.dumps(('-snapshot keysym-', i)), ''), readonly=True, k=('-SNAPSHOT KEYSYM-', i), s=(None, 30)) for i in range(4)],
@@ -23961,6 +23970,7 @@ def main_global_pysimplegui_settings():
               [T('Screenshots Filename or Prefix:'), Push(), In(settings.get('-screenshots filename-', ''), k='-SCREENSHOTS FILENAME-'), FileBrowse()],
               [Checkbox('Auto-number Images', k='-SCREENSHOTS AUTONUMBER-')]], font='_ 16', expand_x=True,)
 
+    # ------------------------- Theme Tab -------------------------
 
     theme_tab = Tab('Theme',
               [[T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
@@ -23968,7 +23978,7 @@ def main_global_pysimplegui_settings():
                Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')]],
                         font='_ 16', expand_x=True)
 
-    settings_tab_group = TabGroup([[theme_tab, interpreter_tab, explorer_tab, editor_tab, ttk_tab, snapshots_tab ]])
+    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab ]])
     layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
