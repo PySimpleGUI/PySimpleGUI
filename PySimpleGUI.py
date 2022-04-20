@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.23 Released 5-Apr-2022"
+version = __version__ = "4.59.0.24 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -74,7 +74,7 @@ _change_log = """
             Added new parm "wait" which is an alias for the "blocking" parm.  Some may like it better.  Take your choice
             Changed button text to "Click to continue" if the blocking/wait parm is set so that it's obvious that your program is waiting on you
     4.59.0.19
-        OK... this time got the Debug Prit stuff working right for real!  YES?  ;-)
+        OK... this time got the Debug Print stuff working right for real!  YES?  ;-)
     4.59.0.20
         irony - when you accidently leave debug prints in your debug print code
     4.59.0.21
@@ -87,6 +87,8 @@ _change_log = """
         Changed the popup errors for Tabs to be popup error with traceback. Much nicer experience with this newer error popup
         Removed Output Element from the packer function... you know it's really gone when it's not in there
             To be clear, there still is an Output Element... it's just a Multiline in disguise now.
+    4.59.0.24
+        Support for the GrayGrayGray theme with the new ttk scrollbars... for those that like the grayscale world, you're now safe
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -14553,34 +14555,24 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
 
         # print(Stylist.get_options(style_name, 'default'))
-
-        style.configure(style_name, troughcolor=element.scroll_trough_color)
-        # style.configure(style_name, darkcolor='red')
-        # style.configure(style_name, lightcolor='red')
-        style.configure(style_name, relief=element.scroll_relief)
-        style.configure(style_name, framecolor=element.scroll_frame_color)
-        style.configure(style_name, bordercolor=element.scroll_frame_color)
-        # style.configure(style_name, thumb='red')
-        # style.configure(style_name, gripcount=16)
-        style.configure(style_name, width=element.scroll_width)
-        style.configure(style_name, arrowsize=element.scroll_arrow_width)
-        # style.configure(style_name, foreground=element.scroll_trough_color)
-        # style.configure(style_name_thumb, arrowsize=40)
-        # style.map(style_name_thumb, background=[("selected", 'red'), ('active', 'red'), ('background', 'red'), ('!focus', 'red')])
-        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
-        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
-        # style.map(style_name, arrowcolor=[("selected", 'red'), ('active', 'red'), ('background', 'red'),('!focus', 'red')])
-        # style.map(style_name, uparrow=[("selected", element.scroll_arrow_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
-        # style.map(style_name, foreground=[("selected", element.scroll_arrow_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_arrow_color), ('!focus', element.scroll_arrow_color)])
-        #
-        # foreground=[('disabled', 'yellow'),
-        #             ('pressed', 'red'),
-        #             ('active', 'blue')],
-        # background=[('disabled', 'magenta'),
-        #             ('pressed', '!focus', 'cyan'),
-        #             ('active', 'green')],
-        # highlightcolor=[('focus', 'green'),
-        #                 ('!focus', 'red')],
+        if element.scroll_trough_color not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, troughcolor=element.scroll_trough_color)
+        if element.scroll_relief not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, relief=element.scroll_relief)
+        if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, framecolor=element.scroll_frame_color)
+        if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, bordercolor=element.scroll_frame_color)
+        if element.scroll_width not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, width=element.scroll_width)
+        if element.scroll_arrow_width not in (None, COLOR_SYSTEM_DEFAULT):
+            style.configure(style_name, arrowsize=element.scroll_arrow_width)
+        if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+            (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+            style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
+        if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+            (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+            style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
 
     def _add_grab(element):
 
