@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.22 Released 5-Apr-2022"
+version = __version__ = "4.59.0.23 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -83,6 +83,10 @@ _change_log = """
         "Ding-dong the Output's dead" - finally replaced the Output element with Multiline by subclassing Multiline
             This solves a bunch of problems including duplication of funcationality using 2 different techniques.
             Problem may be in backward compatibility if anyone is using internal Output element member variables, etc.
+    4.59.0.23
+        Changed the popup errors for Tabs to be popup error with traceback. Much nicer experience with this newer error popup
+        Removed Output Element from the packer function... you know it's really gone when it's not in there
+            To be clear, there still is an Output Element... it's just a Multiline in disguise now.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7015,34 +7019,33 @@ class Tab(Element):
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             if type(element) == list:
-                PopupError('Error creating Tab layout',
+                popup_error_with_traceback('Error creating Tab layout',
                            'Layout has a LIST instead of an ELEMENT',
                            'This means you have a badly placed ]',
                            'The offensive list is:',
                            element,
-                           'This list will be stripped from your layout', keep_on_top=True, image=_random_error_emoji()
-                           )
+                           'This list will be stripped from your layout')
                 continue
             elif callable(element) and not isinstance(element, Element):
-                PopupError('Error creating Tab layout',
+                popup_error_with_traceback('Error creating Tab layout',
                            'Layout has a FUNCTION instead of an ELEMENT',
                            'This likely means you are missing () from your layout',
                            'The offensive list is:',
                            element,
-                           'This item will be stripped from your layout', keep_on_top=True, image=_random_error_emoji())
+                           'This item will be stripped from your layout')
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
                     '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
-                PopupError('Error creating Tab layout',
+                popup_error_with_traceback('Error creating Tab layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
                            'The offensive Element = ',
                            element,
                            'and has a key = ', element.Key,
                            'This item will be stripped from your layout',
-                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True, image=_random_error_emoji())
+                           'Hint - try printing your layout and matching the IDs "print(layout)"')
                 continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
@@ -10147,8 +10150,7 @@ class Window:
         if self.TKrootDestroyed:
             self.read_closed_window_count += 1
             if self.read_closed_window_count > 100:
-                popup_error('You have tried 100 times to read a closed window.', 'You need to add a check for event == WIN_CLOSED',
-                            title='Trying to read a closed window')
+                popup_error_with_traceback('Trying to read a closed window', 'You have tried 100 times to read a closed window.', 'You need to add a check for event == WIN_CLOSED',)
             return None, None
         if not self.Shown:
             self._Show()
@@ -15764,24 +15766,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
                 _add_right_click_menu_and_grab(element)
-                # -------------------------  OUTPUT placement element  ------------------------- #
-            elif element_type == ELEM_TYPE_OUTPUT:
-                element = element  # type: Output
-                width, height = element_size
-                element._TKOut = element.Widget = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
-                                                           background_color=element.BackgroundColor,
-                                                           text_color=text_color, font=font,
-                                                           pad=elementpad, echo_stdout_stderr=element.echo_stdout_stderr)
-                element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
-                element._TKOut.pack(side=tk.LEFT, expand=expand, fill=fill)
-                if element.visible is False:
-                    element._pack_forget_save_settings(alternate_widget=element._TKOut.frame)
-                    # element._TKOut.frame.pack_forget()
-                if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                _add_right_click_menu_and_grab(element)
-                # row_should_expand = True
                 # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
