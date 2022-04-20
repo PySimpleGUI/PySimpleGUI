@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.21 Released 5-Apr-2022"
+version = __version__ = "4.59.0.22 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -79,7 +79,10 @@ _change_log = """
         irony - when you accidently leave debug prints in your debug print code
     4.59.0.21
         Additional exception handling needed for debug window closure at any point 
-        
+    4.59.0.22
+        "Ding-dong the Output's dead" - finally replaced the Output element with Multiline by subclassing Multiline
+            This solves a bunch of problems including duplication of funcationality using 2 different techniques.
+            Problem may be in backward compatibility if anyone is using internal Output element member variables, etc.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4259,117 +4262,119 @@ class TKProgressBar():
                 return False
         return True
 
-
-# ---------------------------------------------------------------------- #
-#                           TKOutput                                     #
-#   New Type of TK Widget that's a Text Widget in disguise               #
-#       Note that it's inherited from the TKFrame class so that the      #
-#       Scroll bar will span the length of the frame                     #
-# ---------------------------------------------------------------------- #
-class TKOutput(tk.Frame):
-    """
-    tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together.
-    Note - This is NOT a user controlled class. Users should NOT be directly using it unless making an extention
-    to PySimpleGUI by directly manipulating tkinter.
-    """
-
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, echo_stdout_stderr=False, font=None, pad=None):
-        """
-        :param parent:             The "Root" that the Widget will be in
-        :type parent:              tk.Tk | tk.Toplevel
-        :param width:              Width in characters
-        :type width:               (int)
-        :param height:             height in rows
-        :type height:              (int)
-        :param bd:                 Border Depth.  How many pixels of border to show
-        :type bd:                  (int)
-        :param background_color:   color of background
-        :type background_color:    (str)
-        :param text_color:         color of the text
-        :type text_color:          (str)
-        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
-        :type echo_stdout_stderr:  (bool)
-        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                (str or (str, int[, str]) or None)
-        :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        """
-        self.frame = tk.Frame(parent)
-        tk.Frame.__init__(self, self.frame)
-        self.output = tk.Text(self.frame, width=width, height=height, bd=bd, font=font)
-        if background_color and background_color != COLOR_SYSTEM_DEFAULT:
-            self.output.configure(background=background_color)
-            self.frame.configure(background=background_color)
-        if text_color and text_color != COLOR_SYSTEM_DEFAULT:
-            self.output.configure(fg=text_color)
-            self.output.configure(insertbackground=text_color)
-        self.vsb = tk.Scrollbar(self.frame, orient="vertical", command=self.output.yview)
-        self.output.configure(yscrollcommand=self.vsb.set)
-        self.output.pack(side="left", fill="both", expand=True)
-        self.vsb.pack(side="left", fill="y", expand=False)
-        self.frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
-        self.previous_stdout = sys.stdout
-        self.previous_stderr = sys.stderr
-        self.parent = parent
-        self.echo_stdout_stderr = echo_stdout_stderr
-
-        sys.stdout = self
-        sys.stderr = self
-        self.pack()
-
-    def write(self, txt):
-        """
-        Called by Python (not tkinter?) when stdout or stderr wants to write
-        Refreshes the window after the write so that the change is immediately displayed
-
-        :param txt: text of output
-        :type txt:  (str)
-        """
-        try:
-            self.output.insert(tk.END, str(txt))
-            self.output.see(tk.END)
-            self.parent.update()
-        except:
-            pass
-
-        try:
-            if self.echo_stdout_stderr:
-                self.previous_stdout.write(txt)
-        except:
-            pass
-
-    def Close(self):
-        """
-        Called when wanting to restore the old stdout/stderr
-        """
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
-
-    def flush(self):
-        """
-        Flush parameter was passed into a print statement.
-        For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
-        """
-        try:
-            if self.echo_stdout_stderr:
-                self.previous_stdout.flush()
-        except:
-            pass
-
-    def __del__(self):
-        """
-        If this Widget is deleted, be sure and restore the old stdout, stderr
-        """
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
+#
+# # ---------------------------------------------------------------------- #
+# #                           TKOutput                                     #
+# #   New Type of TK Widget that's a Text Widget in disguise               #
+# #       Note that it's inherited from the TKFrame class so that the      #
+# #       Scroll bar will span the length of the frame                     #
+# # ---------------------------------------------------------------------- #
+# class TKOutput(tk.Frame):
+#     """
+#     tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together.
+#     Note - This is NOT a user controlled class. Users should NOT be directly using it unless making an extention
+#     to PySimpleGUI by directly manipulating tkinter.
+#     """
+#
+#     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, echo_stdout_stderr=False, font=None, pad=None):
+#         """
+#         :param parent:             The "Root" that the Widget will be in
+#         :type parent:              tk.Tk | tk.Toplevel
+#         :param width:              Width in characters
+#         :type width:               (int)
+#         :param height:             height in rows
+#         :type height:              (int)
+#         :param bd:                 Border Depth.  How many pixels of border to show
+#         :type bd:                  (int)
+#         :param background_color:   color of background
+#         :type background_color:    (str)
+#         :param text_color:         color of the text
+#         :type text_color:          (str)
+#         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
+#         :type echo_stdout_stderr:  (bool)
+#         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+#         :type font:                (str or (str, int[, str]) or None)
+#         :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+#         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+#         """
+#         self.frame = tk.Frame(parent)
+#         tk.Frame.__init__(self, self.frame)
+#         self.output = tk.Text(self.frame, width=width, height=height, bd=bd, font=font)
+#         if background_color and background_color != COLOR_SYSTEM_DEFAULT:
+#             self.output.configure(background=background_color)
+#             self.frame.configure(background=background_color)
+#         if text_color and text_color != COLOR_SYSTEM_DEFAULT:
+#             self.output.configure(fg=text_color)
+#             self.output.configure(insertbackground=text_color)
+#         self.vsb = tk.Scrollbar(self.frame, orient="vertical", command=self.output.yview)
+#         self.output.configure(yscrollcommand=self.vsb.set)
+#         self.output.pack(side="left", fill="both", expand=True)
+#         self.vsb.pack(side="left", fill="y", expand=False)
+#         self.frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
+#         self.previous_stdout = sys.stdout
+#         self.previous_stderr = sys.stderr
+#         self.parent = parent
+#         self.echo_stdout_stderr = echo_stdout_stderr
+#
+#         sys.stdout = self
+#         sys.stderr = self
+#         self.pack()
+#
+#     def write(self, txt):
+#         """
+#         Called by Python (not tkinter?) when stdout or stderr wants to write
+#         Refreshes the window after the write so that the change is immediately displayed
+#
+#         :param txt: text of output
+#         :type txt:  (str)
+#         """
+#         try:
+#             self.output.insert(tk.END, str(txt))
+#             self.output.see(tk.END)
+#             self.parent.update()
+#         except:
+#             pass
+#
+#         try:
+#             if self.echo_stdout_stderr:
+#                 self.previous_stdout.write(txt)
+#         except:
+#             pass
+#
+#     def Close(self):
+#         """
+#         Called when wanting to restore the old stdout/stderr
+#         """
+#         sys.stdout = self.previous_stdout
+#         sys.stderr = self.previous_stderr
+#
+#     def flush(self):
+#         """
+#         Flush parameter was passed into a print statement.
+#         For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
+#         """
+#         try:
+#             if self.echo_stdout_stderr:
+#                 self.previous_stdout.flush()
+#         except:
+#             pass
+#
+#     def __del__(self):
+#         """
+#         If this Widget is deleted, be sure and restore the old stdout, stderr
+#         """
+#         sys.stdout = self.previous_stdout
+#         sys.stderr = self.previous_stderr
 
 
 # ---------------------------------------------------------------------- #
 #                           Output                                       #
 #  Routes stdout, stderr to a scrolled window                            #
 # ---------------------------------------------------------------------- #
-class Output(Element):
+class Output(Multiline):
     """
+    ** NOTE - It's recommended to use Multiline Element instead **
+
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
 
     The Multiline Element is the superior and recommended method for showing the output of stdout.
@@ -4378,6 +4383,9 @@ class Output(Element):
 
     Of course, Output Element continues to operate and be backwards compatible, but you're missing out on
     features such as routing the cprint output to the element.
+
+    In Apr 2022, the Output Element was switched to be a subclass of the Multiline so that more code will be in common. Nowever
+    you will not get all of the parms unless you switch to the Multline Specifically
     """
 
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, echo_stdout_stderr=False, font=None, tooltip=None,
@@ -4417,103 +4425,103 @@ class Output(Element):
         :type metadata:            (Any)
         """
 
-        self._TKOut = self.Widget = None  # type: TKOutput
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-        self.RightClickMenu = right_click_menu
-        key = key if key is not None else k
-        self.echo_stdout_stderr = echo_stdout_stderr
-        sz = size if size != (None, None) else s
-        pad = pad if pad is not None else p
-        self.expand_x = expand_x
-        self.expand_y = expand_y
+        # self._TKOut = self.Widget = None  # type: TKOutput
+        # bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        # fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        # self.RightClickMenu = right_click_menu
+        # key = key if key is not None else k
+        # self.echo_stdout_stderr = echo_stdout_stderr
+        # sz = size if size != (None, None) else s
+        # pad = pad if pad is not None else p
+        # self.expand_x = expand_x
+        # self.expand_y = expand_y
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=sz, background_color=bg, text_color=fg, pad=pad, font=font,
-                         tooltip=tooltip, key=key, visible=visible, metadata=metadata)
+        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip,
+                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata)
+    #
+    # @property
+    # def tk_out(self):
+    #     """
+    #     Returns the TKOutput object used to create the element
+    #
+    #     :return: The TKOutput object
+    #     :rtype:  (TKOutput)
+    #     """
+    #     if self._TKOut is None:
+    #         print('*** Did you forget to call Finalize()? Your code should look something like: ***')
+    #         print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
+    #     return self._TKOut
+    #
+    # def update(self, value=None, visible=None):
+    #     """
+    #     Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+    #
+    #     Changes will not be visible in your window until you call window.read or window.refresh.
+    #
+    #     If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
+    #     function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
+    #     when made visible.
+    #
+    #     :param value:   string that will replace current contents of the output area
+    #     :type value:    (str)
+    #     :param visible: control visibility of element
+    #     :type visible:  (bool)
+    #     """
+    #     if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+    #         return
+    #
+    #     if value is not None:
+    #         self._TKOut.output.delete('1.0', tk.END)
+    #         self._TKOut.output.insert(tk.END, value)
+    #     if visible is False:
+    #         self._pack_forget_save_settings(self._TKOut.frame)
+    #     elif visible is True:
+    #         self._pack_restore_settings(self._TKOut.frame)
+    #
+    #     if visible is not None:
+    #         self._visible = visible
+    #
+    # def get(self):
+    #     """
+    #     Returns the current contents of the output.  Similar to Get method other Elements
+    #     :return: the current value of the output
+    #     :rtype:  (str)
+    #     """
+    #     return self._TKOut.output.get(1.0, tk.END)
+    #
+    # def expand(self, expand_x=False, expand_y=False, expand_row=True):
+    #     """
+    #     Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
+    #
+    #     :param expand_x: If True Element will expand in the Horizontal directions
+    #     :type expand_x:  (bool)
+    #     :param expand_y: If True Element will expand in the Vertical directions
+    #     :type expand_y:  (bool)
+    #     """
+    #
+    #     if expand_x and expand_y:
+    #         fill = tk.BOTH
+    #     elif expand_x:
+    #         fill = tk.X
+    #     elif expand_y:
+    #         fill = tk.Y
+    #     else:
+    #         return
+    #
+    #     self._TKOut.output.pack(expand=True, fill=fill)
+    #     self._TKOut.frame.pack(expand=True, fill=fill)
+    #     self.ParentRowFrame.pack(expand=expand_row, fill=fill)
+    #
+    # def __del__(self):
+    #     """
+    #     Delete this element. Normally Elements do not have their delete method specified, but for this one
+    #     it's important that the underlying TKOut object get deleted so that the stdout will get restored properly
+    #     """
+    #     self._TKOut.__del__()
 
-    @property
-    def tk_out(self):
-        """
-        Returns the TKOutput object used to create the element
-
-        :return: The TKOutput object
-        :rtype:  (TKOutput)
-        """
-        if self._TKOut is None:
-            print('*** Did you forget to call Finalize()? Your code should look something like: ***')
-            print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
-        return self._TKOut
-
-    def update(self, value=None, visible=None):
-        """
-        Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        Changes will not be visible in your window until you call window.read or window.refresh.
-
-        If you change visibility, your element may MOVE. If you want it to remain stationary, use the "layout helper"
-        function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
-        when made visible.
-
-        :param value:   string that will replace current contents of the output area
-        :type value:    (str)
-        :param visible: control visibility of element
-        :type visible:  (bool)
-        """
-        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
-            return
-
-        if value is not None:
-            self._TKOut.output.delete('1.0', tk.END)
-            self._TKOut.output.insert(tk.END, value)
-        if visible is False:
-            self._pack_forget_save_settings(self._TKOut.frame)
-        elif visible is True:
-            self._pack_restore_settings(self._TKOut.frame)
-
-        if visible is not None:
-            self._visible = visible
-
-    def get(self):
-        """
-        Returns the current contents of the output.  Similar to Get method other Elements
-        :return: the current value of the output
-        :rtype:  (str)
-        """
-        return self._TKOut.output.get(1.0, tk.END)
-
-    def expand(self, expand_x=False, expand_y=False, expand_row=True):
-        """
-        Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
-
-        :param expand_x: If True Element will expand in the Horizontal directions
-        :type expand_x:  (bool)
-        :param expand_y: If True Element will expand in the Vertical directions
-        :type expand_y:  (bool)
-        """
-
-        if expand_x and expand_y:
-            fill = tk.BOTH
-        elif expand_x:
-            fill = tk.X
-        elif expand_y:
-            fill = tk.Y
-        else:
-            return
-
-        self._TKOut.output.pack(expand=True, fill=fill)
-        self._TKOut.frame.pack(expand=True, fill=fill)
-        self.ParentRowFrame.pack(expand=expand_row, fill=fill)
-
-    def __del__(self):
-        """
-        Delete this element. Normally Elements do not have their delete method specified, but for this one
-        it's important that the underlying TKOut object get deleted so that the stdout will get restored properly
-        """
-        self._TKOut.__del__()
-
-    TKOut = tk_out
-    Update = update
-    Get = get
+    # TKOut = tk_out
+    # Update = update
+    # Get = get
 
 
 # ---------------------------------------------------------------------- #
