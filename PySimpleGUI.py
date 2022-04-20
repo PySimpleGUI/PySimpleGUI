@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.24 Released 5-Apr-2022"
+version = __version__ = "4.59.0.25 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -89,6 +89,8 @@ _change_log = """
             To be clear, there still is an Output Element... it's just a Multiline in disguise now.
     4.59.0.24
         Support for the GrayGrayGray theme with the new ttk scrollbars... for those that like the grayscale world, you're now safe
+    4.59.0.25
+        Fix for systems that don't yet have the ttk scrollbars set up. Was getting the incorrect defaults (they were all blank)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23793,9 +23795,19 @@ def main_get_debug_data(suppress_popup=False):
 
 
 def _global_settings_get_ttk_scrollbar_info():
+    """
+    This function reads the ttk scrollbar settings from the global PySimpleGUI settings file.
+    Each scrollbar setting is stored with a key that's a TUPLE, not a normal string key.
+    The settings are for pieces of the scrollbar and their associated piece of the PySimpleGUI theme.
+
+    The whole ttk scrollbar feature is based on mapping parts of the scrollbar to parts of the PySimpleGUI theme.
+    That is what the ttk_part_mapping_dict does, maps between the two lists of items.
+    For example, the scrollbar arrow color may map to the theme input text color.
+
+    """
     global ttk_part_mapping_dict, DEFAULT_TTK_THEME
     for ttk_part in TTK_SCROLLBAR_PART_LIST:
-        value = pysimplegui_user_settings.get(json.dumps(('-ttk scroll-', ttk_part)), None)
+        value = pysimplegui_user_settings.get(json.dumps(('-ttk scroll-', ttk_part)), ttk_part_mapping_dict[ttk_part])
         ttk_part_mapping_dict[ttk_part] = value
 
     DEFAULT_TTK_THEME = pysimplegui_user_settings.get('-ttk theme-', DEFAULT_TTK_THEME)
@@ -23879,57 +23891,7 @@ def main_global_pysimplegui_settings():
                     'If you do not call theme("theme name") by your program to change the theme, then the default is used.\n' + \
                     'This setting allows you to set the theme that PySimpleGUI will use for ALL of your programs that\n' + \
                     'do not set a theme specifically.'
-    """
-    if sbar_trough_color is not None:
-        self.scroll_trough_color = sbar_trough_color
-    else:
-        self.scroll_trough_color = theme_slider_color()
 
-    if sbar_background_color is not None:
-        self.scroll_background_color = sbar_background_color
-    else:
-        self.scroll_background_color = theme_button_color()[1]
-
-
-    if sbar_arrow_color is not None:
-        self.scroll_arrow_color = sbar_arrow_color
-    else:
-        self.scroll_arrow_color = theme_button_color()[0]
-
-    if sbar_arrow_background_color is not None:
-        self.scroll_arrow_background_color = sbar_arrow_background_color
-    else:
-        self.scroll_arrow_background_color = theme_button_color()[1]
-
-    if sbar_width is not None:
-        self.scroll_width = sbar_width
-    else:
-        self.scroll_width = 10
-
-    if sbar_arrow_width is not None:
-        self.scroll_arrow_width = sbar_arrow_width
-    else:
-        self.scroll_arrow_width = self.scroll_width
-
-    if sbar_frame_color is not None:
-        self.scroll_frame_color = sbar_frame_color
-    else:
-        self.scroll_frame_color = theme_background_color()
-
-    if sbar_relief is not None:
-        self.scroll_relief = sbar_relief
-    else:
-        self.scroll_relief = RELIEF_RAISED
-
-        style.configure(style_name, troughcolor=element.scroll_trough_color)
-        style.configure(style_name, relief=element.scroll_relief)
-        style.configure(style_name, framecolor=element.scroll_frame_color)
-        style.configure(style_name, bordercolor=element.scroll_frame_color)
-        style.configure(style_name, width=element.scroll_width)
-        style.configure(style_name, arrowsize=element.scroll_arrow_width)
-        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
-        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
-    """
     # ------------------------- TTK Tab -------------------------
     ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(TTK_THEME_LIST, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
 
