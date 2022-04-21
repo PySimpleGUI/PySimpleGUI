@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.25 Released 5-Apr-2022"
+version = __version__ = "4.59.0.26 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -91,6 +91,8 @@ _change_log = """
         Support for the GrayGrayGray theme with the new ttk scrollbars... for those that like the grayscale world, you're now safe
     4.59.0.25
         Fix for systems that don't yet have the ttk scrollbars set up. Was getting the incorrect defaults (they were all blank)
+    4.59.0.26
+        Debug window - betting re-opening code so that the data is not missed from being printed
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10958,6 +10960,24 @@ class Window:
         self.Rows = None
         self.TKroot = None
 
+    def is_closed(self):
+        """
+        Returns True is the window is maybe closed.  Can be difficult to tell sometimes
+
+        :return:    True if the window was closed or destroyed
+        :rtype:     (bool)
+        """
+
+        if self.TKrootDestroyed or self.TKroot is None:
+            return True
+        # see if can do an update... if not, then it's been destroyed
+        try:
+            rc = self.TKroot.update()
+        except:
+            return True
+        return False
+
+
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def _OnClosingCallback(self):
         """
@@ -17242,16 +17262,20 @@ class _DebugWin():
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True, resizable=resizable)
         return
 
+    def reopen_window(self):
+        if self.window is None or (self.window is not None and self.window.is_closed()):
+            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
+                          no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
+
+
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None, blocking=None):
         global SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS
         suppress = SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS
         SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS = True
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
-        if self.window is None:  # if window was destroyed already re-open it
-            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
-                          no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout, blocking=blocking)
+        self.reopen_window()            # if needed, open the window again
 
         timeout  = 0 if not blocking else None
         if  erase_all:
@@ -17268,7 +17292,13 @@ class _DebugWin():
                 if i != num_args - 1:
                     outstring += sep_str
             outstring += end_str
-            self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
+            try:
+                self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
+            except:
+                self.window=None
+                self.reopen_window()
+                self.output_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
+
         else:
             print(*args, sep=sepchar, end=endchar)
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
@@ -17277,13 +17307,13 @@ class _DebugWin():
             try:                    # The window may be closed by user at any time, so have to protect
                 self.quit_button.update(text='Click to continue...')
             except:
-                pass
+                self.window = None
         else:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             try:                    # The window may be closed by user at any time, so have to protect
                 self.quit_button.update(text='Quit')
             except:
-                pass
+                self.window = None
 
         try:                        # The window may be closed by user at any time, so have to protect
             if blocking:
@@ -17291,7 +17321,9 @@ class _DebugWin():
             else:
                 self.window['-PAUSE-'].update(visible=True)
         except:
-            pass
+            self.window = None
+
+        self.reopen_window()            # if needed, open the window again
 
         paused = None
         while True:
