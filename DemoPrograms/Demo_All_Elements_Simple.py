@@ -14,11 +14,18 @@ def make_window(theme=None):
 
     NAME_SIZE = 23
 
+
     def name(name):
         dots = NAME_SIZE-len(name)-2
         return sg.Text(name + ' ' + '•'*dots, size=(NAME_SIZE,1), justification='r',pad=(0,0), font='Courier 10')
 
     sg.theme(theme)
+
+    # NOTE that we're using our own LOCAL Menu element
+    if use_custom_titlebar:
+        Menu = sg.MenubarCustom
+    else:
+        Menu = sg.Menu
 
     treedata = sg.TreeData()
 
@@ -59,8 +66,9 @@ def make_window(theme=None):
                 [name('StatusBar'), sg.StatusBar('StatusBar')],
                 [name('Sizegrip'), sg.Sizegrip()]  ]
 
-    layout = [[sg.MenubarCustom([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)] if use_custom_titlebar else [sg.Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
-              [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-')],
+    # Note - LOCAL Menu element is used (see about for how that's defined)
+    layout = [[Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+              [sg.Checkbox('Use Custom Titlebar & Menubar', sg.theme_use_custom_titlebar(), enable_events=True, k='-USE CUSTOM TITLEBAR-')],
               [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
               [sg.Col(layout_l), sg.Col(layout_r)]]
 
@@ -76,6 +84,7 @@ window = make_window()
 
 while True:
     event, values = window.read()
+    sg.Print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == 'Edit Me':
