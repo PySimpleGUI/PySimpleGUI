@@ -11,6 +11,8 @@ import PySimpleGUI as sg
     The first image that uses popup_animated will stop after a few seconds on its own.
     The remaining images are shown 1 at a time. To move on to the next image, click the current image.
     If you want to exit before reaching the final image, right click the image and choose 'exit'
+    
+    Copyright 2022 PySimpleGUI
 """
 
 # ---------------------------- Base 64 GIFs ----------------------------
@@ -29,18 +31,20 @@ bar_striped = b'R0lGODlhoAAUAIAAAAQCBP7+/iH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCQABACwA
 gifs = [ring_blue, red_dots_ring, ring_black_dots, ring_gray_segments, ring_lines, blue_dots, red_dots_ring, bar_striped, line_boxes, line_bubbles]
 
 # first show how to use popup_animated using built-in GIF image
-for i in range(100000):
-    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, message='Right Click To Exit GIF Windows That Follow\nLeft click to move to next one', no_titlebar=False, time_between_frames=100, text_color='black', background_color='white')
+for i in range(1000):
+    if not sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, message='Right Click To Exit GIF Windows That Follow\nLeft click to move to next one', no_titlebar=False, time_between_frames=100, text_color='black', background_color='white'):
+        break
 sg.popup_animated(None)      # close all Animated Popups
 
 # Next demo is to show how to create custom windows with animations
-layout = [[sg.Image(data=gifs[0], enable_events=True, background_color='white', key='-IMAGE-', right_click_menu=['UNUSED', ['Exit']])],]
+layout = [[sg.Image(data=gifs[0], enable_events=True, background_color='white', key='-IMAGE-', right_click_menu=['UNUSED', ['Exit']], pad=0)],]
 
 window = sg.Window('My new window', layout,
         no_titlebar=True,
         grab_anywhere=True,
         keep_on_top=True,
         background_color='white',
+        # transparent_color='white' if sg.running_windows() else None,
         alpha_channel=.8,
         margins=(0,0))
 
