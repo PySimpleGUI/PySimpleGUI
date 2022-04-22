@@ -3004,6 +3004,10 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### move
 <!-- <+Window.move+> -->
 
+### move_to_center
+<!-- <+Window.move_to_center+> -->
+
+
 ### normal
 <!-- <+Window.normal+> -->
 
