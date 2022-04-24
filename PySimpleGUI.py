@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.26 Released 5-Apr-2022"
+version = __version__ = "4.59.0.27 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -93,6 +93,9 @@ _change_log = """
         Fix for systems that don't yet have the ttk scrollbars set up. Was getting the incorrect defaults (they were all blank)
     4.59.0.26
         Debug window - betting re-opening code so that the data is not missed from being printed
+    4.59.0.27
+        ttk scrollbar support for Column element - was really hacked in to get things to work. Next step is a little cleanup but want to
+            first simply make sure it's working.  Changes were limited to the scrollable column class (which was the scene of the hack-crime too)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4227,8 +4230,6 @@ class TKProgressBar():
             s = ttk.Style()
             _change_ttk_theme(s, ttk_theme)
 
-            # s.theme_use(ttk_theme)
-
             # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Horizontal.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
                 s.configure(self.style_name, background=BarColor[0], troughcolor=BarColor[1],
@@ -4240,7 +4241,6 @@ class TKProgressBar():
         else:
             s = ttk.Style()
             _change_ttk_theme(s, ttk_theme)
-            # s.theme_use(ttk_theme)
             # self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Vertical.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT and BarColor[0] != COLOR_SYSTEM_DEFAULT:
 
@@ -7664,33 +7664,40 @@ class TkScrollableFrame(tk.Frame):
     A frame with one or two scrollbars.  Used to make Columns with scrollbars
     """
 
-    def __init__(self, master, vertical_only, **kwargs):
+    def __init__(self, master, vertical_only, element, window, **kwargs):
         """
         :param master:        The parent widget
         :type master:         (tk.Widget)
         :param vertical_only: if True the only a vertical scrollbar will be shown
         :type vertical_only:  (bool)
+        :param element:       The element containing this object
+        :type element:        (Column)
         """
         tk.Frame.__init__(self, master, **kwargs)
         # create a canvas object and a vertical scrollbar for scrolling it
 
+        self.canvas = tk.Canvas(self)
+        element.Widget = self.canvas
         # Okay, we're gonna make a list. Containing the y-min, x-min, y-max, and x-max of the frame
-
-        self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
-        self.vscrollbar.pack(side='right', fill="y", expand="false")
+        element.element_frame = self
+        _make_ttk_scrollbar(element, 'v', window)
+        # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
+        element.vsb.pack(side='right', fill="y", expand="false")
 
         if not vertical_only:
-            self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
-            self.hscrollbar.pack(side='bottom', fill="x", expand="false")
-            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set, xscrollcommand=self.hscrollbar.set)
-        else:
-            self.canvas = tk.Canvas(self, yscrollcommand=self.vscrollbar.set)
+            _make_ttk_scrollbar(element, 'h', window)
+            # self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
+            element.hsb.pack(side='bottom', fill="x", expand="false")
+            self.canvas.config(xscrollcommand=element.hsb.set)
+            # self.canvas = tk.Canvas(self, )
+        # else:
+        #     self.canvas = tk.Canvas(self)
 
+        self.canvas.config(yscrollcommand=element.vsb.set)
         self.canvas.pack(side="left", fill="both", expand=True)
-
-        self.vscrollbar.config(command=self.canvas.yview)
+        element.vsb.config(command=self.canvas.yview)
         if not vertical_only:
-            self.hscrollbar.config(command=self.canvas.xview)
+            element.hsb.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -7838,8 +7845,8 @@ class Column(Element):
         self.VerticalAlignment = vertical_alignment
         key = key if key is not None else k
         self.Grab = grab
-        self.ExpandX = expand_x
-        self.ExpandY = expand_y
+        self.expand_x = expand_x
+        self.expand_y = expand_y
         self.Layout(layout)
         sz = size if size != (None, None) else s
         pad = pad if pad is not None else p
@@ -14440,6 +14447,58 @@ class Stylist:
         style.configure(ttkstyle, **kwargs)
         return ttkstyle
 
+def _make_ttk_style_name(base_style, element):
+    Window._counter_for_ttk_widgets += 1
+    style_name = str(Window._counter_for_ttk_widgets) + '___' + str(element.Key) + base_style
+    element.ttk_style_name = style_name
+    return style_name
+
+
+def _make_ttk_scrollbar(element, orientation, window):
+    """
+    Creates a ttk scrollbar for elements as they are being added to the layout
+
+    :param element:     The element
+    :type element:      (Element)
+    :param orientation: The orientation vertical ('v') or horizontal ('h')
+    :type orientation:  (str)
+    :param window: The window containing the scrollbar
+    :type window:  (str)
+    """
+
+    style = ttk.Style()
+    _change_ttk_theme(style, window.TtkTheme)
+    if orientation[0].lower() == 'v':
+        orient = 'vertical'
+        style_name = _make_ttk_style_name('.Vertical.TScrollbar', element)
+        # style_name_thumb = _make_ttk_style_name('.Vertical.TScrollbar.thumb', element)
+        element.vsb_style = style
+        element.vsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.yview, style=style_name)
+    else:
+        orient = 'horizontal'
+        style_name = _make_ttk_style_name('.Horizontal.TScrollbar', element)
+        element.hsb_style = style
+        element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
+
+    # print(Stylist.get_options(style_name, 'default'))
+    if element.scroll_trough_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, troughcolor=element.scroll_trough_color)
+    if element.scroll_relief not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, relief=element.scroll_relief)
+    if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, framecolor=element.scroll_frame_color)
+    if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, bordercolor=element.scroll_frame_color)
+    if element.scroll_width not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, width=element.scroll_width)
+    if element.scroll_arrow_width not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, arrowsize=element.scroll_arrow_width)
+    if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+        (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
+    if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+        (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
 
 # if __name__ == '__main__':
 #     root = tk.Tk()
@@ -14545,56 +14604,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     #     return False
 
 
-    def _make_ttk_style_name(base_style, element):
-        Window._counter_for_ttk_widgets += 1
-        style_name = str(Window._counter_for_ttk_widgets) + '___' + str(element.Key) + base_style
-        element.ttk_style_name = style_name
-        return style_name
-
-
-    def _make_ttk_scrollbar(element, orientation):
-        """
-        Creates a ttk scrollbar for elements as they are being added to the layout
-
-        :param element:     The element
-        :type element:      (Element)
-        :param orientation: The orientation vertical ('v') or horizontal ('h')
-        :type orientation:  (str)
-        """
-
-        style = ttk.Style()
-        _change_ttk_theme(style, toplevel_form.TtkTheme)
-        if orientation[0].lower() == 'v':
-            orient = 'vertical'
-            style_name = _make_ttk_style_name('.Vertical.TScrollbar', element)
-            # style_name_thumb = _make_ttk_style_name('.Vertical.TScrollbar.thumb', element)
-            element.vsb_style = style
-            element.vsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.yview, style=style_name)
-        else:
-            orient = 'horizontal'
-            style_name = _make_ttk_style_name('.Horizontal.TScrollbar', element)
-            element.hsb_style = style
-            element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
-
-        # print(Stylist.get_options(style_name, 'default'))
-        if element.scroll_trough_color not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, troughcolor=element.scroll_trough_color)
-        if element.scroll_relief not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, relief=element.scroll_relief)
-        if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, framecolor=element.scroll_frame_color)
-        if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, bordercolor=element.scroll_frame_color)
-        if element.scroll_width not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, width=element.scroll_width)
-        if element.scroll_arrow_width not in (None, COLOR_SYSTEM_DEFAULT):
-            style.configure(style_name, arrowsize=element.scroll_arrow_width)
-        if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
-            (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
-            style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
-        if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
-            (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
-            style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
 
     def _add_grab(element):
 
@@ -14702,8 +14711,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         if form.ElementJustification is not None:
             row_justify = form.ElementJustification
-        # elif toplevel_form.ElementJustification is not None:
-        #     row_justify = toplevel_form.ElementJustification
         else:
             row_justify = 'l'
 
@@ -14751,7 +14758,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Column
                 # ----------------------- SCROLLABLE Column ----------------------
                 if element.Scrollable:
-                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
+                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element, toplevel_form)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -14806,17 +14813,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # side = tk.LEFT
                 # row_justify = element.Justification
 
-                element.Widget = element.TKColFrame
+                # element.Widget = element.TKColFrame
 
                 expand = True
-                if element.ExpandX and element.ExpandY:
+                if element.expand_x and element.expand_y:
                     fill = tk.BOTH
                     row_fill_direction = tk.BOTH
                     row_should_expand = True
-                elif element.ExpandX:
+                elif element.expand_x:
                     fill = tk.X
                     row_fill_direction = tk.X
-                elif element.ExpandY:
+                elif element.expand_y:
                     fill = tk.Y
                     row_fill_direction = tk.Y
                     row_should_expand = True
@@ -15107,8 +15114,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                # Window._counter_for_ttk_widgets += 1
-                # style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + 'custombutton.TButton'
                 style_name = _make_ttk_style_name('.custombutton.TButton', element)
                 button_style = ttk.Style()
                 _change_ttk_theme(button_style, toplevel_form.TtkTheme)
@@ -15481,15 +15486,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
                 if not element.NoScrollbar:
-                    _make_ttk_scrollbar(element, 'v')
-
+                    _make_ttk_scrollbar(element, 'v', toplevel_form)
                     element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
 
                 # Horizontal scrollbar
                 if element.HorizontalScroll:
                     element.TKText.config(wrap='none')
-                    _make_ttk_scrollbar(element, 'h')
+                    _make_ttk_scrollbar(element, 'h', toplevel_form)
                     element.hsb.pack(side=tk.BOTTOM, fill='x')
                     element.Widget.configure(xscrollcommand=element.hsb.set)
 
@@ -15551,7 +15555,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKText = element.Widget = tk.scrolledtext.ScrolledText(element_frame, width=width, height=height, bd=bd, font=font, relief=RELIEF_SUNKEN)
 
                 if not element.no_scrollbar:
-                    _make_ttk_scrollbar(element, 'v')
+                    _make_ttk_scrollbar(element, 'v', toplevel_form)
 
                     element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
@@ -15559,7 +15563,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Horizontal scrollbar
                 if element.HorizontalScroll:
                     element.TKText.config(wrap='none')
-                    _make_ttk_scrollbar(element, 'h')
+                    _make_ttk_scrollbar(element, 'h', toplevel_form)
                     element.hsb.pack(side=tk.BOTTOM, fill='x')
                     element.Widget.configure(xscrollcommand=element.hsb.set)
                 else:
@@ -16025,7 +16029,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 custom_style = _make_ttk_style_name('.customtab.TNotebook', element)
                 style = ttk.Style()
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
-                # style.theme_use(toplevel_form.TtkTheme)
+
                 if element.TabLocation is not None:
                     position_dict = {'left': 'w', 'right': 'e', 'top': 'n', 'bottom': 's', 'lefttop': 'wn',
                                      'leftbottom': 'ws', 'righttop': 'en', 'rightbottom': 'es', 'bottomleft': 'sw',
@@ -16205,7 +16209,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 table_style = ttk.Style()
                 element.ttk_style = table_style
 
-                # table_style.theme_use(toplevel_form.TtkTheme)
                 _change_ttk_theme(table_style, toplevel_form.TtkTheme)
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -16253,7 +16256,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
                 if not element.HideVerticalScroll:
-                    _make_ttk_scrollbar(element, 'v')
+                    _make_ttk_scrollbar(element, 'v', toplevel_form)
 
                     element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
@@ -16261,7 +16264,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Horizontal scrollbar
                 if not element.VerticalScrollOnly:
                     # element.Widget.config(wrap='none')
-                    _make_ttk_scrollbar(element, 'h')
+                    _make_ttk_scrollbar(element, 'h', toplevel_form)
                     element.hsb.pack(side=tk.BOTTOM, fill='x')
                     element.Widget.configure(xscrollcommand=element.hsb.set)
 
@@ -16394,7 +16397,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # style_name = str(element.Key) + '.Treeview'
                 style_name = _make_ttk_style_name('.Treeview', element)
                 tree_style = ttk.Style()
-                # tree_style.theme_use(toplevel_form.TtkTheme)
                 _change_ttk_theme(tree_style, toplevel_form.TtkTheme)
 
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -16430,7 +16432,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
                 if not element.HideVerticalScroll:
-                    _make_ttk_scrollbar(element, 'v')
+                    _make_ttk_scrollbar(element, 'v', toplevel_form)
 
                     element.Widget.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
@@ -16438,7 +16440,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Horizontal scrollbar
                 if not element.VerticalScrollOnly:
                     # element.Widget.config(wrap='none')
-                    _make_ttk_scrollbar(element, 'h')
+                    _make_ttk_scrollbar(element, 'h', toplevel_form)
                     element.hsb.pack(side=tk.BOTTOM, fill='x')
                     element.Widget.configure(xscrollcommand=element.hsb.set)
 
@@ -16494,7 +16496,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # style_name = str(element.Key) + "Line.TSeparator"
                 style_name = _make_ttk_style_name(".Line.TSeparator", element)
                 style = ttk.Style()
-                # style.theme_use(toplevel_form.TtkTheme)
+
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
 
                 if element.color is not None:
@@ -16513,7 +16515,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Sizegrip
                 style_name = "Sizegrip.TSizegrip"
                 style = ttk.Style()
-                # style.theme_use(toplevel_form.TtkTheme)
+
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
 
                 size_grip = element.Widget = ttk.Sizegrip(tk_row_frame)
