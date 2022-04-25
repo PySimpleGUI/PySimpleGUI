@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.27 Released 5-Apr-2022"
+version = __version__ = "4.59.0.28 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -96,6 +96,8 @@ _change_log = """
     4.59.0.27
         ttk scrollbar support for Column element - was really hacked in to get things to work. Next step is a little cleanup but want to
             first simply make sure it's working.  Changes were limited to the scrollable column class (which was the scene of the hack-crime too)
+    4.59.0.28
+        fixed the Column.update call!  Missed the renaming of the ExpandX to expand_x in that function.  Sorry if you hit it!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7960,11 +7962,11 @@ class Column(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
-        if self.ExpandX and self.ExpandY:
+        if self.expand_x and self.expand_y:
             expand = tk.BOTH
-        elif self.ExpandX:
+        elif self.expand_x:
             expand = tk.X
-        elif self.ExpandY:
+        elif self.expand_y:
             expand = tk.Y
         else:
             expand = None
