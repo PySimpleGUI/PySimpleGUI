@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.28 Released 5-Apr-2022"
+version = __version__ = "4.59.0.29 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -98,6 +98,9 @@ _change_log = """
             first simply make sure it's working.  Changes were limited to the scrollable column class (which was the scene of the hack-crime too)
     4.59.0.28
         fixed the Column.update call!  Missed the renaming of the ExpandX to expand_x in that function.  Sorry if you hit it!
+    4.59.0.29
+        Added parms and docstrings to all elements with ttk scrollbars
+        Needed to remove the "arrow background color" option for ttk scrollbars.  You can't set that color directly it turns out... so one less parm now
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -858,19 +861,17 @@ PSG_THEME_PART_LIST = [PSG_THEME_PART_BACKGROUND, PSG_THEME_PART_BUTTON_BACKGROU
 
 TTK_SCROLLBAR_PART_TROUGH_COLOR = 'Trough Color'
 TTK_SCROLLBAR_PART_BACKGROUND_COLOR = 'Background Color'
-TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR = 'Arrow Button Backround Color'
 TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR = 'Arrow Button Arrow Color'
 TTK_SCROLLBAR_PART_FRAME_COLOR = 'Frame Color'
 TTK_SCROLLBAR_PART_SCROLL_WIDTH = 'Frame Width'
 TTK_SCROLLBAR_PART_ARROW_WIDTH = 'Arrow Width'
 TTK_SCROLLBAR_PART_RELIEF = 'Relief'
-TTK_SCROLLBAR_PART_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
+TTK_SCROLLBAR_PART_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
                            TTK_SCROLLBAR_PART_FRAME_COLOR, TTK_SCROLLBAR_PART_SCROLL_WIDTH, TTK_SCROLLBAR_PART_ARROW_WIDTH, TTK_SCROLLBAR_PART_RELIEF]
-TTK_SCROLLBAR_PART_THEME_BASED_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
+TTK_SCROLLBAR_PART_THEME_BASED_LIST = [TTK_SCROLLBAR_PART_TROUGH_COLOR, TTK_SCROLLBAR_PART_BACKGROUND_COLOR, TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR,
                            TTK_SCROLLBAR_PART_FRAME_COLOR]
 DEFAULT_TTK_PART_MAPPING_DICT = {TTK_SCROLLBAR_PART_TROUGH_COLOR: PSG_THEME_PART_SLIDER,
                                  TTK_SCROLLBAR_PART_BACKGROUND_COLOR : PSG_THEME_PART_BUTTON_BACKGROUND,
-                                 TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR : PSG_THEME_PART_BUTTON_BACKGROUND,
                                  TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR :PSG_THEME_PART_BUTTON_TEXT,
                                  TTK_SCROLLBAR_PART_FRAME_COLOR : PSG_THEME_PART_BACKGROUND,
                                  TTK_SCROLLBAR_PART_SCROLL_WIDTH : 12,
@@ -1008,33 +1009,48 @@ class Element():
 
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
                  visible=True, metadata=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
-        :param type:             The type of element. These constants all start with "ELEM_TYPE_"
-        :type type:              (int) (could be enum)
-        :param size:             w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:              (int, int) | (None, None) | int
-        :param auto_size_text:   True if the Widget should be shrunk to exactly fit the number of chars to show
-        :type auto_size_text:    bool
-        :param font:             specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              (str or (str, int[, str]) or None)
-        :param background_color: color of background. Can be in #RRGGBB format or a color name "black"
-        :type background_color:  (str)
-        :param text_color:       element's text color. Can be in #RRGGBB format or a color name "black"
-        :type text_color:        (str)
-        :param key:              Identifies an Element. Should be UNIQUE to this window.
-        :type key:               str | int | tuple | object
-        :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom). If an int is given, then auto-converted to tuple (int, int)
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param tooltip:          text, that will appear when mouse hovers over the element
-        :type tooltip:           (str)
-        :param visible:          set visibility state of the element (Default = True)
-        :type visible:           (bool)
-        :param metadata:         User metadata that can be set to ANYTHING
-        :type metadata:          (Any)
+        :param type:                        The type of element. These constants all start with "ELEM_TYPE_"
+        :type type:                         (int) (could be enum)
+        :param size:                        w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
+        :type size:                         (int, int) | (None, None) | int
+        :param auto_size_text:              True if the Widget should be shrunk to exactly fit the number of chars to show
+        :type auto_size_text:               bool
+        :param font:                        specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                         (str or (str, int[, str]) or None)
+        :param background_color:            color of background. Can be in #RRGGBB format or a color name "black"
+        :type background_color:             (str)
+        :param text_color:                  element's text color. Can be in #RRGGBB format or a color name "black"
+        :type text_color:                   (str)
+        :param key:                         Identifies an Element. Should be UNIQUE to this window.
+        :type key:                          str | int | tuple | object
+        :param pad:                         Amount of padding to put around element in pixels (left/right, top/bottom). If an int is given, then auto-converted to tuple (int, int)
+        :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param tooltip:                     text, that will appear when mouse hovers over the element
+        :type tooltip:                      (str)
+        :param visible:                     set visibility state of the element (Default = True)
+        :type visible:                      (bool)
+        :param metadata:                    User metadata that can be set to ANYTHING
+        :type metadata:                     (Any)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         """
+
         if size is not None and size != (None, None):
             if isinstance(size, int):
                 size = (size, 1)
@@ -1116,13 +1132,6 @@ class Element():
             self.scroll_arrow_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_ARROW_COLOR])
             if callable(self.scroll_arrow_color):
                 self.scroll_arrow_color = self.scroll_arrow_color()
-
-        if sbar_arrow_background_color is not None:
-            self.scroll_arrow_background_color = sbar_arrow_background_color
-        else:
-            self.scroll_arrow_background_color = PSG_THEME_PART_FUNC_MAP.get(ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR], ttk_part_mapping_dict[TTK_SCROLLBAR_PART_ARROW_BUTTON_BACKGROUND_COLOR])
-            if callable(self.scroll_arrow_background_color):
-                self.scroll_arrow_background_color = self.scroll_arrow_background_color()
 
 
         if sbar_frame_color is not None:
@@ -2487,8 +2496,7 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
-                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
         :param values:                     list of values to display. Can be any type including mixed types as long as they have __str__ method
@@ -2525,6 +2533,20 @@ class Listbox(Element):
         :type highlight_background_color:  (str)
         :param highlight_text_color:       color of the text when an item is selected. Defaults to the normal background color (a rerverse look)
         :type highlight_text_color:        (str)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         :param key:                        Used with window.find_element and with return values to uniquely identify this element
         :type key:                         str | int | tuple | object
         :param k:                          Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -2582,7 +2604,7 @@ class Listbox(Element):
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
     def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
@@ -3303,7 +3325,7 @@ class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                 Initial text to show
@@ -3364,22 +3386,20 @@ class Multiline(Element):
         :type justification:                 (str)
         :param no_scrollbar:                 If False then a vertical scrollbar will be shown (the default)
         :type no_scrollbar:                  (bool)
-        :param sbar_trough_color:            Scrollbar color of the trough
-        :type sbar_trough_color:             (str)
-        :param sbar_background_color:        Scrollbar
-        :type sbar_background_color:         (str)
-        :param sbar_arrow_color:             Scrollbar
-        :type sbar_arrow_color:              (str)
-        :param sbar_arrow_background_color: Scrollbar
-        :type sbar_arrow_background_color:  (str)
-        :param sbar_width:                   Scrollbar
-        :type sbar_width:                    (int)
-        :param sbar_arrow_width:             Scrollbar
-        :type sbar_arrow_width:              (int)
-        :param sbar_frame_color:             Scrollbar
-        :type sbar_frame_color:              (str)
-        :param sbar_relief:                  Scrollbar
-        :type sbar_relief:                   (str)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         :param expand_x:                     If True the element will automatically expand in the X direction to fill available space
         :type expand_x:                      (bool)
         :param expand_y:                     If True the element will automatically expand in the Y direction to fill available space
@@ -3434,7 +3454,7 @@ class Multiline(Element):
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
@@ -3734,7 +3754,7 @@ class Text(Element):
         :type click_submits:     (bool)
         :param enable_events:    Turns on the element specific events. Text events happen when the text is clicked
         :type enable_events:     (bool)
-        :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
+        :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
         :type relief:            (str/enum)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              (str or (str, int[, str]) or None)
@@ -4401,41 +4421,57 @@ class Output(Multiline):
     """
 
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, echo_stdout_stderr=False, font=None, tooltip=None,
-                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
+                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None,  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
-        :param size:               (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:                (int, int)  | (None, None) | int
-        :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                   (int, int)  | (None, None) | int
-        :param background_color:   color of background
-        :type background_color:    (str)
-        :param text_color:         color of the text
-        :type text_color:          (str)
-        :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                  Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
-        :type echo_stdout_stderr:  (bool)
-        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                (str or (str, int[, str]) or None)
-        :param tooltip:            text, that will appear when mouse hovers over the element
-        :type tooltip:             (str)
-        :param key:                Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
-        :type key:                 str | int | tuple | object
-        :param k:                  Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                   str | int | tuple | object
-        :param right_click_menu:   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :type right_click_menu:    List[List[ List[str] | str ]]
-        :param expand_x:           If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:            (bool)
-        :param expand_y:           If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:            (bool)
-        :param visible:            set visibility state of the element
-        :type visible:             (bool)
-        :param metadata:           User metadata that can be set to ANYTHING
-        :type metadata:            (Any)
+        :param size:                        (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
+        :type size:                         (int, int)  | (None, None) | int
+        :param s:                           Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                            (int, int)  | (None, None) | int
+        :param background_color:            color of background
+        :type background_color:             (str)
+        :param text_color:                  color of the text
+        :type text_color:                   (str)
+        :param pad:                         Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param echo_stdout_stderr:          If True then output to stdout will be output to this element AND also to the normal console location
+        :type echo_stdout_stderr:           (bool)
+        :param font:                        specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                         (str or (str, int[, str]) or None)
+        :param tooltip:                     text, that will appear when mouse hovers over the element
+        :type tooltip:                      (str)
+        :param key:                         Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
+        :type key:                          str | int | tuple | object
+        :param k:                           Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                            str | int | tuple | object
+        :param right_click_menu:            A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:             List[List[ List[str] | str ]]
+        :param expand_x:                    If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                     (bool)
+        :param expand_y:                    If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                     (bool)
+        :param visible:                     set visibility state of the element
+        :type visible:                      (bool)
+        :param metadata:                    User metadata that can be set to ANYTHING
+        :type metadata:                     (Any)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         """
+
 
         # self._TKOut = self.Widget = None  # type: TKOutput
         # bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -4449,7 +4485,8 @@ class Output(Multiline):
         # self.expand_y = expand_y
 
         super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip,
-                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata)
+                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
     #
     # @property
     # def tk_out(self):
@@ -7784,47 +7821,64 @@ class Column(Element):
 
     def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
-                 vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None):
+                 vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
+                 sbar_frame_color=None, sbar_relief=None):
         """
-        :param layout:                Layout that will be shown in the Column container
-        :type layout:                 List[List[Element]]
-        :param background_color:      color of background of entire Column
-        :type background_color:       (str)
-        :param size:                  (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes
-        :type size:                   (int | None, int | None)
-        :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int | None, int | None)
-        :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param scrollable:            if True then scrollbars will be added to the column
-        :type scrollable:             (bool)
-        :param vertical_scroll_only:  if Truen then no horizontal scrollbar will be shown
-        :type vertical_scroll_only:   (bool)
-        :param right_click_menu:      A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :type right_click_menu:       List[List[ List[str] | str ]]
-        :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key:                    str | int | tuple | object
-        :param k:                     Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                      str | int | tuple | object
-        :param visible:               set visibility state of the element
-        :type visible:                (bool)
-        :param justification:         set justification for the Column itself. Note entire row containing the Column will be affected
-        :type justification:          (str)
-        :param element_justification: All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
-        :type element_justification:  (str)
-        :param vertical_alignment:    Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
-        :type vertical_alignment:     (str)
-        :param grab:                  If True can grab this element and move the window around. Default is False
-        :type grab:                   (bool)
-        :param expand_x:              If True the column will automatically expand in the X direction to fill available space
-        :type expand_x:               (bool)
-        :param expand_y:              If True the column will automatically expand in the Y direction to fill available space
-        :type expand_y:               (bool)
-        :param metadata:              User metadata that can be set to ANYTHING
-        :type metadata:               (Any)
+        :param layout:                      Layout that will be shown in the Column container
+        :type layout:                       List[List[Element]]
+        :param background_color:            color of background of entire Column
+        :type background_color:             (str)
+        :param size:                        (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes
+        :type size:                         (int | None, int | None)
+        :param s:                           Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                            (int | None, int | None)
+        :param pad:                         Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param scrollable:                  if True then scrollbars will be added to the column
+        :type scrollable:                   (bool)
+        :param vertical_scroll_only:        if Truen then no horizontal scrollbar will be shown
+        :type vertical_scroll_only:         (bool)
+        :param right_click_menu:            A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:             List[List[ List[str] | str ]]
+        :param key:                         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:                          str | int | tuple | object
+        :param k:                           Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                            str | int | tuple | object
+        :param visible:                     set visibility state of the element
+        :type visible:                      (bool)
+        :param justification:               set justification for the Column itself. Note entire row containing the Column will be affected
+        :type justification:                (str)
+        :param element_justification:       All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification:        (str)
+        :param vertical_alignment:          Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
+        :type vertical_alignment:           (str)
+        :param grab:                        If True can grab this element and move the window around. Default is False
+        :type grab:                         (bool)
+        :param expand_x:                    If True the column will automatically expand in the X direction to fill available space
+        :type expand_x:                     (bool)
+        :param expand_y:                    If True the column will automatically expand in the Y direction to fill available space
+        :type expand_y:                     (bool)
+        :param metadata:                    User metadata that can be set to ANYTHING
+        :type metadata:                     (Any)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         """
+
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -7853,7 +7907,8 @@ class Column(Element):
         sz = size if size != (None, None) else s
         pad = pad if pad is not None else p
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata,
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def add_row(self, *args):
@@ -8488,8 +8543,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False, border_width=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
-                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, right_click_selects=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
@@ -8545,22 +8599,20 @@ class Table(Element):
         :type hide_vertical_scroll:     (bool)
         :param border_width:            Border width/depth in pixels
         :type border_width:             (int)
-        :param sbar_trough_color:            Scrollbar color of the trough
-        :type sbar_trough_color:             (str)
-        :param sbar_background_color:        Scrollbar
-        :type sbar_background_color:         (str)
-        :param sbar_arrow_color:             Scrollbar
-        :type sbar_arrow_color:              (str)
-        :param sbar_arrow_background_color: Scrollbar
-        :type sbar_arrow_background_color:  (str)
-        :param sbar_width:                   Scrollbar
-        :type sbar_width:                    (int)
-        :param sbar_arrow_width:             Scrollbar
-        :type sbar_arrow_width:              (int)
-        :param sbar_frame_color:             Scrollbar
-        :type sbar_frame_color:              (str)
-        :param sbar_relief:                  Scrollbar
-        :type sbar_relief:                   (str)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         :param size:                    DO NOT USE! Use num_rows instead
         :type size:                     (int, int)
         :param change_submits:          DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -8651,7 +8703,7 @@ class Table(Element):
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
@@ -8876,8 +8928,7 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None, border_width=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None, num_rows=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_arrow_background_color=None,
-                 sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  row_height=None, vertical_scroll_only=True, hide_vertical_scroll=False, pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
@@ -8937,22 +8988,20 @@ class Tree(Element):
         :type vertical_scroll_only:     (bool)
         :param hide_vertical_scroll:    if True vertical scrollbar will be hidden
         :type hide_vertical_scroll:     (bool)
-        :param sbar_trough_color:            Scrollbar color of the trough
-        :type sbar_trough_color:             (str)
-        :param sbar_background_color:        Scrollbar
-        :type sbar_background_color:         (str)
-        :param sbar_arrow_color:             Scrollbar
-        :type sbar_arrow_color:              (str)
-        :param sbar_arrow_background_color: Scrollbar
-        :type sbar_arrow_background_color:  (str)
-        :param sbar_width:                   Scrollbar
-        :type sbar_width:                    (int)
-        :param sbar_arrow_width:             Scrollbar
-        :type sbar_arrow_width:              (int)
-        :param sbar_frame_color:             Scrollbar
-        :type sbar_frame_color:              (str)
-        :param sbar_relief:                  Scrollbar
-        :type sbar_relief:                   (str)
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
@@ -9029,7 +9078,7 @@ class Tree(Element):
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad, key=key, tooltip=tooltip,
                          visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_arrow_background_color=sbar_arrow_background_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
         return
 
     def _treeview_selected(self, event):
@@ -14500,7 +14549,7 @@ def _make_ttk_scrollbar(element, orientation, window):
         style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
     if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
         (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
-        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_arrow_color),('!focus', element.scroll_arrow_color)])
+        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_background_color),('!focus', element.scroll_arrow_color)])
 
 # if __name__ == '__main__':
 #     root = tk.Tk()
