@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.30 Released 5-Apr-2022"
+version = __version__ = "4.59.0.31 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -103,6 +103,10 @@ _change_log = """
         Needed to remove the "arrow background color" option for ttk scrollbars.  You can't set that color directly it turns out... so one less parm now
     4.59.0.30
         Get ttk themes available from ttk rather than the hard coded list.  This is used in the Global Settings window.
+    4.59.0.31
+        Fixed default ttk theme bug - was being changed when a window set a theme just for 1 window.  The overall default shouldn't change for this situation
+        Added support for the heirarchical specification of ttk scrollbars.  The settings will be picked up in this order:
+            Element, Window, Set Options, Global Settings
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -581,12 +585,11 @@ THEME_ALT = 'alt'
 THEME_CLASSIC = 'classic'
 THEME_VISTA = 'vista'
 THEME_XPNATIVE = 'xpnative'
-THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 
 # The theme to use by default for all windows
 DEFAULT_TTK_THEME = THEME_DEFAULT
 ttk_theme_in_use = None
-TTK_THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+# TTK_THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 
 
 USE_TTK_BUTTONS = None
@@ -597,7 +600,7 @@ DEFAULT_PROGRESS_BAR_COLOR_OFFICIAL = ("#01826B", '#D0D0D0')  # a nice green pro
 DEFAULT_PROGRESS_BAR_SIZE = (20, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
-PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+# PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
 DEFAULT_PROGRESS_BAR_STYLE = DEFAULT_TTK_THEME
 DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
@@ -883,6 +886,10 @@ DEFAULT_TTK_PART_MAPPING_DICT = {TTK_SCROLLBAR_PART_TROUGH_COLOR: PSG_THEME_PART
 ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
 
 class TTKPartOverrides():
+    """
+    This class contains "overrides" to the defaults for ttk scrollbars that are defined in the global settings file.
+    This class is used in every element, in the Window class and there's a global one that is used by set_options.
+    """
     def __init__(self, sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         self.sbar_trough_color = sbar_trough_color
         self.sbar_background_color = sbar_background_color
@@ -9531,52 +9538,53 @@ class Window:
         :param right_click_menu_disabled_text_color: Text color for disabled right click menu items
         :type right_click_menu_disabled_text_color:  (str)
         :param right_click_menu_selected_colors:     Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type right_click_menu_selected_colors:     (str, str) | str | Tuple
-        :param right_click_menu_font:               Font for right click menus
-        :type right_click_menu_font:                (str or (str, int[, str]) or None)
-        :param right_click_menu_tearoff:            If True then all right click menus can be torn off
-        :type right_click_menu_tearoff:             bool
-        :param finalize:                            If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
-        :type finalize:                             (bool)
-        :param element_justification:               All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
-        :type element_justification:                (str)
-        :param ttk_theme:                           Set the tkinter ttk "theme" of the window.  Default = DEFAULT_TTK_THEME.  Sets all ttk widgets to this theme as their default
-        :type ttk_theme:                            (str)
-        :param use_ttk_buttons:                     Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
-        :type use_ttk_buttons:                      (bool)
-        :param modal:                               If True then this window will be the only window a user can interact with until it is closed
-        :type modal:                                (bool)
-        :param enable_close_attempted_event:        If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
-        :type enable_close_attempted_event:         (bool)
-        :param titlebar_background_color:           If custom titlebar indicated by use_custom_titlebar, then use this as background color
-        :type titlebar_background_color:            (str | None)
-        :param titlebar_text_color:                 If custom titlebar indicated by use_custom_titlebar, then use this as text color
-        :type titlebar_text_color:                  (str | None)
-        :param titlebar_font:                       If custom titlebar indicated by use_custom_titlebar, then use this as title font
-        :type titlebar_font:                        (str or (str, int[, str]) or None)
-        :param titlebar_icon:                       If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
-        :type titlebar_icon:                        (bytes | str)
-        :param use_custom_titlebar:                 If True, then a custom titlebar will be used instead of the normal titlebar
-        :type use_custom_titlebar:                  bool
-        :param scaling:                             Apply scaling to the elements in the window. Can be set on a global basis using set_options
-        :type scaling:                              float
-        :param sbar_trough_color:           Scrollbar color of the trough
-        :type sbar_trough_color:            (str)
-        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
-        :type sbar_background_color:        (str)
-        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
-        :type sbar_arrow_color:             (str)
-        :param sbar_width:                  Scrollbar width in pixels
-        :type sbar_width:                   (int)
-        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
-        :type sbar_arrow_width:             (int)
-        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
-        :type sbar_frame_color:             (str)
-        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
-        :type sbar_relief:                  (str)
-        :param metadata:                            User metadata that can be set to ANYTHING
-        :type metadata:                             (Any)
+        :type right_click_menu_selected_colors:      (str, str) | str | Tuple
+        :param right_click_menu_font:                Font for right click menus
+        :type right_click_menu_font:                 (str or (str, int[, str]) or None)
+        :param right_click_menu_tearoff:             If True then all right click menus can be torn off
+        :type right_click_menu_tearoff:              bool
+        :param finalize:                             If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
+        :type finalize:                              (bool)
+        :param element_justification:                All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification:                 (str)
+        :param ttk_theme:                            Set the tkinter ttk "theme" of the window.  Default = DEFAULT_TTK_THEME.  Sets all ttk widgets to this theme as their default
+        :type ttk_theme:                             (str)
+        :param use_ttk_buttons:                      Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
+        :type use_ttk_buttons:                       (bool)
+        :param modal:                                If True then this window will be the only window a user can interact with until it is closed
+        :type modal:                                 (bool)
+        :param enable_close_attempted_event:         If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
+        :type enable_close_attempted_event:          (bool)
+        :param titlebar_background_color:            If custom titlebar indicated by use_custom_titlebar, then use this as background color
+        :type titlebar_background_color:             (str | None)
+        :param titlebar_text_color:                  If custom titlebar indicated by use_custom_titlebar, then use this as text color
+        :type titlebar_text_color:                   (str | None)
+        :param titlebar_font:                        If custom titlebar indicated by use_custom_titlebar, then use this as title font
+        :type titlebar_font:                         (str or (str, int[, str]) or None)
+        :param titlebar_icon:                        If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
+        :type titlebar_icon:                         (bytes | str)
+        :param use_custom_titlebar:                  If True, then a custom titlebar will be used instead of the normal titlebar
+        :type use_custom_titlebar:                   bool
+        :param scaling:                              Apply scaling to the elements in the window. Can be set on a global basis using set_options
+        :type scaling:                               float
+        :param sbar_trough_color:                    Scrollbar color of the trough
+        :type sbar_trough_color:                     (str)
+        :param sbar_background_color:                Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:                 (str)
+        :param sbar_arrow_color:                     Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:                      (str)
+        :param sbar_width:                           Scrollbar width in pixels
+        :type sbar_width:                            (int)
+        :param sbar_arrow_width:                     Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:                      (int)
+        :param sbar_frame_color:                     Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:                      (str)
+        :param sbar_relief:                          Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                           (str)
+        :param metadata:                             User metadata that can be set to ANYTHING
+        :type metadata:                              (Any)
         """
+
 
         self._metadata = None  # type: Any
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -14480,7 +14488,7 @@ def _add_right_click_menu(element, toplevel_form):
 
 
 def _change_ttk_theme(style, theme_name):
-    global ttk_theme_in_use, DEFAULT_TTK_THEME
+    global ttk_theme_in_use
     if theme_name not in style.theme_names():
         _error_popup_with_traceback('You are trying to use TTK theme "{}"'.format(theme_name),
                                         'This is not legal for your system',
@@ -14489,47 +14497,48 @@ def _change_ttk_theme(style, theme_name):
 
     style.theme_use(theme_name)
     ttk_theme_in_use = theme_name
-    DEFAULT_TTK_THEME = theme_name
     return True
 
-class Stylist:
-
-    @staticmethod
-    def get_elements(layout):
-        """Return a list of elements contained in the style"""
-        elements = []
-        element = layout[0][0]
-        elements.append(element)
-        sublayout = layout[0][1]
-
-        if 'children' in sublayout:
-            child_elements = Stylist.get_elements(sublayout['children'])
-            elements.extend(child_elements)
-        return elements
-
-    @staticmethod
-    def get_options(ttkstyle, theme=None):
-        style = ttk.Style()
-        if theme is not None:
-            style.theme_use(theme)
-        layout = style.layout(ttkstyle)
-        elements = Stylist.get_elements(layout)
-        options = []
-        for e in elements:
-            _opts = style.element_options(e)
-            if _opts:
-                options.extend(list(_opts))
-        return list(set(options))
-
-    @staticmethod
-    def create_style(base_style: str, theme=None, **kwargs):
-        style = ttk.Style()
-        if theme is not None:
-            style.theme_use(theme)
-        style_id = uuid4()
-        ttkstyle = '{}.{}'.format(style_id, base_style)
-        style.configure(ttkstyle, **kwargs)
-        return ttkstyle
+# class Stylist:
+#     """
+#     A class to help get information about ttk styles
+#     """
+#     @staticmethod
+#     def get_elements(layout):
+#         """Return a list of elements contained in the style"""
+#         elements = []
+#         element = layout[0][0]
+#         elements.append(element)
+#         sublayout = layout[0][1]
+#
+#         if 'children' in sublayout:
+#             child_elements = Stylist.get_elements(sublayout['children'])
+#             elements.extend(child_elements)
+#         return elements
+#
+#     @staticmethod
+#     def get_options(ttkstyle, theme=None):
+#         style = ttk.Style()
+#         if theme is not None:
+#             style.theme_use(theme)
+#         layout = style.layout(ttkstyle)
+#         elements = Stylist.get_elements(layout)
+#         options = []
+#         for e in elements:
+#             _opts = style.element_options(e)
+#             if _opts:
+#                 options.extend(list(_opts))
+#         return list(set(options))
+#
+#     @staticmethod
+#     def create_style(base_style: str, theme=None, **kwargs):
+#         style = ttk.Style()
+#         if theme is not None:
+#             style.theme_use(theme)
+#         style_id = uuid4()
+#         ttkstyle = '{}.{}'.format(style_id, base_style)
+#         style.configure(ttkstyle, **kwargs)
+#         return ttkstyle
 
 def _make_ttk_style_name(base_style, element):
     Window._counter_for_ttk_widgets += 1
@@ -14546,8 +14555,8 @@ def _make_ttk_scrollbar(element, orientation, window):
     :type element:      (Element)
     :param orientation: The orientation vertical ('v') or horizontal ('h')
     :type orientation:  (str)
-    :param window: The window containing the scrollbar
-    :type window:  (str)
+    :param window:      The window containing the scrollbar
+    :type window:       (Window)
     """
 
     style = ttk.Style()
@@ -14564,25 +14573,95 @@ def _make_ttk_scrollbar(element, orientation, window):
         element.hsb_style = style
         element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
 
-    # print(Stylist.get_options(style_name, 'default'))
-    if element.scroll_trough_color not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, troughcolor=element.scroll_trough_color)
-    if element.scroll_relief not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, relief=element.scroll_relief)
-    if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, framecolor=element.scroll_frame_color)
-    if element.scroll_frame_color not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, bordercolor=element.scroll_frame_color)
-    if element.scroll_width not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, width=element.scroll_width)
-    if element.scroll_arrow_width not in (None, COLOR_SYSTEM_DEFAULT):
-        style.configure(style_name, arrowsize=element.scroll_arrow_width)
-    if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
-        (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
-        style.map(style_name, background=[("selected", element.scroll_background_color), ('active', element.scroll_arrow_color), ('background', element.scroll_background_color), ('!focus', element.scroll_background_color)])
-    if (element.scroll_background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
-        (element.scroll_arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
-        style.map(style_name, arrowcolor=[("selected", element.scroll_arrow_color), ('active', element.scroll_background_color), ('background', element.scroll_background_color),('!focus', element.scroll_arrow_color)])
+
+    # ------------------ Get the colors using heirarchy of element, window, options, settings ------------------
+    # Trough Color
+    if element.ttk_part_overrides.sbar_trough_color is not None:
+        trough_color = element.ttk_part_overrides.sbar_trough_color
+    elif window.ttk_part_overrides.sbar_trough_color is not None:
+        trough_color = window.ttk_part_overrides.sbar_trough_color
+    elif ttk_part_overrides_from_options.sbar_trough_color is not None:
+        trough_color = ttk_part_overrides_from_options.sbar_trough_color
+    else:
+        trough_color = element.scroll_trough_color
+    # Relief
+    if element.ttk_part_overrides.sbar_relief is not None:
+        scroll_relief = element.ttk_part_overrides.sbar_relief
+    elif window.ttk_part_overrides.sbar_relief is not None:
+        scroll_relief = window.ttk_part_overrides.sbar_relief
+    elif ttk_part_overrides_from_options.sbar_relief is not None:
+        scroll_relief = ttk_part_overrides_from_options.sbar_relief
+    else:
+        scroll_relief = element.scroll_relief
+    # Frame Color
+    if element.ttk_part_overrides.sbar_frame_color is not None:
+        frame_color = element.ttk_part_overrides.sbar_frame_color
+    elif window.ttk_part_overrides.sbar_frame_color is not None:
+        frame_color = window.ttk_part_overrides.sbar_frame_color
+    elif ttk_part_overrides_from_options.sbar_frame_color is not None:
+        frame_color = ttk_part_overrides_from_options.sbar_frame_color
+    else:
+        frame_color = element.scroll_frame_color
+    # Background Color
+    if element.ttk_part_overrides.sbar_background_color is not None:
+        background_color = element.ttk_part_overrides.sbar_background_color
+    elif window.ttk_part_overrides.sbar_background_color is not None:
+        background_color = window.ttk_part_overrides.sbar_background_color
+    elif ttk_part_overrides_from_options.sbar_background_color is not None:
+        background_color = ttk_part_overrides_from_options.sbar_background_color
+    else:
+        background_color = element.scroll_background_color
+    # Arrow Color
+    if element.ttk_part_overrides.sbar_arrow_color is not None:
+        arrow_color = element.ttk_part_overrides.sbar_arrow_color
+    elif window.ttk_part_overrides.sbar_arrow_color is not None:
+        arrow_color = window.ttk_part_overrides.sbar_arrow_color
+    elif ttk_part_overrides_from_options.sbar_arrow_color is not None:
+        arrow_color = ttk_part_overrides_from_options.sbar_arrow_color
+    else:
+        arrow_color = element.scroll_arrow_color
+    # Arrow Width
+    if element.ttk_part_overrides.sbar_arrow_width is not None:
+        arrow_width = element.ttk_part_overrides.sbar_arrow_width
+    elif window.ttk_part_overrides.sbar_arrow_width is not None:
+        arrow_width = window.ttk_part_overrides.sbar_arrow_width
+    elif ttk_part_overrides_from_options.sbar_arrow_width is not None:
+        arrow_width = ttk_part_overrides_from_options.sbar_arrow_width
+    else:
+        arrow_width = element.scroll_arrow_width
+    # Scroll Width
+    if element.ttk_part_overrides.sbar_width is not None:
+        scroll_width = element.ttk_part_overrides.sbar_width
+    elif window.ttk_part_overrides.sbar_width is not None:
+        scroll_width = window.ttk_part_overrides.sbar_width
+    elif ttk_part_overrides_from_options.sbar_width is not None:
+        scroll_width = ttk_part_overrides_from_options.sbar_width
+    else:
+        scroll_width = element.scroll_width
+
+
+    if trough_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, troughcolor=trough_color)
+
+    if frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, framecolor=frame_color)
+    if frame_color not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, bordercolor=frame_color)
+
+    if (background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+        (arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+        style.map(style_name, background=[("selected", background_color), ('active', arrow_color), ('background', background_color), ('!focus', background_color)])
+    if (background_color not in (None, COLOR_SYSTEM_DEFAULT)) and \
+        (arrow_color not in (None, COLOR_SYSTEM_DEFAULT)):
+        style.map(style_name, arrowcolor=[("selected", arrow_color), ('active', background_color), ('background', background_color),('!focus', arrow_color)])
+
+    if scroll_width not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, width=scroll_width)
+    if arrow_width not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, arrowsize=arrow_width)
+
+    if scroll_relief not in (None, COLOR_SYSTEM_DEFAULT):
+        style.configure(style_name, relief=scroll_relief)
 
 # if __name__ == '__main__':
 #     root = tk.Tk()
@@ -17768,7 +17847,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None)):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
+                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -17882,6 +17962,20 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type force_modal_windows:              (bool)
     :param tooltip_offset:                  Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered.
     :type tooltip_offset:                   ((None, None) | (int, int))
+    :param sbar_trough_color:               Scrollbar color of the trough
+    :type sbar_trough_color:                (str)
+    :param sbar_background_color:           Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+    :type sbar_background_color:            (str)
+    :param sbar_arrow_color:                Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+    :type sbar_arrow_color:                 (str)
+    :param sbar_width:                      Scrollbar width in pixels
+    :type sbar_width:                       (int)
+    :param sbar_arrow_width:                Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+    :type sbar_arrow_width:                 (int)
+    :param sbar_frame_color:                Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+    :type sbar_frame_color:                 (str)
+    :param sbar_relief:                     Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+    :type sbar_relief:                      (str)
     :return:                                None
     :rtype:                                 None
     """
@@ -17941,6 +18035,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_MODAL_WINDOWS_FORCED
     global DEFAULT_TOOLTIP_OFFSET
     global _pysimplegui_user_settings
+    global ttk_part_overrides_from_options
     # global _my_windows
 
     if icon:
@@ -18121,10 +18216,31 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if force_modal_windows is not None:
         DEFAULT_MODAL_WINDOWS_FORCED = force_modal_windows
 
-
-
     if tooltip_offset != (None, None):
         DEFAULT_TOOLTIP_OFFSET = tooltip_offset
+
+
+    # ---------------- ttk scrollbar section ----------------
+    if sbar_background_color is not None:
+        ttk_part_overrides_from_options.sbar_background_color = sbar_background_color
+
+    if sbar_trough_color is not None:
+        ttk_part_overrides_from_options.sbar_trough_color = sbar_trough_color
+
+    if sbar_arrow_color is not None:
+        ttk_part_overrides_from_options.sbar_arrow_color = sbar_arrow_color
+
+    if sbar_frame_color is not None:
+        ttk_part_overrides_from_options.sbar_frame_color = sbar_frame_color
+
+    if sbar_relief is not None:
+        ttk_part_overrides_from_options.sbar_relief = sbar_relief
+
+    if sbar_arrow_width is not None:
+        ttk_part_overrides_from_options.sbar_arrow_width = sbar_arrow_width
+
+    if sbar_width is not None:
+        ttk_part_overrides_from_options.sbar_width = sbar_width
 
     return True
 
