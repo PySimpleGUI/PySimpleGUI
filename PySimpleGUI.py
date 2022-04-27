@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.29 Released 5-Apr-2022"
+version = __version__ = "4.59.0.30 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -101,6 +101,8 @@ _change_log = """
     4.59.0.29
         Added parms and docstrings to all elements with ttk scrollbars
         Needed to remove the "arrow background color" option for ttk scrollbars.  You can't set that color directly it turns out... so one less parm now
+    4.59.0.30
+        Get ttk themes available from ttk rather than the hard coded list.  This is used in the Global Settings window.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -880,6 +882,18 @@ DEFAULT_TTK_PART_MAPPING_DICT = {TTK_SCROLLBAR_PART_TROUGH_COLOR: PSG_THEME_PART
 
 ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
 
+class TTKPartOverrides():
+    def __init__(self, sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
+        self.sbar_trough_color = sbar_trough_color
+        self.sbar_background_color = sbar_background_color
+        self.sbar_arrow_color = sbar_arrow_color
+        self.sbar_width = sbar_width
+        self.sbar_arrow_width = sbar_arrow_width
+        self.sbar_frame_color = sbar_frame_color
+        self.sbar_relief = sbar_relief
+
+ttk_part_overrides_from_options = TTKPartOverrides()
+
 # -------------------------  tkinter key codes for bindings  ------------------------- #
 
 # The keycode that when pressed will take a snapshot of the current window
@@ -1099,6 +1113,7 @@ class Element():
         self._popup_menu_location = (None, None)
         self.pack_settings = None
         ## TTK Scrollbar Settings
+        self.ttk_part_overrides = TTKPartOverrides(sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
         PSG_THEME_PART_FUNC_MAP = {PSG_THEME_PART_BACKGROUND: theme_background_color,
                                        PSG_THEME_PART_BUTTON_BACKGROUND: theme_button_color_background,
@@ -9437,7 +9452,9 @@ class Window:
                  right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
-                 use_custom_titlebar=None, scaling=None, metadata=None):
+                 use_custom_titlebar=None, scaling=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 metadata=None):
         """
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
         :type title:                                 (str)
@@ -9543,6 +9560,20 @@ class Window:
         :type use_custom_titlebar:                  bool
         :param scaling:                             Apply scaling to the elements in the window. Can be set on a global basis using set_options
         :type scaling:                              float
+        :param sbar_trough_color:           Scrollbar color of the trough
+        :type sbar_trough_color:            (str)
+        :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
+        :type sbar_background_color:        (str)
+        :param sbar_arrow_color:            Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over
+        :type sbar_arrow_color:             (str)
+        :param sbar_width:                  Scrollbar width in pixels
+        :type sbar_width:                   (int)
+        :param sbar_arrow_width:            Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar
+        :type sbar_arrow_width:             (int)
+        :param sbar_frame_color:            Scrollbar Color of frame around scrollbar (available only on some ttk themes)
+        :type sbar_frame_color:             (str)
+        :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type sbar_relief:                  (str)
         :param metadata:                            User metadata that can be set to ANYTHING
         :type metadata:                             (Any)
         """
@@ -9675,6 +9706,8 @@ class Window:
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
             self.NoTitleBar = True
+
+        self.ttk_part_overrides = TTKPartOverrides(sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
         if no_titlebar is True:
             self.override_custom_titlebar = True
@@ -23978,7 +24011,8 @@ def main_global_pysimplegui_settings():
                     'do not set a theme specifically.'
 
     # ------------------------- TTK Tab -------------------------
-    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(TTK_THEME_LIST, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
+    ttk_theme_list = ttk.Style().theme_names()
+    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(ttk_theme_list, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
 
     t_len = max([len(l) for l in TTK_SCROLLBAR_PART_LIST])
     ttk_layout = [[]]
