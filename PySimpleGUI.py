@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.31 Released 5-Apr-2022"
+version = __version__ = "4.59.0.32 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -107,6 +107,14 @@ _change_log = """
         Fixed default ttk theme bug - was being changed when a window set a theme just for 1 window.  The overall default shouldn't change for this situation
         Added support for the heirarchical specification of ttk scrollbars.  The settings will be picked up in this order:
             Element, Window, Set Options, Global Settings
+    4.59.0.32
+        Add the ttk theme list AFTER the global options window is created.  This "fix" is only needed when a user calls the global options window directly.
+            If don't do this, the tkinter will create a weird temp window if you call to get the list of ttk themes (gee.... thanks ttk!)
+            An alternate method would be to do the same thing as measuring the screensize where the hidden master window is created to pull it off.
+            Since this is the only place the theme list is retrieved, for now will do the update of the list after the window is created.  This features is
+            already taking forever... (insert eyeroll emoji here)
+        Removed "Use TTK Scrollbars" checkbox in global settings... you're getting TTK scrollbars whether you like it or not ;-)
+        Prettied up the ttk settings tab in global settings
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -24127,8 +24135,9 @@ def main_global_pysimplegui_settings():
                     'do not set a theme specifically.'
 
     # ------------------------- TTK Tab -------------------------
-    ttk_theme_list = ttk.Style().theme_names()
-    ttk_scrollbar_tab_layout = [[Checkbox('Use TTK Scrollbars', settings.get('-use ttk scrollbars-', True)), T('Default TTK Theme'), Combo(ttk_theme_list, DEFAULT_TTK_THEME, readonly=True, key='-TTK THEME-')]]
+    ttk_scrollbar_tab_layout = [[T('Default TTK Theme', font='_ 16'), Combo([], DEFAULT_TTK_THEME, readonly=True, size=(20, 10), key='-TTK THEME-', font='_ 16')],
+                                [HorizontalSeparator()],
+                                [T('TTK Scrollbar Settings', font='_ 16')]]
 
     t_len = max([len(l) for l in TTK_SCROLLBAR_PART_LIST])
     ttk_layout = [[]]
@@ -24191,8 +24200,13 @@ def main_global_pysimplegui_settings():
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
     layout += [[B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')]]
 
-    window = Window('Settings', layout, keep_on_top=True, modal=False)
+    window = Window('Settings', layout, keep_on_top=True, modal=False, finalize=True)
 
+    # fill in the theme list into the Combo element - must do this AFTER the window is created or a tkinter temp window is auto created by tkinter
+    ttk_theme_list = ttk.Style().theme_names()
+
+    window['-TTK THEME-'].update(value=DEFAULT_TTK_THEME, values=ttk_theme_list)
+    
     while True:
         event, values = window.read()
         if event in ('Cancel', WIN_CLOSED):
@@ -24256,7 +24270,7 @@ def main_global_pysimplegui_settings():
                 ttk_part_mapping_dict[ttk_part] = value
             DEFAULT_TTK_THEME = values['-TTK THEME-']
             for i in range(100):
-                Print(i)
+                Print(i, keep_on_top=True)
             Print('Close this window to continue...', keep_on_top=True)
     window.close()
     # In case some of the settings were modified and tried out, reset the ttk info to be what's in the config file
