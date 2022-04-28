@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.32 Released 5-Apr-2022"
+version = __version__ = "4.59.0.33 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -115,6 +115,13 @@ _change_log = """
             already taking forever... (insert eyeroll emoji here)
         Removed "Use TTK Scrollbars" checkbox in global settings... you're getting TTK scrollbars whether you like it or not ;-)
         Prettied up the ttk settings tab in global settings
+    4.59.0.33
+        New Column element parameters - size_subsample_width & size_subsample_height
+            Gives much more control over the sizing of SCROLLABLE columns.  Previously the size was set to 1/2 the required height and the full required width.
+            The defaults are backward compatible (size_subsample_width=1, size_subsample_height=2)
+            Setting both to 1 will make the Column fit the contents exactly.
+            One use is when you expect your Column to grow or shrink over time.  Or maybe you didn't like the 1/2 size that PySimpleGUI has always used before.
+            Hoping this isn't too complex to understand!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7849,7 +7856,7 @@ class Column(Element):
     A container element that is used to create a layout within your window's layout
     """
 
-    def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, scrollable=False,
+    def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), size_subsample_width=1, size_subsample_height=2, pad=None, p=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
                  vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
@@ -7863,6 +7870,10 @@ class Column(Element):
         :type size:                         (int | None, int | None)
         :param s:                           Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                            (int | None, int | None)
+        :param size_subsample_width:        Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.
+        :type size_subsample_width:         (float)
+        :param size_subsample_height:       Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required..
+        :type size_subsample_height:        (float)
         :param pad:                         Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
@@ -7936,6 +7947,8 @@ class Column(Element):
         self.Layout(layout)
         sz = size if size != (None, None) else s
         pad = pad if pad is not None else p
+        self.size_subsample_width = size_subsample_width
+        self.size_subsample_height = size_subsample_height
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata,
                          sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
@@ -14933,18 +14946,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
-                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
-                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // 2)
+                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth() // element.size_subsample_width,
+                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // element.size_subsample_height)
                     else:
-                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
-                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // 2)
+                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth() // element.size_subsample_width,
+                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // element.size_subsample_height)
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
                         elif element.Size[1] is not None:
                             element.TKColFrame.canvas.config(height=element.Size[1])
                         elif element.Size[0] is not None:
                             element.TKColFrame.canvas.config(width=element.Size[0])
-
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKColFrame.canvas.config(background=element.BackgroundColor)
                         element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0, highlightthickness=0)
