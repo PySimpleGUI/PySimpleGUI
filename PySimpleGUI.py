@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.33 Released 5-Apr-2022"
+version = __version__ = "4.59.0.34 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -122,6 +122,9 @@ _change_log = """
             Setting both to 1 will make the Column fit the contents exactly.
             One use is when you expect your Column to grow or shrink over time.  Or maybe you didn't like the 1/2 size that PySimpleGUI has always used before.
             Hoping this isn't too complex to understand!
+    4.59.0.34
+        Fix crash in Element.bind... likely created in version 4.59.0.6.  
+            Crashes because Elements don't have the method _is_window_created which was being called.  YIKES!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1562,8 +1565,6 @@ class Element():
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
-        if not self._is_window_created('tried Window.bind'):
-            return
         try:
             self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt, propagate))
         except Exception as e:
