@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    BDC40CE5211BD258C767
+                    4FD91A459D56B1029FF8
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=BDC40CE5211BD258C767','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=4FD91A459D56B1029FF8','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -1709,6 +1709,8 @@ Column(layout,
     background_color = None,
     size = (None, None),
     s = (None, None),
+    size_subsample_width = 1,
+    size_subsample_height = 2,
     pad = None,
     p = None,
     scrollable = False,
@@ -1723,7 +1725,14 @@ Column(layout,
     grab = None,
     expand_x = None,
     expand_y = None,
-    metadata = None)
+    metadata = None,
+    sbar_trough_color = None,
+    sbar_background_color = None,
+    sbar_arrow_color = None,
+    sbar_width = None,
+    sbar_arrow_width = None,
+    sbar_frame_color = None,
+    sbar_relief = None)
 ```
 
 Parameter Descriptions:
@@ -1734,6 +1743,8 @@ Parameter Descriptions:
 |                                      str                                       |   background_color    | color of background of entire Column |
 |                           (int or None, int or None)                           |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
 |                           (int or None, int or None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                     float                                      | size_subsample_width  | Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required. |
+|                                     float                                      | size_subsample_height | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column |
@@ -1749,6 +1760,13 @@ Parameter Descriptions:
 |                                      bool                                      |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
 |                                      bool                                      |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
 |                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
+|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
+|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 
 ### add_row
 
@@ -5290,7 +5308,6 @@ Listbox(values,
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
-    sbar_arrow_background_color = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
@@ -5328,6 +5345,13 @@ Parameter Descriptions:
 |                                      str                                       |         text_color         | color of the text |
 |                                      str                                       | highlight_background_color | color of the background when an item is selected. Defaults to normal text color (a reverse look) |
 |                                      str                                       |    highlight_text_color    | color of the text when an item is selected. Defaults to the normal background color (a rerverse look) |
+|                                      str                                       |     sbar_trough_color      | Scrollbar color of the trough |
+|                                      str                                       |   sbar_background_color    | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |      sbar_arrow_color      | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |         sbar_width         | Scrollbar width in pixels |
+|                                      int                                       |      sbar_arrow_width      | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |      sbar_frame_color      | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |        sbar_relief         | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 |                         str or int or tuple or object                          |            key             | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |             k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
@@ -6219,7 +6243,6 @@ Multiline(default_text = "",
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
-    sbar_arrow_background_color = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
@@ -6236,49 +6259,48 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                      Any                                       |        default_text         | Initial text to show |
-|                                      bool                                      |        enter_submits        | if True, the Window.Read call will return is enter key is pressed in this element |
-|                                      bool                                      |          disabled           | set disable state |
-|                                      bool                                      |         autoscroll          | If True the contents of the element will automatically scroll as more data added to the end |
-|                                      int                                       |        border_width         | width of border around element in pixels |
-|                       (int, int)  or (None, None) or int                       |            size             | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
-|                       (int, int)  or (None, None) or int                       |              s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                      bool                                      |       auto_size_text        | if True will size the element to match the length of the text |
-|                                      str                                       |      background_color       | color of background |
-|                                      str                                       |         text_color          | color of the text |
-|                                      bool                                      |      horizontal_scroll      | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
-|                                      bool                                      |       change_submits        | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |        enable_events        | Turns on the element specific events. Spin events happen when an item changes |
-|                                      bool                                      |        do_not_clear         | if False the element will be cleared any time the Window.Read call returns |
-|                         str or int or tuple or object                          |             key             | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                         str or int or tuple or object                          |              k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      bool                                      |         write_only          | If True then no entry will be added to the values dictionary when the window is read |
-|                                      bool                                      |        auto_refresh         | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
-|                                      bool                                      |       reroute_stdout        | If True then all output to stdout will be output to this element |
-|                                      bool                                      |       reroute_stderr        | If True then all output to stderr will be output to this element |
-|                                      bool                                      |       reroute_cprint        | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
-|                                      bool                                      |     echo_stdout_stderr      | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
-|                                      bool                                      |            focus            | if True initial focus will go to this element |
-|                       (str or (str, int[, str]) or None)                       |            font             | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |              p              | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      str                                       |           tooltip           | text, that will appear when mouse hovers over the element |
-|                                      str                                       |        justification        | text justification. left, right, center. Can use single characters l, r, c. |
-|                                      bool                                      |        no_scrollbar         | If False then a vertical scrollbar will be shown (the default) |
-|                                      str                                       |      sbar_trough_color      | Scrollbar color of the trough |
-|                                      str                                       |    sbar_background_color    | Scrollbar |
-|                                      str                                       |      sbar_arrow_color       | Scrollbar |
-|                                      str                                       | sbar_arrow_background_color | Scrollbar |
-|                                      int                                       |         sbar_width          | Scrollbar |
-|                                      int                                       |      sbar_arrow_width       | Scrollbar |
-|                                      str                                       |      sbar_frame_color       | Scrollbar |
-|                                      str                                       |         sbar_relief         | Scrollbar |
-|                                      bool                                      |          expand_x           | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |          expand_y           | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |           rstrip            | If True the value returned in will have whitespace stripped from the right side |
-|                         List[List[ List[str] or str ]]                         |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |           visible           | set visibility state of the element |
-|                                      Any                                       |          metadata           | User metadata that can be set to ANYTHING |
+|                                      Any                                       |     default_text      | Initial text to show |
+|                                      bool                                      |     enter_submits     | if True, the Window.Read call will return is enter key is pressed in this element |
+|                                      bool                                      |       disabled        | set disable state |
+|                                      bool                                      |      autoscroll       | If True the contents of the element will automatically scroll as more data added to the end |
+|                                      int                                       |     border_width      | width of border around element in pixels |
+|                       (int, int)  or (None, None) or int                       |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |    auto_size_text     | if True will size the element to match the length of the text |
+|                                      str                                       |   background_color    | color of background |
+|                                      str                                       |      text_color       | color of the text |
+|                                      bool                                      |   horizontal_scroll   | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
+|                                      bool                                      |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |     enable_events     | Turns on the element specific events. Spin events happen when an item changes |
+|                                      bool                                      |     do_not_clear      | if False the element will be cleared any time the Window.Read call returns |
+|                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |      write_only       | If True then no entry will be added to the values dictionary when the window is read |
+|                                      bool                                      |     auto_refresh      | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
+|                                      bool                                      |    reroute_stdout     | If True then all output to stdout will be output to this element |
+|                                      bool                                      |    reroute_stderr     | If True then all output to stderr will be output to this element |
+|                                      bool                                      |    reroute_cprint     | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
+|                                      bool                                      |  echo_stdout_stderr   | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
+|                                      bool                                      |         focus         | if True initial focus will go to this element |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
+|                                      str                                       |     justification     | text justification. left, right, center. Can use single characters l, r, c. |
+|                                      bool                                      |     no_scrollbar      | If False then a vertical scrollbar will be shown (the default) |
+|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
+|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
+|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |        rstrip         | If True the value returned in will have whitespace stripped from the right side |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -7183,29 +7205,43 @@ Output(size = (None, None),
     expand_x = False,
     expand_y = False,
     visible = True,
-    metadata = None)
+    metadata = None,
+    sbar_trough_color = None,
+    sbar_background_color = None,
+    sbar_arrow_color = None,
+    sbar_width = None,
+    sbar_arrow_width = None,
+    sbar_frame_color = None,
+    sbar_relief = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                       (int, int)  or (None, None) or int                       |        size        | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
-|                       (int, int)  or (None, None) or int                       |         s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                      str                                       |  background_color  | color of background |
-|                                      str                                       |     text_color     | color of the text |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      bool                                      | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
-|                       (str or (str, int[, str]) or None)                       |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
-|                         str or int or tuple or object                          |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                         str or int or tuple or object                          |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                         List[List[ List[str] or str ]]                         |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |      visible       | set visibility state of the element |
-|                                      Any                                       |      metadata      | User metadata that can be set to ANYTHING |
+|                       (int, int)  or (None, None) or int                       |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      str                                       |   background_color    | color of background |
+|                                      str                                       |      text_color       | color of the text |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |  echo_stdout_stderr   | If True then output to stdout will be output to this element AND also to the normal console location |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
+|                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
+|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
+|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 
 ### bind
 
@@ -11210,7 +11246,6 @@ Table(values,
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
-    sbar_arrow_background_color = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
@@ -11238,56 +11273,55 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                        List[List[str or int or float]]                         |           values            | Your table data represented as a 2-dimensions table... a list of rows, with each row representing a row in your table. |
-|                                   List[str]                                    |          headings           | The headings to show on the top line |
-|                                   List[bool]                                   |     visible_column_map      | One entry for each column. False indicates the column is not shown |
-|                                   List[int]                                    |         col_widths          | Number of characters that each column will occupy |
-|                                      int                                       |        def_col_width        | Default column width in characters |
-|                                      bool                                      |      auto_size_columns      | if True columns will be sized automatically |
-|                                      int                                       |        max_col_width        | Maximum width for all columns in characters |
-|                                      enum                                      |         select_mode         | Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
-|                                      bool                                      |     display_row_numbers     | if True, the first column of the table will be the row # |
-|                                      int                                       |          num_rows           | The number of rows of the table to display at a time |
-|                                      int                                       |         row_height          | height of a single row in pixels |
-|                       (str or (str, int[, str]) or None)                       |            font             | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      str                                       |        justification        | 'left', 'right', 'center' are valid choices |
-|                                      str                                       |         text_color          | color of the text |
-|                                      str                                       |      background_color       | color of background |
-|                                      str                                       |    alternating_row_color    | if set then every other row will have this color in the background. |
-|                               str or (str, str)                                |     selected_row_colors     | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
-|                                      str                                       |      header_text_color      | sets the text color for the header |
-|                                      str                                       |   header_background_color   | sets the background color for the header |
-|                       (str or (str, int[, str]) or None)                       |         header_font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                 (int or None)                                  |     header_border_width     | Border width for the header portion |
-|                                 (str or None)                                  |        header_relief        | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                 List[Tuple[int, str] or Tuple[Int, str, str]]                  |         row_colors          | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
-|                                      bool                                      |    vertical_scroll_only     | if True only the vertical scrollbar will be visible |
-|                                      bool                                      |    hide_vertical_scroll     | if True vertical scrollbar will be hidden |
-|                                      int                                       |        border_width         | Border width/depth in pixels |
-|                                      str                                       |      sbar_trough_color      | Scrollbar color of the trough |
-|                                      str                                       |    sbar_background_color    | Scrollbar |
-|                                      str                                       |      sbar_arrow_color       | Scrollbar |
-|                                      str                                       | sbar_arrow_background_color | Scrollbar |
-|                                      int                                       |         sbar_width          | Scrollbar |
-|                                      int                                       |      sbar_arrow_width       | Scrollbar |
-|                                      str                                       |      sbar_frame_color       | Scrollbar |
-|                                      str                                       |         sbar_relief         | Scrollbar |
-|                                   (int, int)                                   |            size             | DO NOT USE! Use num_rows instead |
-|                                      bool                                      |       change_submits        | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |        enable_events        | Turns on the element specific events. Table events happen when row is clicked |
-|                                      bool                                      |     enable_click_events     | Turns on the element click events that will give you (row, col) click data when the table is clicked |
-|                                      bool                                      |     right_click_selects     | If True, then right clicking a row will select that row if multiple rows are not currently selected |
-|                                      bool                                      |       bind_return_key       | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |              p              | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                         str or int or tuple or object                          |             key             | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                         str or int or tuple or object                          |              k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      str                                       |           tooltip           | text, that will appear when mouse hovers over the element |
-|                         List[List[ List[str] or str ]]                         |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |          expand_x           | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |          expand_y           | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |           visible           | set visibility state of the element |
-|                                      Any                                       |          metadata           | User metadata that can be set to ANYTHING |
+|                        List[List[str or int or float]]                         |         values          | Your table data represented as a 2-dimensions table... a list of rows, with each row representing a row in your table. |
+|                                   List[str]                                    |        headings         | The headings to show on the top line |
+|                                   List[bool]                                   |   visible_column_map    | One entry for each column. False indicates the column is not shown |
+|                                   List[int]                                    |       col_widths        | Number of characters that each column will occupy |
+|                                      int                                       |      def_col_width      | Default column width in characters |
+|                                      bool                                      |    auto_size_columns    | if True columns will be sized automatically |
+|                                      int                                       |      max_col_width      | Maximum width for all columns in characters |
+|                                      enum                                      |       select_mode       | Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
+|                                      bool                                      |   display_row_numbers   | if True, the first column of the table will be the row # |
+|                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
+|                                      int                                       |       row_height        | height of a single row in pixels |
+|                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
+|                                      str                                       |       text_color        | color of the text |
+|                                      str                                       |    background_color     | color of background |
+|                                      str                                       |  alternating_row_color  | if set then every other row will have this color in the background. |
+|                               str or (str, str)                                |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
+|                                      str                                       |    header_text_color    | sets the text color for the header |
+|                                      str                                       | header_background_color | sets the background color for the header |
+|                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 (int or None)                                  |   header_border_width   | Border width for the header portion |
+|                                 (str or None)                                  |      header_relief      | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                 List[Tuple[int, str] or Tuple[Int, str, str]]                  |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
+|                                      bool                                      |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
+|                                      bool                                      |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
+|                                      int                                       |      border_width       | Border width/depth in pixels |
+|                                      str                                       |    sbar_trough_color    | Scrollbar color of the trough |
+|                                      str                                       |  sbar_background_color  | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |    sbar_arrow_color     | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |       sbar_width        | Scrollbar width in pixels |
+|                                      int                                       |    sbar_arrow_width     | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |    sbar_frame_color     | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |       sbar_relief       | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                                   (int, int)                                   |          size           | DO NOT USE! Use num_rows instead |
+|                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
+|                                      bool                                      |   enable_click_events   | Turns on the element click events that will give you (row, col) click data when the table is clicked |
+|                                      bool                                      |   right_click_selects   | If True, then right clicking a row will select that row if multiple rows are not currently selected |
+|                                      bool                                      |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |         visible         | set visibility state of the element |
+|                                      Any                                       |        metadata         | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -11687,7 +11721,7 @@ Parameter Descriptions:
 |                                      bool                                      |  auto_size_text  | if True size of the Text Element will be sized to fit the string provided in 'text' parm |
 |                                      bool                                      |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
-|                                   (str/enum)                                   |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID` |
+|                                   (str/enum)                                   |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |    text_color    | color of the text |
 |                                      str                                       | background_color | color of background |
@@ -12134,7 +12168,6 @@ Tree(data = None,
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
-    sbar_arrow_background_color = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
@@ -12158,52 +12191,51 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                    TreeData                                    |            data             | The data represented using a PySimpleGUI provided TreeData class |
-|                                   List[str]                                    |          headings           | List of individual headings for each column |
-|                                   List[bool]                                   |     visible_column_map      | Determines if a column should be visible. If left empty, all columns will be shown |
-|                                   List[int]                                    |         col_widths          | List of column widths so that individual column widths can be controlled |
-|                                      int                                       |         col0_width          | Size of Column 0 which is where the row numbers will be optionally shown |
-|                                      str                                       |        col0_heading         | Text to be shown in the header for the left-most column |
-|                                      int                                       |        def_col_width        | default column width |
-|                                      bool                                      |      auto_size_columns      | if True, the size of a column is determined using the contents of the column |
-|                                      int                                       |        max_col_width        | the maximum size a column can be |
-|                                      enum                                      |         select_mode         | Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
-|                                      bool                                      |        show_expanded        | if True then the tree will be initially shown with all nodes completely expanded |
-|                                      bool                                      |       change_submits        | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |        enable_events        | Turns on the element specific events. Tree events happen when row is clicked |
-|                       (str or (str, int[, str]) or None)                       |            font             | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      str                                       |        justification        | 'left', 'right', 'center' are valid choices |
-|                                      str                                       |         text_color          | color of the text |
-|                                      int                                       |        border_width         | Border width/depth in pixels |
-|                                      str                                       |      background_color       | color of background |
-|                               str or (str, str)                                |     selected_row_colors     | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
-|                                      str                                       |      header_text_color      | sets the text color for the header |
-|                                      str                                       |   header_background_color   | sets the background color for the header |
-|                       (str or (str, int[, str]) or None)                       |         header_font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                 (int or None)                                  |     header_border_width     | Border width for the header portion |
-|                                 (str or None)                                  |        header_relief        | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                      int                                       |          num_rows           | The number of rows of the table to display at a time |
-|                                      int                                       |         row_height          | height of a single row in pixels |
-|                                      bool                                      |    vertical_scroll_only     | if True only the vertical scrollbar will be visible |
-|                                      bool                                      |    hide_vertical_scroll     | if True vertical scrollbar will be hidden |
-|                                      str                                       |      sbar_trough_color      | Scrollbar color of the trough |
-|                                      str                                       |    sbar_background_color    | Scrollbar |
-|                                      str                                       |      sbar_arrow_color       | Scrollbar |
-|                                      str                                       | sbar_arrow_background_color | Scrollbar |
-|                                      int                                       |         sbar_width          | Scrollbar |
-|                                      int                                       |      sbar_arrow_width       | Scrollbar |
-|                                      str                                       |      sbar_frame_color       | Scrollbar |
-|                                      str                                       |         sbar_relief         | Scrollbar |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |              p              | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                         str or int or tuple or object                          |             key             | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                         str or int or tuple or object                          |              k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      str                                       |           tooltip           | text, that will appear when mouse hovers over the element |
-|                            List[List[str] or str]]                             |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |          expand_x           | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |          expand_y           | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |           visible           | set visibility state of the element |
-|                                      Any                                       |          metadata           | User metadata that can be set to ANYTHING |
+|                                    TreeData                                    |          data           | The data represented using a PySimpleGUI provided TreeData class |
+|                                   List[str]                                    |        headings         | List of individual headings for each column |
+|                                   List[bool]                                   |   visible_column_map    | Determines if a column should be visible. If left empty, all columns will be shown |
+|                                   List[int]                                    |       col_widths        | List of column widths so that individual column widths can be controlled |
+|                                      int                                       |       col0_width        | Size of Column 0 which is where the row numbers will be optionally shown |
+|                                      str                                       |      col0_heading       | Text to be shown in the header for the left-most column |
+|                                      int                                       |      def_col_width      | default column width |
+|                                      bool                                      |    auto_size_columns    | if True, the size of a column is determined using the contents of the column |
+|                                      int                                       |      max_col_width      | the maximum size a column can be |
+|                                      enum                                      |       select_mode       | Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
+|                                      bool                                      |      show_expanded      | if True then the tree will be initially shown with all nodes completely expanded |
+|                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |      enable_events      | Turns on the element specific events. Tree events happen when row is clicked |
+|                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
+|                                      str                                       |       text_color        | color of the text |
+|                                      int                                       |      border_width       | Border width/depth in pixels |
+|                                      str                                       |    background_color     | color of background |
+|                               str or (str, str)                                |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
+|                                      str                                       |    header_text_color    | sets the text color for the header |
+|                                      str                                       | header_background_color | sets the background color for the header |
+|                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 (int or None)                                  |   header_border_width   | Border width for the header portion |
+|                                 (str or None)                                  |      header_relief      | Relief style for the header. Values are same as other elements that use relief. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
+|                                      int                                       |       row_height        | height of a single row in pixels |
+|                                      bool                                      |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
+|                                      bool                                      |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
+|                                      str                                       |    sbar_trough_color    | Scrollbar color of the trough |
+|                                      str                                       |  sbar_background_color  | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |    sbar_arrow_color     | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |       sbar_width        | Scrollbar width in pixels |
+|                                      int                                       |    sbar_arrow_width     | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |    sbar_frame_color     | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |       sbar_relief       | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
+|                            List[List[str] or str]]                             |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |         visible         | set visibility state of the element |
+|                                      Any                                       |        metadata         | User metadata that can be set to ANYTHING |
 
 ### add_treeview_data
 
@@ -12963,6 +12995,13 @@ Window(title,
     titlebar_icon = None,
     use_custom_titlebar = None,
     scaling = None,
+    sbar_trough_color = None,
+    sbar_background_color = None,
+    sbar_arrow_color = None,
+    sbar_width = None,
+    sbar_arrow_width = None,
+    sbar_frame_color = None,
+    sbar_relief = None,
     metadata = None)
 ```
 
@@ -13022,6 +13061,13 @@ Parameter Descriptions:
 |               (bytes or str)                |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                    bool                     |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
 |                    float                    |               scaling                | Apply scaling to the elements in the window. Can be set on a global basis using set_options |
+|                     str                     |          sbar_trough_color           | Scrollbar color of the trough |
+|                     str                     |        sbar_background_color         | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                     str                     |           sbar_arrow_color           | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                     int                     |              sbar_width              | Scrollbar width in pixels |
+|                     int                     |           sbar_arrow_width           | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                     str                     |           sbar_frame_color           | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                     str                     |             sbar_relief              | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 |                     Any                     |               metadata               | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -19592,7 +19638,14 @@ set_options(icon = None,
     scaling = None,
     disable_modal_windows = None,
     force_modal_windows = None,
-    tooltip_offset = (None, None))
+    tooltip_offset = (None, None),
+    sbar_trough_color = None,
+    sbar_background_color = None,
+    sbar_arrow_color = None,
+    sbar_width = None,
+    sbar_arrow_width = None,
+    sbar_frame_color = None,
+    sbar_relief = None)
 ```
 
 Parameter Descriptions:
@@ -19655,6 +19708,13 @@ Parameter Descriptions:
 |                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows (unless they've been set to FORCED using another option) |
 |                      bool                      |       force_modal_windows       | If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal) |
 |          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
+|                      str                       |        sbar_trough_color        | Scrollbar color of the trough |
+|                      str                       |      sbar_background_color      | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                      str                       |        sbar_arrow_color         | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                      int                       |           sbar_width            | Scrollbar width in pixels |
+|                      int                       |        sbar_arrow_width         | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                      str                       |        sbar_frame_color         | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                      str                       |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -19728,7 +19788,14 @@ SetOptions(icon = None,
     scaling = None,
     disable_modal_windows = None,
     force_modal_windows = None,
-    tooltip_offset = (None, None))
+    tooltip_offset = (None, None),
+    sbar_trough_color = None,
+    sbar_background_color = None,
+    sbar_arrow_color = None,
+    sbar_width = None,
+    sbar_arrow_width = None,
+    sbar_frame_color = None,
+    sbar_relief = None)
 ```
 
 Parameter Descriptions:
@@ -19791,6 +19858,13 @@ Parameter Descriptions:
 |                      bool                      |      disable_modal_windows      | If True then all windows, including popups, will not be modal windows (unless they've been set to FORCED using another option) |
 |                      bool                      |       force_modal_windows       | If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal) |
 |          ((None, None) or (int, int))          |         tooltip_offset          | Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered. |
+|                      str                       |        sbar_trough_color        | Scrollbar color of the trough |
+|                      str                       |      sbar_background_color      | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                      str                       |        sbar_arrow_color         | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                      int                       |           sbar_width            | Scrollbar width in pixels |
+|                      int                       |        sbar_arrow_width         | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                      str                       |        sbar_frame_color         | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                      str                       |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
