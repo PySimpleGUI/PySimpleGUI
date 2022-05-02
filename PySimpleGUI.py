@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.34 Released 5-Apr-2022"
+version = __version__ = "4.59.0.35 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -125,6 +125,8 @@ _change_log = """
     4.59.0.34
         Fix crash in Element.bind... likely created in version 4.59.0.6.  
             Crashes because Elements don't have the method _is_window_created which was being called.  YIKES!
+    4.59.0.35
+        New coupon
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -24792,7 +24794,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'BDC40CE5211BD258C767',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '4FD91A459D56B1029FF8',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
