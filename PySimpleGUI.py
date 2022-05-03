@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.35 Released 5-Apr-2022"
+version = __version__ = "4.59.0.36 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -127,6 +127,8 @@ _change_log = """
             Crashes because Elements don't have the method _is_window_created which was being called.  YIKES!
     4.59.0.35
         New coupon
+    4.59.0.36
+        Made selected text color for Input, Combo and Multiline match the color theme! (THANK YOU JASON!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15492,10 +15494,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
                 element.TKEntry.bind('<Return>', element._ReturnKeyHandler)
+
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKEntry.configure(background=element.BackgroundColor)
+                    element.TKEntry.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKEntry.configure(fg=text_color)
+                    element.TKEntry.configure(fg=text_color, selectbackground=text_color)
 
                 if element.disabled_readonly_background_color is not None:
                     element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
@@ -15549,10 +15552,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 try:
                     if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
                         combostyle.configure(style_name, foreground=element.TextColor)
-                        combostyle.configure(style_name, selectforeground=element.TextColor)
+                        combostyle.configure(style_name, selectbackground=element.TextColor)
                         combostyle.configure(style_name, insertcolor=element.TextColor)
                     if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
-                        combostyle.configure(style_name, selectbackground=element.BackgroundColor)
+                        combostyle.configure(style_name, selectforeground=element.BackgroundColor)
                         combostyle.map(style_name, fieldbackground=[('readonly', element.BackgroundColor)])
                         combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
 
@@ -15764,7 +15767,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    element.TKText.configure(background=element.BackgroundColor)
+                    element.TKText.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
 
                 element.TKText.tag_configure("center", justify='center')
                 element.TKText.tag_configure("left", justify='left')
@@ -15801,7 +15804,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     toplevel_form.FocusSet = True
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKText.configure(fg=text_color)
+                    element.TKText.configure(fg=text_color, selectbackground=text_color)
+
+
                 if element.Disabled is True:
                     element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
