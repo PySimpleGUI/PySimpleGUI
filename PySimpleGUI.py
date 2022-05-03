@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.36 Released 5-Apr-2022"
+version = __version__ = "4.59.0.37 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -129,6 +129,9 @@ _change_log = """
         New coupon
     4.59.0.36
         Made selected text color for Input, Combo and Multiline match the color theme! (THANK YOU JASON!)
+    4.59.0.37
+        Added back the filetypes parameter availability for the mac for the file browse operations.  Was previously (incorrectly evidently!) removed for FileBrowse operations
+            (Thank you resnbl for all the help!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4931,11 +4934,8 @@ class Button(Element):
             else:  # if "cancel" button clicked, don't generate an event
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            if running_mac():
-                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
-            else:
-                file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
-                                                          initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
+            file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder,
+                                                      parent=self.ParentForm.TKroot if not running_mac() else None)  # show the 'get file' dialog box
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -4947,10 +4947,8 @@ class Button(Element):
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            if running_mac():
-                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
-            else:
-                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
+            file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder,
+                                                       parent=self.ParentForm.TKroot if not running_mac() else None)
             if file_name:
                 file_name = self._files_delimiter.join(file_name)  # normally a ';'
                 strvar.set(file_name)
@@ -4959,11 +4957,8 @@ class Button(Element):
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             # show the 'get file' dialog box
-            if running_mac():
-                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
-            else:
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder,
-                                                            parent=self.ParentForm.TKroot)
+            file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder,
+                                                        parent=self.ParentForm.TKroot if not running_mac() else None)
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -20315,9 +20310,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             root.withdraw()
         except:
             pass
-        folder_name = tk.filedialog.askdirectory(
-            initialdir=initial_folder,
-        )  # show the 'get folder' dialog box
+        folder_name = tk.filedialog.askdirectory(initialdir=initial_folder)  # show the 'get folder' dialog box
 
         root.destroy()
 
