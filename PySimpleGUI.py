@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.37 Released 5-Apr-2022"
+version = __version__ = "4.59.0.38 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -132,6 +132,9 @@ _change_log = """
     4.59.0.37
         Added back the filetypes parameter availability for the mac for the file browse operations.  Was previously (incorrectly evidently!) removed for FileBrowse operations
             (Thank you resnbl for all the help!)
+    4.59.0.38
+        Combo element finally gets drop-down list formatting (thank you Jason!)
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15558,6 +15561,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         combostyle.configure(style_name, arrowcolor=element.button_arrow_color)
                     if element.button_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                         combostyle.configure(style_name, background=element.button_background_color)
+
                 except Exception as e:
                     _error_popup_with_traceback('Combo Element error {}'.format(e),
                                                 'Combo element key: {}'.format(element.Key),
@@ -15569,6 +15573,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tk_row_frame.option_add("*TCombobox*Listbox*Font", element._newfont)
 
                 element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
+
+                # make tcl call to deal with colors for the drop-down formatting
+                try:
+                    if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT) and \
+                        element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                        element.Widget.tk.eval(
+                    '[ttk::combobox::PopdownWindow {}].f.l configure -foreground {} -background {} -selectforeground {} -selectbackground {}'.format(element.Widget,
+                                                                                                                                                    element.TextColor,
+                                                                                                                                                    element.BackgroundColor,
+                                                                                                                                                    element.BackgroundColor,
+                                                                                                                                                    element.TextColor))
+                except Exception as e:
+                    pass    # going to let this one slide
 
                 # Chr0nic
                 element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
