@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.38 Released 5-Apr-2022"
+version = __version__ = "4.59.0.39 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -134,6 +134,9 @@ _change_log = """
             (Thank you resnbl for all the help!)
     4.59.0.38
         Combo element finally gets drop-down list formatting (thank you Jason!)
+    4.59.0.39
+        Reworked sg.main test harness to recover space to fit on smaller screens
+        Make upgrade from github Multiline smaller to fit the Pi screen
         
     """
 
@@ -23903,7 +23906,7 @@ def _copy_files_from_github():
         python_command = python_command.replace('pythonw', 'python')
 
     layout = [[Text('Pip Upgrade Progress')],
-              [Multiline(s=(90,30), k='-MLINE-', reroute_cprint=True, write_only=True)],
+              [Multiline(s=(90,15), k='-MLINE-', reroute_cprint=True, write_only=True)],
               [Button('Downloading...', k='-EXIT-')]]
 
     window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
@@ -24597,11 +24600,12 @@ def _create_main_window():
     frame2 = [
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
 
-        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
+        [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True),
+         Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3))],
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='-COMBO1-', )],
-        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 20', default_value='Combo item 2', key='-COMBO2-', )],
+        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 14', default_value='Combo item 2', key='-COMBO2-', )],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='-COMBO2-')],
-        [Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3))],
+        
     ]
 
     frame3 = [
@@ -24616,36 +24620,34 @@ def _create_main_window():
     ]
     matrix = [[str(x * y) for x in range(1, 5)] for y in range(1, 8)]
 
-    frame5 = [[
+    frame5 = [vtop([
         Table(values=matrix, headings=matrix[0],
               auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',  header_border_width=4,
               # header_relief=RELIEF_GROOVE,
               num_rows=10, alternating_row_color='lightblue', key='-TABLE-',
-              col_widths=[5, 5, 5, 5], size=(400, 200)),
-        T('  '),
-        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True, header_border_width=4,
+              col_widths=[5, 5, 5, 5]),
+        Tree(data=treedata, headings=['col1', 'col2', 'col3'], col_widths=[5, 5, 5, 5], change_submits=True, auto_size_columns=False, header_border_width=4,
              # header_relief=RELIEF_GROOVE,
-             num_rows=10, col0_width=10, key='-TREE-', show_expanded=True )],[VStretch()]]
+             num_rows=8, col0_width=8, key='-TREE-', show_expanded=True )])]
     frame7 = [[Image(EMOJI_BASE64_HAPPY_HEARTS, enable_events=True, k='-EMOJI-HEARTS-'), T('Do you'), Image(HEART_3D_BASE64, subsample=3, enable_events=True, k='-HEART-'), T('so far?')],
-              [T('Want to be taught PySimpleGUI?  Then maybe the "Official PySimpleGUI Course" on Udemy is for you.')],
-              [T('Coupon codes are sometimes around so check docs, announcements, easter eggs on this page, to see specials.')],
-              [B(image_data=UDEMY_ICON, enable_events=True,  k='-UDEMY-')],
-              [T('It is financially draining to operate a project this huge. ANY help helps and is very appreciated')],
-              [B(image_data=ICON_BUY_ME_A_COFFEE, enable_events=True,  k='-COFFEE-')]]
+              [T('Want to be taught PySimpleGUI?\nThen maybe the "Official PySimpleGUI Course" on Udemy is for you.')],
+              [B(image_data=UDEMY_ICON, enable_events=True,  k='-UDEMY-'),T('Check docs, announcements, easter eggs on this page for coupons.')],
+              [B(image_data=ICON_BUY_ME_A_COFFEE, enable_events=True,  k='-COFFEE-'), T('It is financially draining to operate a project this huge. $1 helps')]]
 
 
     pop_test_tab_layout = [
-        [T('Popup tests... good idea!'),Image(EMOJI_BASE64_HAPPY_IDEA), Push(), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
-        [T('Get popups too!'), Push(), B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
+        [Image(EMOJI_BASE64_HAPPY_IDEA), T('Popup tests? Good idea!')],
+        [B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
+        [T('"Get" popups too!')],
+        [B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
 
-    GRAPH_SIZE=(650, 250)
+    GRAPH_SIZE=(500, 200)
     graph_elem = Graph(GRAPH_SIZE, (0, 0), GRAPH_SIZE, key='+GRAPH+')
 
-    frame6 = [[graph_elem]]
+    frame6 = [[VPush()],[graph_elem]]
 
-    global_settings_tab_layout = [[T('Global Settings:', font='_ 15')],
-                                  [T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
-                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,10))],
+    global_settings_tab_layout = [[T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
+                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,8))],
                                   ]
 
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
@@ -24671,7 +24673,7 @@ def _create_main_window():
     layout_top = Column([
         [Image(EMOJI_BASE64_HAPPY_BIG_SMILE, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-IMAGE-'),
-         Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
+         Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file vs importing', font='ANY 14',
               tooltip='My tooltip', key='-TEXT1-')],
         VerLine(ver, 'PySimpleGUI Version') + [Image(HEART_3D_BASE64, subsample=4)],
         VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
@@ -24682,7 +24684,7 @@ def _create_main_window():
     layout_bottom = [
         [B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE TABS-'),
          pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='-TAB_GROUP-')]], k='-TAB GROUP COL-'))],
-        [B('Button', highlight_colors=('yellow', 'red'),pad=(1, 0)), B('Hide Stuff',pad=(1, 0), metadata='my metadata'),
+        [B('Button', highlight_colors=('yellow', 'red'),pad=(1, 0)),
          B('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button',pad=(1, 0)),
          B('See-through Mode', tooltip='Make the background transparent',pad=(1, 0)),
          B('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-',pad=(1, 0)),
@@ -24775,9 +24777,6 @@ def main():
         if event == 'Button':
             window.Element('-TEXT1-').SetTooltip('NEW TEXT')
             window.Element('-MENU-').Update(visible=True)
-        elif event.startswith('Hide'):
-            # window.Normal()
-            window.Element('-MENU-').Update(visible=False)
         elif event == 'Popout':
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
