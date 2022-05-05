@@ -84,7 +84,7 @@ window = make_window()
 
 while True:
     event, values = window.read()
-    sg.Print(event, values)
+    # sg.Print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == 'Edit Me':
@@ -95,6 +95,7 @@ while True:
         window = make_window()
     if event == '-USE CUSTOM TITLEBAR-':
         use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
+        sg.set_options(use_custom_titlebar=use_custom_titlebar)
         window.close()
         window = make_window()
     elif event == 'Version':

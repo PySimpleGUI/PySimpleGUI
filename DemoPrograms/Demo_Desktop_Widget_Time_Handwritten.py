@@ -29,7 +29,7 @@ def main():
 
     layout = [[sg.Image(blank, key=('-IMAGE-', i), p=0, subsample=subsample) for i in range(max_digits)]]
 
-    window = sg.Window('', layout, background_color='black', no_titlebar=True, grab_anywhere=True, right_click_menu=right_click_menu, location=location, enable_close_attempted_event=True, alpha_channel=alpha, metadata=subsample)
+    window = sg.Window('', layout, background_color='black', no_titlebar=True, grab_anywhere=True, right_click_menu=right_click_menu, location=location, keep_on_top=True, enable_close_attempted_event=True, alpha_channel=alpha, metadata=subsample)
 
     while True:
         event, values = window.read(timeout=300)
