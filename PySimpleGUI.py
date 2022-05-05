@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.39 Released 5-Apr-2022"
+version = __version__ = "4.59.0.40 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -137,7 +137,8 @@ _change_log = """
     4.59.0.39
         Reworked sg.main test harness to recover space to fit on smaller screens
         Make upgrade from github Multiline smaller to fit the Pi screen
-        
+    4.59.0.40
+        Auto-correct file_types problems for Browse buttons.  Automatically change the formatting from (str, str) to ((str, str),) and warn the user
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4648,7 +4649,7 @@ class Button(Element):
         :type target:                 str | (int, int)
         :param tooltip:               text, that will appear when mouse hovers over the element
         :type tooltip:                (str)
-        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).  Note - NOT SUPPORTED ON MAC
+        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).
         :type file_types:             Tuple[(str, str), ...]
         :param initial_folder:        starting path for folders and files
         :type initial_folder:         (str)
@@ -4717,6 +4718,9 @@ class Button(Element):
 
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
+        if file_types is not None and len(file_types) == 2 and isinstance(file_types[0], str) and isinstance(file_types[1], str):
+            warnings.warn('file_types parameter not correctly specified. This parameter is a LIST of TUPLES. You have passed (str,str) rather than ((str, str),). Fixing it for you this time.\nchanging {} to {}\nPlease correct your code'.format(file_types, ((file_types[0], file_types[1]),)), UserWarning)
+            file_types = ((file_types[0], file_types[1]),)
         self.FileTypes = file_types
         self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
