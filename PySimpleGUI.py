@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.43 Released 5-Apr-2022"
+version = __version__ = "4.59.0.44 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -145,6 +145,8 @@ _change_log = """
         FileBrowse - giving a series of try blocks a try to see if can get around the Mac file_types issue
     4.59.0.43
         Hi-Ho-Hi-Ho... it's back to no file_type on the Mac we go... Need to add similar code to popup_get_file to ensure doesn't crash there too.
+    4.59.0.44
+        Fix in popup_get_file for the file_type parameter that crashes on the Mac.  Like the Browse button, the file_type parameter is disabled for the Mac. VERY sorry Mac users
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4655,7 +4657,7 @@ class Button(Element):
         :type target:                 str | (int, int)
         :param tooltip:               text, that will appear when mouse hovers over the element
         :type tooltip:                (str)
-        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).
+        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),). NOT avoilable on the MAC
         :type file_types:             Tuple[(str, str), ...]
         :param initial_folder:        starting path for folders and files
         :type initial_folder:         (str)
@@ -12664,7 +12666,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       filter file types Default value = (("ALL Files", "*.* *"),)
+    :param file_types:       filter file types Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
     :type file_types:        Tuple[(str, str), ...]
     :param initial_folder:   starting path for folders and files
     :type initial_folder:
@@ -12719,7 +12721,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       Default value = (("ALL Files", "*.* *"),)
+    :param file_types:       Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
     :type file_types:        Tuple[(str, str), ...]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -12777,7 +12779,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        Default value = (("ALL Files", "*.* *"),)
+    :param file_types:        Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -12833,7 +12835,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        Default value = (("ALL Files", "*.* *"),)
+    :param file_types:        Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -20398,7 +20400,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type save_as:                   (bool)
     :param multiple_files:           if True, then allows multiple files to be selected that are returned with ';' between each filename
     :type multiple_files:            (bool)
-    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),)
+    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
     :type file_types:                Tuple[Tuple[str,str]]
     :param no_window:                if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:                 (bool)
@@ -20493,22 +20495,37 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
             _set_icon_for_tkinter_window(root, icon=icon)
         # for Macs, setting parent=None fixes a warning problem.
         if save_as:
-            filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+            if running_mac():
+                filename = tk.filedialog.asksaveasfilename(initialdir=initial_folder,
+                                                       initialfile=default_path,
+                                                       defaultextension=default_extension)  # show the 'get file' dialog box
+            else:
+                filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        initialdir=initial_folder,
                                                        initialfile=default_path,
-                                                       parent=root if not running_mac() else None,
+                                                       parent=root,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
-            filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+            if running_mac():
+                filename = tk.filedialog.askopenfilenames(initialdir=initial_folder,
+                                                          initialfile=default_path,
+                                                          defaultextension=default_extension)  # show the 'get file' dialog box
+            else:
+                filename = tk.filedialog.askopenfilenames(filetypes=file_types,
                                                       initialdir=initial_folder,
                                                       initialfile=default_path,
-                                                      parent=root if not running_mac() else None,
+                                                      parent=root,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
-            filename = tk.filedialog.askopenfilename(filetypes=file_types,
+            if running_mac():
+                filename = tk.filedialog.askopenfilename(initialdir=initial_folder,
+                                                     initialfile=default_path,
+                                                     defaultextension=default_extension)  # show the 'get files' dialog box
+            else:
+                filename = tk.filedialog.askopenfilename(filetypes=file_types,
                                                      initialdir=initial_folder,
                                                      initialfile=default_path,
-                                                     parent=root if not running_mac() else None,
+                                                     parent=root,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
         root.destroy()
 
