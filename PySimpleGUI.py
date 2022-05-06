@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.40 Released 5-Apr-2022"
+version = __version__ = "4.59.0.41 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -139,6 +139,8 @@ _change_log = """
         Make upgrade from github Multiline smaller to fit the Pi screen
     4.59.0.40
         Auto-correct file_types problems for Browse buttons.  Automatically change the formatting from (str, str) to ((str, str),) and warn the user
+    4.59.0.41
+        Docstring typo fixes for file_types parm
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12682,7 +12684,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       filter file types (Default value = (("ALL Files", "*.* *")))
+    :param file_types:       filter file types Default value = (("ALL Files", "*.* *"),)
     :type file_types:        Tuple[(str, str), ...]
     :param initial_folder:   starting path for folders and files
     :type initial_folder:
@@ -12737,7 +12739,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       (Default value = (("ALL Files", "*.* *")))
+    :param file_types:       Default value = (("ALL Files", "*.* *"),)
     :type file_types:        Tuple[(str, str), ...]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -12795,7 +12797,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        (Default value = (("ALL Files", "*.* *")))
+    :param file_types:        Default value = (("ALL Files", "*.* *"),)
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -12851,7 +12853,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        (Default value = (("ALL Files", "*.* *")))
+    :param file_types:        Default value = (("ALL Files", "*.* *"),)
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
