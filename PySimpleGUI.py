@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.42 Released 5-Apr-2022"
+version = __version__ = "4.59.0.43 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -143,6 +143,8 @@ _change_log = """
         Docstring typo fixes for file_types parm
     4.59.0.42
         FileBrowse - giving a series of try blocks a try to see if can get around the Mac file_types issue
+    4.59.0.43
+        Hi-Ho-Hi-Ho... it's back to no file_type on the Mac we go... Need to add similar code to popup_get_file to ensure doesn't crash there too.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4894,39 +4896,6 @@ class Button(Element):
         """
         Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
         """
-        # global _my_windows
-
-        # print('Button callback')
-
-        # Button Callback - Parent = {self.ParentForm}   Position = {self.Position}')
-        # Buttons modify targets or return from the form
-        # If modifying target, get the element object at the target and modify its StrVar
-        # target = self.Target
-        # target_element = None
-        # if target[0] == ThisRow:
-        #     target = [self.Position[0], target[1]]
-        #     if target[1] < 0:
-        #         target[1] = self.Position[1] + target[1]
-        # strvar = None
-        # should_submit_window = False
-        # if target == (None, None):
-        #     strvar = self.TKStringVar
-        # else:
-        #     if not isinstance(target, str):
-        #         if target[0] < 0:
-        #             target = [self.Position[0] + target[0], target[1]]
-        #         target_element = self.ParentContainer._GetElementAtLocation(target)
-        #     else:
-        #         target_element = self.ParentForm.find_element(target)
-        #     try:
-        #         strvar = target_element.TKStringVar
-        #     except:
-        #         pass
-        #     try:
-        #         if target_element.ChangeSubmits:
-        #             should_submit_window = True
-        #     except:
-        #         pass
 
         if self.Disabled == BUTTON_DISABLED_MEANS_IGNORE:
             return
@@ -4948,13 +4917,10 @@ class Button(Element):
             else:  # if "cancel" button clicked, don't generate an event
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            try:
-                file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)  # show the 'get file' dialog box
-            except:
-                try:
-                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)  # show the 'get file' dialog box
-                except:
-                    file_name = None
+            if running_mac():
+                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+            else:
+                file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
 
             if file_name:
                 strvar.set(file_name)
@@ -4967,15 +4933,10 @@ class Button(Element):
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            try:
-                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)
-
-            except:
-                try:
-                    file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)
-
-                except:
-                    file_name = None
+            if running_mac():
+                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
+            else:
+                file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
             if file_name:
                 file_name = self._files_delimiter.join(file_name)  # normally a ';'
@@ -4985,13 +4946,10 @@ class Button(Element):
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             # show the 'get file' dialog box
-            try:
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)
-            except:
-                try:
-                    file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot if not running_mac() else None)
-                except:
-                    file_name = None
+            if running_mac():
+                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+            else:
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
             if file_name:
                 strvar.set(file_name)
