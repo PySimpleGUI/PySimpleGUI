@@ -1899,7 +1899,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -2994,6 +2994,10 @@ window.close()
 
 So, in summary, `window.perform_long_operation` starts and manages the thread on your behalf.  You are returned an event when your "long operation" completes.  If your function returns a value, then that value will show up in the `values` variable from your `window.read()` call.  Threading made simple.
 
+###  `window.perform_long_operation`Has An Alias `window.start_thread`
+
+If you're a threading pro, then maybe you would prefer the alias for  `window.perform_long_operation`.  In addition to this name for the method, you'll get the exact same results by calling  `window.start_thread`.  Since threading is becoming more popular due to the `write_event_value` capability, it makes sense to enable you to call a thread a thread if that's what you prefer... so enjoy the `start_thread` alias if that's how you roll.
+
 ### Threading the "New Way" - `Window.write_event_value`
 
 This new function that is available currently only in the tkinter port as of July 2020 is exciting and represents the future way multi-threading is handled in PySimpleGUI.
@@ -3145,9 +3149,9 @@ or
 
 Color can be Blue, Green, Black, Gray, Purple, Brown, Teal, Red.   The # is optional or can be from 1 to XX.  Some colors have a lot of choices.  There are 13 "Light Brown" choices for example.
 
-### "System" Default - No Colors
+### "System" Default - No Colors (e.g. `"Gray Gray Gray"`)
 
-If you're bent on having no colors at all in your window, then choose `Default 1` or `System Default 1`.
+If you're bent on having no colors at all in your window, then choose `Default 1` or `System Default 1`.  Use the `"Gray Gray Gray"` theme if you really want to ensure system defaults only.
 
 If you want the original PySimpleGUI color scheme of a blue button and everything else gray then you can get that with the theme `Default` or `System Default`.
 
@@ -3185,13 +3189,13 @@ The first step is to create the window object using the desired window customiza
 
 ## Modal Windows (only applied to tkinter port currently
 )
-NOTE - as of PySimpleGUI 4.25.0 Modal Windows are supported!  By default the `popup` windows that block will be marked Modal by default.  This is a somewhat risky change because your expisting applications will behave differently. However, in theory, you shouldn't have been interacting with other windows while the popup is active.  All of those actions are at best queued.  It's implementation dependent.
+NOTE - as of PySimpleGUI 4.25.0 Modal Windows are supported!  By default the `popup` windows that block will be marked Modal by default.  This is a somewhat risky change because your existing applications will behave differently. However, in theory, you shouldn't have been interacting with other windows while the popup is active.  All of those actions are at best queued.  It's implementation dependent.
 
 "Modal" in this case means that you must close this "modal" window before you will be able to interact with windows created before this window.  Think about an "about" box.  You normally have to close this little popup in most programs.  So, that's what PySimpleGUI is doing now.
 
 ## Making your window modal
 
-To make a Modal  Wio=ndow you have 2 options.
+To make a Modal  Window you have 2 options.
 
 1. Set the `moodel=True` parameter in your Window calls.
 
@@ -3283,12 +3287,30 @@ tkinter has a number of "Themes" that can be used with ttk widgets.  In PySimple
 
 If a system-wide setting is desired, then the default can be set using `set_options`. This will affect all windows such as popups and the debug window.
 
-The ttk theme choices depend on the platform. Linux has a shorter number of selections than Windows.  These are the Windows choices:
-'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+The ttk theme choices depend on the platform. Linux has a shorter number of selections than Windows.  
+
+The minimum list of TTK themes is:
+- default
+- alt
+- clam
+- classic
+
+Most Windows systems have some additional themes that come standard with tkinter:
+- default
+- alt
+- clam
+- classic
+- winnative
+- vista
+- xpnative
+
+The list of available themes is populated automatically when you open the Global PySimpleGUI Settings window.  Previously the list of themes was hard-coded by the PySimpleGUI code.  Now the list is retrieved from tkinter. 
 
 There are constants defined to help you with code completion to determine what your choices are.  Theme constants start with `THEME_`.  For example, the "clam" theme is `THEME_CLAM`
 
-You're urged to experiment with this setting to determine which you like the most.  They change the ttk-based elements in subtle but still significant ways.
+If you try to manually set a TTK theme while making a Window or calling `set_options` and it is not a valid theme, you will be shown the list of valid themes in the error popup.  The popup may resemble one like this:
+
+![image](https://user-images.githubusercontent.com/46163555/167274285-14b95be3-5c5f-4edf-80e0-b8969ca3cf5c.png)
 
 ## Closing Windows
 
@@ -6106,6 +6128,118 @@ menu_bar = [right_click_menu_1, right_click_menu_2, button_menu_def ]
 ```
 
 And, of course, the direction works the opposite too.  You can take a Menu Bar definition and pull out an individual menu item to create a right click or button menu.
+
+# TTK & TTK Scrollbars
+
+In version 4.60.0 all of the scrollbars in PySimpleGUI were converted into TTK scrollbars.  This change enables all parts of a PySimpleGUI to match the theme.  Additionally, scrollbars can be ***further*** themed by changing the TTK Theme.
+
+TTK Themes have been available for use in PySimpleGUI for years.  The `Window` object has a parameter to indicate which theme should be used for the window.  `set_options` has also been a way to set the theme for your application.
+
+## TTK in Global Settings
+
+A new third way to set the TTK theme was added in the 4.60.0 release, the PySimpleGUI Global Settings.  There is a tab dedicated to TTK in the global settings window.
+
+![SNAG-1660](https://user-images.githubusercontent.com/46163555/167268144-b7a05b8d-6770-430a-ad92-96a10eae7d01.jpg)
+
+## TTK Scrollbars
+
+TTK Scrollbars are quite flexible in how they can be styled.  PySimpleGUI provides many options for these scrollbars.  Like much of PySimpleGUI, TTK Scrollbars have been simplified for you so that you are not required to set each and every option.  There is a trade-off, a payment, for the trivialization of features.  The simplification removes a few settings that are instead done on your behalf.  
+
+All scrollbars in all elements of PySimpleGUI have been gray for 4 years and now you get not only that sweet sweet dull system-default-gray, but 1,000s of other colors ***and*** they match your PySimpleGUI theme's colors automagically.  
+
+### "Test Scrollbar Settings"
+
+In the Global PySimpleGUI Settings window, in the TTK tab, you'll find a button that will enable you to test/preview your settings.  When you click it, you will see the debug window open and some numbers printed so that the scrollbar changes over time.  If all PySimpleGUI defaults are used (including the PySimpleGUI theme), it will look something like this:
+
+![SNAG-1661](https://user-images.githubusercontent.com/46163555/167268148-de075756-e585-450c-9b15-c4958629297e.jpg)
+
+### Values of Scrollbar Settings
+
+In the Global Settings window, you'll find this list of options for each of the TTK Scrollbar parts:
+- Button Text Color
+- Button Background Color
+- Background Color
+- Input Element Background Color
+- Input Element Text Color
+- Text Color
+- Slider Color
+
+![image](https://user-images.githubusercontent.com/46163555/167271981-059584f8-76ee-47b1-b3ed-7545e03bba8c.png)
+
+These colors are from the **PySimpleGUI Theme colors**.  The term `Slider Color` means to use the color defined by the PySimpleGUI theme in use for the slider.  If the slider color is defined as "blue" in the theme, then selecting `Slider Color` will result in that part of the scrollbar being blue.
+
+In addition to the items in the drop-down, you can type color values directly into the combo-box.  If you want your slider's trough color to be red, then you can type `red` into the setting in the settings window.  You can also use hex RGB colors, like `#FF0000` for pure red.
+
+### Anatomy of a Scrollbar
+
+This diagram shows the parts of a scrollbar that are discussed in the documentation and are in docstrings for parameters.  The only item not shown in the diagram is the "Frame Color".  It's left vague as it depends on which TTK Theme is chosen and it's a mash-up of multiple tkinter TTK Scrollbar parameters.  It's part of the magic-simplification mentioned above. Sticking with the default values almost always has great results.
+
+![image](https://user-images.githubusercontent.com/46163555/167270106-9fd41032-dcc4-4867-bc8a-b4e5833b7767.png)
+
+#### The "Thumb"
+
+That bar in the middle that you grab in order to manually scroll quickly is sometimes called the "thumb".... so that's what I'll call it.
+
+The question I'm sure many want to know is "how do I set just the color of the Thumb?"  I wanted to know that too!  The answer is... you can't.  It will be the same color as the background color of the buttons with the arrows. 
+
+#### Background
+
+The reason you see 2 lines coming out of the word "Background" in the diagram is that this color is used in 2 places.  That background setting is used to set both the thumb and the arrow background.
+
+#### Trough
+
+The trough is the "ditch" of the scrollbar.  The Thumb slides in the Trough. 
+
+#### Button Arrow
+
+- The arrow color is the color of the arrow on the buttons located at the ends of the scrollbar.
+
+#### Relief
+
+The relief setting applies to the trough and the thumb, best I can tell.  It's most noticeable when you mouse over parts of the scrollbar.
+
+#### Frame Width & Arrow Width
+
+The Frame Width you can think of as the trough's width.  The Arrow Width is the width of the triangle.  It's possible to make some truly weird looking scrollbars by setting these 2 widths to be dramatically different.  This odd scrollbar has a Frame Width of 16 and an Arrow Width of 8.
+
+![image](https://user-images.githubusercontent.com/46163555/167273502-0e5da5ec-3e65-41d5-8bee-3961458dc8da.png)
+### Mouse-over Effects
+
+The TTK Scrollbars in PySimpleGUI have a consistent mouse-over behavior.  When the mouse moves over the buttons or the thumb, the colors "swap".
+
+"Swap" in this context means switching foreground and background colors.  The "Arrow Button Arrow Color" is the "foreground" and the "Background Color" is the "background".
+
+These 2 examples show the effect 
+
+The first example shows the mouse is over the top button of the scrollbar.  This button's colors have swapped the arrow color for the background color and vice versa.  See how the button at the top of the scrollbar is the "opposite" of the bottom button?
+
+![image](https://user-images.githubusercontent.com/46163555/167273763-f6e8ff99-f83a-476d-bfab-d64f29942bbb.png)
+
+In this second example, the mouse is over the thumb.  Normally the color of the thumb is the "background" color (i.e. the color of the arrow button's background). Thus, when the mouse is moved over it, the color will become the color of the ***arrow***.
+
+![image](https://user-images.githubusercontent.com/46163555/167273751-87dee6db-4e23-4f0b-9de0-7ae2c0868d4c.png)
+
+## Hierarchy of TTK Scrollbar Settings
+
+Scrollbars have numerous places that they can be specified.  The order of priorities is determined based on whether or not a level has been set.  The order the settings are checked and thus the priority order is:
+
+* Element
+* Window
+* set_options
+* Global Settings
+
+For example, if a `Multiline` element has the trough color for it's scrollbar defined in the layout, then that color will be used for that Multiline's scrollbar.  If no scrollbar settings are set for the element, then the settings for the Window the element is contained in.  Next the settings changed by a user's program calling the `set_options` function is used.  And finally, if none of those are set, then the Global Settings are used.
+
+## Scrollbar Parameter Names
+
+All functions and objects that have a scrollbar setting use the same names for the paramters:
+- sbar_trough_color
+- sbar_background_color
+- sbar_arrow_color
+- sbar_width
+- sbar_arrow_width
+- sbar_frame_color
+- sbar_relief
 
 # Running Multiple Windows
 
