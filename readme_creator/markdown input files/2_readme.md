@@ -4616,7 +4616,7 @@ The trough is the "ditch" of the scrollbar.  The Thumb slides in the Trough.
 
 #### Button Arrow
 
-- The arrow color is the color of the arrow on the buttons located at the ends of the scrollbar.
+The arrow color is the color of the arrow on the buttons located at the ends of the scrollbar.
 
 
 #### Relief
@@ -4659,13 +4659,14 @@ For example, if a `Multiline` element has the trough color for it's scrollbar de
 ## Scrollbar Parameter Names
 
 All functions and objects that have a scrollbar setting use the same names for the paramters:
-- sbar_trough_color
-- sbar_background_color
-- sbar_arrow_color
-- sbar_width
-- sbar_arrow_width
-- sbar_frame_color
-- sbar_relief
+
+* sbar_trough_color
+* sbar_background_color
+* sbar_arrow_color
+* sbar_width
+* sbar_arrow_width
+* sbar_frame_color
+* sbar_relief
 
 
 
