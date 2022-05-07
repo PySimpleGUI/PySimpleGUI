@@ -118,7 +118,7 @@ Parameter Descriptions:
 |                                      int                                       |      button_type      | You should NOT be setting this directly. ONLY the shortcut functions set this |
 |                               str or (int, int)                                |        target         | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
 |                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
-|                             Tuple[(str, str), ...]                             |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),). Note - NOT SUPPORTED ON MAC |
+|                             Tuple[(str, str), ...]                             |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                                      str                                       |    initial_folder     | starting path for folders and files |
 |                                      str                                       |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                 (bool or str)                                  |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinter |
@@ -15082,7 +15082,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
 |                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types    | filter file types (Default value = (("ALL Files", "*.* *"))) |
+|                             Tuple[(str, str), ...]                             |    file_types    | filter file types Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                                                                                |  initial_folder  | starting path for folders and files |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
@@ -15130,7 +15130,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |    button_text    | text in the button (Default value = 'Save As...') |
 |                               str or (int, int)                                |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.* *"))) |
+|                             Tuple[(str, str), ...]                             |    file_types     | Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                                      str                                       | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                      str                                       |  initial_folder   | starting path for folders and files |
 |                                      bool                                      |     disabled      | set disable state for element (Default = False) |
@@ -15181,7 +15181,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
 |                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types    | (Default value = (("ALL Files", "*.* *"))) |
+|                             Tuple[(str, str), ...]                             |    file_types    | Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |  initial_folder  | starting path for folders and files |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
@@ -15613,7 +15613,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                                                                     str                                                                                      |    button_text    | text in the button (Default value = 'Save As...') |
 |                                                                              str or (int, int)                                                                               |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                                                                            Tuple[(str, str), ...]                                                                            |    file_types     | (Default value = (("ALL Files", "*.* *"))) |
+|                                                                            Tuple[(str, str), ...]                                                                            |    file_types     | Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                                                                                     str                                                                                      | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                                                                     str                                                                                      |  initial_folder   | starting path for folders and files |
 |                                                                                     bool                                                                                     |     disabled      | set disable state for element (Default = False) |
@@ -15985,7 +15985,7 @@ Parameter Descriptions:
 |                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
 |                bool                |       erase_all       | If True when erase the output before printing |
 |           (bool or None)           |       blocking        | if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
-|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
+|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..." |
 
 Close a previously opened EasyPrint window
 
@@ -16051,7 +16051,7 @@ Parameter Descriptions:
 |                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
 |                bool                |       erase_all       | If True when erase the output before printing |
 |           (bool or None)           |       blocking        | if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
-|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
+|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..." |
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -16111,7 +16111,7 @@ Parameter Descriptions:
 |                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
 |                bool                |       erase_all       | If True when erase the output before printing |
 |           (bool or None)           |       blocking        | if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
-|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
+|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..." |
 
 Close a previously opened EasyPrint window
 
@@ -16177,7 +16177,7 @@ Parameter Descriptions:
 |                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
 |                bool                |       erase_all       | If True when erase the output before printing |
 |           (bool or None)           |       blocking        | if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
-|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
+|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..." |
 
 Close a previously opened EasyPrint window
 
@@ -16243,7 +16243,7 @@ Parameter Descriptions:
 |                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
 |                bool                |       erase_all       | If True when erase the output before printing |
 |           (bool or None)           |       blocking        | if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
-|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changers to "More" |
+|           (bool or None)           |         wait          | Same as the "blocking" parm. It's an alias. if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..." |
 
 Close a previously opened EasyPrint window
 
@@ -16768,7 +16768,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -17811,7 +17811,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
