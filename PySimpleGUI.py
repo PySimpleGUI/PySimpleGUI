@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0 Released 8-May-2022"
+version = __version__ = "4.60.0.1 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
+    
+    4.60.0.1
+        main_open_github_issue - prefill the "Details" using the platform module (thank you macdeport!)
+            Fills Mac, Windows and Linux with details
 
     """
 
@@ -23556,6 +23560,8 @@ def main_open_github_issue():
 
     window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True, margins=(0, 0))
 
+
+
     # for i in range(len(checklist)):
     [window['-T{}-'.format(i)].set_cursor('hand1') for i in range(len(checklist))]
     # window['-TABGROUP-'].expand(True, True, True)
@@ -23563,6 +23569,15 @@ def main_open_github_issue():
     # window['-ML DETAILS-'].expand(True, True, True)
     # window['-ML MARKDOWN-'].expand(True, True, True)
     # window['-PANE-'].expand(True, True, True)
+
+    if running_mac():
+        window['-OS MAC VER-'].update(platform.mac_ver())
+    elif running_windows():
+        window['-OS WIN VER-'].update(platform.win32_ver())
+    elif running_linux():
+        window['-OS LINUX VER-'].update(platform.libc_ver())
+
+
     window.bring_to_front()
     while True:  # Event Loop
         event, values = window.read()
