@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.44 Released 5-Apr-2022"
+version = __version__ = "4.59.0.45 Released 5-Apr-2022"
 
 _change_log = """
     Changelog since 4.59.0 released to PyPI on 5-Apr-2022
@@ -147,6 +147,8 @@ _change_log = """
         Hi-Ho-Hi-Ho... it's back to no file_type on the Mac we go... Need to add similar code to popup_get_file to ensure doesn't crash there too.
     4.59.0.44
         Fix in popup_get_file for the file_type parameter that crashes on the Mac.  Like the Browse button, the file_type parameter is disabled for the Mac. VERY sorry Mac users
+    4.59.0.45
+        Fix for Scrollable Columns that expand. Needed to switch to using the canvas, not the frame, for scrolling (THANK YOU Jason and milahu!)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7784,34 +7786,35 @@ class TkScrollableFrame(tk.Frame):
 
         # Chr0nic
 
+        # self.unhookMouseWheel(None)
+        # self.TKFrame.bind("<Enter>", self.hookMouseWheel)
+        # self.TKFrame.bind("<Leave>", self.unhookMouseWheel)
+        # self.bind('<Configure>', self.set_scrollregion)
+
+
         self.unhookMouseWheel(None)
-        self.TKFrame.bind("<Enter>", self.hookMouseWheel)
-        self.TKFrame.bind("<Leave>", self.unhookMouseWheel)
-
-        # self.canvas.bind_all('<4>', self.yscroll,  add='+')
-        # self.canvas.bind_all('<5>', self.yscroll,  add='+')
-        # self.canvas.bind_all("<MouseWheel>", self.yscroll,  add='+')
-        # self.canvas.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
-
+        self.canvas.bind("<Enter>", self.hookMouseWheel)
+        self.canvas.bind("<Leave>", self.unhookMouseWheel)
         self.bind('<Configure>', self.set_scrollregion)
+
 
     # Chr0nic
     def hookMouseWheel(self, e):
         # print("enter")
         VarHolder.canvas_holder = self.canvas
-        self.TKFrame.bind_all('<4>', self.yscroll, add='+')
-        self.TKFrame.bind_all('<5>', self.yscroll, add='+')
-        self.TKFrame.bind_all("<MouseWheel>", self.yscroll, add='+')
-        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
+        self.canvas.bind_all('<4>', self.yscroll, add='+')
+        self.canvas.bind_all('<5>', self.yscroll, add='+')
+        self.canvas.bind_all("<MouseWheel>", self.yscroll, add='+')
+        self.canvas.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
 
     # Chr0nic
     def unhookMouseWheel(self, e):
         # print("leave")
         VarHolder.canvas_holder = None
-        self.TKFrame.unbind_all('<4>')
-        self.TKFrame.unbind_all('<5>')
-        self.TKFrame.unbind_all("<MouseWheel>")
-        self.TKFrame.unbind_all("<Shift-MouseWheel>")
+        self.canvas.unbind_all('<4>')
+        self.canvas.unbind_all('<5>')
+        self.canvas.unbind_all("<MouseWheel>")
+        self.canvas.unbind_all("<Shift-MouseWheel>")
 
     def resize_frame(self, e):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
@@ -17607,7 +17610,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type erase_all:              (bool)
     :param blocking:              if True, makes the window block instead of returning immediately. The "Quit" button changers to "More"
     :type blocking:               (bool | None)
-    :param wait:                  Same as the "blocking" parm. It's an alias.  if True, makes the window block instead of returning immediately. The "Quit" button changers to "More"
+    :param wait:                  Same as the "blocking" parm. It's an alias.  if True, makes the window block instead of returning immediately. The "Quit" button changes to "Click to Continue..."
     :type wait:                   (bool | None)
     :return:
     :rtype:
