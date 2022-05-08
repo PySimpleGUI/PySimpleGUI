@@ -3026,6 +3026,9 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### save_to_disk
 <!-- <+Window.save_to_disk+> -->
 
+### save_window_screenshot_to_disk
+<!-- <+Window.save_window_screenshot_to_disk+> -->
+
 ### send_to_back
 <!-- <+Window.send_to_back+> -->
 
@@ -3449,6 +3452,8 @@ The way to get Windows that have elements that have matching colors.
 <!-- <+func.theme_background_color+> -->
 <!-- <+func.theme_border_width+> -->
 <!-- <+func.theme_button_color+> -->
+<!-- <+func.theme_button_color_background+> -->
+<!-- <+func.theme_button_color_text+> -->
 <!-- <+func.theme_element_background_color+> -->
 <!-- <+func.theme_element_text_color+> -->
 <!-- <+func.theme_global+> -->
@@ -3463,6 +3468,8 @@ The way to get Windows that have elements that have matching colors.
 <!-- <+func.theme_slider_color+> -->
 <!-- <+func.theme_text_color+> -->
 <!-- <+func.theme_text_element_background_color+> -->
+<!-- <+func.theme_use_custom_titlebar+> -->
+
 
 --------------------
 

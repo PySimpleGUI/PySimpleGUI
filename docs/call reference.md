@@ -13632,6 +13632,20 @@ Parameter Descriptions:
 |--|--|--|
 | str | filename | Filename to save the values to in pickled form |
 
+### save_window_screenshot_to_disk
+
+Saves an image of the PySimpleGUI window provided into the filename provided
+
+```
+save_window_screenshot_to_disk(filename = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (PIL.ImageGrab or None) | **RETURN** | A PIL ImageGrab object that can be saved or manipulated
+
 ### send_to_back
 
 Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
@@ -18689,6 +18703,32 @@ Parameter Descriptions:
 |--|--|--|
 | (str, str) | **RETURN** | (str, str) - TUPLE with color strings of the button color currently in use (button text color, button background color)
 
+Returns the button color background currently in use. Note this function simple calls the theme_button_color
+function and splits apart the tuple
+
+```
+theme_button_color_background()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str) | **RETURN** | color string of the button color background currently in use
+
+Returns the button color text currently in use.  Note this function simple calls the theme_button_color
+function and splits apart the tuple
+
+```
+theme_button_color_text()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str) | **RETURN** | color string of the button color text currently in use
+
 Sets/Returns the background color currently in use for all elements except containers
 
 ```
@@ -18863,6 +18903,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | (str) | **RETURN** | (str) - color string of the text background color currently in use
+
+Returns True if a custom titlebar will be / should be used.
+The setting is in the Global Settings window and can be overwridden
+using set_options call
+
+```
+theme_use_custom_titlebar()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if a custom titlebar / custom menubar should be used
 
 --------------------
 
