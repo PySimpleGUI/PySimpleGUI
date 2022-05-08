@@ -1,154 +1,10 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.59.0.45 Released 5-Apr-2022"
+version = __version__ = "4.60.0 Released 8-May-2022"
 
 _change_log = """
-    Changelog since 4.59.0 released to PyPI on 5-Apr-2022
-    
-    4.59.0.1
-        Addition of the blocking parameter to the Print function. Enables using Print through an entire program with the last
-            Print call setting the blocking parameter so that the window doesn't close until user interacts with the Debug Output Window
-    4.59.0.2
-        Added SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS as a way to turn off checking for widgets to be finalized. Needed to get around some race conditions.
-            It's possible (likely) that a debug window is closed while printing to the debug window. This would normally generate an error. Use this flag to
-            turn off this error checking temporarily            
-    4.59.0.3
-        NEW ttk scrollbars added to Multiline, Listbox, Table and Tree
-        Tree element - added new horizontal scrollbar (also uses the new ttk scrollbar)
-        Parameters added to Mulitline, Listbox, Table and Tree to control the scrollbar styling 
-        NOTE - the positioning methods have not been tested for the new ttk scrollbars. They are being releaseed just to get some feedback on the look of these scrollbars
-    4.59.0.4
-        New Window screencapture that uses PIL if you've got PIL installed.
-            It does NOT require PIL be installed in order to use PySimpleGUI.  ONLY when a capture is attempted does PySimpleGUI try to import PIL
-            It's the first step of building the larger "Catalog" feature
-            The alignment is not perfect and  the whole thing needs more work
-            The keystrokes used to perform the cpature, the locatoin the file is stored and the filename are al in the PySimpleGUI global settings
-            The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
-    4.59.0.5
-        Fixed the font and sizing of the "Editor Settings" section
-        Niocer abnner at the top of the window
-    4.59.0.6
-        Added exception handing to the bind methods
-    4.59.0.7
-        More exception handling
-    4.59.0.8
-        New Debug Print capability - The "Pause/Resume" option enables printing to be paused.  This will block the caller
-        Added ability to control use of Custom Titlebar from the system settings. Turn on Customer Titlebar setting in the
-            Global System Settings and that will cause all windows to automatically use a custom titlebar and custom menubar
-            New theme call to determine if a custom titlebar shoue be used - theme_use_custom_titlebar returns True if should use one
-        Main test harness 
-            Fixed freeing up the graphic lines being drawn as they scrolled off the screen.  Now as each lines if scrolled off the screen, tit is feed up
-            Window is not modal so can interact the debug Print window
-            Grab anywhere turned off - Remember can always use CONTROL + LEFT CLICK & DRAG to move ANY PySimpleGUI as if grab anywhere is enabled
-    4.59.0.9
-        Made the save window as image into a Window method - Window.save_window_screenshot_to_disk
-        Show a popup message when a window save is performed using the keys specified in the system settings
-        Debug Print still has some problems so be warned for the time being... it's being worked on...
-    4.59.0.10
-        Ugh .... terrible ttk theme bug!  Sorry!!!
-    4.59.0.11
-        Improved TTK theme error reporting
-    4.59.0.12
-        user_settings_delete_filename - added report_error parm giving ability to turn off the error popup (now off by default).  The UserSettings object also got this parm
-        Big rework is in progress for the global settings.  Converted to entirely use TABS now.  It's getting closer!!!  Can almost taste the new tastey ttk scrollbars
-    4.59.0.13
-        theme_global - added error checking and reporting about non-standard theme names being attempted
-        Dark Grey 15 - NEW theme! (inspired by the theme_global issue :-)
-    4.59.0.14
-        Made default TTK scrollbar width 12 pixels instead of 10.  They're still smaller than the old tk scrollbars that are about 17 pixels wide
-        Removed the "Thumb Color" and "Thumb Depressed" ttk slider parms... it's not a settable option generally speaking so it had to go.
-        Two new theme calls - theme_button_color_background and theme_button_color_text. They are read-only calls and are simply the button color (theme_button_color) TUPLE split apart
-        Completed the first draft of the TTK Scrollbar settings in the Global settings window... was a LOT more work than I estimated!
-    4.59.0.15
-        TTK Theme added to the System Settings :-)  
-        Made the ttk scrollbar settings tab look nicer
-    4.59.0.16
-        Added button to test ttk scrollbar settings within the System Settings window. Aids in changing the design if scrollbar colors, sizes, etc.
-    4.59.0.17
-        Noted tricky problem - if "always use custom titlebar" is set in system settings, then USER still needs to account for this in their layout
-            That means using the MenubarCustom instaed of Menu. For now, user will have to handle this. Will come back to it to fix up later
-        Made MenubarCustom have a pad=0 by default so that it's snug under the titlebar and extends to edges correctly.
-        Renamed ttk scrollbar system settings tab to ttk
-    4.59.0.18
-        Got the Debug Print stuff working right!  YES!
-            Added new parm "wait" which is an alias for the "blocking" parm.  Some may like it better.  Take your choice
-            Changed button text to "Click to continue" if the blocking/wait parm is set so that it's obvious that your program is waiting on you
-    4.59.0.19
-        OK... this time got the Debug Print stuff working right for real!  YES?  ;-)
-    4.59.0.20
-        irony - when you accidently leave debug prints in your debug print code
-    4.59.0.21
-        Additional exception handling needed for debug window closure at any point 
-    4.59.0.22
-        "Ding-dong the Output's dead" - finally replaced the Output element with Multiline by subclassing Multiline
-            This solves a bunch of problems including duplication of funcationality using 2 different techniques.
-            Problem may be in backward compatibility if anyone is using internal Output element member variables, etc.
-    4.59.0.23
-        Changed the popup errors for Tabs to be popup error with traceback. Much nicer experience with this newer error popup
-        Removed Output Element from the packer function... you know it's really gone when it's not in there
-            To be clear, there still is an Output Element... it's just a Multiline in disguise now.
-    4.59.0.24
-        Support for the GrayGrayGray theme with the new ttk scrollbars... for those that like the grayscale world, you're now safe
-    4.59.0.25
-        Fix for systems that don't yet have the ttk scrollbars set up. Was getting the incorrect defaults (they were all blank)
-    4.59.0.26
-        Debug window - betting re-opening code so that the data is not missed from being printed
-    4.59.0.27
-        ttk scrollbar support for Column element - was really hacked in to get things to work. Next step is a little cleanup but want to
-            first simply make sure it's working.  Changes were limited to the scrollable column class (which was the scene of the hack-crime too)
-    4.59.0.28
-        fixed the Column.update call!  Missed the renaming of the ExpandX to expand_x in that function.  Sorry if you hit it!
-    4.59.0.29
-        Added parms and docstrings to all elements with ttk scrollbars
-        Needed to remove the "arrow background color" option for ttk scrollbars.  You can't set that color directly it turns out... so one less parm now
-    4.59.0.30
-        Get ttk themes available from ttk rather than the hard coded list.  This is used in the Global Settings window.
-    4.59.0.31
-        Fixed default ttk theme bug - was being changed when a window set a theme just for 1 window.  The overall default shouldn't change for this situation
-        Added support for the heirarchical specification of ttk scrollbars.  The settings will be picked up in this order:
-            Element, Window, Set Options, Global Settings
-    4.59.0.32
-        Add the ttk theme list AFTER the global options window is created.  This "fix" is only needed when a user calls the global options window directly.
-            If don't do this, the tkinter will create a weird temp window if you call to get the list of ttk themes (gee.... thanks ttk!)
-            An alternate method would be to do the same thing as measuring the screensize where the hidden master window is created to pull it off.
-            Since this is the only place the theme list is retrieved, for now will do the update of the list after the window is created.  This features is
-            already taking forever... (insert eyeroll emoji here)
-        Removed "Use TTK Scrollbars" checkbox in global settings... you're getting TTK scrollbars whether you like it or not ;-)
-        Prettied up the ttk settings tab in global settings
-    4.59.0.33
-        New Column element parameters - size_subsample_width & size_subsample_height
-            Gives much more control over the sizing of SCROLLABLE columns.  Previously the size was set to 1/2 the required height and the full required width.
-            The defaults are backward compatible (size_subsample_width=1, size_subsample_height=2)
-            Setting both to 1 will make the Column fit the contents exactly.
-            One use is when you expect your Column to grow or shrink over time.  Or maybe you didn't like the 1/2 size that PySimpleGUI has always used before.
-            Hoping this isn't too complex to understand!
-    4.59.0.34
-        Fix crash in Element.bind... likely created in version 4.59.0.6.  
-            Crashes because Elements don't have the method _is_window_created which was being called.  YIKES!
-    4.59.0.35
-        New coupon
-    4.59.0.36
-        Made selected text color for Input, Combo and Multiline match the color theme! (THANK YOU JASON!)
-    4.59.0.37
-        Added back the filetypes parameter availability for the mac for the file browse operations.  Was previously (incorrectly evidently!) removed for FileBrowse operations
-            (Thank you resnbl for all the help!)
-    4.59.0.38
-        Combo element finally gets drop-down list formatting (thank you Jason!)
-    4.59.0.39
-        Reworked sg.main test harness to recover space to fit on smaller screens
-        Make upgrade from github Multiline smaller to fit the Pi screen
-    4.59.0.40
-        Auto-correct file_types problems for Browse buttons.  Automatically change the formatting from (str, str) to ((str, str),) and warn the user
-    4.59.0.41
-        Docstring typo fixes for file_types parm
-    4.59.0.42
-        FileBrowse - giving a series of try blocks a try to see if can get around the Mac file_types issue
-    4.59.0.43
-        Hi-Ho-Hi-Ho... it's back to no file_type on the Mac we go... Need to add similar code to popup_get_file to ensure doesn't crash there too.
-    4.59.0.44
-        Fix in popup_get_file for the file_type parameter that crashes on the Mac.  Like the Browse button, the file_type parameter is disabled for the Mac. VERY sorry Mac users
-    4.59.0.45
-        Fix for Scrollable Columns that expand. Needed to switch to using the canvas, not the frame, for scrolling (THANK YOU Jason and milahu!)
+    Changelog since 4.60.0 released to PyPI on 8-May-2022
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -18961,6 +18817,14 @@ def theme_add_new(new_theme_name, new_theme_dict):
 
 
 def theme_use_custom_titlebar():
+    """
+    Returns True if a custom titlebar will be / should be used.
+    The setting is in the Global Settings window and can be overwridden
+    using set_options call
+
+    :return:        True if a custom titlebar / custom menubar should be used
+    :rtype:         (bool)
+    """
     if USE_CUSTOM_TITLEBAR is False:
         return False
 

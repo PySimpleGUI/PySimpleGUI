@@ -10081,6 +10081,89 @@ Test harness forces all windows to be modal and is no longer keep-on-top
 	- Set the main window `keep_on_top=False`. Ensures that all windows created by it should never be hidden.  This is a somewhat experimental change.  Let's hope for the best!
 	- Forced all windows except for 1 non-modal popup to be modal. This also should ensure no windows are "lost" behind the main window
 
+## 4.60.0 PySimpleGUI 8-May-2022
+
+TTK Scrollbars... the carpet now matches the drapes  
+Debug Window improvements  
+Built-in Screen-capture Initial Release  
+Test Harness and Settings Windows fit on small screens better  
+
+* Debug Window
+	* Added the `wait` and `blocking` parameters (they are identical)
+		* Setting to `True` will make the `Print` call wait for a user to press a `Click To Continue...` button
+		* Example use - if you want to print right before exiting your program
+	* Added `Pause` button
+		* If clicked, the `Print` will not return until user presses `Resume`
+		* Good for programs that are outputting information quickly and you want to pause execution so you can read the output
+* TTK
+	* TTK Theme added to the PySimpleGUI Global Settings Window
+	* Theme list is retrieved from tkinter now rather than hard coded
+	* TTK Scrollbars
+		* All Scrollbars have been replaced with TTK Scrollbars
+		* Scrollbars now match the PySimpleGUI theme colors
+		* Can indicate default settings in the PySimpleGUI Global Settings Window
+		* Can preview the settings in the Global Settings Window
+		* Scrollbars settings are defined in this priority order:
+			* The Element's creation in your layout
+			* The Window's creation
+			* Calling `set_options`
+			* The defaults in the PySimpleGUI Global Settings
+		* The TTK Theme can change the appearance of scrollbars as well
+		* Impacted Elements:
+			* `Multiline`
+			* `Listbox`
+			* `Table`
+			* `Tree`
+			* `Output`
+ * Tree Element gets horizontal scrollbar setting
+ * `sg.main()` Test Harness
+ 	* Restructured the `main()` Test Harness to be more compact. Now fits Pi screens better.
+ 	* Made not modal so can interact with the Debug Window
+ 	* Turned off Grab Anywhere (note you can always use Control+Drag to move any PySimpleGUI window)
+ 	* Freed up graph lines as they scroll off the screen for better memory management
+ 	* Made the upgrade from GitHub status window smaller to fit small screens better
+ * Global Settings
+ 	* Restructured the Global Settings window to be tabbed
+ 	* Added ability to control Custom Titlebar. Set here and all of your applications will use this setting for the Titlebar and Menubar
+ 	* TTK Theme can be specified in the global settings (already mentioned above)
+ 	* New section for the Screenshot feature
+ * Exception handling added to `bind` methods
+ * Screenshots
+	 * First / early release of a built-in screenshot feature
+	 * Requires that PIL be installed on your system
+	 * New `Window` method `save_window_screenshot_to_disk`
+	 * Global Settings allows definition of a hotkey that triggers a save
+	 * Popup is shown when hotkeys are used
+	 * **To be clear** - PIL does not need to be installed in order to use PySimpleGUI.  ONLY when a capture is attempted does PySimpleGUI try to import PIL
+	 * It's the first step of building the larger "Gallery" feature
+	 * The alignment is not perfect and  the whole thing needs more work
+	 * The auto-numbering freature is not yet implemented.  Only 1 file is used and is overwritten if exists
+* `user_settings_delete_filename` got a new parm `report_error` (off by default).  The `UserSettings` object also got this parm to help control error reporting
+* Themes (PySimpleGUI Themes)
+	* `theme_global` - added error checking and reporting should non-strandard theme names be attempted with this call
+	* New theme `Dark Grey 15`.  Give it a try!
+	* New theme `Python Plus` - a more saturated blue and yellow colors. Give it a try!
+	* New function - `theme_button_color_background` - read-only call that returns the button background color. Previously only available as a tuple using `theme_button_color`.
+	* New function - `theme_button_color_text` - read-only call that returns the button text color. Previously only available as a tuple using `theme_button_color`.
+	* New function - `theme_use_custom_titlebar` returns `True` if Global Settings indicate custom titlebars should will be used
+* `Output` Element - implementation changed to use the Multiline Element.  No one should be impacted unless you were using some internal object details that was not published.  I still suggest using the `Multiline` element instead so that you can access much more functionality.
+* Tab errors now use the popup errors with traceback
+* `Column` Element
+	* Fixed scrollwheel not working correctly when expand paramters used. Scrolls the canvas now not the frame.
+	* New `size_subsample_width` & `size_subsample_height` parameteres
+		* Gives much more control over the sizing of SCROLLABLE columns.  Previously the size was set to 1/2 the required height and the full required width. 
+		* The defaults are backward compatible (size_subsample_width=1, size_subsample_height=2)
+		* Setting both to 1 will make the Column fit the contents exactly. One use is when you expect your Column to grow or shrink over time.  Or maybe you didn't like the 1/2 size that PySimpleGUI has always used before.
+* Made Select Colors match the theme colors
+	* `Input`, `Multiline`, `Combo` elements now use matching colors for selections of characters (big-time thanks to Jason who also provided the magic code to make the combo drop-down match the theme)
+* `popup_get_file` - Removed the file_types parameter use if on a Mac
+	* Missed catching this problem when added the no_window option
+	* Need to revisit this file types on the Mac topic in next release.
+	* Particularly bad problem because cannot catch the exception.  Your code simply crashes.  And the behavior isn't the same across all Macs.
+	* I'm really sorry Mac users that we keep running into these kinds of issues!
+* Auto-correct file_types problems for Browse buttons.  Automatically change the formatting from (str, str) to ((str, str),) and warns the user
+* Docstring typo fixes for file_types parm
+
 ## Code Condition
 
     Make it run
