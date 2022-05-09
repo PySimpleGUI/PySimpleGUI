@@ -491,7 +491,7 @@ def make_window():
               [choose_folder_at_top],
               # [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True)],
               [sg.Pane([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ], orientation='h', relief=sg.RELIEF_SUNKEN, k='-PANE-')],
-              [options_at_bottom]]
+              [options_at_bottom, sg.Sizegrip()]]
 
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
