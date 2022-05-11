@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.1 Unreleased"
+version = __version__ = "4.60.0.2 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -8,6 +8,8 @@ _change_log = """
     4.60.0.1
         main_open_github_issue - prefill the "Details" using the platform module (thank you macdeport!)
             Fills Mac, Windows and Linux with details
+    4.60.0.2
+        Fix for the "jumping window problem on Linux".  Major credit to Chr0nic for his amazing "stick with it" work on this problem!
 
     """
 
@@ -16822,6 +16824,9 @@ def StartupTK(window):
         if not running_mac() or \
             (running_mac() and not window.NoTitleBar) or \
             (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
+
+            if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
+                root.wait_visibility(root)
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except Exception as e:
         print('*** Exception setting alpha channel to zero while creating window ***', e)
