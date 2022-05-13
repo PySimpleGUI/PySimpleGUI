@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.2 Unreleased"
+version = __version__ = "4.60.0.3 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -10,7 +10,11 @@ _change_log = """
             Fills Mac, Windows and Linux with details
     4.60.0.2
         Fix for the "jumping window problem on Linux".  Major credit to Chr0nic for his amazing "stick with it" work on this problem!
-
+    4.60.0.3
+        Removed the previous fix attempt for jumping window on linux
+        Added ability for Mac users to specify file_type in Browse and popup_get_file
+            This feature must be ENABLED by the user in the Mac control panel that can be found in the PySimpleGUI Global Settings
+            The default is this feature is OFF
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4784,7 +4788,10 @@ class Button(Element):
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             if running_mac():
-                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                if _mac_allow_filetypes():
+                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, filetypes=filetypes)  # show the 'get file' dialog box
+                else:
+                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
 
@@ -4800,7 +4807,10 @@ class Button(Element):
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             if running_mac():
-                file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
+                if _mac_allow_filetypes():
+                    file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+                else:
+                    file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
@@ -4813,7 +4823,10 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             # show the 'get file' dialog box
             if running_mac():
-                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+                if _mac_allow_filetypes():
+                    file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+                else:
+                    file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
@@ -16825,8 +16838,8 @@ def StartupTK(window):
             (running_mac() and not window.NoTitleBar) or \
             (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
 
-            if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
-                root.wait_visibility(root)
+            # if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
+            #     root.wait_visibility(root)
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except Exception as e:
         print('*** Exception setting alpha channel to zero while creating window ***', e)
@@ -20372,9 +20385,15 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         # for Macs, setting parent=None fixes a warning problem.
         if save_as:
             if running_mac():
-                filename = tk.filedialog.asksaveasfilename(initialdir=initial_folder,
-                                                       initialfile=default_path,
-                                                       defaultextension=default_extension)  # show the 'get file' dialog box
+                if _mac_allow_filetypes():
+                    filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                               initialdir=initial_folder,
+                                                               initialfile=default_path,
+                                                               defaultextension=default_extension)  # show the 'get file' dialog box
+                else:
+                    filename = tk.filedialog.asksaveasfilename(initialdir=initial_folder,
+                                                               initialfile=default_path,
+                                                               defaultextension=default_extension)  # show the 'get file' dialog box
             else:
                 filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        initialdir=initial_folder,
@@ -20383,20 +20402,32 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             if running_mac():
-                filename = tk.filedialog.askopenfilenames(initialdir=initial_folder,
-                                                          initialfile=default_path,
-                                                          defaultextension=default_extension)  # show the 'get file' dialog box
+                if _mac_allow_filetypes():
+                    filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                              initialdir=initial_folder,
+                                                              initialfile=default_path,
+                                                              defaultextension=default_extension)  # show the 'get file' dialog box
+                else:
+                    filename = tk.filedialog.askopenfilenames(initialdir=initial_folder,
+                                                              initialfile=default_path,
+                                                              defaultextension=default_extension)  # show the 'get file' dialog box
             else:
                 filename = tk.filedialog.askopenfilenames(filetypes=file_types,
-                                                      initialdir=initial_folder,
-                                                      initialfile=default_path,
-                                                      parent=root,
-                                                      defaultextension=default_extension)  # show the 'get file' dialog box
+                                                          initialdir=initial_folder,
+                                                          initialfile=default_path,
+                                                          parent=root,
+                                                          defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             if running_mac():
-                filename = tk.filedialog.askopenfilename(initialdir=initial_folder,
-                                                     initialfile=default_path,
-                                                     defaultextension=default_extension)  # show the 'get files' dialog box
+                if _mac_allow_filetypes():
+                    filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                             initialdir=initial_folder,
+                                                             initialfile=default_path,
+                                                             defaultextension=default_extension)  # show the 'get files' dialog box
+                else:
+                    filename = tk.filedialog.askopenfilename(initialdir=initial_folder,
+                                                             initialfile=default_path,
+                                                             defaultextension=default_extension)  # show the 'get files' dialog box
             else:
                 filename = tk.filedialog.askopenfilename(filetypes=file_types,
                                                      initialdir=initial_folder,
@@ -22263,7 +22294,8 @@ available to make this process more atuomatic.
 # Dictionary of Mac Patches.  Used to find the key in the global settings and the default value
 MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False),
                   'Disable Modal Windows' : ('-mac feature disable modal windows-', True),
-                  'Disable Grab Anywhere with Titlebar' : ('-mac feature disable grab anywhere with titlebar-', True)}
+                  'Disable Grab Anywhere with Titlebar' : ('-mac feature disable grab anywhere with titlebar-', True),
+                  'Enable file_types parm in BrowseFile(s) and popop_get_file (use with caution)' : ('-mac feature enable file_types-', False)}
 
 def _read_mac_global_settings():
     """
@@ -22303,6 +22335,22 @@ def _mac_should_apply_notitlebar_patch():
         warnings.warn('Exception while trying to parse tkinter version {} Error = {}'.format(framework_version, e), UserWarning)
 
     return False
+
+def _mac_allow_filetypes():
+    """
+    If running a Mac, then will return True if user has indicated so in the PySimpleGUI Global Settings Window
+
+    :return:    True if should file_types parm to be used on the Mac
+    :rtype:     (bool)
+    """
+
+    if not running_mac():
+        return False
+
+    enable_filetypes = pysimplegui_user_settings.get('-mac feature enable file_types-', False)
+
+    return enable_filetypes
+
 
 
 def main_mac_feature_control():
