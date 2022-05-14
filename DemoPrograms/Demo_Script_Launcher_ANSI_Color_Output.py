@@ -1,12 +1,14 @@
-import subprocess
-import sys
 import PySimpleGUI as sg
 import re
 
 """
 	Demo Program - Realtime output of a shell command in the window using ANSI color codes
 		Shows how you can run a long-running subprocess and have the output
-		be displayed in realtime in the window.  The output is assumed to have color codes embedded in it
+		be displayed in realtime in the window.  The output is assumed to have color codes embedded in it.
+		
+	The commands you enter will be run as shell commands.  The output is then shown with the ANSI strings parsed.
+	
+	Copyright 2022 PySimpleGUI
 """
 
 
@@ -78,50 +80,38 @@ def cut_ansi_string_into_parts(string_with_ansi_codes):
 
     for x in range(0, len(tuple_list)):
         if tuple_list[x][0]:
-            new_tuple_list += [(tuple_list[x][0], tuple_list[x][1], tuple_list[x][2], tuple_list[x][3])]
+            new_tuple_list += [[tuple_list[x][0], tuple_list[x][1], tuple_list[x][2], tuple_list[x][3]]]
 
     return new_tuple_list
 
 
 def main():
     layout = [
-        [sg.Multiline(size=(110, 30), font='courier 10', background_color='black', text_color='white', key='-MLINE-')],
+        [sg.Multiline(size=(110, 30), font='courier 10', background_color='black', text_color='white', key='-MLINE-', expand_x=True, expand_y=True)],
         [sg.T('Promt> '), sg.Input(key='-IN-', focus=True, do_not_clear=False)],
-        [sg.Button('Run', bind_return_key=True), sg.Button('Exit')]]
+        [sg.Button('Run', bind_return_key=True), sg.Button('Exit'), sg.Sizegrip()]]
 
-    window = sg.Window('Realtime Shell Command Output', layout)
+    window = sg.Window('Realtime Shell Command Output', layout, resizable=True)
 
     while True:  # Event Loop
         event, values = window.read()
-        # print(event, values)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event == 'Run':
-            runCommand(cmd=values['-IN-'], window=window)
+            args = values['-IN-'].split(' ')
+            p = sg.execute_command_subprocess(args[0], *args[1:], wait=False, pipe_output=True, merge_stderr_with_stdout=True )
+            lines = sg.execute_get_results(p)
+
+            for line in lines:
+                if line is None:
+                    continue
+                ansi_list = cut_ansi_string_into_parts(line)
+                for ansi_item in ansi_list:
+                    if ansi_item[1] == 'Reset':
+                        ansi_item[1] = None
+                    window['-MLINE-'].update(ansi_item[0] , text_color_for_value=ansi_item[1], background_color_for_value=ansi_item[2], append=True, autoscroll=True)
+                window.refresh()
+
     window.close()
 
-
-def runCommand(cmd, timeout=None, window=None):
-    """ run shell command
-    @param cmd: command to execute
-    @param timeout: timeout for command execution
-    @param window: the PySimpleGUI window that the output is going to (needed to do refresh on)
-    @return: (return code from command, command output)
-    """
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    for line in p.stdout:
-        line = line.decode(errors='replace' if (sys.version_info) < (3, 5) else 'backslashreplace').rstrip()
-        ansi_list = cut_ansi_string_into_parts(line)
-        for ansi_item in ansi_list:
-            if ansi_item[1] == 'Reset':
-                ansi_item[1] = None
-            window['-MLINE-'].update(ansi_item[0] + '\n', text_color_for_value=ansi_item[1], background_color_for_value=ansi_item[2], append=True,
-                                     autoscroll=True)
-        window.refresh()
-
-    retval = p.wait(timeout)
-    return retval
-
-
-sg.theme('Dark Blue 3')
 main()
