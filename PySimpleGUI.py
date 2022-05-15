@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.3 Unreleased"
+version = __version__ = "4.60.0.4 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -15,6 +15,9 @@ _change_log = """
         Added ability for Mac users to specify file_type in Browse and popup_get_file
             This feature must be ENABLED by the user in the Mac control panel that can be found in the PySimpleGUI Global Settings
             The default is this feature is OFF
+    4.60.0.4
+        New location parameter option for Windows. Setting location=None tells PySimpleGUI to not set any location when window is created. It's up to the OS to decide.
+            The docstring for Window has been changed, but not all the other places (like popup). Want to make sure this works before making all those changes.            
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9370,8 +9373,8 @@ class Window:
         :type auto_size_buttons:                     (bool)
         :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int)
-        :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
-        :type location:                              (int, int)
+        :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide
+        :type location:                              (int, int) or None
         :param size:                                 (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead
         :type size:                                  (int, int)
         :param element_padding:                      Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int)
@@ -16768,35 +16771,42 @@ def _convert_window_to_tk(window):
         master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
-    if window.Location != (None, None):
-        x, y = window.Location
-    elif DEFAULT_WINDOW_LOCATION != (None, None):
-        x, y = DEFAULT_WINDOW_LOCATION
+    if window.Location is not None:
+        if window.Location != (None, None):
+            x, y = window.Location
+        elif DEFAULT_WINDOW_LOCATION != (None, None):
+            x, y = DEFAULT_WINDOW_LOCATION
+        else:
+            master.update_idletasks()  # don't forget to do updates or values are bad
+            win_width = master.winfo_width()
+            win_height = master.winfo_height()
+            x = screen_width / 2 - win_width / 2
+            y = screen_height / 2 - win_height / 2
+            if y + win_height > screen_height:
+                y = screen_height - win_height
+            if x + win_width > screen_width:
+                x = screen_width - win_width
+
+        if window.RelativeLoction != (None, None):
+            x += window.RelativeLoction[0]
+            y += window.RelativeLoction[1]
+
+        move_string = '+%i+%i' % (int(x), int(y))
+        master.geometry(move_string)
+        window.config_last_location = (int(x), (int(y)))
+        window.TKroot.x = int(x)
+        window.TKroot.y = int(y)
+        window.starting_window_position = (int(x), (int(y)))
+        master.update_idletasks()  # don't forget
+        master.geometry(move_string)
+        master.update_idletasks()  # don't forget
     else:
-        master.update_idletasks()  # don't forget to do updates or values are bad
-        win_width = master.winfo_width()
-        win_height = master.winfo_height()
-        x = screen_width / 2 - win_width / 2
-        y = screen_height / 2 - win_height / 2
-        if y + win_height > screen_height:
-            y = screen_height - win_height
-        if x + win_width > screen_width:
-            x = screen_width - win_width
-
-    if window.RelativeLoction != (None, None):
-        x += window.RelativeLoction[0]
-        y += window.RelativeLoction[1]
-
-    move_string = '+%i+%i' % (int(x), int(y))
-    master.geometry(move_string)
-    window.config_last_location = (int(x), (int(y)))
-    window.TKroot.x = int(x)
-    window.TKroot.y = int(y)
-    window.starting_window_position = (int(x), (int(y)))
-    master.update_idletasks()  # don't forget
-    master.geometry(move_string)
-    master.update_idletasks()  # don't forget
-
+        master.update_idletasks()
+        x, y = int(master.winfo_x()), int(master.winfo_y())
+        window.config_last_location = x,y
+        window.TKroot.x = x
+        window.TKroot.y = y
+        window.starting_window_position = x,y
     _no_titlebar_setup(window)
 
     return
