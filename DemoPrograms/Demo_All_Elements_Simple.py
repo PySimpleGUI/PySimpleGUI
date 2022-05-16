@@ -8,7 +8,8 @@ import PySimpleGUI as sg
     Copyright 2022 PySimpleGUI
 """
 
-use_custom_titlebar = False
+
+use_custom_titlebar = True if sg.running_trinket() else False
 
 def make_window(theme=None):
 
@@ -50,7 +51,7 @@ def make_window(theme=None):
                 [name('Image'), sg.Image(sg.EMOJI_BASE64_HAPPY_THUMBS_UP)],
                 [name('Graph'), sg.Graph((125, 50), (0,0), (125,50), k='-GRAPH-')]  ]
 
-    layout_r  = [[name('Canvas'), sg.Canvas(background_color=sg.theme_button_color()[1], size=(125,50))],
+    layout_r  = [[name('Canvas'), sg.Canvas(background_color=sg.theme_button_color()[1], size=(125,40))],
                 [name('ProgressBar'), sg.ProgressBar(100, orientation='h', s=(10,20), k='-PBAR-')],
                 [name('Table'), sg.Table([[1,2,3], [4,5,6]], ['Col 1','Col 2','Col 3'], num_rows=2)],
                 [name('Tree'), sg.Tree(treedata, ['Heading',], num_rows=3)],
@@ -68,9 +69,9 @@ def make_window(theme=None):
 
     # Note - LOCAL Menu element is used (see about for how that's defined)
     layout = [[Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
-              [sg.Checkbox('Use Custom Titlebar & Menubar', sg.theme_use_custom_titlebar(), enable_events=True, k='-USE CUSTOM TITLEBAR-')],
-              [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 18', justification='c', expand_x=True)],
-              [sg.Col(layout_l), sg.Col(layout_r)]]
+              [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 14', justification='c', expand_x=True)],
+              [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-', p=0)],
+              [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)]]
 
     window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, keep_on_top=True, use_custom_titlebar=use_custom_titlebar)
 
