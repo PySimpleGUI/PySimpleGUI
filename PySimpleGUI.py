@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.5 Unreleased"
+version = __version__ = "4.60.0.6 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -20,6 +20,8 @@ _change_log = """
             The docstring for Window has been changed, but not all the other places (like popup). Want to make sure this works before making all those changes.            
     4.60.0.5
         Added check for None invalid values parm when creating a Listbox element
+    4.60.0.6
+        Column docstring changed to add reminder to call contents_changed if changing the contents of a scrollable column
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7758,7 +7760,7 @@ class Column(Element):
         :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param scrollable:                  if True then scrollbars will be added to the column
+        :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also
         :type scrollable:                   (bool)
         :param vertical_scroll_only:        if Truen then no horizontal scrollbar will be shown
         :type vertical_scroll_only:         (bool)
