@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.6 Unreleased"
+version = __version__ = "4.60.0.7 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -22,6 +22,8 @@ _change_log = """
         Added check for None invalid values parm when creating a Listbox element
     4.60.0.6
         Column docstring changed to add reminder to call contents_changed if changing the contents of a scrollable column
+    4.60.0.7
+        Fixed crash when horizontal_scroll=True for Listbox element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15572,7 +15574,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # Horizontal scrollbar
                 if element.HorizontalScroll:
-                    element.TKText.config(wrap='none')
                     _make_ttk_scrollbar(element, 'h', toplevel_form)
                     element.hsb.pack(side=tk.BOTTOM, fill='x')
                     element.Widget.configure(xscrollcommand=element.hsb.set)
