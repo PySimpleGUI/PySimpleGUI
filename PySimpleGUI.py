@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.4 Unreleased"
+version = __version__ = "4.60.0.5 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -18,6 +18,8 @@ _change_log = """
     4.60.0.4
         New location parameter option for Windows. Setting location=None tells PySimpleGUI to not set any location when window is created. It's up to the OS to decide.
             The docstring for Window has been changed, but not all the other places (like popup). Want to make sure this works before making all those changes.            
+    4.60.0.5
+        Added check for None invalid values parm when creating a Listbox element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2499,6 +2501,9 @@ class Listbox(Element):
         :param metadata:                   User metadata that can be set to ANYTHING
         :type metadata:                    (Any)
         """
+
+        if values is None:
+            _error_popup_with_traceback('Error in your Listbox definition - The values parameter cannot be None', 'Use an empty list if you want no values in your Listbox')
 
         self.Values = values
         self.DefaultValues = default_values
