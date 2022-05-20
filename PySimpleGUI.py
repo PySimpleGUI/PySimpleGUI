@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.7 Unreleased"
+version = __version__ = "4.60.0.8 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -24,6 +24,8 @@ _change_log = """
         Column docstring changed to add reminder to call contents_changed if changing the contents of a scrollable column
     4.60.0.7
         Fixed crash when horizontal_scroll=True for Listbox element
+    4.60.0.8
+        Added readonly to Input.update
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1975,7 +1977,7 @@ class Input(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None, paste=None):
+    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None, paste=None, readonly=None):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
         Changes will not be visible in your window until you call window.read or window.refresh.
@@ -2002,6 +2004,8 @@ class Input(Element):
         :type password_char:     str
         :param paste:            If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location.
         :type paste:             bool
+        :param readonly:         if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
+        :type readonly:          (bool)
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
@@ -2010,6 +2014,13 @@ class Input(Element):
         elif disabled is False:
             self.TKEntry['state'] = 'readonly' if self.ReadOnly else 'normal'
         self.Disabled = disabled if disabled is not None else self.Disabled
+
+        if readonly is True:
+            self.TKEntry['state'] = 'readonly'
+        elif readonly is False:
+            self.TKEntry['state'] = 'normal'
+
+
 
         if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKEntry.configure(background=background_color)
