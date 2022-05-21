@@ -1710,6 +1710,88 @@ while True:
 
 ----------
 
+# Recipe - Clean Simple Inputs
+
+## Single Line Inputs
+
+Many of our first GUIs involve collecting small bits of information and then continuing on with processing that input.  They are simple programs that are quick for beginners to knock out and get a few accomplishments so their confidence builds.
+
+The most basic of these are layouts that have a `Text` Element and an `Input` Element.  This is a basic "form" the user fills out.  Maybe you've got code that looks like this already.
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('Name'), sg.Input(key='-NAME-')],
+            [sg.Text('Address'), sg.Input(key='-ADDRESS-')],
+            [sg.Text('City and State'), sg.Input(key='-CITY AND STATE-')],
+            [sg.Ok(), sg.Cancel()]]
+
+window = sg.Window('Simple Inputs', layout)
+
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel':
+        break
+
+window.close()
+```
+
+
+![image](https://user-images.githubusercontent.com/46163555/169648190-e172a7e3-58e2-441c-8085-e2eafa7857f2.png)
+
+
+## `Push` Your `Input` Rows
+
+One easy addition to your layout is to "push" each input row to the right.  The effect is quite nice and the implementation involves one simple operation - add a `Push` element to the start of each row that has an `Input`
+
+The change looks like this:
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Push(), sg.Text('Name'), sg.Input(key='-NAME-')],
+            [sg.Push(), sg.Text('Address'), sg.Input(key='-ADDRESS-')],
+            [sg.Push(), sg.Text('City and State'), sg.Input(key='-CITY AND STATE-')],
+            [sg.Ok(), sg.Cancel()]]
+
+window = sg.Window('Simple Inputs', layout)
+
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel':
+        break
+
+window.close()
+
+```
+
+And the result is surprisingly pleasant.
+
+![image](https://user-images.githubusercontent.com/46163555/169648352-c0580c03-64fe-438f-960a-ccf3dd521d5f.png)
+
+## Push Everything - `element_justification='r'`
+
+If you really want to get clever and save time as well, you can make a 1-parameter change to your `Window` definition and get a similar result.  The one difference is that the buttons will also get pushed over.
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('Name'), sg.Input(key='-NAME-')],
+            [sg.Text('Address'), sg.Input(key='-ADDRESS-')],
+            [sg.Text('City and State'), sg.Input(key='-CITY AND STATE-')],
+            [sg.Ok(), sg.Cancel()]]
+
+window = sg.Window('Simple Inputs', layout, element_justification='r')
+
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel':
+        break
+
+window.close()
+```
+
+![image](https://user-images.githubusercontent.com/46163555/169648493-22303ef7-2dba-42f3-85f5-87530824be82.png)
 
 
 
