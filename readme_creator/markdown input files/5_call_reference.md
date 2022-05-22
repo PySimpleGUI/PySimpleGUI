@@ -1665,8 +1665,6 @@ The following methods are here for backwards compatibility reference.  You will 
 ### SetTooltip
 <!-- <+Output.SetTooltip+> -->
 
-### TKOut
-<!-- <+Output.TKOut+> -->
 
 ### Update
 <!-- <+Output.Update+> -->
