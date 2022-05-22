@@ -7583,8 +7583,6 @@ Parameter Descriptions:
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-### TKOut
-
 ### Update
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior

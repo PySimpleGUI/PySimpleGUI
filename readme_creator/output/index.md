@@ -10164,6 +10164,10 @@ Test Harness and Settings Windows fit on small screens better
 * Auto-correct file_types problems for Browse buttons.  Automatically change the formatting from (str, str) to ((str, str),) and warns the user
 * Docstring typo fixes for file_types parm
 
+## 4.60.1 PySimpleGUI 22-May-2022
+
+* A patch-release that fixes crash if `horizontal_scrollbar=True` when making a `Listbox` element
+
 ## Code Condition
 
     Make it run
