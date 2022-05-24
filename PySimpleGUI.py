@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.8 Unreleased"
+version = __version__ = "4.60.0.9 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -26,6 +26,8 @@ _change_log = """
         Fixed crash when horizontal_scroll=True for Listbox element
     4.60.0.8
         Added readonly to Input.update
+    4.60.0.9
+        Added Window.set_resizable - can change the X and Y axis resizing after window is created
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11261,6 +11263,25 @@ class Window:
             return
         self.TKroot.minsize(size[0], size[1])
         self.TKroot.update_idletasks()
+
+
+    def set_resizable(self, x_axis_enable, y_axis_enable):
+        """
+        Changes if a window can be resized in either the X or the Y direction.
+        Note Window must be read or finalized first.
+
+        :param x_axis_enable: If True, the window can be changed in the X-axis direction. If False, it cannot
+        :type x_axis_enable: (bool)
+        :param y_axis_enable: If True, the window can be changed in the Y-axis direction. If False, it cannot
+        :type y_axis_enable: (bool)
+        """
+
+        if not self._is_window_created('tried Window.set_resixable'):
+            return
+        try:
+            self.TKroot.resizable(x_axis_enable, y_axis_enable)
+        except Exception as e:
+            _error_popup_with_traceback('Window.set_resizable - tkinter reported error', e)
 
     def visibility_changed(self):
         """
