@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.10 Unreleased"
+version = __version__ = "4.60.0.11 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -31,6 +31,8 @@ _change_log = """
     4.60.0.10
         Added wrap parameter to Spin element - if True, wraps back to the first value when at the end
         Temp test code added for a new verification feature
+    4.60.0.11
+        Fixed Spin Element docstring - readonly was not correct
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3104,7 +3106,7 @@ class Spin(Element):
         :type change_submits:    (bool)
         :param enable_events:    Turns on the element specific events. Spin events happen when an item changes
         :type enable_events:     (bool)
-        :param readonly:         Turns on the element specific events. Spin events happen when an item changes
+        :param readonly:         If True, then users cannot type in values. Only values from the values list are allowed.
         :type readonly:          (bool)
         :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int)  | (None, None) | int
