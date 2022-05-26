@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.9 Unreleased"
+version = __version__ = "4.60.0.10 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -28,6 +28,9 @@ _change_log = """
         Added readonly to Input.update
     4.60.0.9
         Added Window.set_resizable - can change the X and Y axis resizing after window is created
+    4.60.0.10
+        Added wrap parameter to Spin element - if True, wraps back to the first value when at the end
+        Temp test code added for a new verification feature
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -166,6 +169,7 @@ import calendar
 import datetime
 import textwrap
 
+import hashlib
 import inspect
 import traceback
 import difflib
@@ -3087,7 +3091,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
-                 size=(None, None), s=(None, None), auto_size_text=None, bind_return_key=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, p=None,
+                 size=(None, None), s=(None, None), auto_size_text=None, bind_return_key=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, p=None, wrap=None,
                  tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:           List of valid values
@@ -3124,6 +3128,8 @@ class Spin(Element):
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param wrap:             Determines if the values should "Wrap". Default is False. If True, when reaching last value, will continue back to the first value.
+        :type wrap:              (bool)
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3147,6 +3153,7 @@ class Spin(Element):
         self.Readonly = readonly
         self.RightClickMenu = right_click_menu
         self.BindReturnKey = bind_return_key
+        self.wrap = wrap
 
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -15876,6 +15883,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(background=element.BackgroundColor)
                     element.TKSpinBox.configure(buttonbackground=element.BackgroundColor)
                 element.Widget.config(highlightthickness=0)
+                if element.wrap is True:
+                    element.Widget.configure(wrap=True)
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
@@ -23084,6 +23093,14 @@ def get_versions():
     return versions
 
 
+def self_check_hash():
+    with open(__file__, "r",encoding="utf8") as file:
+        lines_in_file = file.readlines()
+    combined_lines = '\n'.join(lines_in_file[:-1])
+    entire_file_bytes = bytearray(combined_lines, encoding='utf8')
+    curfile_hash = hashlib.sha256(entire_file_bytes)
+    return curfile_hash.hexdigest()
+
 # ==================================================#
 #
 # MM""""""""`M                     oo oo
@@ -24215,7 +24232,12 @@ def main_global_pysimplegui_settings():
                Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')]],
                         font='_ 16', expand_x=True)
 
-    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab ]])
+    # ------------------------- Security Tab -------------------------
+    security_tab = Tab('Security',
+                [[T('PySimpleGUI hashcode')], [T(self_check_hash())]],
+                       expand_x=True)
+
+    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab ]])
     layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
@@ -24589,7 +24611,7 @@ def _create_main_window():
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
 
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True),
-         Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3))],
+         Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3), wrap=True)],
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='-COMBO1-', )],
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 14', default_value='Combo item 2', key='-COMBO2-', )],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='-COMBO2-')],
@@ -24950,3 +24972,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
+def get_signature(): return b'&\xd4R\x03.\xb1T\xab9\xb1\x03\x1b.\xae\x054\xf1\xcd_3\xb2\xc5\xb5\xc4i\xc7\t\x16\x7f:\xdb\xea\xe9\xbf\x80\x81\xae_C\xc7\xe3\x18$\xf7\x03\xe83A\xcc\xd3)\x8cA\xcf\xcf\xdcnr\xf3\x91\xa6q\x88\xde\x13\xb7N\xa7\xb0\xbf\x04\xb5\\\x03\x813\x9a\x1e\x07a\xe6\x1c\x13j\xe0\x15\xd5\xc4\x90\xc3\x1a\x80\xff\xc6\xe6\xed\xe3=\r\x98Y\xf2\x90\rPF?\x1d\xbc\xd9c\x82\xca?\xc5\x8c\x9f\x01q\xb8\xdf\xc3\xc1\xd4\x9e\xb6H\xa1'
