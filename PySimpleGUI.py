@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.11 Unreleased"
+version = __version__ = "4.60.0.12 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -33,6 +33,9 @@ _change_log = """
         Temp test code added for a new verification feature
     4.60.0.11
         Fixed Spin Element docstring - readonly was not correct
+    4.60.0.12
+        Output element - addition of wrap_lines and horizontal_scroll parameters
+        Multiline element -  addition of wrap_lines parameter
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3286,7 +3289,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, wrap_lines=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
@@ -3348,6 +3351,8 @@ class Multiline(Element):
         :type justification:                 (str)
         :param no_scrollbar:                 If False then a vertical scrollbar will be shown (the default)
         :type no_scrollbar:                  (bool)
+        :param wrap_lines:                   If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping.
+        :type wrap_lines:                    (bool)
         :param sbar_trough_color:           Scrollbar color of the trough
         :type sbar_trough_color:            (str)
         :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
@@ -3406,6 +3411,7 @@ class Multiline(Element):
         self.expand_x = expand_x
         self.expand_y = expand_y
         self.rstrip = rstrip
+        self.wrap_lines = wrap_lines
         if reroute_stdout:
             self.reroute_stdout_to_here()
         if reroute_stderr:
@@ -4383,7 +4389,7 @@ class Output(Multiline):
     """
 
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, echo_stdout_stderr=False, font=None, tooltip=None,
-                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None,
+                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None, wrap_lines=None, horizontal_scroll=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None,  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
         :param size:                        (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -4418,6 +4424,10 @@ class Output(Multiline):
         :type visible:                      (bool)
         :param metadata:                    User metadata that can be set to ANYTHING
         :type metadata:                     (Any)
+        :param wrap_lines:                  If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping.
+        :type wrap_lines:                   (bool)
+        :param horizontal_scroll:           Controls if a horizontal scrollbar should be shown. If True, then line wrapping will be off by default
+        :type horizontal_scroll:            (bool)
         :param sbar_trough_color:           Scrollbar color of the trough
         :type sbar_trough_color:            (str)
         :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
@@ -4446,7 +4456,7 @@ class Output(Multiline):
         # self.expand_x = expand_x
         # self.expand_y = expand_y
 
-        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip,
+        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll,
                  key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata,
                          sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
     #
@@ -15691,6 +15701,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     element.TKText.config(wrap='word')
 
+                if element.wrap_lines is True:
+                    element.TKText.config(wrap='word')
+                elif element.wrap_lines is False:
+                    element.TKText.config(wrap='none')
+
                 if not element.no_scrollbar or element.HorizontalScroll:
                     # Chr0nic
                     element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
@@ -24973,5 +24988,5 @@ if __name__ == '__main__':
         main_sdk_help()
         exit(0)
     main()
-    exit(0)
-def get_signature(): return b'&\xd4R\x03.\xb1T\xab9\xb1\x03\x1b.\xae\x054\xf1\xcd_3\xb2\xc5\xb5\xc4i\xc7\t\x16\x7f:\xdb\xea\xe9\xbf\x80\x81\xae_C\xc7\xe3\x18$\xf7\x03\xe83A\xcc\xd3)\x8cA\xcf\xcf\xdcnr\xf3\x91\xa6q\x88\xde\x13\xb7N\xa7\xb0\xbf\x04\xb5\\\x03\x813\x9a\x1e\x07a\xe6\x1c\x13j\xe0\x15\xd5\xc4\x90\xc3\x1a\x80\xff\xc6\xe6\xed\xe3=\r\x98Y\xf2\x90\rPF?\x1d\xbc\xd9c\x82\xca?\xc5\x8c\x9f\x01q\xb8\xdf\xc3\xc1\xd4\x9e\xb6H\xa1'
+    exit(00)
+def get_signature(): return b'\x01!!\xeaC5\xc0\x15v\xf0\xcf\xb7\n\x8a\xe9\xfd\x84L\xd8\xde!\x08p_T\x0c\x1fP\xb7\x85\xb5\xf3{\'\x06\xe1\xdc\xe2\xd0$\n,\x14\x119\xf4\x08\x0c\x95\x92o\x97\xdf\xf5N\xb0\x1f\xf1\xb4\xc8\xe0\xb8\xf7\xf3\x8b\x84\x1a>\x14m3\xa7\x12\xc4\xc0\xfe\x98M\xf6\xcdK\xf9\x08\x86P_\'\xba\xe2\xb5\x16\x19\x87\x11\x85R1}\x94e\\\x9cY"\x1d\x95\xfe\xb6\'\xda\x97?\x97\xab\x14\x07\xfd\xbf\xfb\xd1\xcdL\x07{7\xa1\xe8\x03'
