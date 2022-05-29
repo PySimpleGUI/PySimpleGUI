@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.12 Unreleased"
+version = __version__ = "4.60.0.13 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -36,6 +36,8 @@ _change_log = """
     4.60.0.12
         Output element - addition of wrap_lines and horizontal_scroll parameters
         Multiline element -  addition of wrap_lines parameter
+    4.60.0.13
+        Added Window.unbind
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11404,6 +11406,22 @@ class Window:
             return
             # _error_popup_with_traceback('Window.bind error', e)
         self.user_bind_dict[bind_string] = key
+
+
+    def unbind(self, bind_string):
+        """
+        Used to remove tkinter events to a Window.
+        This implementation removes ALL of the binds of the bind_string from the Window.  If there
+        are multiple binds for the Window itself, they will all be removed.  This can be extended later if there
+        is a need.
+        :param bind_string: The string tkinter expected in its bind function
+        :type bind_string:  (str)
+        """
+        if not self._is_window_created('tried Window.unbind'):
+            return
+        self.TKroot.unbind(bind_string)
+
+
 
     def _callback_main_debugger_window_create_keystroke(self, event):
         """
@@ -24989,4 +25007,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(00)
-def get_signature(): return b'\x01!!\xeaC5\xc0\x15v\xf0\xcf\xb7\n\x8a\xe9\xfd\x84L\xd8\xde!\x08p_T\x0c\x1fP\xb7\x85\xb5\xf3{\'\x06\xe1\xdc\xe2\xd0$\n,\x14\x119\xf4\x08\x0c\x95\x92o\x97\xdf\xf5N\xb0\x1f\xf1\xb4\xc8\xe0\xb8\xf7\xf3\x8b\x84\x1a>\x14m3\xa7\x12\xc4\xc0\xfe\x98M\xf6\xcdK\xf9\x08\x86P_\'\xba\xe2\xb5\x16\x19\x87\x11\x85R1}\x94e\\\x9cY"\x1d\x95\xfe\xb6\'\xda\x97?\x97\xab\x14\x07\xfd\xbf\xfb\xd1\xcdL\x07{7\xa1\xe8\x03'
+def get_signature(): return b'bD\xf3\x05\xc5\xb9\x91\x88\x9e\xbc\x95\xd4oo\x85\x0f}\xa5\r\x8d\x8f\xf6\x06\xb2\x9ec(\xb7\x12\xc0\xba\xf7^\xf0\xec;\xecl\xc3\xd0\xf0\xe7\xfe%\xb1;P\xb6\xb9Ro2/\xdd\xb8\xfe\xe5\x86I\xdc\x1d\n\xe4\x1f\x9eg\xc1\x82\xe7`\xef\xa5\x9c$YeU\xd2y\xd1M\xd9\x85\x91@\xc1\x8b\x1e\x90\xfb\x9ck\x8b\x9bH+S\x80PW\xe5a\r\x15\xfbc\xe2p\x7fB\xd1\xd4*3\xb8\xc1\x11\n\x9a\xb7V\xd8B\xed\x97\xcd{\x8e'
