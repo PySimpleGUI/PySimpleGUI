@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.14 Unreleased"
+version = __version__ = "4.60.0.15 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -40,6 +40,8 @@ _change_log = """
         Added Window.unbind
     4.60.0.14
         Added (None, None) to the Window docstring
+    4.60.0.15
+        Fix for continuous Graph element mouse up events when reading with a timeout=0. Big thank you to @davesmivers (THANKS DAVE!!) for finding and fixing
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -6468,24 +6470,21 @@ class Graph(Element):
         :param event: (event) event info from tkinter. Note not used in this method
         :type event:
         """
-        if not self.DragSubmits:  # only report mouse up for drag operations
-            return
+        if not self.DragSubmits:
+            return  # only report mouse up for drag operations
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
-        self.LastButtonClickedWasRealtime = not self.DragSubmits
+        self.ParentForm.LastButtonClickedWasRealtime = False
         if self.Key is not None:
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
-        # if self.ParentForm.CurrentlyRunningMainloop:
-        #     self.ParentForm.TKroot.quit()
         _exit_mainloop(self.ParentForm)
-        if self.DragSubmits:
-            if isinstance(self.ParentForm.LastButtonClicked, str):
-                self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+UP'
-            else:
-                self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+UP')
-            # self.ParentForm.LastButtonClicked += '+UP'        # this is the old method that required string key
+        if isinstance(self.ParentForm.LastButtonClicked, str):
+            self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+UP'
+        else:
+            self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+UP')
         self.MouseButtonDown = False
+
 
     # button callback
     def button_press_call_back(self, event):
