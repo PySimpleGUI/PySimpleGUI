@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.13 Unreleased"
+version = __version__ = "4.60.0.14 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -38,6 +38,8 @@ _change_log = """
         Multiline element -  addition of wrap_lines parameter
     4.60.0.13
         Added Window.unbind
+    4.60.0.14
+        Added (None, None) to the Window docstring
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9417,7 +9419,7 @@ class Window:
         :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int)
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide
-        :type location:                              (int, int) or None
+        :type location:                              (int, int) or (None, None) or None
         :param size:                                 (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead
         :type size:                                  (int, int)
         :param element_padding:                      Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int)
