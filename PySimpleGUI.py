@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.15 Unreleased"
+version = __version__ = "4.60.0.16 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -42,6 +42,8 @@ _change_log = """
         Added (None, None) to the Window docstring
     4.60.0.15
         Fix for continuous Graph element mouse up events when reading with a timeout=0. Big thank you to @davesmivers (THANKS DAVE!!) for finding and fixing
+    4.60.0.16
+        Added platform (Windows, Mac, Linux) and platform version information to the get_versions function
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -23111,7 +23113,9 @@ def get_versions():
     Returns a human-readable string of version numbers for:
 
     Python version
-    PySimpleGUI Port (tkinter in this case)
+    Platform (Win, Mac, Linux)
+    Platform version (tuple with information from the platform module)
+    PySimpleGUI Port (PySimpleGUI in this case)
     tkinter version
     PySimpleGUI version
     The location of the PySimpleGUI.py file
@@ -23121,10 +23125,22 @@ def get_versions():
     :return:
     :rtype:  str
     """
-    versions = "Python version: {}.{}.{}\nPort: {}\ntkinter version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major,
+    if running_mac():
+        platform_name, platform_ver = 'Mac', platform.mac_ver()
+    elif running_windows():
+        platform_name, platform_ver = 'Windows', platform.win32_ver()
+    elif running_linux():
+        platform_name, platform_ver = 'Linux', platform.libc_ver()
+    else:
+        platform_name, platform_ver = 'Unknown platorm', 'Unknown platform version'
+
+    versions = "Python version: {}.{}.{}\nPlatform: {}\nPlatform version: {}\nPort: {}\ntkinter version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major,
                                                                                                                                    sys.version_info.minor,
-                                                                                                                                   sys.version_info.micro, port,
-                                                                                                                                   tclversion_detailed, ver,
+                                                                                                                                   sys.version_info.micro,
+                                                                                                                                    platform_name, platform_ver,
+                                                                                                                                   port,
+                                                                                                                                   tclversion_detailed,
+                                                                                                                                   ver,
                                                                                                                                    __file__)
     return versions
 
@@ -24078,13 +24094,7 @@ def main_get_debug_data(suppress_popup=False):
     :returns:              String containing the information to place into the GitHub Issue
     :rtype:                (str)
     """
-    message = \
-        """Python version: {}
-        port: tkinter
-        tkinter version: {}
-        PySimpleGUI version: {}
-        PySimpleGUI filename: {}""".format(sys.version, tclversion_detailed, ver, __file__)
-
+    message = get_versions()
     clipboard_set(message)
 
     if not suppress_popup:
@@ -25007,5 +25017,5 @@ if __name__ == '__main__':
         main_sdk_help()
         exit(0)
     main()
-    exit(00)
-def get_signature(): return b'bD\xf3\x05\xc5\xb9\x91\x88\x9e\xbc\x95\xd4oo\x85\x0f}\xa5\r\x8d\x8f\xf6\x06\xb2\x9ec(\xb7\x12\xc0\xba\xf7^\xf0\xec;\xecl\xc3\xd0\xf0\xe7\xfe%\xb1;P\xb6\xb9Ro2/\xdd\xb8\xfe\xe5\x86I\xdc\x1d\n\xe4\x1f\x9eg\xc1\x82\xe7`\xef\xa5\x9c$YeU\xd2y\xd1M\xd9\x85\x91@\xc1\x8b\x1e\x90\xfb\x9ck\x8b\x9bH+S\x80PW\xe5a\r\x15\xfbc\xe2p\x7fB\xd1\xd4*3\xb8\xc1\x11\n\x9a\xb7V\xd8B\xed\x97\xcd{\x8e'
+    exit(0)
+def get_signature(): return b'Q\xd8-\xff\xfbBQ\xb6\xe1HmJ\xa07\xd2~9\x8f\xf7\xc7>%\xca\x0e D!\x8e\x9e\xab_\xb1b\x95\x0b\x7f\xc9\xc1h\t\xb0\xc9\xcb\x90ZR\xebG\xb2O\x12\x12\xfc\x06\xb0xq\xc6T\x03\xf9\xba$]\xe7\xec\xe2@\nDmv\x11\xcc~\xf8\x88r\xb7\x0f\xa4\x1ce\xf8\x9b"\xed\xddy\xa9\x11[\x94\xf3,j\xa8\xa6\xe8N\x9aZ5/\xd9d\x95\xac\x15t\x85\xb64uV`\xecy\xc6\xda\xbf(\xd2A\xe7\xf1S\xcc'
