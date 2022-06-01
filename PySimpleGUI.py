@@ -4844,7 +4844,7 @@ class Button(Element):
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
                 is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
-                if not len(set(filetypes)) > 1 and (not len(is_all) == 0 or filetypes == FILE_TYPES_ALL_FILES):
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)
                 else:
                     file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, filetypes=filetypes)  # show the 'get file' dialog box
@@ -4869,7 +4869,7 @@ class Button(Element):
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
                 is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
-                if not len(set(filetypes)) > 1 and (not len(is_all) == 0 or filetypes == FILE_TYPES_ALL_FILES):
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
                 else:
                     file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
@@ -4891,7 +4891,7 @@ class Button(Element):
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
                 is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
-                if not len(set(filetypes)) > 1 and (not len(is_all) == 0 or filetypes == FILE_TYPES_ALL_FILES):
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
                 else:
                     file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
@@ -25038,4 +25038,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b":R2p\xdf\xb9\xbf\xa2\xaf\xc8x\xf4\x95\x1f\x8e\xf38\xd2\x11\x15\x05v\xf9\xfa\xa2\xcf\xfb\xfb\x80 \x84fD\xb4\xe0\xf4\xa1\x88\xc1v\xd1\xa7|Y\x14\xef\x86q\xf6\t\x8br\xd4\xe6\x01\x19\xb9\xba:\xbc'\xfa1\x1c$mW35\x87\xee\xb5\xd2H$eTK\x9b\xbcMY3\x03\xfb\x1fO]\x87W}3\xee\xb57\xda\x17\x9dX\x98\xe9t\xaf\xdf(\x1a.\x9e\x973)\x11\xe5\xeap\x10So\x9b5\xab\xfaFe\x08U\xc4\xdf"
+def get_signature(): return b'm\xdc\xd8\x89\xa6\x8b\x01;\xb8\x02})\xeeP\xde\x9f`\x08s_\xf5\x8a.N\xb1\x9d9\xfd\xf0K\x15N\xd5\xc8\x87\xab\x96zj\x8b-\x12\xf7\xce\xd2\xa2#\x12\xac\x08\xa9\x08\x90)<\r\x07(zu|\xda\xf3ai\x91;\xca\'\xc3?\xd3\x06\xd5z\x88\xfa\xd2\x83 \x1f;"\xc5\x15\x99c:\xf2h%d\xd3\xdd\xd0\x1b\t%\x05\x7f"\xd0\xe5\xd8\x04`f\xec\xfb\xd9F\xabL\x92\xdc\xa02a\x87\x9b_-u\xbd\xcdI\x14;'
