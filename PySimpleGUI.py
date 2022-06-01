@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.16 Unreleased"
+version = __version__ = "4.60.0.17 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -44,6 +44,8 @@ _change_log = """
         Fix for continuous Graph element mouse up events when reading with a timeout=0. Big thank you to @davesmivers (THANKS DAVE!!) for finding and fixing
     4.60.0.16
         Added platform (Windows, Mac, Linux) and platform version information to the get_versions function
+    4.60.0.17
+        Added a fix for the file_types Mac problem that doesn't require the system settings to be used... let's give it a go!
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4840,10 +4842,16 @@ class Button(Element):
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             if running_mac():
-                if _mac_allow_filetypes():
-                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, filetypes=filetypes)  # show the 'get file' dialog box
+                # Workaround for the "*.*" issue on Mac
+                is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
+                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)
                 else:
-                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                    file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, filetypes=filetypes)  # show the 'get file' dialog box
+                # elif _mac_allow_filetypes():
+                    # file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder, filetypes=filetypes)  # show the 'get file' dialog box
+                # else:
+                #     file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
 
@@ -4859,10 +4867,16 @@ class Button(Element):
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             if running_mac():
-                if _mac_allow_filetypes():
-                    file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
-                else:
+                # Workaround for the "*.*" issue on Mac
+                is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
+                else:
+                    file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+                # elif _mac_allow_filetypes():
+                #     file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder)
+                # else:
+                #     file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
@@ -4875,10 +4889,16 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             # show the 'get file' dialog box
             if running_mac():
-                if _mac_allow_filetypes():
-                    file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
-                else:
+                # Workaround for the "*.*" issue on Mac
+                is_all = [(x, y) for (x, y) in filetypes if y == "*" or y == "*.*" or y == "*.* *"]
+                if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+                else:
+                    file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+                # elif _mac_allow_filetypes():
+                #     file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
+                # else:
+                #     file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes, defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
 
@@ -25018,4 +25038,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'Q\xd8-\xff\xfbBQ\xb6\xe1HmJ\xa07\xd2~9\x8f\xf7\xc7>%\xca\x0e D!\x8e\x9e\xab_\xb1b\x95\x0b\x7f\xc9\xc1h\t\xb0\xc9\xcb\x90ZR\xebG\xb2O\x12\x12\xfc\x06\xb0xq\xc6T\x03\xf9\xba$]\xe7\xec\xe2@\nDmv\x11\xcc~\xf8\x88r\xb7\x0f\xa4\x1ce\xf8\x9b"\xed\xddy\xa9\x11[\x94\xf3,j\xa8\xa6\xe8N\x9aZ5/\xd9d\x95\xac\x15t\x85\xb64uV`\xecy\xc6\xda\xbf(\xd2A\xe7\xf1S\xcc'
+def get_signature(): return b'm\xdc\xd8\x89\xa6\x8b\x01;\xb8\x02})\xeeP\xde\x9f`\x08s_\xf5\x8a.N\xb1\x9d9\xfd\xf0K\x15N\xd5\xc8\x87\xab\x96zj\x8b-\x12\xf7\xce\xd2\xa2#\x12\xac\x08\xa9\x08\x90)<\r\x07(zu|\xda\xf3ai\x91;\xca\'\xc3?\xd3\x06\xd5z\x88\xfa\xd2\x83 \x1f;"\xc5\x15\x99c:\xf2h%d\xd3\xdd\xd0\x1b\t%\x05\x7f"\xd0\xe5\xd8\x04`f\xec\xfb\xd9F\xabL\x92\xdc\xa02a\x87\x9b_-u\xbd\xcdI\x14;'
