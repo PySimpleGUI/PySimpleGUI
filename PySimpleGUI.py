@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.21 Unreleased"
+version = __version__ = "4.60.0.22 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -54,6 +54,8 @@ _change_log = """
         Fix for bind_return_key - if a button has been disabled, then the event shouldn't be generated for the return key being pressed
     4.60.0.21
         Added cols_justification for Table element - list or tuple of strings that indicates how each column should be justified
+    4.60.0.22
+        Better error handling for table element's new justification list. If a bad value is found, will use the default value
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16388,8 +16390,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                 col_anchor = tk.W
                             elif element.cols_justification[i].startswith('r'):
                                 col_anchor = tk.E
-                            else:
+                            elif element.cols_justification[i].startswith('c'):
                                 col_anchor = tk.CENTER
+                            else:
+                                col_anchor = anchor
+
                         except:             # likely didn't specify enough entries (must be one per col)
                             col_anchor = anchor
                     else:
@@ -25066,4 +25071,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"\x81\xbfU'\xa1*\x8f\xc3\x04\xb5i\xafE|m \xdcK\x08\xdf\x0f\xe9\xb7/\x9e\xadW\x03j\x82\x88\xa5\x81f\xfc\xe2/]u\xbd\x9e\x8d\xb3\xcc]\xa5>=y\xc8d\n\x184\xb3\x9f\x15\x1b^,\xdc\xa3\x8aH\x8ama#\xfc\xbb\x88\xf2\x8b\xd4\x05o'\xf1w$-t\xbb\xedj\x93\xc1C\xdb\xc9\xa9&\x00\xeef\xa2Xu[\x94\x8dA\x1ey\x83\x0f>\xfd\xec\xad\x9a\x83\xbf\x1c\x99\xd7\x80\xc9|@6\x08\xcf\r\x00\x05$1"
+def get_signature(): return b'\x1e\x94j\x0b\xe5Mi\xe0\x00$\x12s\x93\x88\xf7\x95K\xec\xa3\xcd\xaa\x84\x89M\xe9\xdbiQ2\x018_\xf34W\xfd\x0c\x98q\x12Q\x96\xc2\xa8\x12t\xd8\xc2\xf8\xf6Y\xc3\xd6\x7fYJ\x0eA\xd0\xf9\xb2pk\xa4\xce\x86\xa3A\xe3\xf4\xb4H\x0f(\xad\xfeD\xd0\x97p\x05\x06\xb0Wo\xbd\xc0,K\x01\xa5Z\x1e\xb3\xf5\x07V<T\x8esz\xd7}\x8c\x08\x83\xed\xf7\x06\x15\x0e\xe2\x04\xe9\xaac\xca\xf4_\x81\xf36\xc73\xee\x87\x95'
