@@ -30,9 +30,9 @@ headings = [str(data[0][x])+' ..' for x in range(len(data[0]))]
 # ------ Window Layout ------
 layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
                     auto_size_columns=True,
-                    # cols_justification=('l','c','r','c', 'r', 'r'),       # Added on GitHub only as of June 2022
+                    # cols_justification=('left','center','right','c', 'l', 'bad'),       # Added on GitHub only as of June 2022
                     display_row_numbers=True,
-                    justification='right',
+                    justification='center',
                     num_rows=20,
                     alternating_row_color='lightblue',
                     key='-TABLE-',
@@ -62,9 +62,9 @@ while True:
     if event == sg.WIN_CLOSED:
         break
     if event == 'Double':
-        for i in range(len(data)):
+        for i in range(1,len(data)):
             data.append(data[i])
-        window['-TABLE-'].update(values=data)
+        window['-TABLE-'].update(values=data[1:][:])
     elif event == 'Change Colors':
         window['-TABLE-'].update(row_colors=((8, 'white', 'red'), (9, 'green')))
 
