@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.20 Unreleased"
+version = __version__ = "4.60.0.21 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -52,6 +52,8 @@ _change_log = """
         PySimpleGUI Anniversary sale on Udemy course coupon 
     4.60.0.20
         Fix for bind_return_key - if a button has been disabled, then the event shouldn't be generated for the return key being pressed
+    4.60.0.21
+        Added cols_justification for Table element - list or tuple of strings that indicates how each column should be justified
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8531,7 +8533,7 @@ Menubar = Menu  # another name for Menu to make it clear it's the Menu Bar
 # ---------------------------------------------------------------------- #
 class Table(Element):
 
-    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
+    def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, cols_justification=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
@@ -8548,6 +8550,8 @@ class Table(Element):
         :type visible_column_map:       List[bool]
         :param col_widths:              Number of characters that each column will occupy
         :type col_widths:               List[int]
+        :param cols_justification:      Justification for EACH column. Is a list of strings with the value 'l', 'r', 'c' that indicates how the column will be justified. Either no columns should be set, or have to have one for every colun
+        :type cols_justification:       List[str] or Tuple[str] or None
         :param def_col_width:           Default column width in characters
         :type def_col_width:            (int)
         :param auto_size_columns:       if True columns will be sized automatically
@@ -8645,6 +8649,7 @@ class Table(Element):
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
         self.ColumnWidths = col_widths
+        self.cols_justification = cols_justification
         self.MaxColumnWidth = max_col_width
         self.DefaultColumnWidth = def_col_width
         self.AutoSizeColumns = auto_size_columns
@@ -16377,7 +16382,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i] * _char_width_in_pixels(font)
                         except:
                             width = element.DefaultColumnWidth * _char_width_in_pixels(font)
-                    treeview.column(heading, width=width, minwidth=10, anchor=anchor, stretch=element.expand_x)
+                    if element.cols_justification is not None:
+                        try:
+                            if element.cols_justification[i].startswith('l'):
+                                col_anchor = tk.W
+                            elif element.cols_justification[i].startswith('r'):
+                                col_anchor = tk.E
+                            else:
+                                col_anchor = tk.CENTER
+                        except:             # likely didn't specify enough entries (must be one per col)
+                            col_anchor = anchor
+                    else:
+                        col_anchor = anchor
+                    treeview.column(heading, width=width, minwidth=10, anchor=col_anchor, stretch=element.expand_x)
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
@@ -25049,4 +25066,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'\x8e\x1a\xf9\x99\x98z\x8fG\xf5G]\xa9\x08\xcc\xb0!\x88\xa5\x1ax\xd2%\xe7\x18\x87\xce\xad!\x9a\xff\x91z\x98\x84\x00r\xe8\xa3\x1212\xd5#\xe5\xb7\xc1\x01\xcb\xf5m\x0f\xc3\x02\x08\xf5c\x16\x12\x16\xf3\x99\xd1h\xe3\x05\xd4\xccS]\x15\x9a}\x9fTr\x965\xd5S\xce\x93#|x\xac7\x9a#\x1d\x90\x97\xcc\xfa\xe2w\x00\xf8\xd0\xeb\x10\x8a\x81\r\xffO}\x17\x95\xbc\x806\xaf>8\xc9\xd1\xe3\xc9v\x9a\x05$\xa2\x90\xa6\xe9F$'
+def get_signature(): return b"\x81\xbfU'\xa1*\x8f\xc3\x04\xb5i\xafE|m \xdcK\x08\xdf\x0f\xe9\xb7/\x9e\xadW\x03j\x82\x88\xa5\x81f\xfc\xe2/]u\xbd\x9e\x8d\xb3\xcc]\xa5>=y\xc8d\n\x184\xb3\x9f\x15\x1b^,\xdc\xa3\x8aH\x8ama#\xfc\xbb\x88\xf2\x8b\xd4\x05o'\xf1w$-t\xbb\xedj\x93\xc1C\xdb\xc9\xa9&\x00\xeef\xa2Xu[\x94\x8dA\x1ey\x83\x0f>\xfd\xec\xad\x9a\x83\xbf\x1c\x99\xd7\x80\xc9|@6\x08\xcf\r\x00\x05$1"
