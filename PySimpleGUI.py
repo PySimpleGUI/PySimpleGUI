@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.19 Unreleased"
+version = __version__ = "4.60.0.20 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -50,6 +50,8 @@ _change_log = """
         Added ubiquitious Edit Me to the right click menu
     4.60.0.19
         PySimpleGUI Anniversary sale on Udemy course coupon 
+    4.60.0.20
+        Fix for bind_return_key - if a button has been disabled, then the event shouldn't be generated for the return key being pressed
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1350,6 +1352,9 @@ class Element():
         MyForm = self.ParentForm
         button_element = self._FindReturnKeyBoundButton(MyForm)
         if button_element is not None:
+            # if the Button has been disabled, then don't perform the callback
+            if button_element.Disabled:
+                return
             button_element.ButtonCallBack()
 
     def _generic_callback_handler(self, alternative_to_key=None, force_key_to_be=None):
@@ -25044,4 +25049,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'\x0eg8VS\xf3\x83K-\xd4i\x15\xd0\xac\xa7\x87\x9c\xb1\x7f\x94p\x8d\x98\xb3\x1e\xdb\xa6\x81\xa3Vw\x15\xd6\xc5\x91Jg\xa9\xa4~\xcb\x0f\xa1Q/b\xe8\x91\x00e\x1f\xdct3\xcb\x88/\xd8(\xe3\x94\xa5\x99\x087\x8fY\x01\xe2\x95s \xc9J\x16\\\x82\xe9}rmH\x9f\xfe\x0cF\x89*V~\xa3Z\x89\x14\x84/\xdb\x19,\xb0\xf03ml\xf7m\x04\x86\xd8\xc8\x7f\xba{\xec\x08\n\xdaS\x83\xe6V\xe2\x8e\xd9aB+A'
+def get_signature(): return b'\x8e\x1a\xf9\x99\x98z\x8fG\xf5G]\xa9\x08\xcc\xb0!\x88\xa5\x1ax\xd2%\xe7\x18\x87\xce\xad!\x9a\xff\x91z\x98\x84\x00r\xe8\xa3\x1212\xd5#\xe5\xb7\xc1\x01\xcb\xf5m\x0f\xc3\x02\x08\xf5c\x16\x12\x16\xf3\x99\xd1h\xe3\x05\xd4\xccS]\x15\x9a}\x9fTr\x965\xd5S\xce\x93#|x\xac7\x9a#\x1d\x90\x97\xcc\xfa\xe2w\x00\xf8\xd0\xeb\x10\x8a\x81\r\xffO}\x17\x95\xbc\x806\xaf>8\xc9\xd1\xe3\xc9v\x9a\x05$\xa2\x90\xa6\xe9F$'
