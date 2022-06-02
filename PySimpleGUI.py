@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.17 Unreleased"
+version = __version__ = "4.60.0.18 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -46,6 +46,8 @@ _change_log = """
         Added platform (Windows, Mac, Linux) and platform version information to the get_versions function
     4.60.0.17
         Added a fix for the file_types Mac problem that doesn't require the system settings to be used... let's give it a go!
+    4.60.0.18
+        Added ubiquitious Edit Me to the right click menu
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -24786,7 +24788,7 @@ def _create_main_window():
     window = Window('PySimpleGUI Main Test Harness', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
-                    right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
+                    right_click_menu=['&Right', ['Right', 'Edit Me', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
                     keep_on_top=False,
@@ -24928,6 +24930,8 @@ def main():
                 popup_auto_close('Will autoclose in 3 seconds', auto_close_duration=3, keep_on_top=True)
         elif event == 'Versions for GitHub':
             main_get_debug_data()
+        elif event == 'Edit Me':
+            execute_editor(__file__)
         elif event == 'Open GitHub Issue':
             window.minimize()
             main_open_github_issue()
@@ -25038,4 +25042,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'm\xdc\xd8\x89\xa6\x8b\x01;\xb8\x02})\xeeP\xde\x9f`\x08s_\xf5\x8a.N\xb1\x9d9\xfd\xf0K\x15N\xd5\xc8\x87\xab\x96zj\x8b-\x12\xf7\xce\xd2\xa2#\x12\xac\x08\xa9\x08\x90)<\r\x07(zu|\xda\xf3ai\x91;\xca\'\xc3?\xd3\x06\xd5z\x88\xfa\xd2\x83 \x1f;"\xc5\x15\x99c:\xf2h%d\xd3\xdd\xd0\x1b\t%\x05\x7f"\xd0\xe5\xd8\x04`f\xec\xfb\xd9F\xabL\x92\xdc\xa02a\x87\x9b_-u\xbd\xcdI\x14;'
+def get_signature(): return b'()\x11\x83\xfb\xba\xf64\x10\xfaH\x17\x9cR\xd0\x0e[\xaba\xb3C\xe2\xe7\x83O\x8eR\x1dK\x95\x91\xfa\xa9\xe63\x91\xf8\xab\xae\xf6S[\x9fd\x82pO\x85\\\xf1\xd2\xfeq\xdb\xdeT\x07\x19\xaa,EM\xdf\xd1g\xda\x85.\x0b0\xeb\x83\xc3\x04\xdc\xa4\nY!\x8f\x8e\xf32\x0e\xbd\xa0\xa2\xf1:\x16lw\x19\x85$j\xf0\xac\xa28\x8a$z\x04,\x81\x83\xee\x8dx\x08\x1cFp\x14\xc0\xcb7\xbfjC\x88+F|\xf4\x01_'
