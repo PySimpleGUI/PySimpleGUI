@@ -5,9 +5,10 @@ import string
 
 """
     Basic use of the Table Element
+    
+    Copyright 2022 PySimpleGUI
 """
 
-sg.theme('Dark Red')
 
 # ------ Some functions to help generate data for the table ------
 def word():
@@ -24,27 +25,34 @@ def make_table(num_rows, num_cols):
 
 # ------ Make the Table Data ------
 data = make_table(num_rows=15, num_cols=6)
-headings = [str(data[0][x])+'     ..' for x in range(len(data[0]))]
+headings = [str(data[0][x])+' ..' for x in range(len(data[0]))]
 
 # ------ Window Layout ------
 layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
-                    # background_color='light blue',
                     auto_size_columns=True,
+                    # cols_justification=('l','c','r','c', 'r', 'r'),       # Added on GitHub only as of June 2022
                     display_row_numbers=True,
                     justification='right',
                     num_rows=20,
-                    alternating_row_color='lightyellow',
+                    alternating_row_color='lightblue',
                     key='-TABLE-',
-                    row_height=35,
+                    selected_row_colors='red on yellow',
+                    enable_events=True,
+                    expand_x=False,
+                    expand_y=True,
+                    vertical_scroll_only=False,
+                    enable_click_events=True,           # Comment out to not enable header and other clicks
                     tooltip='This is a table')],
           [sg.Button('Read'), sg.Button('Double'), sg.Button('Change Colors')],
           [sg.Text('Read = read which rows are selected')],
           [sg.Text('Double = double the amount of data in the table')],
-          [sg.Text('Change Colors = Changes the colors of rows 8 and 9')]]
+          [sg.Text('Change Colors = Changes the colors of rows 8 and 9'), sg.Sizegrip()]]
 
 # ------ Create Window ------
 window = sg.Window('The Table Element', layout,
+                   # ttk_theme='clam',
                    # font='Helvetica 25',
+                   resizable=True
                    )
 
 # ------ Event Loop ------
@@ -61,3 +69,4 @@ while True:
         window['-TABLE-'].update(row_colors=((8, 'white', 'red'), (9, 'green')))
 
 window.close()
+
