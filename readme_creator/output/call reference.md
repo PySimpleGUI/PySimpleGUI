@@ -1747,7 +1747,7 @@ Parameter Descriptions:
 |                                     float                                      | size_subsample_height | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column |
+|                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also |
 |                                      bool                                      | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
 |                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
@@ -5163,7 +5163,8 @@ update(value = None,
     background_color = None,
     move_cursor_to = "end",
     password_char = None,
-    paste = None)
+    paste = None,
+    readonly = None)
 ```
 
 Parameter Descriptions:
@@ -5179,6 +5180,7 @@ Parameter Descriptions:
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 |    str    |  password_char   | Password character if this is a password field |
 |   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
+|   bool    |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 
 ### visible
 
@@ -5263,7 +5265,8 @@ Update(value = None,
     background_color = None,
     move_cursor_to = "end",
     password_char = None,
-    paste = None)
+    paste = None,
+    readonly = None)
 ```
 
 Parameter Descriptions:
@@ -5279,6 +5282,7 @@ Parameter Descriptions:
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 |    str    |  password_char   | Password character if this is a password field |
 |   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
+|   bool    |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 
 ---------
 
@@ -6240,6 +6244,7 @@ Multiline(default_text = "",
     tooltip = None,
     justification = None,
     no_scrollbar = False,
+    wrap_lines = None,
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
@@ -6288,6 +6293,7 @@ Parameter Descriptions:
 |                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
 |                                      str                                       |     justification     | text justification. left, right, center. Can use single characters l, r, c. |
 |                                      bool                                      |     no_scrollbar      | If False then a vertical scrollbar will be shown (the default) |
+|                                      bool                                      |      wrap_lines       | If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping. |
 |                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
 |                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
 |                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
@@ -7206,6 +7212,8 @@ Output(size = (None, None),
     expand_y = False,
     visible = True,
     metadata = None,
+    wrap_lines = None,
+    horizontal_scroll = None,
     sbar_trough_color = None,
     sbar_background_color = None,
     sbar_arrow_color = None,
@@ -7235,6 +7243,8 @@ Parameter Descriptions:
 |                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
 |                                      bool                                      |        visible        | set visibility state of the element |
 |                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
+|                                      bool                                      |      wrap_lines       | If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping. |
+|                                      bool                                      |   horizontal_scroll   | Controls if a horizontal scrollbar should be shown. If True, then line wrapping will be off by default |
 |                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
 |                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
 |                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
@@ -9559,6 +9569,7 @@ Spin(values,
     k = None,
     pad = None,
     p = None,
+    wrap = None,
     tooltip = None,
     right_click_menu = None,
     expand_x = False,
@@ -9576,7 +9587,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state |
 |                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
-|                                      bool                                      |     readonly     | Turns on the element specific events. Spin events happen when an item changes |
+|                                      bool                                      |     readonly     | If True, then users cannot type in values. Only values from the values list are allowed. |
 |                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
@@ -9588,6 +9599,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |       wrap       | Determines if the values should "Wrap". Default is False. If True, when reaching last value, will continue back to the first value. |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
@@ -13014,7 +13026,7 @@ Parameter Descriptions:
 |                    bool                     |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
 |                    bool                     |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
 |                 (int, int)                  |          relative_location           | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                 (int, int)                  |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|      (int, int or None, None) or None       |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide |
 |                 (int, int)                  |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
 |  (int, int or (int, int),(int,int)) or int  |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
 |                 (int, int)                  |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
@@ -14716,7 +14728,9 @@ Parameter Descriptions:
 Returns a human-readable string of version numbers for:
 
 Python version
-PySimpleGUI Port (tkinter in this case)
+Platform (Win, Mac, Linux)
+Platform version (tuple with information from the platform module)
+PySimpleGUI Port (PySimpleGUI in this case)
 tkinter version
 PySimpleGUI version
 The location of the PySimpleGUI.py file
