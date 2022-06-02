@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.18 Unreleased"
+version = __version__ = "4.60.0.19 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -48,6 +48,8 @@ _change_log = """
         Added a fix for the file_types Mac problem that doesn't require the system settings to be used... let's give it a go!
     4.60.0.18
         Added ubiquitious Edit Me to the right click menu
+    4.60.0.19
+        PySimpleGUI Anniversary sale on Udemy course coupon 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -24886,7 +24888,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '4FD91A459D56B1029FF8',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '8D57E54186ADB10C4180',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -25042,4 +25044,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'()\x11\x83\xfb\xba\xf64\x10\xfaH\x17\x9cR\xd0\x0e[\xaba\xb3C\xe2\xe7\x83O\x8eR\x1dK\x95\x91\xfa\xa9\xe63\x91\xf8\xab\xae\xf6S[\x9fd\x82pO\x85\\\xf1\xd2\xfeq\xdb\xdeT\x07\x19\xaa,EM\xdf\xd1g\xda\x85.\x0b0\xeb\x83\xc3\x04\xdc\xa4\nY!\x8f\x8e\xf32\x0e\xbd\xa0\xa2\xf1:\x16lw\x19\x85$j\xf0\xac\xa28\x8a$z\x04,\x81\x83\xee\x8dx\x08\x1cFp\x14\xc0\xcb7\xbfjC\x88+F|\xf4\x01_'
+def get_signature(): return b'\x0eg8VS\xf3\x83K-\xd4i\x15\xd0\xac\xa7\x87\x9c\xb1\x7f\x94p\x8d\x98\xb3\x1e\xdb\xa6\x81\xa3Vw\x15\xd6\xc5\x91Jg\xa9\xa4~\xcb\x0f\xa1Q/b\xe8\x91\x00e\x1f\xdct3\xcb\x88/\xd8(\xe3\x94\xa5\x99\x087\x8fY\x01\xe2\x95s \xc9J\x16\\\x82\xe9}rmH\x9f\xfe\x0cF\x89*V~\xa3Z\x89\x14\x84/\xdb\x19,\xb0\xf03ml\xf7m\x04\x86\xd8\xc8\x7f\xba{\xec\x08\n\xdaS\x83\xe6V\xe2\x8e\xd9aB+A'
