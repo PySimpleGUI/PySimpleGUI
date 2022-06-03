@@ -63,7 +63,7 @@ _change_log = """
     4.60.0.25
         New logic for checking for the * case for Mac filetypes
     4.60.0.26
-        Docstring update - TabGroup visible parameter marked as depricated.  Use a Column element to make a TabGroup invisible
+        Docstring update - TabGroup visible parameter marked as deprecated .  Use a Column element to make a TabGroup invisible
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7257,7 +7257,7 @@ class TabGroup(Element):
         :type expand_x:                   (bool)
         :param expand_y:                  If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:                   (bool)
-        :param visible:                   DEPRICATED - Should you need to control visiblity for the TabGroup as a whole, place it into a Column element
+        :param visible:                   DEPRECATED  - Should you need to control visiblity for the TabGroup as a whole, place it into a Column element
         :type visible:                    (bool)
         :param metadata:                  User metadata that can be set to ANYTHING
         :type metadata:                   (Any)
@@ -25079,4 +25079,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"<F<\xc7\x1a\xb84H\xf1\x8d-\xec\xe5K\x15H\xca]S4>X\xb1\xf0\xc5\xb8a\xdb\xda8IlU\xb3\xe5\x83I\x0eAW\xb2D\x00\x89W\x8b\xe7q\xb0\x81\xb5\x10Z\xa7\xda\x0f\xd1\xb4\x0c'M\xfe\x07\xb8\xe7?\xb4\xa2\xa2\x87\xc0?\xdb\xeb\x8c-\x06I\xab\x84\xc6S\xab\xe5\x97\xf0C@\xa7\xbe:a\xd75`IR\xbd\xf1;}\x7f\x03nF\xa6\x1c?\x90\x16j3 \x97\xe7\x1a\xcc\xb3-\x94\x1dn\x1d\xf0f\xd96\xda"
+def get_signature(): return b'4E\x89\x1a\xc2\xf6\xef\xa7\xe7\xabZ\x0c\x13H\xe0\t\x1a\xf2\xa8z\x80\x026\xe2\x8aZ\xac-\x87\xde\x90\x92Um&@9\xc9\xffD\x1e,%D\xcb\x01A\x0fO\x01\xbeb\xdf\x89\x95\x10\x0b R\xfa!\xa7\x1c\xeeZg\xa7\x84\x99M0\xe5s\x894\x98YF\x81Fi3&\xaf\x9f\x8b\x0e\t\x94\xd6/\xab\xcf\xaf\x87fyW\x19\x8f \xe9\xa4\xcb r<\xfa\xe4\x039\r\xec\xab\xb5\xe1\x8c\xa5\x80\xc6n(a"\x94\xdb\xf4\xd9'
