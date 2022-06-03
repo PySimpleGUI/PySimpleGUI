@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.23 Unreleased"
+version = __version__ = "4.60.0.24 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -58,6 +58,8 @@ _change_log = """
         Better error handling for table element's new justification list. If a bad value is found, will use the default value
     4.60.0.23
         Additional mac filetype testing.... added more combinations that specify 
+    4.60.0.24
+        Added * *.* to the Mac filetypes to check for
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4858,7 +4860,7 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
-                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*')]
+                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*',  "* *.*",)]
                 if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)
                 else:
@@ -4883,7 +4885,7 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
-                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*')]
+                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*',  "* *.*",)]
                 if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
                 else:
@@ -4905,7 +4907,7 @@ class Button(Element):
             # show the 'get file' dialog box
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
-                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*')]
+                is_all = [(x, y) for (x, y) in filetypes if y in  ("*", "*.*", "*.* *", "*.", '.*',  "* *.*",)]
                 if not len(set(filetypes)) > 1 and (len(is_all) != 0 or filetypes == FILE_TYPES_ALL_FILES):
                     file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
                 else:
@@ -25073,4 +25075,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"\x7f\xees\xcd\x15\x00\xea\x1e\xa1c\xc1(\xdf\x9f\xa3\xd0\xcc)\xe4*X\x98V\xc8}xT\xad\xa0\xc6a\x9f\x08\x1e6}\x17\xfaA\xcc>?D3b\xea\xce\xce\xdb\xc7\x13\x0e\xa0O[l\x02\xe0\xe5`>sZ\xd7\xcd\x9b\x91y\xbc\xb7\xb3\xf3'\x8e\x1a\xca\xd1+\xa2\xc0\x07]#\x92\xcc\xcc\xd6\x01#,\xdf\x1c\xb1\x89\x05\xc5\xadB)\x80\xfe\x86y\xd29\xab\x7f{\x83%%\x93c\xf8\x97T\xca\xfc\x9a}z\xaeqf\xf7l\x83\xa4"
+def get_signature(): return b"1U\x17KF\xbb\xd6\x8f\x91x\xdd\x1a\xff\xc79]\x83%\xd0&Mt\x92s#\x81*Z\xba\x9d\xdew\x04Y\x95;\xf3]\x03\xc4v\xcb\xd1|{\xce\x1co\xc3\x8a\x0b5\xf8c\x01)>\xb1B\x1c\xa9\\2i=5O\xeeW|\xe8$\xab\xff\x07F'\x19\xa5\xa19\n|\x13\xa0\xbd/b\xd72dP\xa8\xde\xf9\\\xc7\x10\xf0I\x80\x94\xa5g\x15G\xc1\xd6\x0f\xe1\x8coqkWv\xff\xbeCf\xe9P\xe8O\xec\xc4\x1b\x92"
