@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.25 Unreleased"
+version = __version__ = "4.60.0.26 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -62,6 +62,8 @@ _change_log = """
         Added * *.* to the Mac filetypes to check for
     4.60.0.25
         New logic for checking for the * case for Mac filetypes
+    4.60.0.26
+        Docstring update - TabGroup visible parameter marked as depricated.  Use a Column element to make a TabGroup invisible
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7255,7 +7257,7 @@ class TabGroup(Element):
         :type expand_x:                   (bool)
         :param expand_y:                  If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:                   (bool)
-        :param visible:                   set visibility state of the element
+        :param visible:                   DEPRICATED - Should you need to control visiblity for the TabGroup as a whole, place it into a Column element
         :type visible:                    (bool)
         :param metadata:                  User metadata that can be set to ANYTHING
         :type metadata:                   (Any)
@@ -25077,4 +25079,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"zy\x8f\xf4\xa7\xc0f\xc6\xfe\x94]\xaf\x05f?j\xd2\x02\xb8\x8e\xe4J\xa2\xab*\xfd\xe2\x9e\x97\x0b\x8bBh\x15\xef^v\x99\x12\xe3JN\xce\x8a\xcc\xbf[k\x8d\xe6X\xc5\x88&xS\xd8R[rWf{!\x13[6a/\xcc\xae,I\xa0\x90\xc6\x8b\xf1\xd7G\xc1\x1c\x96\x03\xb6\x15UP\xa1\xc7'\xe6bu\xf2h\x10\xc8[4s\xa0\xed\x9a\xfeNv@\x18i\x9e\xc4\xda\xfc\xf9\xec\x8aDo\x86}C\x0cM\xd9\xd2?\x8a"
+def get_signature(): return b"<F<\xc7\x1a\xb84H\xf1\x8d-\xec\xe5K\x15H\xca]S4>X\xb1\xf0\xc5\xb8a\xdb\xda8IlU\xb3\xe5\x83I\x0eAW\xb2D\x00\x89W\x8b\xe7q\xb0\x81\xb5\x10Z\xa7\xda\x0f\xd1\xb4\x0c'M\xfe\x07\xb8\xe7?\xb4\xa2\xa2\x87\xc0?\xdb\xeb\x8c-\x06I\xab\x84\xc6S\xab\xe5\x97\xf0C@\xa7\xbe:a\xd75`IR\xbd\xf1;}\x7f\x03nF\xa6\x1c?\x90\x16j3 \x97\xe7\x1a\xcc\xb3-\x94\x1dn\x1d\xf0f\xd96\xda"
