@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.26 Unreleased"
+version = __version__ = "4.60.0.27 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -64,6 +64,9 @@ _change_log = """
         New logic for checking for the * case for Mac filetypes
     4.60.0.26
         Docstring update - TabGroup visible parameter marked as deprecated .  Use a Column element to make a TabGroup invisible
+    4.60.0.27
+        Docstring update for the pin helper function that describes the shrinking of the container that it helps provide.  
+        Also added explanation that it's the elements you want to make visible/invisible that are what you want to pin
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12402,6 +12405,11 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
     """
     Pin's an element provided into a layout so that when it's made invisible and visible again, it will
      be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
+
+     The element you want to pin is the element that you'll be making visibile/invisible.
+
+    The pin helper function also causes containers to shrink to fit the contents correct after something inside
+     has changed visiblity.  Note that setting a hardcoded size on your window can impact this ability to shrink.
 
     :param elem:               the element to put into the layout
     :type elem:                Element
@@ -25079,4 +25087,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'4E\x89\x1a\xc2\xf6\xef\xa7\xe7\xabZ\x0c\x13H\xe0\t\x1a\xf2\xa8z\x80\x026\xe2\x8aZ\xac-\x87\xde\x90\x92Um&@9\xc9\xffD\x1e,%D\xcb\x01A\x0fO\x01\xbeb\xdf\x89\x95\x10\x0b R\xfa!\xa7\x1c\xeeZg\xa7\x84\x99M0\xe5s\x894\x98YF\x81Fi3&\xaf\x9f\x8b\x0e\t\x94\xd6/\xab\xcf\xaf\x87fyW\x19\x8f \xe9\xa4\xcb r<\xfa\xe4\x039\r\xec\xab\xb5\xe1\x8c\xa5\x80\xc6n(a"\x94\xdb\xf4\xd9'
+def get_signature(): return b']\xba\xca\xce\xe5\x06\xe7\x95bd-T\xfa\xf0dD\xb1\x92:\xab\xa0\xfc\x1f\xc5\xd2\xb6\x1dr\xeaC\xbdL,\xec|Uz\xc9\x1cX\xa1\x93\xbe/%\x14\xca\x1b\xb5\x84h\x81\x0e\x98k\x91\xbf8\xf2\xdfH@\xa7\x1b\x01\xecG\xaf]{\xd1\x1b\xaa\x94\xab\xd9\xeen(\x03"\x1f[7\xc8\xe5\xe6/y~DR\x10\xb68Ke\'\x04/)\xfaL\xb3\x08\xbeEw\x98\x9e\xbe\xd5lp\x98\x06\x8c*\xbd\xa1\x98BT(\xe5N\x87!'
