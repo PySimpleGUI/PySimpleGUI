@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.27 Unreleased"
+version = __version__ = "4.60.0.28 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -67,6 +67,9 @@ _change_log = """
     4.60.0.27
         Docstring update for the pin helper function that describes the shrinking of the container that it helps provide.  
         Also added explanation that it's the elements you want to make visible/invisible that are what you want to pin
+    4.60.0.28
+        Applied same Mac file_types fix to popup_get_file
+        Removed filetypes setting from Mac Feature Control Panel
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20549,13 +20552,14 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         # for Macs, setting parent=None fixes a warning problem.
         if save_as:
             if running_mac():
-                if _mac_allow_filetypes():
-                    filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
-                                                               initialdir=initial_folder,
+                is_all = [(x, y) for (x, y) in file_types if all(ch in '* .' for ch in y)]
+                if not len(set(file_types)) > 1 and (len(is_all) != 0 or file_types == FILE_TYPES_ALL_FILES):
+                    filename = tk.filedialog.asksaveasfilename(initialdir=initial_folder,
                                                                initialfile=default_path,
                                                                defaultextension=default_extension)  # show the 'get file' dialog box
                 else:
-                    filename = tk.filedialog.asksaveasfilename(initialdir=initial_folder,
+                    filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
+                                                               initialdir=initial_folder,
                                                                initialfile=default_path,
                                                                defaultextension=default_extension)  # show the 'get file' dialog box
             else:
@@ -20566,13 +20570,14 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             if running_mac():
-                if _mac_allow_filetypes():
-                    filename = tk.filedialog.askopenfilenames(filetypes=file_types,
-                                                              initialdir=initial_folder,
+                is_all = [(x, y) for (x, y) in file_types if all(ch in '* .' for ch in y)]
+                if not len(set(file_types)) > 1 and (len(is_all) != 0 or file_types == FILE_TYPES_ALL_FILES):
+                    filename = tk.filedialog.askopenfilenames(initialdir=initial_folder,
                                                               initialfile=default_path,
                                                               defaultextension=default_extension)  # show the 'get file' dialog box
                 else:
-                    filename = tk.filedialog.askopenfilenames(initialdir=initial_folder,
+                    filename = tk.filedialog.askopenfilenames(filetypes=file_types,
+                                                              initialdir=initial_folder,
                                                               initialfile=default_path,
                                                               defaultextension=default_extension)  # show the 'get file' dialog box
             else:
@@ -20583,13 +20588,14 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                                                           defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             if running_mac():
-                if _mac_allow_filetypes():
-                    filename = tk.filedialog.askopenfilename(filetypes=file_types,
-                                                             initialdir=initial_folder,
+                is_all = [(x, y) for (x, y) in file_types if all(ch in '* .' for ch in y)]
+                if not len(set(file_types)) > 1 and (len(is_all) != 0 or file_types == FILE_TYPES_ALL_FILES):
+                    filename = tk.filedialog.askopenfilename(initialdir=initial_folder,
                                                              initialfile=default_path,
                                                              defaultextension=default_extension)  # show the 'get files' dialog box
                 else:
-                    filename = tk.filedialog.askopenfilename(initialdir=initial_folder,
+                    filename = tk.filedialog.askopenfilename(filetypes=file_types,
+                                                             initialdir=initial_folder,
                                                              initialfile=default_path,
                                                              defaultextension=default_extension)  # show the 'get files' dialog box
             else:
@@ -22459,7 +22465,7 @@ available to make this process more atuomatic.
 MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False),
                   'Disable Modal Windows' : ('-mac feature disable modal windows-', True),
                   'Disable Grab Anywhere with Titlebar' : ('-mac feature disable grab anywhere with titlebar-', True),
-                  'Enable file_types parm in BrowseFile(s) and popop_get_file (use with caution)' : ('-mac feature enable file_types-', False)}
+                  }
 
 def _read_mac_global_settings():
     """
@@ -22499,21 +22505,6 @@ def _mac_should_apply_notitlebar_patch():
         warnings.warn('Exception while trying to parse tkinter version {} Error = {}'.format(framework_version, e), UserWarning)
 
     return False
-
-def _mac_allow_filetypes():
-    """
-    If running a Mac, then will return True if user has indicated so in the PySimpleGUI Global Settings Window
-
-    :return:    True if should file_types parm to be used on the Mac
-    :rtype:     (bool)
-    """
-
-    if not running_mac():
-        return False
-
-    enable_filetypes = pysimplegui_user_settings.get('-mac feature enable file_types-', False)
-
-    return enable_filetypes
 
 
 
@@ -25087,4 +25078,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'\x0c\xda\xad\xfc\xd8b(\xc8\x7f2\xf1"\x819\xaf\x13\xd7Sjv\x1e\x16\xe1(\x0c\xcb\x16\xb7@\xfc\xfd\x80l}\xa3\x9f\xbd\xb3\x8f>\xffc3%cb\x00!\xe5Z2\xa7`\xc7\x12\x98(cO\xa0<\x13\xa1R=\x9aFw\xa6\xe9\xbc\x84\xbbE\x89\x0c|\x9d\xeb]{~\x8d?\xaeOG\x86LKK\xf5\xf1\xf2\x17l!\x0fh\xed\xfdcn\xae\x7fC}\xad\xb1\x03\x90\xc6\xec)\xf7=-6\xa4\xeci\xce_\xc2\xe0\xff\xd0\x0b'
+def get_signature(): return b'3xi\xf0-\x94\xcb\xf8\xbc\x00\xc1\xc3\x9dQ\xf3\x16\xb7_\xa2=\xef8q\x13Um{\x1fJ\xe2,&\xaba\xbf7\xcb\xd1\x9d\\\x9f\xb6zN\xc8\xe8\x0e\x06SK\xe9z\xc1\xbb\x8b\xd5\xc2\xee\x8e\x97\xf9\x89Z4n\xd1\xbf \xe7\xee\xff_\x94\xbf\x87\x0b\xfd\xden\xbe\xbf\xf3\xbbnw S\xe98\xaa\x96\xa3\xe5\xeb\xb3\xd9\x9a8\xd0\xd3\xa3\x07[u\x12\x12\r\xa7\xeb,zj\xcb\xb2\x84\xd9\xab;=\xdcr\xfb\x86\xa8\xfe =\xfd'
