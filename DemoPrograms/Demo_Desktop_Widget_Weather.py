@@ -226,7 +226,7 @@ def create_window(win_location):
 
     window = sg.Window(layout=layout, title='Weather Widget', margins=(0, 0), finalize=True, location=win_location,
                        element_justification='center', keep_on_top=True, no_titlebar=True, grab_anywhere=True, alpha_channel=ALPHA,
-                       right_click_menu=[[''], ['Edit Me', 'Versions', 'Exit',]], enable_close_attempted_event=True)
+                       right_click_menu=[[''], ['Edit Me', 'Versions', 'Settings', 'Exit',]], enable_close_attempted_event=True)
 
     for col in ['COL1', 'COL2', 'TopCOL', 'BotCOL', '-QUIT-']:
         window[col].expand(expand_y=True, expand_x=True)
@@ -278,27 +278,29 @@ def main(refresh_rate, win_location):
         exit()
 
     window = create_window(win_location)
+    try:
+        while True:  # Event Loop
+            event, values = window.read(timeout=refresh_in_milliseconds)
+            if event in (None, '-QUIT-', 'Exit', sg.WIN_CLOSE_ATTEMPTED_EVENT):
+                sg.user_settings_set_entry('-win location-', window.current_location())  # The line of code to save the position before exiting
+                break
+            if event in ('-CHANGE-', 'Settings'):
+                x, y = window.current_location()
+                settings = change_settings(settings, (x + 200, y+50))
+            elif event == '-REFRESH-':
+                sg.popup_quick_message('Refreshing...', keep_on_top=True, background_color='red', text_color='white',
+                                       auto_close_duration=3, non_blocking=False, location=(window.current_location()[0]+window.size[0]//2-30, window.current_location()[1]+window.size[1]//2-10))
+            elif event == 'Edit Me':
+                sg.execute_editor(__file__)
+            elif event == 'Versions':
+                sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location())
+            elif event != sg.TIMEOUT_KEY:
+                sg.Print('Unknown event received\nEvent & values:\n', event, values, location=win_location, keep_on_top=True)
 
-    while True:  # Event Loop
-        event, values = window.read(timeout=refresh_in_milliseconds)
-        if event in (None, '-QUIT-', 'Exit', sg.WIN_CLOSE_ATTEMPTED_EVENT):
-            sg.user_settings_set_entry('-win location-', window.current_location())  # The line of code to save the position before exiting
-            break
-        if event == '-CHANGE-':
-            x, y = window.current_location()
-            settings = change_settings(settings, (x + 200, y+50))
-        elif event == '-REFRESH-':
-            sg.popup_quick_message('Refreshing...', keep_on_top=True, background_color='red', text_color='white',
-                                   auto_close_duration=3, non_blocking=False, location=(window.current_location()[0]+window.size[0]//2-30, window.current_location()[1]+window.size[1]//2-10))
-        elif event == 'Edit Me':
-            sg.execute_editor(__file__)
-        elif event == 'Versions':
-            sg.main_get_debug_data()
-        elif event != sg.TIMEOUT_KEY:
-            sg.Print('Unknown event received\nEvent & values:\n', event, values, location=win_location)
-
-        update_weather()
-        update_metrics(window)
+            update_weather()
+            update_metrics(window)
+    except Exception as e:
+        sg.Print('Exception in Weather Widget event loop', sg.__file__, e, keep_on_top=True, wait=True, location=win_location)
     window.close()
 
 
