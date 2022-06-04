@@ -3030,81 +3030,263 @@ if __name__ == '__main__':
 
 --------------- 
 
-# Recipe - Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
+# Recipe - All Elements  (The Everything Bagel... 2022-Style)
 
-Example of nearly all of the Elements in a single window.  Uses a customized color scheme, lots of Elements, default values, Columns, Frames with colored text, tooltips, file browsing.  There are at least 13 different Elements used.  
+As of June 2022, this window represents all 33 of the PySimpleGUI elements in a single window.  It takes about 70 lines of code to show all of the elements in this one window.
 
-Before scrolling down to the code, guess how many lines of Python code were required to create this custom layout window.
+The code isn't as practical as what you'll find in the Demo Programs.  This use of the elements is shortened and doesn't show how each is used in a typical way.
+
 
       
-![latest everything bagel](https://user-images.githubusercontent.com/13696193/45920376-22d89000-be71-11e8-8ac4-640f011f84d0.jpg)      
+![image](https://user-images.githubusercontent.com/46163555/172018343-37331967-ff65-4588-a101-1a43b2348d2d.png)
+
       
       
-```python      
-#!/usr/bin/env Python3      
-import PySimpleGUI as sg      
-    
-sg.theme('GreenTan')      
-    
-# ------ Menu Definition ------ #      
-menu_def = [['File', ['Open', 'Save', 'Exit', 'Properties']],      
-            ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],      
-            ['Help', 'About...'], ]      
-    
-# ------ Column Definition ------ #      
-column1 = [[sg.Text('Column 1', background_color='#F7F3EC', justification='center', size=(10, 1))],      
-            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 1')],      
-            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 2')],      
-            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]      
-    
-layout = [      
-    [sg.Menu(menu_def, tearoff=True)],      
-    [sg.Text('All graphic widgets in one window!', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],    
-    [sg.Text('Here is some text.... and a place to enter text')],      
-    [sg.InputText('This is my text')],      
-    [sg.Frame(layout=[      
-    [sg.Checkbox('Checkbox', size=(10,1)),  sg.Checkbox('My second checkbox!', default=True)],      
-    [sg.Radio('My first Radio!     ', "RADIO1", default=True, size=(10,1)), sg.Radio('My second Radio!', "RADIO1")]], title='Options',title_color='red', relief=sg.RELIEF_SUNKEN, tooltip='Use these to set flags')],      
-    [sg.Multiline(default_text='This is the default Text should you decide not to type anything', size=(35, 3)),      
-        sg.Multiline(default_text='A second multi-line', size=(35, 3))],      
-    [sg.InputCombo(('Combobox 1', 'Combobox 2'), size=(20, 1)),      
-        sg.Slider(range=(1, 100), orientation='h', size=(34, 20), default_value=85)],      
-    [sg.InputOptionMenu(('Menu Option 1', 'Menu Option 2', 'Menu Option 3'))],      
-    [sg.Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), size=(30, 3)),      
-        sg.Frame('Labelled Group',[[      
-        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=25),      
-        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=75),      
-        sg.Slider(range=(1, 100), orientation='v', size=(5, 20), default_value=10),      
-        sg.Column(column1, background_color='#F7F3EC')]])],      
-    [sg.Text('_'  * 80)],      
-    [sg.Text('Choose A Folder', size=(35, 1))],      
-    [sg.Text('Your Folder', size=(15, 1), auto_size_text=False, justification='right'),      
-        sg.InputText('Default Folder'), sg.FolderBrowse()],      
-    [sg.Submit(tooltip='Click to submit this window'), sg.Cancel()]    
-]      
-    
-    
-window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)      
-    
-event, values = window.read()      
+```python
+import PySimpleGUI as sg
 
-window.close()    
+"""
+    Demo - Element List
 
-sg.popup('Title',      
-            'The results of the window.',      
-            'The button clicked was "{}"'.format(event),      
-            'The values are', values)      
+    All elements shown in 1 window as simply as possible.
+
+    Copyright 2022 PySimpleGUI
+"""
+
+
+use_custom_titlebar = True if sg.running_trinket() else False
+
+def make_window(theme=None):
+
+    NAME_SIZE = 23
+
+    def name(name):
+        dots = NAME_SIZE-len(name)-2
+        return sg.Text(name + ' ' + '•'*dots, size=(NAME_SIZE,1), justification='r',pad=(0,0), font='Courier 10')
+
+    sg.theme(theme)
+
+    # NOTE that we're using our own LOCAL Menu element
+    if use_custom_titlebar:
+        Menu = sg.MenubarCustom
+    else:
+        Menu = sg.Menu
+
+    treedata = sg.TreeData()
+
+    treedata.Insert("", '_A_', 'Tree Item 1', [1234], )
+    treedata.Insert("", '_B_', 'B', [])
+    treedata.Insert("_A_", '_A1_', 'Sub Item 1', ['can', 'be', 'anything'], )
+
+    layout_l = [
+                [name('Text'), sg.Text('Text')],
+                [name('Input'), sg.Input(s=15)],
+                [name('Multiline'), sg.Multiline(s=(15,2))],
+                [name('Output'), sg.Output(s=(15,2))],
+                [name('Combo'), sg.Combo(sg.theme_list(), default_value=sg.theme(), s=(15,22), enable_events=True, readonly=True, k='-COMBO-')],
+                [name('OptionMenu'), sg.OptionMenu(['OptionMenu',],s=(15,2))],
+                [name('Checkbox'), sg.Checkbox('Checkbox')],
+                [name('Radio'), sg.Radio('Radio', 1)],
+                [name('Spin'), sg.Spin(['Spin',], s=(15,2))],
+                [name('Button'), sg.Button('Button')],
+                [name('ButtonMenu'), sg.ButtonMenu('ButtonMenu', sg.MENU_RIGHT_CLICK_EDITME_EXIT)],
+                [name('Slider'), sg.Slider((0,10), orientation='h', s=(10,15))],
+                [name('Listbox'), sg.Listbox(['Listbox', 'Listbox 2'], no_scrollbar=True,  s=(15,2))],
+                [name('Image'), sg.Image(sg.EMOJI_BASE64_HAPPY_THUMBS_UP)],
+                [name('Graph'), sg.Graph((125, 50), (0,0), (125,50), k='-GRAPH-')]  ]
+
+    layout_r  = [[name('Canvas'), sg.Canvas(background_color=sg.theme_button_color()[1], size=(125,40))],
+                [name('ProgressBar'), sg.ProgressBar(100, orientation='h', s=(10,20), k='-PBAR-')],
+                [name('Table'), sg.Table([[1,2,3], [4,5,6]], ['Col 1','Col 2','Col 3'], num_rows=2)],
+                [name('Tree'), sg.Tree(treedata, ['Heading',], num_rows=3)],
+                [name('Horizontal Separator'), sg.HSep()],
+                [name('Vertical Separator'), sg.VSep()],
+                [name('Frame'), sg.Frame('Frame', [[sg.T(s=15)]])],
+                [name('Column'), sg.Column([[sg.T(s=15)]])],
+                [name('Tab, TabGroup'), sg.TabGroup([[sg.Tab('Tab1',[[sg.T(s=(15,2))]]), sg.Tab('Tab2', [[]])]])],
+                [name('Pane'), sg.Pane([sg.Col([[sg.T('Pane 1')]]), sg.Col([[sg.T('Pane 2')]])])],
+                [name('Push'), sg.Push(), sg.T('Pushed over')],
+                [name('VPush'), sg.VPush()],
+                [name('Sizer'), sg.Sizer(1,1)],
+                [name('StatusBar'), sg.StatusBar('StatusBar')],
+                [name('Sizegrip'), sg.Sizegrip()]  ]
+
+    # Note - LOCAL Menu element is used (see about for how that's defined)
+    layout = [[Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+              [sg.T('PySimpleGUI Elements - Use Combo to Change Themes', font='_ 14', justification='c', expand_x=True)],
+              [sg.Checkbox('Use Custom Titlebar & Menubar', use_custom_titlebar, enable_events=True, k='-USE CUSTOM TITLEBAR-', p=0)],
+              [sg.Col(layout_l, p=0), sg.Col(layout_r, p=0)]]
+
+    window = sg.Window('The PySimpleGUI Element List', layout, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, keep_on_top=True, use_custom_titlebar=use_custom_titlebar)
+
+    window['-PBAR-'].update(30)                                                     # Show 30% complete on ProgressBar
+    window['-GRAPH-'].draw_image(data=sg.EMOJI_BASE64_HAPPY_JOY, location=(0,50))   # Draw something in the Graph Element
+
+    return window
+
+
+window = make_window()
+
+while True:
+    event, values = window.read()
+    # sg.Print(event, values)
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Edit Me':
+        sg.execute_editor(__file__)
+    if values['-COMBO-'] != sg.theme():
+        sg.theme(values['-COMBO-'])
+        window.close()
+        window = make_window()
+    if event == '-USE CUSTOM TITLEBAR-':
+        use_custom_titlebar = values['-USE CUSTOM TITLEBAR-']
+        sg.set_options(use_custom_titlebar=use_custom_titlebar)
+        window.close()
+        window = make_window()
+    elif event == 'Version':
+        sg.popup_scrolled(sg.get_versions(), __file__, keep_on_top=True, non_blocking=True)
+window.close()
+
+
 
 ```
-      
-      
-#### 35 lines of code
 
-That's what the window definition, creation, display and get values ultimately ended up being when you remove the blank lines above.  Try displaying 13 seperate "GUI Widgets" in any of the GUI frameworks.  There's $20 waiting for the person that can code up the same window in under 35 lines of Python code using tkinter, WxPython, or Qt.  For compactness, it's difficult to beat PySimpleGUI simply because the PySimpleGUI code is running a ton of "boilerplate" code on your behalf.
+
+#### Custom Titlebar and Menubar
+
+The checkbox at the top of the left column can be checked in order to display the window with the custom titlebar and custom menubar
+
+#### Can use to preview Themes
+
+One practical use of this Demo Program is that you can preview how the elements look when using a specific theme by choosing the theme using the Combo element in the window.
+
+For example, choosing the DarkGrey13 theme, with the custom titlebar checked, the window is replaced with one using that theme.  Very nice!
+
+![image](https://user-images.githubusercontent.com/46163555/172019275-046708d8-dd13-43cb-95c3-6d8ce4972520.png)
+
+
+-------------
+
+# Recipe - Exception handling of a console-less application
+
+Some applications, such as those that run in the system tray or are "Desktop Widgets" are meant to run entirely without a console.  On Windows, they're often named with a .pyw extension.  This is challenging in a couple of ways.
+
+1. These programs run for days rather than moments
+2. They have no console to output to
+
+Debugging an intermittent problem is difficult when using plain Python for an application like these.  Normally you would need to use a debugger so that the crash is caught when it happens or use a logging module that writes to disk.
+
+With PySimpleGUI there are a number of simple ways to handle these types of errors, assuming that PySimpleGUI itself has remained functional.
+
+Numerous `popup` calls are available to output information to a popup window.  If you want to output a lot of information that you can also copy and paste from, then a `popup_scrolled` call is a good choice.  However, there's an ever better technique.
+
+## The Debug Print Window
+
+The Debug Print Window is One of the easiest ways to get the information to help you debug the problem.  To output to this window, call the function `sg.Print` in the same way you a normal `print`.  It accepts similar parameters including `sep` and `end` as well as some PySimpleGUI specific ones that enable printing in color.
+
+One advantage that the Debug Print has over popups is that you can output the information using multiple calls.  Each time you call `sg.Print`, the information will be added to output that's already in the Debug Print Window.  You will be able to copy and paste from this window to another application should there be a log or some other information that you can to save.   Maybe you want to loop through a list and print certain items as part of the information to display.  Using `sg.Print` will enable you to easily do this.
+
+## Use the `wait`/ `blocking` parameter!
+
+Be sure and set the `wait` parameter to `True` in the last call you make to `sg.Print`.  The reason for this is that if you do not, the call will output to the window and then immediately return and your program will likely continue on and exit.  Adding `wait=True` will output to the Debug Window and then wait for you to click the `Continue` button in the window before the call will return.  
+
+
+## Example Program With Exception
+
+This example will crash when you click the "Go" button. 
+
+```python
+import PySimpleGUI as sg
+
+def main():
+    layout = [  [sg.Text('My Window')],
+                [sg.Input(key='-IN-')],
+                [sg.Button('Go'), sg.Button('Exit')]  ]
+
+    window = sg.Window('Window Title', layout)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+        if event == 'Go':
+            bad_call()
+    window.close()
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+ If this program was launched by double clicking a .pyw file or some other technique that doesn't involve a debugger or command line, then what you would see is this:
+ 
+![CrashNoHandler](https://user-images.githubusercontent.com/46163555/172020151-f0843b5a-c20e-47e4-876e-69f20ec1556e.gif)
+
+Your window would disappear and you would have nothing to help you understand why.  This is why PySimpleGUI uses a popup window for errors that are encountered internally instead of raising an exception.
+
+## Example With Exception Handling Added
+
+Here is the same program, but we've added a `try` block around the entire event loop.  A total of 3 line of code were added.  
+1. The `try` statement
+2. The `except` statement
+3. The `sg.Print` call to output to the Debug Window
+
+```python
+import PySimpleGUI as sg
+
+def main():
+    layout = [  [sg.Text('My Window')],
+                [sg.Input(key='-IN-')],
+                [sg.Button('Go'), sg.Button('Exit')]  ]
+
+    window = sg.Window('Window Title', layout)
+
+    try:
+        while True:             # Event Loop
+            event, values = window.read()
+            if event == sg.WIN_CLOSED or event == 'Exit':
+                break
+            if event == 'Go':
+                bad_call()
+    except Exception as e:
+        sg.Print('Exception in my event loop for the program:', sg.__file__, e, keep_on_top=True, wait=True)
+
+    window.close()
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+This time the experience enables you to understand why and where your program crashed.  It's clearly there's a problem with the call to `bad_call`
+
+![CrashWithDebugOutput](https://user-images.githubusercontent.com/46163555/172020264-ad166651-a5f4-42e0-9b14-b7f74f691b8a.gif)
+
+## Adding Traceback and Editing Capabilities
+
+With the Debug Print, you're able to output information about the exception which certainly helps.  Because PySimpleGUI was written for you, a Python developer, there's a popup call that you can add to make your life even *easier*! 
+
+We'll change the exception handling portion this time to be these 2 lines of code:
+```python
+        sg.Print('Exception in my event loop for the program:', sg.__file__, e, keep_on_top=True)
+        sg.popup_error_with_traceback('Problem in my event loop!', e)
+```
+
+We're still print to the Debug Window, but we've removed the `wait` parameter because the `popup` call immediately after it will stop the program from exiting.  The popup we've added is `popup_error_with_traceback`.  This call will show you more detailed information about where the problem happened, and more conveniently, enable you to open your editor to the line of code that caused the problem.  You will need to add your editor's information in the PySimpleGUI globals settings for this feature to work, so be sure and fill in this information. 
+
+Now our experience changes considerably.  We get the Debug Window as before, but we also get a popup that has a "Take me to error" button that will open your editor to the line of code where you called the popup.  The exception information is included in the popup because we added it when calling the popup.
+
+This popup saves you the time of locating where on your computer the .py or .pyw file is located.  Just click the button and your editor will be launched with the correct filename and you'll be taken to the line of code.  You also get, for free, an attempt at humor with an unhappy looking emoji.
+
+![CrashPopupTraceback](https://user-images.githubusercontent.com/46163555/172020844-c0072e30-c0f3-440c-a65a-bdb19aea54c1.gif)
+
+
 
 -------------      
 
-      
+
 ## Asynchronous Window With Periodic Update    
 
 ### Sync Versus Async Mode
