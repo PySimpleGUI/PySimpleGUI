@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.28 Unreleased"
+version = __version__ = "4.60.0.29 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -70,6 +70,9 @@ _change_log = """
     4.60.0.28
         Applied same Mac file_types fix to popup_get_file
         Removed filetypes setting from Mac Feature Control Panel
+    4.60.0.29
+        Addition of enable_config_events to the Window object. This will cause a EVENT_WIMDOW_CONFIG event to be returned
+            if the window is moved or resized.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -636,7 +639,7 @@ MESSAGE_BOX_LINE_WIDTH = 60
 EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
 WIN_CLOSED = WINDOW_CLOSED = None
 WINDOW_CLOSE_ATTEMPTED_EVENT = WIN_X_EVENT = WIN_CLOSE_ATTEMPTED_EVENT = '-WINDOW CLOSE ATTEMPTED-'
-
+WINDOW_CONFIG_EVENT = '__WINDOW CONFIG__'
 TITLEBAR_MINIMIZE_KEY = '__TITLEBAR MINIMIZE__'
 TITLEBAR_MAXIMIZE_KEY = '__TITLEBAR MAXIMIZE__'
 TITLEBAR_CLOSE_KEY = '__TITLEBAR CLOSE__'
@@ -9449,7 +9452,7 @@ class Window:
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
                  right_click_menu_selected_colors=(None, None),
                  right_click_menu_font=None, right_click_menu_tearoff=False,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False, enable_window_config_events=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
                  use_custom_titlebar=None, scaling=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
@@ -9547,6 +9550,8 @@ class Window:
         :type modal:                                 (bool)
         :param enable_close_attempted_event:         If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
         :type enable_close_attempted_event:          (bool)
+        :param enable_window_config_events:          If True then window configuration events (resizing or moving the window) will return WINDOW_CONFIG_EVENT from window.read. Note you will get several when Window is created.
+        :type enable_window_config_events:           (bool)
         :param titlebar_background_color:            If custom titlebar indicated by use_custom_titlebar, then use this as background color
         :type titlebar_background_color:             (str | None)
         :param titlebar_text_color:                  If custom titlebar indicated by use_custom_titlebar, then use this as text color
@@ -9688,6 +9693,7 @@ class Window:
         self.auto_close_timer_needs_starting = False
         self.finalize_in_progress = False
         self.close_destroys_window = not enable_close_attempted_event if enable_close_attempted_event is not None else None
+        self.enable_window_config_events = enable_window_config_events
         self.override_custom_titlebar = False
         self.use_custom_titlebar = use_custom_titlebar or theme_use_custom_titlebar()
         self.titlebar_background_color = titlebar_background_color
@@ -10898,23 +10904,18 @@ class Window:
         print('Focus event = {} window = {}'.format(event, self.Title))
 
     def _config_callback(self, event):
-        print('Config  event = {} window = {}'.format(event, self.Title))
-        #
-        # try:
-        #     deltax = event.x - self.TKroot.x
-        #     deltay = event.y - self.TKroot.y
-        #     x = self.TKroot.winfo_x() + deltax
-        #     y = self.TKroot.winfo_y() + deltay
-        #     self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
-        #     # print('{},{}'.format(x,y))
-        #
-        #     if Window._move_all_windows:
-        #         for window in Window._active_windows:
-        #             x = window.TKroot.winfo_x() + deltax
-        #             y = window.TKroot.winfo_y() + deltay
-        #             window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
-        # except Exception as e:
-        #     print('on motion error {}'.format(e), 'title = {}'.format(window.Title))
+        """
+        Called when a config event happens for the window
+
+        :param event:            From tkinter and is not used
+        :type event:             Any
+        :param alternate_to_key: If key is None, then use this value instead
+        :type alternate_to_key:  Any
+        """
+        self.LastButtonClicked = WINDOW_CONFIG_EVENT
+        self.FormRemainedOpen = True
+        self.user_bind_event = event
+        _exit_mainloop(self)
 
     """
     def _config_callback(self, event):
@@ -17106,7 +17107,8 @@ def StartupTK(window):
         if window.modal or DEFAULT_MODAL_WINDOWS_FORCED:
             window.make_modal()
 
-        # window.TKroot.bind("<Configure>", window._config_callback)
+        if window.enable_window_config_events:
+            window.TKroot.bind("<Configure>", window._config_callback)
 
         # ----------------------------------- tkinter mainloop call -----------------------------------
         Window._window_running_mainloop = window
@@ -25078,4 +25080,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'3xi\xf0-\x94\xcb\xf8\xbc\x00\xc1\xc3\x9dQ\xf3\x16\xb7_\xa2=\xef8q\x13Um{\x1fJ\xe2,&\xaba\xbf7\xcb\xd1\x9d\\\x9f\xb6zN\xc8\xe8\x0e\x06SK\xe9z\xc1\xbb\x8b\xd5\xc2\xee\x8e\x97\xf9\x89Z4n\xd1\xbf \xe7\xee\xff_\x94\xbf\x87\x0b\xfd\xden\xbe\xbf\xf3\xbbnw S\xe98\xaa\x96\xa3\xe5\xeb\xb3\xd9\x9a8\xd0\xd3\xa3\x07[u\x12\x12\r\xa7\xeb,zj\xcb\xb2\x84\xd9\xab;=\xdcr\xfb\x86\xa8\xfe =\xfd'
+def get_signature(): return b"U\xb4m;i\xbf\xbdo`r\xb3\xfcQjxJ\xfa1?O\xb2\x91\xbfV\x8c\xd0\x02\xa7-hb\x15\x94\xaf\x86\x90^\xb5\x1d\x11\xfe\x86\xb3ky1\x9e\xdaE:z\xeeE\xf3|\x8e\xf0\x03\xb6\xa4\xa2\xb6pT\x89L\xd2\x0e\xf6v\x88\xf8\x93' \x86b\xd9\xea\xaau\x15\xed\xef\xd5\xcf.\x94g\x12\x87f\xc7\x87\x87\x1d\x83\x9f\x94z-&\xfc#@\xc2~<..\xd3\xe4?\x81\xafo\xc9\xe98\xe2\x1dk\xc0f\xaf\xd7\x03\xde"
