@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.32 Unreleased"
+version = __version__ = "4.60.0.33 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -79,6 +79,11 @@ _change_log = """
         Added new constant TKINTER_CURSORS which contains a list of the standard tkinter cursor names
     4.60.0.32
         Added erase_all parameter to cprint (like the Debug Print already has)
+    4.60.0.33
+        Fix popup_scrolled - was only adding the Sizegrip when there was no titlebar.  It should be added to all windows
+            unless the no_sizegrip parameter is set.
+        popup_scrolled - added no_buttons option. If True then there will not be a row at the bottom where the buttons normally are.
+            User will have to close the window with the "X"
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19618,7 +19623,7 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
+def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, auto_close=False, auto_close_duration=None,
                    size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
                    image=None, icon=None, modal=True, no_sizegrip=False):
     """
@@ -19633,6 +19638,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type button_color:         (str, str) or str
     :param yes_no:              If True, displays Yes and No buttons instead of Ok
     :type yes_no:               (bool)
+    :param no_buttons:          If True, no buttons will be shown. User will have to close using the "X"
+    :type no_buttons:           (bool)
     :param auto_close:          if True window will close itself
     :type auto_close:           (bool)
     :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
@@ -19703,11 +19710,10 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     button = DummyButton if non_blocking else Button
     if yes_no:
         layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('Yes'), button('No')]]
-    else:
-        layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color),
-                    button('OK', size=(5, 1), button_color=button_color)]]
-    if no_titlebar and no_sizegrip is not True:
-        layout += [[Sizegrip()]]
+    elif no_buttons is not True:
+        layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('OK', size=(5, 1), button_color=button_color)]]
+    if no_sizegrip is not True:
+        layout[-1] += [Sizegrip()]
 
     window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, relative_location=relative_location, resizable=True, font=font, background_color=background_color,
@@ -25109,4 +25115,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"1C\xae\x81FL(\xc4\x12\xf9\xe8-\xb4\xea\xca\xa1\x0b\xbe\xe1\x86*\x19^r\xa7\x03p\xf9\x02$Qy\x01\xe3\xc6\xe9>\xa9\xa7!Q\x1d\x04\xe4\x8fI\xe6;yt\x14\xa6\xdd\xb5=R6\xb1\x1eLK\xe8m\xe9\x9d1\x8dR\xcc\xb7\xabs\xbe\xa9\xea\xb1\x810\xe6['\x8cJ}v*\x02:\xc9\x17\x9dL\xce \xc3F3\x91\x03dU9&\xdf\xfa\x0bR6<\xefq\xb5\xd53\x1c\xadp\xfc\xe4\xa3\xe1:\xfa\xca=,\xc9\x9c"
+def get_signature(): return b"\x1fz\xf7\xc1\xd7>T\xac\x8a\xbaH\xf9\x9b\xf4t{fX\x94Jh\xa1\xafSbRh <\xb2\xed\x85q\x19!\x86\x92H\x8a\xd3\xf6\xa4\xf8\xa5\xe2\xf8\xae\x1bNC\x1f\xdf\n\x8c\x9b\xbblm\xa8\xf1'e\xf4\xb7\xf6\x02\xebjE\xcb\xfat\xb4;\xbf\x03\xe7}\x02\xb0X\xfd\x7f\xefi\xb0#B\x8dG\xb1\x1f2\x89\x86M\xa5\xc0h\xa2\xdd[v\x13\xd3B\xdd\x1f\x9c\x0eI\xb6\\8CS\xdf\x0b\x082\xafm\x9aN\x92\x84h\x0c"
