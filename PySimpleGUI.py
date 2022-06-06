@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from wx import EraseEvent
 
-version = __version__ = "4.60.0.31 Unreleased"
+version = __version__ = "4.60.0.32 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -77,6 +78,8 @@ _change_log = """
         Made upgrade from GitHub window resizable so can screencapture the entire session
     4.60.0.31
         Added new constant TKINTER_CURSORS which contains a list of the standard tkinter cursor names
+    4.60.0.32
+        Added erase_all parameter to cprint (like the Debug Print already has)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17743,7 +17746,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None,
-           justification=None, autoscroll=True):
+           justification=None, autoscroll=True, erase_all=False):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -17800,6 +17803,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :type justification:     (str)
     :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
     :type autoscroll:        (bool)
+    :param erase_all         If True the contents of the element will be cleared before printing happens
+    :type erase_all          (bool)
     """
 
     destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY if key is None else key
@@ -17831,6 +17836,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     mline = destination_window.find_element(destination_key, silent_on_error=True)  # type: Multiline
     try:
         # mline = destination_window[destination_key]     # type: Multiline
+        if erase_all is True:
+            mline.update('')
         if end is None:
             mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font,
                         autoscroll=autoscroll)
@@ -25103,4 +25110,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"\x87\x0b\x1fd\xfe\x9bd<b\xb7\n\xae\xe6\xf9\xd0\x8d3\xfd\xf2\x11\xa1\xf7A\xd2\xd00\xb2\x8f2\xda\x82+\x1e\x1dx`\x8f\xc5\x07D\xc7\xb0\x9e\xd2o\x93\xf2/8\x14\xd3j@\xa4\xafj\x84[zH\xa3\xcak^\xccv\xf6X\x97:>\xef#\xc0\xad\x00Z2\x0f\xe4\xe2\xeaO>\xbd\x9c\x92\xf9\xc5G\xc1'\xfe\xd3\x1a\x06\xc5\x18~>M\xc5P\x0e\x8f6O\xf4f\xad}\x8d\xb3\xfb6\xc5;\xa3\xbc\x99\x1eO\x08{>lj\x96"
+def get_signature(): return b'\x1e>\xc9\xc3\x06(\x83\xaf\xc6\xa3K{\xbe\x94Qm\x14\xe40\xe1\x86]\xcf\xffn\xfb\xcb\x99\n\x1f\x92\xf4U\x05\x9e\x90mn\xda\xc9\x81\xc4\'\xf3\x04\x1d\xdcv\xba\xc4\xca\x13\xf3@wo\xee[\xdf_R\xcf3q\xe3Y\x97"\x1c\xe7\x8b\xda\x9b\xc6K\xbcH!\xc5\xb2b\xd3\x02q\x10<\xa5v\xac\xec~\xae\xa5\x88\x01H\xf6\xb4\xad\xd2<\xb2\xe3\xdel\x11\xb5B\xf6\x1f\xa4\x9e\x9a\xda\x8d\xd92[\xb8*\x84V\xc7\xf6\xbb,FP'
