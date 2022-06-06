@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.29 Unreleased"
+version = __version__ = "4.60.0.30 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -73,6 +73,8 @@ _change_log = """
     4.60.0.29
         Addition of enable_window_config_events to the Window object. This will cause a EVENT_WIMDOW_CONFIG event to be returned
             if the window is moved or resized.
+    4.60.0.30
+        Made upgrade from GitHub window resizable so can screencapture the entire session
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -24023,10 +24025,10 @@ def _copy_files_from_github():
         python_command = python_command.replace('pythonw', 'python')
 
     layout = [[Text('Pip Upgrade Progress')],
-              [Multiline(s=(90,15), k='-MLINE-', reroute_cprint=True, write_only=True)],
-              [Button('Downloading...', k='-EXIT-')]]
+              [Multiline(s=(90,15), k='-MLINE-', reroute_cprint=True, write_only=True, expand_x=True, expand_y=True)],
+              [Button('Downloading...', k='-EXIT-'), Sizegrip()]]
 
-    window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
+    window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True, resizable=True)
 
     window.disable_debugger()
 
@@ -25080,4 +25082,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'*\xdf\xec\xf9M^b\xfal\xfa^\xdd\xb1k\x97\x8bp`\xe8\xf1\xf1\x90b\xcb,\x89)\x88\x86\\\xe3X\x9b\xd5\xef\x17R\x86\x9b\xa62l8\x12a\xd6\x1e\xfcc=\xa2?\xe5Aw\x02XbN\x9f`\xaa\xbe\xff\xeb\x0f\x7f\xe5\x02\x86\xd5\xdc\x89\xafV*D6\xbf\x1b\x13Xb\x1a@\xden\xbd\xae\xd9\x1d\x08\x9a\xb2$hyZ9Hvk\x92\xe9\x19\x0f\xb78S\xf69=\xd0T{p\x8f\n\xaf3\x89\xb4D#ae1l'
+def get_signature(): return b'g\x1d3\ngF#i\x9d\x05\xad\xda\x80\x05\x9c/\xce+\xfdrs/\x95E\xb8\x14;\xb0\xf7P\x88>\xb3\x8eD\xe8\x10Zk\xc5O\xec\xd9\x9b\xe3\x9d\xea\x8b\xc1\xd8\xd9\xed\xccFMD\xfe\xa3\x00S\x18\xba\x8bS\x1b\xe4\xe6\xeb\x10\x1fI\x10\xca\xa1\xa3\xf7\xc5\xcf\xdfM\x95\x1a\xc8T@\xbf\xec\xd0T8\xd9\xee\x17\\g\xd9\xa5%_j\xb5\x92V\xdc\x08\xd8p/^\xce\x9c6}\x9e\x87\xe7C\xf6R>\xdd\xad&\x19=\x14j1'
