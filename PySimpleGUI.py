@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.30 Unreleased"
+version = __version__ = "4.60.0.31 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -75,6 +75,8 @@ _change_log = """
             if the window is moved or resized.
     4.60.0.30
         Made upgrade from GitHub window resizable so can screencapture the entire session
+    4.60.0.31
+        Added new constant TKINTER_CURSORS which contains a list of the standard tkinter cursor names
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -869,6 +871,23 @@ class TTKPartOverrides():
         self.sbar_relief = sbar_relief
 
 ttk_part_overrides_from_options = TTKPartOverrides()
+
+
+# -------------------------  tkinter BASIC cursors... there are some OS dependent ones too  ------------------------- #
+TKINTER_CURSORS = ['X_cursor', 'arrow', 'based_arrow_down', 'based_arrow_up', 'boat',
+                   'bogosity', 'bottom_left_corner', 'bottom_right_corner', 'bottom_side',
+                   'bottom_tee', 'box_spiral', 'center_ptr', 'circle', 'clock',
+                   'coffee_mug', 'cross', 'cross_reverse', 'crosshair', 'diamond_cross',
+                   'dot', 'dotbox', 'double_arrow', 'draft_large', 'draft_small', 'draped_box',
+                   'exchange', 'fleur', 'gobbler', 'gumby', 'hand1', 'hand2', 'heart',
+                   'icon', 'iron_cross', 'left_ptr', 'left_side', 'left_tee', 'leftbutton',
+                   'll_angle', 'lr_angle', 'man', 'middlebutton', 'mouse', 'pencil', 'pirate',
+                   'plus', 'question_arrow', 'right_ptr', 'right_side', 'right_tee',
+                   'rightbutton', 'rtl_logo', 'sailboat', 'sb_down_arrow', 'sb_h_double_arrow',
+                   'sb_left_arrow', 'sb_right_arrow', 'sb_up_arrow', 'sb_v_double_arrow',
+                   'shuttle', 'sizing', 'spider', 'spraycan', 'star', 'target', 'tcross',
+                   'top_left_arrow', 'top_left_corner', 'top_right_corner', 'top_side', 'top_tee',
+                   'trek', 'ul_angle', 'umbrella', 'ur_angle', 'watch', 'xterm']
 
 # -------------------------  tkinter key codes for bindings  ------------------------- #
 
@@ -25082,4 +25101,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'g\x1d3\ngF#i\x9d\x05\xad\xda\x80\x05\x9c/\xce+\xfdrs/\x95E\xb8\x14;\xb0\xf7P\x88>\xb3\x8eD\xe8\x10Zk\xc5O\xec\xd9\x9b\xe3\x9d\xea\x8b\xc1\xd8\xd9\xed\xccFMD\xfe\xa3\x00S\x18\xba\x8bS\x1b\xe4\xe6\xeb\x10\x1fI\x10\xca\xa1\xa3\xf7\xc5\xcf\xdfM\x95\x1a\xc8T@\xbf\xec\xd0T8\xd9\xee\x17\\g\xd9\xa5%_j\xb5\x92V\xdc\x08\xd8p/^\xce\x9c6}\x9e\x87\xe7C\xf6R>\xdd\xad&\x19=\x14j1'
+def get_signature(): return b'\x80\xa7E\xfe\xb0l\xb4/\xea\x8c\xab\xcf\x18\x87\xe8B&(9C\xd7\xa2\x8d\xe4\x80\xde\xbd\x01\xbc\x08\x81\x14\xd7\x00\xf0\x9a\xe5\x02b:m8\xec\xdf\xce\x16\xad\x00+8\xcc\xa3\xe1\x11\xef\xf7\xa9\xfe\x06\xd0`\x8b\xf5\xfc\xe6\xbb\xcc~A\xb6^f\xb6P>\x97g\xf2\xa8\x8b\xf7,2\xd7!\xf5\xf7X%yx\xc5W\xe9\x96\x0elh\x9c\xab\x9c\xc7u\x94\xe8?\r\xdc )\xc01=\x1aS\xfe\n\xe9w\x9e\x1f\xfe\xb9_V\x86\x94 '
