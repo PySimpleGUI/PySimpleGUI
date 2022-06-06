@@ -889,6 +889,8 @@ TKINTER_CURSORS = ['X_cursor', 'arrow', 'based_arrow_down', 'based_arrow_up', 'b
                    'top_left_arrow', 'top_left_corner', 'top_right_corner', 'top_side', 'top_tee',
                    'trek', 'ul_angle', 'umbrella', 'ur_angle', 'watch', 'xterm']
 
+
+TKINTER_CURSORS = ['X_cursor', 'arrow', 'based_arrow_down', 'based_arrow_up', 'boat', 'bogosity', 'bottom_left_corner', 'bottom_right_corner', 'bottom_side', 'bottom_tee', 'box_spiral', 'center_ptr', 'circle', 'clock', 'coffee_mug', 'cross', 'cross_reverse', 'crosshair', 'diamond_cross', 'dot', 'dotbox', 'double_arrow', 'draft_large', 'draft_small', 'draped_box', 'exchange', 'fleur', 'gobbler', 'gumby', 'hand1', 'hand2', 'heart', 'ibeam', 'icon', 'iron_cross', 'left_ptr', 'left_side', 'left_tee', 'leftbutton', 'll_angle', 'lr_angle', 'man', 'middlebutton', 'mouse', 'no', 'none', 'pencil', 'pirate', 'plus', 'question_arrow', 'right_ptr', 'right_side', 'right_tee', 'rightbutton', 'rtl_logo', 'sailboat', 'sb_down_arrow', 'sb_h_double_arrow', 'sb_left_arrow', 'sb_right_arrow', 'sb_up_arrow', 'sb_v_double_arrow', 'shuttle', 'size', 'size_ne_sw', 'size_ns', 'size_nw_se', 'size_we', 'sizing', 'spider', 'spraycan', 'star', 'starting', 'target', 'tcross', 'top_left_arrow', 'top_left_corner', 'top_right_corner', 'top_side', 'top_tee', 'trek', 'ul_angle', 'umbrella', 'uparrow', 'ur_angle', 'wait', 'watch', 'xterm']
 # -------------------------  tkinter key codes for bindings  ------------------------- #
 
 # The keycode that when pressed will take a snapshot of the current window
@@ -25101,4 +25103,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'\x80\xa7E\xfe\xb0l\xb4/\xea\x8c\xab\xcf\x18\x87\xe8B&(9C\xd7\xa2\x8d\xe4\x80\xde\xbd\x01\xbc\x08\x81\x14\xd7\x00\xf0\x9a\xe5\x02b:m8\xec\xdf\xce\x16\xad\x00+8\xcc\xa3\xe1\x11\xef\xf7\xa9\xfe\x06\xd0`\x8b\xf5\xfc\xe6\xbb\xcc~A\xb6^f\xb6P>\x97g\xf2\xa8\x8b\xf7,2\xd7!\xf5\xf7X%yx\xc5W\xe9\x96\x0elh\x9c\xab\x9c\xc7u\x94\xe8?\r\xdc )\xc01=\x1aS\xfe\n\xe9w\x9e\x1f\xfe\xb9_V\x86\x94 '
+def get_signature(): return b"\x87\x0b\x1fd\xfe\x9bd<b\xb7\n\xae\xe6\xf9\xd0\x8d3\xfd\xf2\x11\xa1\xf7A\xd2\xd00\xb2\x8f2\xda\x82+\x1e\x1dx`\x8f\xc5\x07D\xc7\xb0\x9e\xd2o\x93\xf2/8\x14\xd3j@\xa4\xafj\x84[zH\xa3\xcak^\xccv\xf6X\x97:>\xef#\xc0\xad\x00Z2\x0f\xe4\xe2\xeaO>\xbd\x9c\x92\xf9\xc5G\xc1'\xfe\xd3\x1a\x06\xc5\x18~>M\xc5P\x0e\x8f6O\xf4f\xad}\x8d\xb3\xfb6\xc5;\xa3\xbc\x99\x1eO\x08{>lj\x96"
