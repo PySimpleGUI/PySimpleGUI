@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.33 Unreleased"
+version = __version__ = "4.60.0.34 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -84,6 +84,10 @@ _change_log = """
             unless the no_sizegrip parameter is set.
         popup_scrolled - added no_buttons option. If True then there will not be a row at the bottom where the buttons normally are.
             User will have to close the window with the "X"
+    4.60.0.34
+        popup_scrolled - added button_justification parameter. Wanted to make scrolled popups consistent with other popups which have left justified
+            buttons.  But since they've been right justified in the past, want to give users the ability to retain that look. 
+            Since the Sizegrip works correctly now, it increases the changes of accidently clicking a button if it's right justified.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19623,58 +19627,61 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, auto_close=False, auto_close_duration=None,
+def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, button_justification='l', auto_close=False, auto_close_duration=None,
                    size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
                    image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
 
-    :param *args:               Variable number of items to display
-    :type *args:                (Any)
-    :param title:               Title to display in the window.
-    :type title:                (str)
-    :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
-    :param yes_no:              If True, displays Yes and No buttons instead of Ok
-    :type yes_no:               (bool)
-    :param no_buttons:          If True, no buttons will be shown. User will have to close using the "X"
-    :type no_buttons:           (bool)
-    :param auto_close:          if True window will close itself
-    :type auto_close:           (bool)
-    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
-    :type auto_close_duration:  int | float
-    :param size:                (w,h) w=characters-wide, h=rows-high
-    :type size:                 (int, int)
-    :param location:            Location on the screen to place the upper left corner of the window
-    :type location:             (int, int)
-    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
-    :param non_blocking:        if True the call will immediately return rather than waiting on user input
-    :type non_blocking:         (bool)
-    :param background_color:    color of background
-    :type background_color:     (str)
-    :param text_color:          color of the text
-    :type text_color:           (str)
-    :param no_titlebar:         If True no titlebar will be shown
-    :type no_titlebar:          (bool)
-    :param grab_anywhere:       If True, than can grab anywhere to move the window (Default = False)
-    :type grab_anywhere:        (bool)
-    :param keep_on_top:         If True the window will remain above all current windows
-    :type keep_on_top:          (bool)
-    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 (str or (str, int[, str]) or None)
-    :param image:               Image to include at the top of the popup window
-    :type image:                (str) or (bytes)
-    :param icon:                filename or base64 string to be used for the window's icon
-    :type icon:                 bytes | str
-    :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
-    :type modal:                bool
-    :param no_sizegrip:         If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar
-    :type no_sizegrip:          (bool)
-    :return:                    Returns text of the button that was pressed.  None will be returned if user closed window with X
-    :rtype:                     str | None | TIMEOUT_KEY
+    :param *args:                 Variable number of items to display
+    :type *args:                  (Any)
+    :param title:                 Title to display in the window.
+    :type title:                  (str)
+    :param button_color:          button color (foreground, background)
+    :type button_color:           (str, str) or str
+    :param yes_no:                If True, displays Yes and No buttons instead of Ok
+    :type yes_no:                 (bool)
+    :param no_buttons:            If True, no buttons will be shown. User will have to close using the "X"
+    :type no_buttons:             (bool)
+    :param button_justification:  How buttons should be arranged.  l, c, r for Left, Center or Right justified
+    :type button_justification:   (str)
+    :param auto_close:            if True window will close itself
+    :type auto_close:             (bool)
+    :param auto_close_duration:   Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration:    int | float
+    :param size:                  (w,h) w=characters-wide, h=rows-high
+    :type size:                   (int, int)
+    :param location:              Location on the screen to place the upper left corner of the window
+    :type location:               (int, int)
+    :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:      (int, int)
+    :param non_blocking:          if True the call will immediately return rather than waiting on user input
+    :type non_blocking:           (bool)
+    :param background_color:      color of background
+    :type background_color:       (str)
+    :param text_color:            color of the text
+    :type text_color:             (str)
+    :param no_titlebar:           If True no titlebar will be shown
+    :type no_titlebar:            (bool)
+    :param grab_anywhere:         If True, than can grab anywhere to move the window (Default = False)
+    :type grab_anywhere:          (bool)
+    :param keep_on_top:           If True the window will remain above all current windows
+    :type keep_on_top:            (bool)
+    :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+    :type font:                   (str or (str, int[, str]) or None)
+    :param image:                 Image to include at the top of the popup window
+    :type image:                  (str) or (bytes)
+    :param icon:                  filename or base64 string to be used for the window's icon
+    :type icon:                   bytes | str
+    :param modal:                 If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
+    :type modal:                  bool
+    :param no_sizegrip:           If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar
+    :type no_sizegrip:            (bool)
+    :return:                      Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype:                       str | None | TIMEOUT_KEY
     """
+
     if not args: return
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
@@ -19705,13 +19712,24 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         height_computed = height
     layout += [[Multiline(complete_output, size=(max_line_width, height_computed), background_color=background_color, text_color=text_color, expand_x=True,
                           expand_y=True, k='-MLINE-')]]
-    pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
     button = DummyButton if non_blocking else Button
+
     if yes_no:
-        layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('Yes'), button('No')]]
+        buttons = [button('Yes'), button('No')]
     elif no_buttons is not True:
-        layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('OK', size=(5, 1), button_color=button_color)]]
+        buttons =  [button('OK', size=(5, 1), button_color=button_color)]
+    else:
+        buttons = None
+
+    if buttons is not None:
+        if button_justification.startswith('l'):
+            layout += [buttons]
+        elif button_justification.startswith('c'):
+            layout += [[Push()] + buttons + [Push()]]
+        else:
+            layout += [[Push()] + buttons]
+
     if no_sizegrip is not True:
         layout[-1] += [Sizegrip()]
 
@@ -25115,4 +25133,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"\x1fz\xf7\xc1\xd7>T\xac\x8a\xbaH\xf9\x9b\xf4t{fX\x94Jh\xa1\xafSbRh <\xb2\xed\x85q\x19!\x86\x92H\x8a\xd3\xf6\xa4\xf8\xa5\xe2\xf8\xae\x1bNC\x1f\xdf\n\x8c\x9b\xbblm\xa8\xf1'e\xf4\xb7\xf6\x02\xebjE\xcb\xfat\xb4;\xbf\x03\xe7}\x02\xb0X\xfd\x7f\xefi\xb0#B\x8dG\xb1\x1f2\x89\x86M\xa5\xc0h\xa2\xdd[v\x13\xd3B\xdd\x1f\x9c\x0eI\xb6\\8CS\xdf\x0b\x082\xafm\x9aN\x92\x84h\x0c"
+def get_signature(): return b"0\x7f\xda\xe4j]F\xe0\xd7-\x04\xb4\xb4K\xa4\xae'\x05\xd85\xe7\xd8B\xb4\xbdL&s\xd8\xfd\xcf\xfb%\xd2\xb2#\x7f\xb5\x1d@\xb8&\x07K\xf2\x0b^\xfe\xdc\xceY\xe0b\xa2f\xa7q*\xf0l#q\xb5\x84\xfe\x12\xb4\x19=\x82]3/Bj\x1b8\x95\x82e4\x17\x14KP\x12Z^\xbb>\x05\x8c\x16X\xbc %`?\xb1bo!\xc3\x08t\xea\xed:\x9f5;V\x9c\x91\xa7|\xa8\x00\xeb\x93X`\x99K\xd8zI"
