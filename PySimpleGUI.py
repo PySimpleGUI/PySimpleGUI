@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.34 Unreleased"
+version = __version__ = "4.60.0.35 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -88,6 +88,8 @@ _change_log = """
         popup_scrolled - added button_justification parameter. Wanted to make scrolled popups consistent with other popups which have left justified
             buttons.  But since they've been right justified in the past, want to give users the ability to retain that look. 
             Since the Sizegrip works correctly now, it increases the changes of accidently clicking a button if it's right justified.
+    4.60.0.35
+        Added default_color to ColorChooser button
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4768,6 +4770,7 @@ class Button(Element):
         self.calendar_day_abbreviations = None
         self.calendar_title = ''
         self.calendar_selection = ''
+        self.default_button = None
         self.InitialFolder = initial_folder
         self.DefaultExtension = default_extension
         self.Disabled = disabled
@@ -4925,7 +4928,7 @@ class Button(Element):
             else:           # if "cancel" button clicked, don't generate an event
                 should_submit_window = False
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
+            color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot, color=self.default_color)  # show the 'get file' dialog box
             color = color[1]  # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
@@ -13879,7 +13882,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None,
-                       key=None, k=None, visible=True, metadata=None):
+                       key=None, k=None, default_color=None, visible=True, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -13923,6 +13926,8 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                 str | int | tuple | object
+    :param default_color:    Color to be sent to tkinter to use as the default color
+    :type default_color:     str
     :param visible:          set initial visibility state of the Button
     :type visible:           (bool)
     :param metadata:         User metadata that can be set to ANYTHING
@@ -13930,12 +13935,13 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :return:                 returns a button
     :rtype:                  (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
+    button = Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
-
+    button.default_color = default_color
+    return button
 
 #####################################  -----  BUTTON Functions   ------ ##################################################
 
@@ -25133,4 +25139,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b"0\x7f\xda\xe4j]F\xe0\xd7-\x04\xb4\xb4K\xa4\xae'\x05\xd85\xe7\xd8B\xb4\xbdL&s\xd8\xfd\xcf\xfb%\xd2\xb2#\x7f\xb5\x1d@\xb8&\x07K\xf2\x0b^\xfe\xdc\xceY\xe0b\xa2f\xa7q*\xf0l#q\xb5\x84\xfe\x12\xb4\x19=\x82]3/Bj\x1b8\x95\x82e4\x17\x14KP\x12Z^\xbb>\x05\x8c\x16X\xbc %`?\xb1bo!\xc3\x08t\xea\xed:\x9f5;V\x9c\x91\xa7|\xa8\x00\xeb\x93X`\x99K\xd8zI"
+def get_signature(): return b'a\xc8k\xe7\xe3\rI\xc7 O)"\x99P_1\x9dH\xb1\x86\x19sZe!\xdftZOY[1\x1f\t\xe2\x91\x87\x11\x0c\x11p\xd7\xfd>\xc4\x88R,\xfavf\xf6\x91\xb4J\xfe\x91\x18E\xa70S\x15\xfd\x90\x87\xa28\xda\x1ay\x8e\xa3$.\xbdY]\x99Os\xb2\xd6\x02\x81\xb2\xf3\x90`_uT\xe2\x85\x88\xed\xe1:y\x8d`\xe3\xe7\x92 n\xab\x11\x83F\xe7\xd5\xb3\xb7\xe4SJ\xff\xfc\x1f\xe0\xe5o\x99\t\xc6\xc9\x87'
