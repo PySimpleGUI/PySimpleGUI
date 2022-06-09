@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.36 Unreleased"
+version = __version__ = "4.60.0.37 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -92,6 +92,8 @@ _change_log = """
         Added default_color to ColorChooser button
     4.60.0.36
         Added to Button element error message that images must be in PNG or GIF format
+    4.60.0.37
+        Added exapnd_x and expand_y to all of the "lazy buttons" and Chooser buttons
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12664,7 +12666,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None), s=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
-                 font=None, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+                 font=None, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
@@ -12702,6 +12704,10 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 The Button created
     :rtype:                  (Button)
     """
@@ -12709,14 +12715,14 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None,
                tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
-               pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+               pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Browse')
@@ -12757,20 +12763,24 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
-                  button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, p=None, key=None, k=None, visible=True, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
+                font=None, pad=None, p=None, key=None, k=None, visible=True, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None, expand_x=False, expand_y=False):
     """
     Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
@@ -12814,13 +12824,17 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :type files_delimiter:   str
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                     initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                     tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
-                    disabled=disabled, button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                    disabled=disabled, button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
     button._files_delimiter = files_delimiter
     return button
 
@@ -12829,7 +12843,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None,
                default_extension='', disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
-               pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+               pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -12872,20 +12886,23 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :type visible:            (bool)
     :param metadata:          Anything you want to store along with this button
     :type metadata:           (Any)
-    :return:                  returns a button
+    :param expand_x:          If True Element will expand in the Horizontal directions
+    :type expand_x:           (bool)
+    :param expand_y:          If True Element will expand in the Vertical directions
+    :type expand_y:           (bool)        :return:                  returns a button
     :rtype:                   (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES_ALL_FILES, initial_folder=None, default_extension='',
            disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
-           pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+           pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -12927,18 +12944,22 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :type visible:            (bool)
     :param metadata:          Anything you want to store along with this button
     :type metadata:           (Any)
+    :param expand_x:          If True Element will expand in the Horizontal directions
+    :type expand_x:           (bool)
+    :param expand_y:          If True Element will expand in the Vertical directions
+    :type expand_y:           (bool)
     :return:                  returns a button
     :rtype:                   (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
-         disabled=False, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Save')
@@ -12973,17 +12994,21 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Submit')
@@ -13018,18 +13043,22 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Open')
@@ -13064,17 +13093,21 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'OK')
@@ -13109,17 +13142,21 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Ok')
@@ -13154,17 +13191,21 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Cancel')
@@ -13199,17 +13240,21 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Quit')
@@ -13244,17 +13289,21 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Exit')
@@ -13289,17 +13338,21 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+        font=None, bind_return_key=True, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Yes')
@@ -13334,17 +13387,21 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-       font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+       font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'No')
@@ -13379,17 +13436,21 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-         tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+         tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button (Default value = 'Help')
@@ -13424,17 +13485,21 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-          tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+          tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
     This Button has been changed in how it works!!
     Your button has been replaced with a normal button that has the PySimpleGUI Debugger buggon logo on it.
@@ -13472,6 +13537,10 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
@@ -13482,13 +13551,13 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     return Button(button_text='', button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=user_key, k=k, visible=visible, image_data=PSG_DEBUGGER_LOGO,
-                  image_subsample=2, border_width=0, metadata=metadata)
+                  image_subsample=2, border_width=0, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
-                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None, expand_x=False, expand_y=False):
     """
     DEPIRCATED
 
@@ -13532,6 +13601,10 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type k:                 str | int | tuple | object
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
@@ -13539,13 +13612,13 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-                bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+                bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None, expand_x=False, expand_y=False):
     """
     DEPRICATED
 
@@ -13590,6 +13663,10 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type k:                 str | int | tuple | object
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
@@ -13597,7 +13674,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 CButton = CloseButton
@@ -13606,7 +13683,7 @@ CButton = CloseButton
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-               bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
+               bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None, expand_x=False, expand_y=False):
     """
     :param button_text:      text in the button
     :type button_text:       (str)
@@ -13648,6 +13725,10 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type border_width:      (int)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 Button created
     :rtype:                  (Button)
     """
@@ -13656,7 +13737,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 ReadFormButton = ReadButton
@@ -13666,7 +13747,7 @@ RButton = ReadFormButton
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
-                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button
@@ -13711,6 +13792,10 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 Button created
     :rtype:                  (Button)
     """
@@ -13718,13 +13803,13 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-                disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
+                disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
     This is a special type of Button.
 
@@ -13775,6 +13860,10 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type visible:           (bool)
     :param metadata:         Anything you want to store along with this button
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
@@ -13782,7 +13871,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
-                  pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
@@ -13792,7 +13881,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None, enable_events=None,
                    key=None, k=None, visible=True, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None,
                    title='Choose Date',
-                   no_titlebar=True, location=(None, None), metadata=None):
+                   no_titlebar=True, location=(None, None), metadata=None, expand_x=False, expand_y=False):
     """
     Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -13858,6 +13947,10 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type visible:                 (bool)
     :param metadata:               Anything you want to store along with this button
     :type metadata:                (Any)
+    :param expand_x:               If True Element will expand in the Horizontal directions
+    :type expand_x:                (bool)
+    :param expand_y:               If True Element will expand in the Vertical directions
+    :type expand_y:                (bool)
     :return:                       returns a button
     :rtype:                        (Button)
     """
@@ -13865,7 +13958,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, enable_events=enable_events,
-                    bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                    bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
     button.calendar_close_when_chosen = close_when_date_chosen
     button.calendar_default_date_M_D_Y = default_date_m_d_y
     button.calendar_locale = locale
@@ -13884,7 +13977,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None,
-                       key=None, k=None, default_color=None, visible=True, metadata=None):
+                       key=None, k=None, default_color=None, visible=True, metadata=None, expand_x=False, expand_y=False):
     """
 
     :param button_text:      text in the button
@@ -13934,6 +14027,10 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type visible:           (bool)
     :param metadata:         User metadata that can be set to ANYTHING
     :type metadata:          (Any)
+    :param expand_x:         If True Element will expand in the Horizontal directions
+    :type expand_x:          (bool)
+    :param expand_y:         If True Element will expand in the Vertical directions
+    :type expand_y:          (bool)
     :return:                 returns a button
     :rtype:                  (Button)
     """
@@ -13941,7 +14038,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, visible=visible, metadata=metadata, expand_x=expand_x, expand_y=expand_y)
     button.default_color = default_color
     return button
 
@@ -25142,4 +25239,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'L\xfcV8N4/\xd3\xb8?\xb2z*\xd2\x1b)\x01\xd7\xd8\xa2e\xecit\x0f?\x0b\xb0\xd4\xd01\xcdb\xf2\x9b\x85Q\xaa\xf5\xfc\x12\xd6\xc1q\x04h\xabP\x0c\xeac\xbb\xc8\xc5\x88~T\xcd\x9c#G\\P\x9f$\xb0m=\x07\xaa\xea:.*\x8d]c5\x90\xb1\x1b6t\x8bE8\xab=7hYz\xaa\xc6[\x9f\xaf$\xf30y\x18\x13H\xb0\xd6\xdf\x01\x1d\xf9P:J\x8e\x86\x9b\xday\xdb\x80\x96\xa7X\xd5+\xb4\xc7j'
+def get_signature(): return b'\x0c\x96\x85\x8a\x85\xcc\x88\xa7\xc1.\xcdA{\xa5\x14Zf\xe3mn_\xa8\x9cWY\x8b\x1cC\x1a\xae2\r\xd3 N\xaf\xb2\xa5\xfc\x13\n\x9cd\xc1\x19\x00\xe1zT\xf1/F\xd3\xb1\xc25\x15\xa4\n2R\xbc\x10\xe3\x12c8\xe5\x15Y\x8a[G\xd9dd\xc6\x1d\xcf\xe4~\xd4\xc1\xab\x867\x1d\xdb\x16\xdfh\xf6v1\x19\xfb\\\xcbp\xf8Bm\xd7H\xf8\xa5\xabz\xcb\xff\x8e\xa6\xdb/\x0f\xb7\xdfO\x8a\xdd6FQ\x90Qn\x92\x8d'
