@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.35 Unreleased"
+version = __version__ = "4.60.0.36 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -90,6 +90,8 @@ _change_log = """
             Since the Sizegrip works correctly now, it increases the changes of accidently clicking a button if it's right justified.
     4.60.0.35
         Added default_color to ColorChooser button
+    4.60.0.36
+        Added to Button element error message that images must be in PNG or GIF format
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -15253,6 +15255,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width, height = photo.width(), photo.height()
                     except Exception as e:
                         _error_popup_with_traceback('Button Element error {}'.format(e), 'Image filename: {}'.format(element.ImageFilename),
+                                                     'NOTE - file format must be PNG or GIF!',
                                                     'Button element key: {}'.format(element.Key),
                                                     "Parent Window's Title: {}".format(toplevel_form.Title))
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
@@ -25139,4 +25142,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'a\xc8k\xe7\xe3\rI\xc7 O)"\x99P_1\x9dH\xb1\x86\x19sZe!\xdftZOY[1\x1f\t\xe2\x91\x87\x11\x0c\x11p\xd7\xfd>\xc4\x88R,\xfavf\xf6\x91\xb4J\xfe\x91\x18E\xa70S\x15\xfd\x90\x87\xa28\xda\x1ay\x8e\xa3$.\xbdY]\x99Os\xb2\xd6\x02\x81\xb2\xf3\x90`_uT\xe2\x85\x88\xed\xe1:y\x8d`\xe3\xe7\x92 n\xab\x11\x83F\xe7\xd5\xb3\xb7\xe4SJ\xff\xfc\x1f\xe0\xe5o\x99\t\xc6\xc9\x87'
+def get_signature(): return b'L\xfcV8N4/\xd3\xb8?\xb2z*\xd2\x1b)\x01\xd7\xd8\xa2e\xecit\x0f?\x0b\xb0\xd4\xd01\xcdb\xf2\x9b\x85Q\xaa\xf5\xfc\x12\xd6\xc1q\x04h\xabP\x0c\xeac\xbb\xc8\xc5\x88~T\xcd\x9c#G\\P\x9f$\xb0m=\x07\xaa\xea:.*\x8d]c5\x90\xb1\x1b6t\x8bE8\xab=7hYz\xaa\xc6[\x9f\xaf$\xf30y\x18\x13H\xb0\xd6\xdf\x01\x1d\xf9P:J\x8e\x86\x9b\xday\xdb\x80\x96\xa7X\xd5+\xb4\xc7j'
