@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.37 Unreleased"
+version = __version__ = "4.60.0.38 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -94,6 +94,8 @@ _change_log = """
         Added to Button element error message that images must be in PNG or GIF format
     4.60.0.37
         Added exapnd_x and expand_y to all of the "lazy buttons" and Chooser buttons
+    4.60.0.38
+        Column element - added horizontal_scroll_only parameter (fingers crossed on this one....)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7751,7 +7753,7 @@ class TkScrollableFrame(tk.Frame):
     A frame with one or two scrollbars.  Used to make Columns with scrollbars
     """
 
-    def __init__(self, master, vertical_only, element, window, **kwargs):
+    def __init__(self, master, vertical_only, horizontal_only, element, window, **kwargs):
         """
         :param master:        The parent widget
         :type master:         (tk.Widget)
@@ -7767,24 +7769,28 @@ class TkScrollableFrame(tk.Frame):
         element.Widget = self.canvas
         # Okay, we're gonna make a list. Containing the y-min, x-min, y-max, and x-max of the frame
         element.element_frame = self
-        _make_ttk_scrollbar(element, 'v', window)
-        # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
-        element.vsb.pack(side='right', fill="y", expand="false")
 
-        if not vertical_only:
+
+        if horizontal_only:
             _make_ttk_scrollbar(element, 'h', window)
             # self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
             element.hsb.pack(side='bottom', fill="x", expand="false")
             self.canvas.config(xscrollcommand=element.hsb.set)
+            self.canvas.pack(side="bottom", fill="both", expand=True)
+            element.hsb.config(command=self.canvas.xview)
+
             # self.canvas = tk.Canvas(self, )
         # else:
         #     self.canvas = tk.Canvas(self)
-
-        self.canvas.config(yscrollcommand=element.vsb.set)
-        self.canvas.pack(side="left", fill="both", expand=True)
-        element.vsb.config(command=self.canvas.yview)
-        if not vertical_only:
-            element.hsb.config(command=self.canvas.xview)
+        if vertical_only:
+            _make_ttk_scrollbar(element, 'v', window)
+            # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
+            element.vsb.pack(side='right', fill="y", expand="false")
+            self.canvas.config(yscrollcommand=element.vsb.set)
+            self.canvas.pack(side="left", fill="both", expand=True)
+            element.vsb.config(command=self.canvas.yview)
+            # if not vertical_only:
+            #     element.hsb.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -7869,7 +7875,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), size_subsample_width=1, size_subsample_height=2, pad=None, p=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
+                 vertical_scroll_only=False, horizontal_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
                  vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
                  sbar_frame_color=None, sbar_relief=None):
@@ -7892,8 +7898,10 @@ class Column(Element):
         :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also
         :type scrollable:                   (bool)
-        :param vertical_scroll_only:        if Truen then no horizontal scrollbar will be shown
+        :param vertical_scroll_only:        if True then no horizontal scrollbar will be shown if a scrollable column
         :type vertical_scroll_only:         (bool)
+        :param horizontal_scroll_only:      if True then no vertical scrollbar will be shown if a scrollable column
+        :type horizontal_scroll_only:       (bool)
         :param right_click_menu:            A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:             List[List[ List[str] | str ]]
         :param key:                         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -7945,7 +7953,7 @@ class Column(Element):
         self.TKColFrame = None  # type: tk.Frame
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
-
+        self.HorizontalScrollOnly =  horizontal_scroll_only
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window._GetAContainerNumber()
@@ -15093,7 +15101,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Column
                 # ----------------------- SCROLLABLE Column ----------------------
                 if element.Scrollable:
-                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element, toplevel_form)  # do not use yet!  not working
+                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element.HorizontalScrollOnly,element, toplevel_form)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -25239,4 +25247,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'\x0c\x96\x85\x8a\x85\xcc\x88\xa7\xc1.\xcdA{\xa5\x14Zf\xe3mn_\xa8\x9cWY\x8b\x1cC\x1a\xae2\r\xd3 N\xaf\xb2\xa5\xfc\x13\n\x9cd\xc1\x19\x00\xe1zT\xf1/F\xd3\xb1\xc25\x15\xa4\n2R\xbc\x10\xe3\x12c8\xe5\x15Y\x8a[G\xd9dd\xc6\x1d\xcf\xe4~\xd4\xc1\xab\x867\x1d\xdb\x16\xdfh\xf6v1\x19\xfb\\\xcbp\xf8Bm\xd7H\xf8\xa5\xabz\xcb\xff\x8e\xa6\xdb/\x0f\xb7\xdfO\x8a\xdd6FQ\x90Qn\x92\x8d'
+def get_signature(): return b'^0A\xe2\x89JK\x91\xed\x9b\xcc&W_\xde\xc5\x82W\xc8\x06\xa1\x0eS\xdbp\x9d\xe4\xbb6\x1f\xdaC\x97\xe7\xe0(|\x89\r\x11@\xaa\x15<\x05\xb0\xd7\x9e \xef\xa1U\x1b\x83\xac\xb4 X\xcb)G\x18\xc0m\xec\xa2F\x98\xe5dc\x14@\xae\xb2\x8b%yJt\xe1\x1e\xa7\x9a\xe0\xd1\x90,\xf9\x89\xe2\x13\xa6\xae\xce\x07Q\x9b\xa2\x80S\x12\xd4\x1c\x8a\x8e\x90\x8c\x18d\xe7n;\xb5\x88\x96XSk\x88j\xefgs`\x08\x06\xa6'
