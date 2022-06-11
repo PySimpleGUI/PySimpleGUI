@@ -2,7 +2,7 @@
 
 ## One Stop Shopping For Templates and Techniques 
 
-This folder of over 170 programs is your jump-start, spring board, boost, shove in the back, cheat sheet to get you to a solution as quickly as possible.  You can think of them as Recipes from a large PySimpleGUI Cookbook.
+This folder of over 320 programs is your jump-start to getting you to a solution as quickly as possible.  You can think of them as Recipes from a large PySimpleGUI Cookbook.
 
 Programs in this folder have a range of uses and reasons for existing
 
@@ -10,13 +10,37 @@ Programs in this folder have a range of uses and reasons for existing
 * Design patterns are "official" ways to get something done (Multiple windows)
 * Integrate PySimpleGUI with another package / technology (OpenCV, Matplotlib)
 * Assemble PySimpleGUI elements in a useful way (Bar graphs, games)
-* Additional user code that enable new functionality (ANSI color strings)
 * How to deal with common GUI problems (work requiring lots of time)
 
 
 ## Demo Program Browser
 
-The best way to work with these demos is to use the Demo Program Browser.  You'll find installation instructions in the Cookbook.  This browser will enable you to search by filename and also enable you to search inside the demos, a particularly powerful capability.
+The best way to work with these demos is to use the Demo Program Browser.   This browser will enable you to search by filename and also enable you to search inside the demos, a particularly powerful capability.
+
+It will enable you to run the programs or launch your editor / IDE to edit them.
+
+### Installing from GitHub
+
+You'll find installation instructions in the Cookbook.  It is the first Recipe in the Cookbook.  The instructions are detailed with many screenshots.
+
+### Installation Using Pip
+
+There are a few ways to get these programs on your system.  One of the simplest is to use `pip`:
+
+`pip install psgdemos`
+
+Or if on Linux / Mac (that uses `pip3`
+
+
+`pip3 install psgdemos`
+
+This will install `psgdemos` from PyPI which includes the Demo Browser and all of these Demo Program source files.
+
+To invoke the demo browser after installing using pip, type:
+`psgdemos` 
+
+from the command line and you'll be shown the Demo Browser
+
 
 ## Coding Conventions
 
@@ -57,7 +81,7 @@ There are Demo Programs folders under each of the ports folders in the GitHub.
 
 ## Running Demos Online
 
-Recently two online Python services have been used to demonstrate using PySimpleGUI- Trinket & repl.it.  You will find not only some of the Demo Programs from this folder on these sites, but other demo programs as well.  They make good "scratch pads" for posting PySimpleGUI code.  They are superior to GithubGists because not only can you share your code, but people can run the code without having to install or do anything locally.
+Some of the Demo Programs are included in the online eCookbook (http://eCookbook.PySimpleGUI.org).  The eCookbook has a mix of a few of these Demos along with some unique examples not in the Demo Program.
 
 
 ### Trinket
@@ -69,25 +93,10 @@ The benefits of using Trinket include
 * No need to install PySimpleGUI or even Python on your local machine
 * Additional explanation can be included with the code, including images
 
-You'll find the demos that have been added to Trinket here:
+This link will get you to the eCookbook:
 
-http://Trinket.PySimpleGUI.org
+http://eCookbook.PySimpleGUI.org
 
-
-
-### Repl.it
-
-Prior to discovering Trinket PySimpleGUI demo programs were being hosted online on repl.it.  Repl.it has several advantages over Trinket including:
-
-* Able to run both PySimpleGUI and PySimpleGUIWeb programs
-* Can use other packages with PySimpleGUI
-* Can pip install specific PySimpleGUI versions to use
-
-You'll find a list of repl.it demos here:
-
-https://repl.it/@PySimpleGUI
-
-These programs may not be the most up to date and in fact are likely to contain old coding constructs and examples.  As a result, use them more of a demonstration of "what's possible" rather than "exactly how to do it".
 
 ## Other Sample Code in this GitHub Account
 
@@ -106,14 +115,16 @@ If you encounter more subtle problems, you should take into account that these p
 
 # Author 
 
-The PySimpleGUI Organization and PySimpleGUI users
+The PySimpleGUI Organization and a few rare examples were provided by PySimpleGUI users.
 
 If the code has been provide by a PySimpleGUI user, then the comments at the top of the program will indicate the author.
 
+Because the PySimpleGUI project does not accept pull requests, it's unusual for Demo Progams to originate outside the project.  The eCookbook is a better place to find user created examples.  
 
+Of cource, GitHub is where you'll find many 1,000's of user created PySimpleGUI programs, so go take a look!  Issue #10 here on the PySimpleGUI GitHub has screenshots submitted by users and is another location you can go for examples and inspiration.
    
 # License        
 
-Copyright 2019 PySimpleGUI.org
+Copyright 2019, 2020, 2021, 2022 PySimpleGUI
 
-GNU Lesser General Public License (LGPL 3) +        
+GNU Lesser General Public License (LGPL 3) +  
