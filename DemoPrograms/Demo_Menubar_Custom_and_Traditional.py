@@ -51,10 +51,8 @@ def Menubar(menu_def, text_color, background_color, pad=(0, 0)):
 
 def main():
     sg.theme('dark green 7')
-    sg.theme('dark amber')
-    # sg.theme('dark purple 3')
 
-    menu_def = [['&File', ['&Open     Ctrl-O', '&Save       Ctrl-S', '&Properties', 'E&xit']],
+    menu_def = [['&File', ['&Open   &  Ctrl-O', '&Save   &    Ctrl-S', '&Properties', 'E&xit']],
                 ['&Edit', [['Special', 'Normal',['Normal1', 'Normal2'] ], 'Undo'], ],
                 ['!Disabled', [['Special', 'Normal',['Normal1', 'Normal2'] ], 'Undo'], ],
                 ['&Toolbar', ['---', 'Command &1::Command_Key', 'Command &2', '---', 'Command &3', 'Command &4']],
@@ -78,13 +76,13 @@ def main():
 
     layout3 = [[sg.Multiline(size=(70, 20), reroute_stdout=True, reroute_cprint=True, write_only=True)],]
 
-    window = sg.Window("Custom Titlebar and Menu", layout, use_custom_titlebar=True, finalize=True)
+    window = sg.Window("Custom Titlebar and Menu", layout, use_custom_titlebar=True, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
     win_loc = window.current_location()
 
-    window2 = sg.Window("Traditional Titlebar and Menu", layout2, finalize=True, location=(win_loc[0]-window.size[0]-40, win_loc[1]))
+    window2 = sg.Window("Traditional Titlebar and Menu", layout2, finalize=True, location=(win_loc[0]-window.size[0]-40, win_loc[1]), right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
-    window3 = sg.Window("Output Window", layout3, finalize=True, location=(win_loc[0]-window.size[0]//1.5, win_loc[1]+window.size[1]+30), use_custom_titlebar=True)
+    window3 = sg.Window("Output Window", layout3, finalize=True, location=(int(win_loc[0]-window.size[0]//1.5), int(win_loc[1]+window.size[1]+30)), use_custom_titlebar=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
 
     # ------ Event Loop ------ #
@@ -97,7 +95,11 @@ def main():
 
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, non_blocking=True)
+            
         sg.cprint(f'event = {event}', c='white on red')
         sg.cprint(f'values = {values}', c='white on green')
 
