@@ -2,6 +2,17 @@
 
 ---
 
+# Debug Output
+
+Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
+
+For a fun time, add these lines to the top of your script
+
+```python
+    import PySimpleGUI as sg
+    print = sg.Print
+```
+This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
 
 
 # "Demo Programs" Applications
@@ -104,119 +115,6 @@ Another also mentioned it may be helpful to add the "windowed" option so that a 
 This info was located on Reddit with the source traced back to:
 https://github.com/pyinstaller/pyinstaller/issues/1350
 
-# Debug Output
-
-Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
-
-For a fun time, add these lines to the top of your script
-
-```python
-    import PySimpleGUI as sg
-    print = sg.Print
-```
-This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
-
-# Look and Feel
-
-You can change defaults and colors of a large number of things in PySimpleGUI quite easily.
-
-##  `ChangleLookAndFeel`
-
-Want a quick way of making your windows look a LOT better?  Try calling `ChangeLookAndFeel`.  It will, in a single call, set various color values to widgets, background, text, etc.
-
-Or dial in the look and feel (and a whole lot more) that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
-
-
-```python
-    sg.ChangeLookAndFeel('GreenTan')
-```
-
-Valid look and feel values are currently:
-
-```python
-SystemDefault
-Reddit
-Topanga
-GreenTan
-Dark
-LightGreen
-Dark2
-Black
-Tan
-TanBlue
-DarkTanBlue
-DarkAmber
-DarkBlue
-Reds
-Green
-BluePurple
-Purple
-BlueMono
-GreenMono
-BrownBlue
-BrightColors
-NeutralBlue
-Kayak
-SandyBeach
-TealMono
-```
-
-
-The way this call actually works is that it calls `SetOptions` with a LOT of color settings.  Here is the actual call that's made.  As you can see lots of stuff is defined for you.
-
-
-
-```python
-SetOptions(background_color=colors['BACKGROUND'],
-            text_element_background_color=colors['BACKGROUND'],
-            element_background_color=colors['BACKGROUND'],
-            text_color=colors['TEXT'],
-            input_elements_background_color=colors['INPUT'],
-            button_color=colors['BUTTON'],
-            progress_meter_color=colors['PROGRESS'],
-            border_width=colors['BORDER'],
-            slider_border_width=colors['SLIDER_DEPTH'],
-            progress_meter_border_depth=colors['PROGRESS_DEPTH'],
-            scrollbar_color=(colors['SCROLL']),
-            element_text_color=colors['TEXT'],
-            input_text_color=colors['TEXT_INPUT'])
-```
-
-
-<!-- <+func.ListOfLookAndFeelValues+> -->
-
-
-
-<!-- <+func.ChangeLookAndFeel+> -->
-
-
-To see the latest list of color choices you can call `ListOfLookAndFeelValues()`
-
-You can also combine the `ChangeLookAndFeel` function with the `SetOptions` function to quickly modify one of the canned color schemes.  Maybe you like the colors but was more depth to your bezels.  You can dial in exactly what you want.
-
-
-
-**ObjToString**
-Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
-This statement:
-
-    print(sg.ObjToSting(x))
-
-And this was the output
-
-    <class '__main__.X'>
-        abc = abc
-        attr12 = 12
-        c = <class '__main__.C'>
-            b = <class '__main__.B'>
-                a = <class '__main__.A'>
-                    attr1 = 1
-                    attr2 = 2
-                    attr3 = three
-                attr10 = 10
-                attrx = x
-
-You'll quickly wonder how you ever coded without it.
 
 ---
 # Known Issues

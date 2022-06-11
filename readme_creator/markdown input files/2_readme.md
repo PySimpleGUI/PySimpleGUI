@@ -1340,13 +1340,14 @@ You can learn more about these async / non-blocking windows toward the end of th
 
 In Dec 2019 the function `change_look_and_feel` was replaced by `theme`.  The concept remains the same, but a new group of function calls makes it a lot easier to manage colors and other settings.
 
-By default the PySimpleGUI color theme is now `Dark Blue 3`.  Gone are the "system default" gray colors.  If you want your window to be devoid of all colors so that the system chooses the colors (gray) for you, then set the theme to 'SystemDefault1' or `Default1`.
+By default the PySimpleGUI color theme is now `Dark Blue 3`.  Gone are the "system default" gray colors.  If you want your window to be devoid of all colors so that the system chooses the colors (gray) for you, then set the theme to 'gray gray gray'.  This tells PySimpleGUI that you're a boring person.... no no no... I'm **just kidding!**.... it just means you want PySimpleGUI to not set any colors so that the default colors provided by the OS/tkinter will be used.  It's a memorable theme name.  There are several with "default" in the name and it got confusing which was the full-on-add-no-color name, so 'gray gray gray' was added to make it easy to recall.
 
-There are 130 themes available.  You can preview these themes by calling `theme_previewer()` which will create a LARGE window displaying all of the color themes available.
+There are 154 themes available.  You can preview these themes by calling `theme_previewer()` which will create a LARGE window displaying all of the color themes available.
 
-As of this writing, these are your available themes.
+You can see the current available themes by calling `sg.theme_previewer()`.  It creates a window that looked like this in June 2022:
 
-![SNAG-0620](https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg)
+![image](https://user-images.githubusercontent.com/46163555/173203488-7fef44b5-000f-48b9-b353-625c214e41d4.png)
+
 
 ## Default is `Dark Blue 3`
 
@@ -1388,19 +1389,33 @@ The basic theme function call is `theme(theme_name)`.  This sets the theme.  Cal
 
 If you want to get or modify any of the theme settings, you can do it with these functions that you will find detailed information about in the function definitions section at the bottom of the document.  Each will return the current value if no parameter is used.
 
+You'll find a detailed list of the theme calls in the SDK Call Reference in this section:
+
+https://pysimplegui.readthedocs.io/en/latest/call%20reference/#themes
+
 ```python
+theme
+theme_add_new
 theme_background_color
 theme_border_width
 theme_button_color
+theme_button_color_background
+theme_button_color_text
 theme_element_background_color
 theme_element_text_color
+theme_global
 theme_input_background_color
 theme_input_text_color
+theme_list
+theme_previewer
+theme_previewer_swatches
 theme_progress_bar_border_width
 theme_progress_bar_color
 theme_slider_border_width
 theme_slider_color
 theme_text_color
+theme_text_element_background_color
+theme_use_custom_titlebar
 ```
 
 These will help you get a list of available choices.
@@ -3870,19 +3885,19 @@ This is a blocking call so expect it to take a few seconds if you're fading the 
 
 # Global Settings
 
-There are multiple ways to customize PySimpleGUI.  The call with the most granularity (allows access to specific and precise settings).  The `ChangeLookAndFeel` call is in reality a single call to `SetOptions` where it changes 13 different settings.
-
-**Mac Users** - You can't call `ChangeLookAndFeel` but you can call `SetOptions` with any sets of values you want.  Nothing is being blocked or filtered.
-
-**These settings apply to all windows that are created in the future.**
-
- `SetOptions`.  The  options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
+There are multiple ways to customize PySimpleGUI.  You can think of customizations as being done in a hierarchical manner
 
  - Global
  - Window
  - Element
 
+The function `set_options` is used to change settings that will apply globally.  If it's a setting that applies to Windows, then that setting will apply not only to Windows that you create, but also to popup Windows. 
+
 Each lower level overrides the settings of the higher level.  Once settings have been changed, they remain changed for the duration of the program (unless changed again).
+
+After Global settings are settings made at Window level.  These settings apply to a single `Window`.  Fonts are a good example of a Windows-level setting.  All elements within that `Window` will use the specified font.
+
+The lowest level of setting is the element-level.  It will modify one particular element's setting.  Again using font as an example, if you set the `font` parameter on a `Text` element, then only that specific `Text` element will use the specified font.
 
 # Persistent windows (Window stays open after button click)
 
@@ -3917,7 +3932,7 @@ window.close()
 ```
 
 
-## Read(timeout = t, timeout_key=TIMEOUT_KEY, close=False)
+## read(timeout = t, timeout_key=TIMEOUT_KEY, close=False)
 
 Read with a timeout is a very good thing for your GUIs to use in a non-blocking read situation.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
 
@@ -4048,8 +4063,8 @@ import PySimpleGUI as sg
 import time
 
 # ----------------  Create Form  ----------------
-sg.ChangeLookAndFeel('Black')
-sg.SetOptions(element_padding=(0, 0))
+sg.theme('Black')
+sg.set_options(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
          [sg.Text(size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
@@ -4199,7 +4214,7 @@ window['spin'].update(sz)
 
 Remember this design pattern because you will use it OFTEN if you use persistent windows.
 
-It works as follows.  The expresion `window[key]` returns the Element object represented by the provided `key`.  This element is then updated by calling it's `update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
+It works as follows.  The expression `window[key]` returns the Element object represented by the provided `key`.  This element is then updated by calling it's `update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
 
     text_element = window['text']
     text_element.update(font=font)
