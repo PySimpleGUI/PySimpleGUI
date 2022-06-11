@@ -1715,6 +1715,7 @@ Column(layout,
     p = None,
     scrollable = False,
     vertical_scroll_only = False,
+    horizontal_scroll_only = False,
     right_click_menu = None,
     key = None,
     k = None,
@@ -1739,34 +1740,35 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                              List[List[Element]]                               |        layout         | Layout that will be shown in the Column container |
-|                                      str                                       |   background_color    | color of background of entire Column |
-|                           (int or None, int or None)                           |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
-|                           (int or None, int or None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                     float                                      | size_subsample_width  | Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required. |
-|                                     float                                      | size_subsample_height | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also |
-|                                      bool                                      | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
-|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      bool                                      |        visible        | set visibility state of the element |
-|                                      str                                       |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
-|                                      str                                       | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
-|                                      str                                       |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
-|                                      bool                                      |         grab          | If True can grab this element and move the window around. Default is False |
-|                                      bool                                      |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
-|                                      bool                                      |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
-|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
-|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
-|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
-|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
-|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
-|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
-|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
-|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                              List[List[Element]]                               |         layout         | Layout that will be shown in the Column container |
+|                                      str                                       |    background_color    | color of background of entire Column |
+|                           (int or None, int or None)                           |          size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
+|                           (int or None, int or None)                           |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                     float                                      |  size_subsample_width  | Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required. |
+|                                     float                                      | size_subsample_height  | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |       scrollable       | if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also |
+|                                      bool                                      |  vertical_scroll_only  | if True then no horizontal scrollbar will be shown if a scrollable column |
+|                                      bool                                      | horizontal_scroll_only | if True then no vertical scrollbar will be shown if a scrollable column |
+|                         List[List[ List[str] or str ]]                         |    right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                         str or int or tuple or object                          |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |        visible         | set visibility state of the element |
+|                                      str                                       |     justification      | set justification for the Column itself. Note entire row containing the Column will be affected |
+|                                      str                                       | element_justification  | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
+|                                      str                                       |   vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                      bool                                      |          grab          | If True can grab this element and move the window around. Default is False |
+|                                      bool                                      |        expand_x        | If True the column will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y        | If True the column will automatically expand in the Y direction to fill available space |
+|                                      Any                                       |        metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |   sbar_trough_color    | Scrollbar color of the trough |
+|                                      str                                       | sbar_background_color  | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |    sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |       sbar_width       | Scrollbar width in pixels |
+|                                      int                                       |    sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |    sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |      sbar_relief       | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 
 ### add_row
 
@@ -10861,7 +10863,7 @@ Parameter Descriptions:
 |                         List[List[ List[str] or str ]]                         |     right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |         expand_x          | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |         expand_y          | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |          visible          | set visibility state of the element |
+|                                      bool                                      |          visible          | DEPRECATED - Should you need to control visiblity for the TabGroup as a whole, place it into a Column element |
 |                                      Any                                       |         metadata          | User metadata that can be set to ANYTHING |
 
 ### add_tab
@@ -11231,6 +11233,7 @@ Table(values,
     headings = None,
     visible_column_map = None,
     col_widths = None,
+    cols_justification = None,
     def_col_width = 10,
     auto_size_columns = True,
     max_col_width = 20,
@@ -11287,6 +11290,7 @@ Parameter Descriptions:
 |                                   List[str]                                    |        headings         | The headings to show on the top line |
 |                                   List[bool]                                   |   visible_column_map    | One entry for each column. False indicates the column is not shown |
 |                                   List[int]                                    |       col_widths        | Number of characters that each column will occupy |
+|                        List[str] or Tuple[str] or None                         |   cols_justification    | Justification for EACH column. Is a list of strings with the value 'l', 'r', 'c' that indicates how the column will be justified. Either no columns should be set, or have to have one for every colun |
 |                                      int                                       |      def_col_width      | Default column width in characters |
 |                                      bool                                      |    auto_size_columns    | if True columns will be sized automatically |
 |                                      int                                       |      max_col_width      | Maximum width for all columns in characters |
@@ -12999,6 +13003,7 @@ Window(title,
     use_ttk_buttons = None,
     modal = False,
     enable_close_attempted_event = False,
+    enable_window_config_events = False,
     titlebar_background_color = None,
     titlebar_text_color = None,
     titlebar_font = None,
@@ -13065,6 +13070,7 @@ Parameter Descriptions:
 |                    bool                     |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
 |                    bool                     |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
 |                    bool                     |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
+|                    bool                     |     enable_window_config_events      | If True then window configuration events (resizing or moving the window) will return WINDOW_CONFIG_EVENT from window.read. Note you will get several when Window is created. |
 |                (str or None)                |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
 |                (str or None)                |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
 |     (str or (str, int[, str]) or None)      |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
@@ -14405,6 +14411,11 @@ VisibilityChanged()
 Pin's an element provided into a layout so that when it's made invisible and visible again, it will
  be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
+ The element you want to pin is the element that you'll be making visibile/invisible.
+
+The pin helper function also causes containers to shrink to fit the contents correct after something inside
+ has changed visiblity.  Note that setting a hardcoded size on your window can impact this ability to shrink.
+
 ```
 pin(elem,
     vertical_alignment = None,
@@ -14801,7 +14812,9 @@ CalendarButton(button_text,
     title = "Choose Date",
     no_titlebar = True,
     location = (None, None),
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -14839,6 +14852,8 @@ Parameter Descriptions:
 |                                   (int, int)                                   |        location        | Location on the screen (x,y) to show the calendar popup window |
 |                                      bool                                      |        visible         | set initial visibility state of the Button |
 |                                      Any                                       |        metadata        | Anything you want to store along with this button |
+|                                      bool                                      |        expand_x        | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |        expand_y        | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -14857,7 +14872,9 @@ Cancel(button_text = "Cancel",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -14880,6 +14897,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -14903,8 +14922,11 @@ ColorChooserButton(button_text,
     p = None,
     key = None,
     k = None,
+    default_color = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -14931,8 +14953,11 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |  default_color   | Color to be sent to tkinter to use as the default color |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 This Button has been changed in how it works!!
@@ -14956,7 +14981,9 @@ Debug(button_text = "",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -14979,6 +15006,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 This is a special type of Button.
@@ -15009,7 +15038,9 @@ DummyButton(button_text,
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15037,6 +15068,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15055,7 +15088,9 @@ Exit(button_text = "Exit",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15078,6 +15113,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15099,7 +15136,9 @@ FileBrowse(button_text = "Browse",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15125,6 +15164,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15147,7 +15188,9 @@ FileSaveAs(button_text = "Save As...",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15174,6 +15217,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |      visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata      | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x      | If True Element will expand in the Horizontal directions |
+|            bool)        :return:                  returns a button             |     expand_y      | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
@@ -15198,7 +15243,9 @@ FilesBrowse(button_text = "Browse",
     k = None,
     visible = True,
     files_delimiter = ";",
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15225,6 +15272,8 @@ Parameter Descriptions:
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      str                                       | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15245,7 +15294,9 @@ FolderBrowse(button_text = "Browse",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15270,6 +15321,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | The Button created
 
 ```
@@ -15288,7 +15341,9 @@ Help(button_text = "Help",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15311,6 +15366,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15329,7 +15386,9 @@ No(button_text = "No",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15352,6 +15411,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15370,7 +15431,9 @@ OK(button_text = "OK",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15393,6 +15456,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15411,7 +15476,9 @@ Ok(button_text = "Ok",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15434,6 +15501,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15452,7 +15521,9 @@ Open(button_text = "Open",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15475,6 +15546,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15493,7 +15566,9 @@ Quit(button_text = "Quit",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15516,6 +15591,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15539,7 +15616,9 @@ RealtimeButton(button_text,
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15567,6 +15646,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | Button created
 
 ```
@@ -15585,7 +15666,9 @@ Save(button_text = "Save",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15608,6 +15691,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15630,7 +15715,9 @@ SaveAs(button_text = "Save As...",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15656,6 +15743,8 @@ Parameter Descriptions:
 |                                                                        str or int or tuple or object                                                                         |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                                                                     bool                                                                                     |      visible      | set initial visibility state of the Button |
 |                                                                                     Any                                                                                      |     metadata      | Anything you want to store along with this button |
+|                                                                                     bool                                                                                     |     expand_x      | If True Element will expand in the Horizontal directions |
+|                                                                                     bool                                                                                     |     expand_y      | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15674,7 +15763,9 @@ Submit(button_text = "Submit",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15697,6 +15788,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -15715,7 +15808,9 @@ Yes(button_text = "Yes",
     key = None,
     k = None,
     visible = True,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15738,6 +15833,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |     visible      | set initial visibility state of the Button |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 ## Button Functions No Longer Used (DO NOT USE)
@@ -15765,7 +15862,9 @@ RButton(button_text,
     p = None,
     key = None,
     k = None,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15792,6 +15891,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      int                                       |   border_width   | width of border around element |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | Button created
 
 ```
@@ -15814,7 +15915,9 @@ ReadButton(button_text,
     p = None,
     key = None,
     k = None,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15841,6 +15944,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      int                                       |   border_width   | width of border around element |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | Button created
 
 DEPRICATED
@@ -15868,7 +15973,9 @@ CButton(button_text,
     p = None,
     key = None,
     k = None,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15894,6 +16001,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 DEPRICATED
@@ -15921,7 +16030,9 @@ CloseButton(button_text,
     p = None,
     key = None,
     k = None,
-    metadata = None)
+    metadata = None,
+    expand_x = False,
+    expand_y = False)
 ```
 
 Parameter Descriptions:
@@ -15947,6 +16058,8 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
+|                                      bool                                      |     expand_x     | If True Element will expand in the Horizontal directions |
+|                                      bool                                      |     expand_y     | If True Element will expand in the Vertical directions |
 | (Button) | **RETURN** | returns a button
 
 -----------
@@ -16320,7 +16433,8 @@ cprint(args=*<1 or N object>,
     window = None,
     key = None,
     justification = None,
-    autoscroll = True)
+    autoscroll = True,
+    erase_all = False)
 ```
 
 Parameter Descriptions:
@@ -17304,6 +17418,8 @@ popup_scrolled(args=*<1 or N object>,
     background_color = None,
     text_color = None,
     yes_no = False,
+    no_buttons = False,
+    button_justification = "l",
     auto_close = False,
     auto_close_duration = None,
     size = (None, None),
@@ -17324,26 +17440,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |        *args        | Variable number of items to display |
-|                str                 |        title        | Title to display in the window. |
-|         (str, str) or str          |    button_color     | button color (foreground, background) |
-|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|                bool                |     auto_close      | if True window will close itself |
-|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
-|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
-|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|                str                 |  background_color   | color of background |
-|                str                 |     text_color      | color of the text |
-|                bool                |     no_titlebar     | If True no titlebar will be shown |
-|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|                bool                |     keep_on_top     | If True the window will remain above all current windows |
-| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|            str or bytes            |        image        | Image to include at the top of the popup window |
-|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
-|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args         | Variable number of items to display |
+|                str                 |        title         | Title to display in the window. |
+|         (str, str) or str          |     button_color     | button color (foreground, background) |
+|                bool                |        yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |      no_buttons      | If True, no buttons will be shown. User will have to close using the "X" |
+|                str                 | button_justification | How buttons should be arranged. l, c, r for Left, Center or Right justified |
+|                bool                |      auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration  | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |         size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |       location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                bool                |     non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |   background_color   | color of background |
+|                str                 |      text_color      | color of the text |
+|                bool                |     no_titlebar      | If True no titlebar will be shown |
+|                bool                |    grab_anywhere     | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top      | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |         font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image         | Image to include at the top of the popup window |
+|            bytes or str            |         icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip      | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -17405,6 +17523,8 @@ sprint(args=*<1 or N object>,
     background_color = None,
     text_color = None,
     yes_no = False,
+    no_buttons = False,
+    button_justification = "l",
     auto_close = False,
     auto_close_duration = None,
     size = (None, None),
@@ -17425,26 +17545,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |        *args        | Variable number of items to display |
-|                str                 |        title        | Title to display in the window. |
-|         (str, str) or str          |    button_color     | button color (foreground, background) |
-|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|                bool                |     auto_close      | if True window will close itself |
-|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
-|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
-|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|                str                 |  background_color   | color of background |
-|                str                 |     text_color      | color of the text |
-|                bool                |     no_titlebar     | If True no titlebar will be shown |
-|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|                bool                |     keep_on_top     | If True the window will remain above all current windows |
-| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|            str or bytes            |        image        | Image to include at the top of the popup window |
-|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
-|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args         | Variable number of items to display |
+|                str                 |        title         | Title to display in the window. |
+|         (str, str) or str          |     button_color     | button color (foreground, background) |
+|                bool                |        yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |      no_buttons      | If True, no buttons will be shown. User will have to close using the "X" |
+|                str                 | button_justification | How buttons should be arranged. l, c, r for Left, Center or Right justified |
+|                bool                |      auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration  | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |         size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |       location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                bool                |     non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |   background_color   | color of background |
+|                str                 |      text_color      | color of the text |
+|                bool                |     no_titlebar      | If True no titlebar will be shown |
+|                bool                |    grab_anywhere     | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top      | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |         font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image         | Image to include at the top of the popup window |
+|            bytes or str            |         icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip      | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -17457,6 +17579,8 @@ ScrolledTextBox(args=*<1 or N object>,
     background_color = None,
     text_color = None,
     yes_no = False,
+    no_buttons = False,
+    button_justification = "l",
     auto_close = False,
     auto_close_duration = None,
     size = (None, None),
@@ -17477,26 +17601,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |        *args        | Variable number of items to display |
-|                str                 |        title        | Title to display in the window. |
-|         (str, str) or str          |    button_color     | button color (foreground, background) |
-|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|                bool                |     auto_close      | if True window will close itself |
-|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
-|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
-|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|                str                 |  background_color   | color of background |
-|                str                 |     text_color      | color of the text |
-|                bool                |     no_titlebar     | If True no titlebar will be shown |
-|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|                bool                |     keep_on_top     | If True the window will remain above all current windows |
-| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|            str or bytes            |        image        | Image to include at the top of the popup window |
-|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
-|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args         | Variable number of items to display |
+|                str                 |        title         | Title to display in the window. |
+|         (str, str) or str          |     button_color     | button color (foreground, background) |
+|                bool                |        yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |      no_buttons      | If True, no buttons will be shown. User will have to close using the "X" |
+|                str                 | button_justification | How buttons should be arranged. l, c, r for Left, Center or Right justified |
+|                bool                |      auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration  | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |         size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |       location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                bool                |     non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |   background_color   | color of background |
+|                str                 |      text_color      | color of the text |
+|                bool                |     no_titlebar      | If True no titlebar will be shown |
+|                bool                |    grab_anywhere     | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top      | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |         font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image         | Image to include at the top of the popup window |
+|            bytes or str            |         icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip      | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 ## Popup Not PEP8 Compliant names
@@ -18390,6 +18516,8 @@ PopupScrolled(args=*<1 or N object>,
     background_color = None,
     text_color = None,
     yes_no = False,
+    no_buttons = False,
+    button_justification = "l",
     auto_close = False,
     auto_close_duration = None,
     size = (None, None),
@@ -18410,26 +18538,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |        *args        | Variable number of items to display |
-|                str                 |        title        | Title to display in the window. |
-|         (str, str) or str          |    button_color     | button color (foreground, background) |
-|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|                bool                |     auto_close      | if True window will close itself |
-|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
-|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
-|             (int, int)             |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|                str                 |  background_color   | color of background |
-|                str                 |     text_color      | color of the text |
-|                bool                |     no_titlebar     | If True no titlebar will be shown |
-|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|                bool                |     keep_on_top     | If True the window will remain above all current windows |
-| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|            str or bytes            |        image        | Image to include at the top of the popup window |
-|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
-|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args         | Variable number of items to display |
+|                str                 |        title         | Title to display in the window. |
+|         (str, str) or str          |     button_color     | button color (foreground, background) |
+|                bool                |        yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |      no_buttons      | If True, no buttons will be shown. User will have to close using the "X" |
+|                str                 | button_justification | How buttons should be arranged. l, c, r for Left, Center or Right justified |
+|                bool                |      auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration  | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |         size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |       location       | Location on the screen to place the upper left corner of the window |
+|             (int, int)             |  relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                bool                |     non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |   background_color   | color of background |
+|                str                 |      text_color      | color of the text |
+|                bool                |     no_titlebar      | If True no titlebar will be shown |
+|                bool                |    grab_anywhere     | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top      | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |         font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image         | Image to include at the top of the popup window |
+|            bytes or str            |         icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip      | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
