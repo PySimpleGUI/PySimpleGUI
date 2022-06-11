@@ -88,8 +88,7 @@ while True:
     # sg.Print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
-    if event == 'Edit Me':
-        sg.execute_editor(__file__)
+
     if values['-COMBO-'] != sg.theme():
         sg.theme(values['-COMBO-'])
         window.close()
@@ -99,8 +98,10 @@ while True:
         sg.set_options(use_custom_titlebar=use_custom_titlebar)
         window.close()
         window = make_window()
+    if event == 'Edit Me':
+        sg.execute_editor(__file__)
     elif event == 'Version':
-        sg.popup_scrolled(sg.get_versions(), __file__, keep_on_top=True, non_blocking=True)
+        sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, non_blocking=True)
 window.close()
 
 

@@ -11,7 +11,7 @@
         Displays the values dictionary entry for each element
         And more!
 
-    Copyright 2021 PySimpleGUI
+    Copyright 2021, 2022 PySimpleGUI
 """
 
 import PySimpleGUI as sg
@@ -36,7 +36,7 @@ def make_window(theme):
                  sg.Image(data=sg.DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-GIF-IMAGE-'),],
                 [sg.Checkbox('Checkbox', default=True, k='-CB-')],
                 [sg.Radio('Radio1', "RadioDemo", default=True, size=(10,1), k='-R1-'), sg.Radio('Radio2', "RadioDemo", default=True, size=(10,1), k='-R2-')],
-                [sg.Combo(values=('Combo 1', 'Combo 2', 'Combo 3'), default_value='Combo 1', readonly=True, k='-COMBO-'),
+                [sg.Combo(values=('Combo 1', 'Combo 2', 'Combo 3'), default_value='Combo 1', readonly=False, k='-COMBO-'),
                  sg.OptionMenu(values=('Option 1', 'Option 2', 'Option 3'),  k='-OPTION MENU-'),],
                 [sg.Spin([i for i in range(1,11)], initial_value=10, k='-SPIN-'), sg.Text('Spin')],
                 [sg.Multiline('Demo of a Multi-Line Text Element!\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nYou get the point.', size=(45,5), expand_x=True, expand_y=True, k='-MLINE-')],
@@ -88,9 +88,7 @@ def make_window(theme):
 
                ]]
     layout[-1].append(sg.Sizegrip())
-    window = sg.Window('All Elements Demo', layout, right_click_menu=right_click_menu_def, right_click_menu_tearoff=True, grab_anywhere=True, resizable=True, margins=(0,0), use_custom_titlebar=True, finalize=True, keep_on_top=True,
-                       # scaling=2.0,
-                       )
+    window = sg.Window('All Elements Demo', layout, right_click_menu=right_click_menu_def, right_click_menu_tearoff=True, grab_anywhere=True, resizable=True, margins=(0,0), use_custom_titlebar=True, finalize=True, keep_on_top=True)
     window.set_min_size(window.size)
     return window
 
@@ -151,7 +149,7 @@ def main():
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Versions':
-            sg.popup(sg.get_versions(), keep_on_top=True)
+            sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, non_blocking=True)
 
     window.close()
     exit(0)
