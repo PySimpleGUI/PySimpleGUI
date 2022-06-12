@@ -23,7 +23,7 @@ def main(location):
 
     layout = [[graph]]
 
-    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
+    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True)
 
     text_id2 = graph.draw_text(f'CPU', (GSIZE[0] // 2, GSIZE[1] // 4), font='Any 20', text_location=sg.TEXT_LOCATION_CENTER, color=sg.theme_button_color()[0])
 
@@ -46,6 +46,8 @@ def main(location):
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), location=window.current_location(), keep_on_top=True, non_blocking=True)
         # erase figures so they can be redrawn
         graph.delete_figure(rect_id)
         graph.delete_figure(text_id1)

@@ -274,7 +274,7 @@ def main(location):
         [sg.T(size=(5, 1), font='Any 20', justification='c', background_color='black', k='-gauge VALUE-')]]
 
 
-    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
+    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True)
 
     gauge = Gauge(pointer_color=sg.theme_text_color(), clock_color=sg.theme_text_color(), major_tick_color=sg.theme_text_color(),
                   minor_tick_color=sg.theme_input_background_color(), pointer_outer_color=sg.theme_text_color(), major_tick_start_radius=45,
@@ -298,6 +298,8 @@ def main(location):
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), location=window.current_location(), keep_on_top=True, non_blocking=True)
     window.close()
 
 
