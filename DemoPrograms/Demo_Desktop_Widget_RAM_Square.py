@@ -30,7 +30,7 @@ def main(location):
     graph = sg.Graph(GSIZE, (0, 0), GSIZE, key='-GRAPH-', enable_events=True)
     layout = [[graph]]
 
-    window = sg.Window('RAM Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, enable_close_attempted_event=True)
+    window = sg.Window('RAM Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True, keep_on_top=True)
 
 
     while True:  # Event Loop
@@ -47,8 +47,10 @@ def main(location):
             if event != sg.WIN_CLOSED:
                 sg.user_settings_set_entry('-location-', window.current_location())  # The line of code to save the position before exiting
             break
-        elif event == 'Edit Me':
+        if event == 'Edit Me':
             sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), location=window.current_location(), keep_on_top=True, non_blocking=True)
 
         graph.delete_figure(rect_id)
         graph.delete_figure(text_id1)
