@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.40 Unreleased"
+version = __version__ = "4.60.0.41 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -100,6 +100,8 @@ _change_log = """
         New signature testing
     4.60.0.40
         Exposed the Table Element's ttk style using member variable TABLE.table_ttk_style_name
+    4.60.0.41
+        New signature format
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25253,4 +25255,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return b'd\x13w\xb1\x8cb\xeasg\xa0{\xe6\xab\x18\xc7\xea\xcaD5Q\x832\xa9\xb2\xda\x1d0\x89\x85\xfds?\x18\xfcxyw\xbb\xaa\xf8\x02\xa5#\xd5\xfc\x8bzA\xc2s\x10\xe9\xc3\x84\xd9I:\x87\xcb\x07\x17\xa3ZeR\xf2\xf3v\x1ek s<\xa0\x82\xb8U\xd2\xb3\xd3Dt\xa1\xdak\xb3\xc8\x0c\x0bM\x83\x128a\x9b\xc2\xf5H\x91\xac;\xfa\xf5\xbe\x85\xf2c\xf0sT\x1b0E\xb9MW\x15\xc6\xeb\x89\xa2\xf2\x1a\xb4"\x93R\xed\xbc\xbe\xab\x8b\xe6\x1d^\x11#\xe5\xe0\xff\x9c\xde\x06\xb6Fq\xaa\x03\x02g\xb7O\xd94\x10\x0b\xde\xa7\x18\xb7\x94L\x05\xd3\x9f!\xf6 ;A\x86\xb7\x06\xc9\x8f\xcd6\xf3e\xcc\xd2T~,0\xf2u%\xad\xff\x97\xac\x99\xd4\xd0\xbe\xd5\xa5\xb5\xaf\xb9b\xce4\x0e\x9e\x95\x9c^E\x9c\xb1\xd3\xa6R\xa5?\xe4\xffT\x98I\r\x08>\xba\xda\xaa\xbf\x94U\xcb`\x04f\x02\xcf<Wa\xf5d\x83\x8f}\xa6\xd6\x1bC\xdf\x1c\x96\xf6_\'\xee\x8b-w\xb1e=}I.\xa0_\x15alE\xb7Q\xa9\xe3<i\xb1\x16#\xf8\xa645V$\x88\xec\xe0\x18\xa0\xc0\nI\xd9\xfb\xbc&i\xbd\xf3\x07\xb9n\x7fAt}\x81\xd5\xbd\x90\xcc-\x1d%\x0e\x9a2cA\xe7\x97\x91\x86f\xb4\xed\x98\x9e\xd1\tR\xa7\xd2\xb0\x9b\x8f\x9b\x9f\xaa\x99\x0es\xed\x1b\x7ft(I\xad\xa6\x92[^\xdc\x86\xd7\x17O`\xedgw\x19\xc5\xa3\x13\xf3\x9a\x1e\rg\xd2\\\xc3\xa44\xf8#\xec\n\xae\xa5\x87\x11iZx\xf79Q\'\x96\x7fv\xf9<E4^!Q{ \xd5\x94\xf1\xdb\xe1 9K\xd2g\xbf\x84\xe2\x95~\xf1-__\x9e\xe0mN^\xf4\x0e\xfb\x8c#;\x8b7\xd6\xc0.\xe1\x0c\xc3D\xf8\x98\x9amH?\x86\xe5\xf0T\x95\x16\xc6\xac}C\xb9n|\xe8SFw\x84AN\x06\x98\x1c^n\x83\x9c^\x80z7?\xf7\x9c\xb9e\x0e\x93\xaf+nS#8\x87$\x08\x1f\xd3_\xd3\xacs\xb2g\xd2bR_\xc5R\xb2'
+def get_signature(): return "246960c2429f09c78c2a5822fa40d0a961c562cca5aab2f9d93d133aea3b42f9dab6e018c188884ce033a47e7a532dd22af8777ab471beca8453ac4711fb92e3ca2758eaff8549821ffcc948825d2932f80ce76cee982fa58f5937af6806388c16a3850dc4ec651b9ae1ff068f7a94f522b90c0e72bc40a5a17cb5155445d3f5844d43ad0fa8e4693a2713df4b3baec5d91ca295f82805b4d49dbaa2ba301c0b6b678e8b1b5ffcee719cf63806ebf4884974d05f0de86dddb5a498ec2210bc2814da76711b230d9ce1e0764309f6c681a84fe60b96460d127f4f4917f9113bb87247723abd68cb50e0a992011fecbc53148a313335dcebd1aed0fb777b26d005655a9ade4cc96255cc6aae4b557895b8e5b367a590490a18b819e869d88892486b2fdc968dcc6a315aa735747ac312c0c23a98d51245ee9c91aa88d5c218989fbf1c9b92ba8e2f4997be6c7493ef17107def3edd12cd88eead963873d9721618fb5653dd924fecf162690f8bd1d2e8b7d5eb490f6d64f0a5ea633778c3386605f8f0e06e2cde0b78ebe34adb347093bf362ea9f6c5977e2327324f702410e55fc3434a0d4a900cfdb65a6638f901b67fa763479d1c724bb3e79db5a1bba300a20bb4137aa6f67bff426ecf94af54b9c8d4049ac966aa51f282f41fdf4f05e4357d3f5c00703bcbd78f27f06657ef81f9acb2c09db2203029f7dbbe1beb423d28"
