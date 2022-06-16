@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.41 Unreleased"
+version = __version__ = "4.60.0.43 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -102,6 +102,11 @@ _change_log = """
         Exposed the Table Element's ttk style using member variable TABLE.table_ttk_style_name
     4.60.0.41
         New signature format
+    4.60.0.42
+        Backed out the changes from 4.60.0.38 (horizontal_scroll_only parameter).  Those changes broke code in the scrollable columns.  Need to make time to work on this feature more.
+    4.60.0.43
+        Added a print if get an exception trying to set the alpha channel after a window is created (troubleshooting a Mac problem)
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7759,7 +7764,7 @@ class TkScrollableFrame(tk.Frame):
     A frame with one or two scrollbars.  Used to make Columns with scrollbars
     """
 
-    def __init__(self, master, vertical_only, horizontal_only, element, window, **kwargs):
+    def __init__(self, master, vertical_only, element, window, **kwargs):
         """
         :param master:        The parent widget
         :type master:         (tk.Widget)
@@ -7775,28 +7780,24 @@ class TkScrollableFrame(tk.Frame):
         element.Widget = self.canvas
         # Okay, we're gonna make a list. Containing the y-min, x-min, y-max, and x-max of the frame
         element.element_frame = self
+        _make_ttk_scrollbar(element, 'v', window)
+        # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
+        element.vsb.pack(side='right', fill="y", expand="false")
 
-
-        if horizontal_only:
+        if not vertical_only:
             _make_ttk_scrollbar(element, 'h', window)
             # self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
             element.hsb.pack(side='bottom', fill="x", expand="false")
             self.canvas.config(xscrollcommand=element.hsb.set)
-            self.canvas.pack(side="bottom", fill="both", expand=True)
-            element.hsb.config(command=self.canvas.xview)
-
             # self.canvas = tk.Canvas(self, )
         # else:
         #     self.canvas = tk.Canvas(self)
-        if vertical_only:
-            _make_ttk_scrollbar(element, 'v', window)
-            # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
-            element.vsb.pack(side='right', fill="y", expand="false")
-            self.canvas.config(yscrollcommand=element.vsb.set)
-            self.canvas.pack(side="left", fill="both", expand=True)
-            element.vsb.config(command=self.canvas.yview)
-            # if not vertical_only:
-            #     element.hsb.config(command=self.canvas.xview)
+
+        self.canvas.config(yscrollcommand=element.vsb.set)
+        self.canvas.pack(side="left", fill="both", expand=True)
+        element.vsb.config(command=self.canvas.yview)
+        if not vertical_only:
+            element.hsb.config(command=self.canvas.xview)
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -7881,7 +7882,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), size_subsample_width=1, size_subsample_height=2, pad=None, p=None, scrollable=False,
-                 vertical_scroll_only=False, horizontal_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
+                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
                  vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
                  sbar_frame_color=None, sbar_relief=None):
@@ -7906,8 +7907,6 @@ class Column(Element):
         :type scrollable:                   (bool)
         :param vertical_scroll_only:        if True then no horizontal scrollbar will be shown if a scrollable column
         :type vertical_scroll_only:         (bool)
-        :param horizontal_scroll_only:      if True then no vertical scrollbar will be shown if a scrollable column
-        :type horizontal_scroll_only:       (bool)
         :param right_click_menu:            A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:             List[List[ List[str] | str ]]
         :param key:                         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -7959,7 +7958,7 @@ class Column(Element):
         self.TKColFrame = None  # type: tk.Frame
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
-        self.HorizontalScrollOnly =  horizontal_scroll_only
+
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window._GetAContainerNumber()
@@ -15109,7 +15108,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Column
                 # ----------------------- SCROLLABLE Column ----------------------
                 if element.Scrollable:
-                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element.HorizontalScrollOnly,element, toplevel_form)  # do not use yet!  not working
+                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element, toplevel_form)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -17216,9 +17215,11 @@ def StartupTK(window):
     window.set_icon(window.WindowIcon)
 
     try:
-        root.attributes('-alpha', 1 if window.AlphaChannel is None else window.AlphaChannel)  # Make window visible again
-    except:
-        pass
+        alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
+        root.attributes('-alpha', alpha_channel)  # Make window visible again
+    except Exception as e:
+        print('**** Error setting Alpha Channel to {} after window was created ****'.format(alpha_channel), e)
+        # pass
 
     if window.ReturnKeyboardEvents and not window.NonBlocking:
         root.bind("<KeyRelease>", window._KeyboardCallback)
@@ -25255,4 +25256,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return "246960c2429f09c78c2a5822fa40d0a961c562cca5aab2f9d93d133aea3b42f9dab6e018c188884ce033a47e7a532dd22af8777ab471beca8453ac4711fb92e3ca2758eaff8549821ffcc948825d2932f80ce76cee982fa58f5937af6806388c16a3850dc4ec651b9ae1ff068f7a94f522b90c0e72bc40a5a17cb5155445d3f5844d43ad0fa8e4693a2713df4b3baec5d91ca295f82805b4d49dbaa2ba301c0b6b678e8b1b5ffcee719cf63806ebf4884974d05f0de86dddb5a498ec2210bc2814da76711b230d9ce1e0764309f6c681a84fe60b96460d127f4f4917f9113bb87247723abd68cb50e0a992011fecbc53148a313335dcebd1aed0fb777b26d005655a9ade4cc96255cc6aae4b557895b8e5b367a590490a18b819e869d88892486b2fdc968dcc6a315aa735747ac312c0c23a98d51245ee9c91aa88d5c218989fbf1c9b92ba8e2f4997be6c7493ef17107def3edd12cd88eead963873d9721618fb5653dd924fecf162690f8bd1d2e8b7d5eb490f6d64f0a5ea633778c3386605f8f0e06e2cde0b78ebe34adb347093bf362ea9f6c5977e2327324f702410e55fc3434a0d4a900cfdb65a6638f901b67fa763479d1c724bb3e79db5a1bba300a20bb4137aa6f67bff426ecf94af54b9c8d4049ac966aa51f282f41fdf4f05e4357d3f5c00703bcbd78f27f06657ef81f9acb2c09db2203029f7dbbe1beb423d28"
+def get_signature(): return "2d8278028042a122720092f5dad1def42f4ded4aebf829b900471e5979ff749c7d2c01acba797eeb1da108377c2e60ab479c89920e282f340675d3b58ffec5bd2b47fad7c0f09b6aea63020993cde1537aa9259831e7f0f655fe15f8165748e8df52c0484edfd31c243d2691c090312d54ed9ff20a68792592144f10457e9fba5acd932e3991687645367ba6c59d7ba79a132167061d4b2303d0fc6943d90637fb0b1734097e26b9331f2c312297797a773b6127b09c6e4f0ff89c4d5acf60eba03701e99e8927ac1ba97f26cc57b5ee9037c1b59268c9c820c23a0f29e77433cccff0056d4d4c1138db50ea48833b501550cd5d29e0476cc768dec29f432e3c732230c65ef1b0f2273f8222bb6de1ff9fc5cda3ed058183c7af313bb602a4cbe34456995f1d53265f81b3d8e5bc8330361b52339f4cde32c0ca072d03f14a6fdb2b16577eee44813f2506d471c21f509e0a23899277ab5e43272b6599e736404360a28971083934753e8792b60954a455c36c43500f4a50aa0877f5b2616515aa1f0e77bdd6b0466b1e1169d2aa541aed99e881c78ca6f6960d2d18e06f7a291e710b2b3af8ad85c37d5181bccc064c7cd27716c28901a7596ab0455cdf0820a58f60ede8e5c0c0ae322de3be41e2e90e8ff406c9f8a0d477b6c51b0b3c36c30adb1ed9e688fecbb8640995eaf95b1e1aa740b6958ebfdf78e253d66d4ce781"
