@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.45 Unreleased"
+version = __version__ = "4.60.0.46 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -111,6 +111,8 @@ _change_log = """
         Format of file-signature changed
     4.60.0.45
         Further refinement of Menubar docstring
+    4.60.0.46
+        Added suggestion of using the Demo Browser to the checklist item of "Look for Demo Programs similar to your problem"
         
     """
 
@@ -23712,7 +23714,7 @@ def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_p
 These items may solve your problem. Please check those you've done by changing - [ ] to - [X]
 
 - [{}] Searched main docs for your problem  www.PySimpleGUI.org
-- [{}] Looked for Demo Programs that are similar to your goal Demos.PySimpleGUI.org
+- [{}] Looked for Demo Programs that are similar to your goal. It is recommend you use the Demo Browser! Demos.PySimpleGUI.org
 - [{}] If not tkinter - looked for Demo Programs for specific port
 - [{}] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
 - [{}] Run your program outside of your debugger (from a command line)
@@ -23921,7 +23923,7 @@ def main_open_github_issue():
                       [In(size=(25, 1), k='-EXP NOTES-', expand_x=True)]]
 
     checklist = (('Searched main docs for your problem', 'www.PySimpleGUI.org'),
-                 ('Looked for Demo Programs that are similar to your goal ', 'http://Demos.PySimpleGUI.org'),
+                 ('Looked for Demo Programs that are similar to your goal.\nIt is recommend you use the Demo Browser!', 'http://Demos.PySimpleGUI.org'),
                  ('If not tkinter - looked for Demo Programs for specific port', ''),
                  ('For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)', ''),
                  ('Run your program outside of your debugger (from a command line)', ''),
@@ -25269,4 +25271,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#81dda6ac3c5273c7870c9fb7a7ddc6542e5e44bff41a3c20f825df7ecd8581a5edcebe796f0e9363e6c8ac79239e5baa035308dff0ee5343f62c3821269dbf6e891cb681e0aa011d7cb05a078ab07463c6295f0b58006d141d755a2f448244d6c668848dea3747abf958e30edcb787be40415d8651169830f2cae8987e91674139b6d788b228a51e754b8c1868eeda1da117df13c3072c040502ae9f7e8b5b7b11c7181063f5b680b2ff58823a199df6f0b96ec75c0693e587fa5f3a1cc707f0276d475b1ddede888cacea7a0d5c4def06a81745d94e41f6b7dd1d214fc88666f667e536e4f576372680f34d0673177146b24028bd61d19ef1276a2b8936aed9675d0bfe238bca9938dba78eef39dfdb6ba1ed2fc25928d6e10bd7a7142813771fa260b75ad05fb626efa89dcbb12d77b870402f761b9233a2524643ee54b09008fb6a92f2a4861f8c15e4bd5eefb66b68559bc8be20f1167c0770039e9a4b9a6e05e562b440c6a6d81f09918006c0d8a1acc709725d9ea0eb1bd227bd120072eec1c7ddc20df85c5f48cdc1443ba0c9a1e50baec72538a5f72a620247d22089a32b032444c7966ad3d0c7cace6b0eb45870f6ee295d8cd03864373146fc9735d43202a9ac2d14bfdc27f47388dcf61ff995005dc0f705c65ce96fc5af001fc8cea2982dcc35ee27e9c90e8203cf296a1e2ff78385f2db8350ff26188b6fe2e5
+#866ba539c4e2c0f4dfad4522b41a833c85f4c2897797bc612638f96467ad5f9d109ae37966364f26e9a0d71ed9d3f7046d621e9b78655479d030a4c9305c06f24a5c5f54816d85a852fefbc56eaccd17015521d98d28810ac35c881931659d5548e999f79d0ac2db316e88253fad4d40e394cca28d15d3ad101c9c4131213730021ee91d3cbd7687bc61d149a8a6b0097edcf3182c4b52e3e1ac1486e7075fa255d47676142dadbc7d6b4193573bc6359f78e6551da40495780c6b7b7dd36eca47fea0443511555d45c3e4c5691cd777a4787a5efdd617b635d0c7c5bab8fe13d72a7a0946c8b11b78a1349f3ca6225f95b98cd98ad4696ba206917f5375d614e27ef8c53d2aace1ba3ca02d7c8b8d13aa8c7a5f94043447c2dff8ae5f8af2666ad54fba615299fa93bcff4f6330e50b7b908b26fc8da2d469d21a2e54c0f292d2af8367df7b327cc3e5bbd67ccafdf66902f5b4fee73218e3be2c2338b9bdcf47b951ec1f7258a51c01459702684c1cd9049bb6be000bd6d43acdbdeabb17a98b8e0c10f08ad7535f05fe880fef7ef5df77de5169f1c7a06807afe917f6446e6f794bc4570af4cc3c9f58253041192b8faa40b74c4fae9180b3963dd9b13ff77af6c841af8a03eeb21bb727658596a7e82899d2a07a133f36f633817f65401162f09f24693a4b0aa6574dd746aaeb7c1445bbf0cb4b1429646231c9a711fd01
