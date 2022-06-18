@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.44 Unreleased"
+version = __version__ = "4.60.0.45 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -109,6 +109,8 @@ _change_log = """
     4.60.0.44
         Updated Menubar docstring to clarify the Menubar iself cannot have colors changed, only the submenus. Use MenubarCustom if you want full control
         Format of file-signature changed
+    4.60.0.45
+        Further refinement of Menubar docstring
         
     """
 
@@ -8468,8 +8470,8 @@ class Menu(Element):
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
-    Important Note!  The colors of the Menubar itself cannot be changed, only the menus shown after clicking the menubar
-    can be changed.  If you want to change the color the Menubar, then you will have to use the MenuarCustom element.
+    Important Note!  The colors, font, look of the Menubar itself cannot be changed, only the menus shown AFTER clicking the menubar
+    can be changed.  If you want to change the style/colors the Menubar, then you will have to use the MenubarCustom element.
     Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
@@ -8484,7 +8486,7 @@ class Menu(Element):
         :type background_color:     (str)
         :param text_color:          text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black".
         :type text_color:           (str)
-        :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+        :param disabled_text_color: color to use for text when item in submenu, not the menubar itself, is disabled. Can be in #RRGGBB format or a color name "black"
         :type disabled_text_color:  (str)
         :param size:                Not used in the tkinter port
         :type size:                 (int, int)
@@ -8496,7 +8498,7 @@ class Menu(Element):
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :param font:                specifies the  font family, size, etc. of submenus. Does NOT apply to the Menubar itself. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                 (str or (str, int[, str]) or None)
         :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                  str | int | tuple | object
@@ -25267,4 +25269,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0fe0886d6c2dca2ecd44eff1a6136444321d685d9319ed24154df0139b6bc12d9fc0a2b9d0ce8c08efad5cb056075a94a2882a8e4807a49f540526c23024c03f5639010fd358d2b32c1f4156c7717605c586dfc8517e4f77650c8d8e64e79f48afebd5f3850fbde0eaae2458bcf8a637ccb005a309c1f61cb49409ee666a07fc543d93bd49196f68ee1a7a3b0d9276ef1261a38c8e5eb2043057393d569127b23f08263c5162c3ea29925377bf34958664bf7d1f981d8bb852a26e409b9380ffcc5bcffe6a9b70727346262227bb47c3602b578b053ec8d87887de578f4436775003089d83a59f3ba3b55a798d10f6b678a31b7310bc4385da39d69365821e1bb5ff41235b864e55d487cc54dff16f6542fce66d881e1f998006d3405c03b9dc457a540ee39da00aca43843ce9bd94bff6353d9567b6f9f67ef44fe7c2b1cdb716287d451c5bb931167ee75b4404c5475276c61f2c3e424f8394c99e950749eb27a287f6696064d4eda93006036984437a23a6b5d9d5e2f2a9cd6ece4c5ef3285b142a89183301ec0ef1991b1394ca805324221ab178f67862bf34a307878273983a053b6e3a14114ac6b64c481aa1fbb43e8843b421a6742d821043e3575a483567012b44b8ba9ce211c5175631474aba5d4994090485e7e1430cab30b5c3efe0b490f42ef2b54bc9a63d334a8516f948f6297f865f3928fe9572d4391d2008
+#81dda6ac3c5273c7870c9fb7a7ddc6542e5e44bff41a3c20f825df7ecd8581a5edcebe796f0e9363e6c8ac79239e5baa035308dff0ee5343f62c3821269dbf6e891cb681e0aa011d7cb05a078ab07463c6295f0b58006d141d755a2f448244d6c668848dea3747abf958e30edcb787be40415d8651169830f2cae8987e91674139b6d788b228a51e754b8c1868eeda1da117df13c3072c040502ae9f7e8b5b7b11c7181063f5b680b2ff58823a199df6f0b96ec75c0693e587fa5f3a1cc707f0276d475b1ddede888cacea7a0d5c4def06a81745d94e41f6b7dd1d214fc88666f667e536e4f576372680f34d0673177146b24028bd61d19ef1276a2b8936aed9675d0bfe238bca9938dba78eef39dfdb6ba1ed2fc25928d6e10bd7a7142813771fa260b75ad05fb626efa89dcbb12d77b870402f761b9233a2524643ee54b09008fb6a92f2a4861f8c15e4bd5eefb66b68559bc8be20f1167c0770039e9a4b9a6e05e562b440c6a6d81f09918006c0d8a1acc709725d9ea0eb1bd227bd120072eec1c7ddc20df85c5f48cdc1443ba0c9a1e50baec72538a5f72a620247d22089a32b032444c7966ad3d0c7cace6b0eb45870f6ee295d8cd03864373146fc9735d43202a9ac2d14bfdc27f47388dcf61ff995005dc0f705c65ce96fc5af001fc8cea2982dcc35ee27e9c90e8203cf296a1e2ff78385f2db8350ff26188b6fe2e5
