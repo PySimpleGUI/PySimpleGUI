@@ -1715,7 +1715,6 @@ Column(layout,
     p = None,
     scrollable = False,
     vertical_scroll_only = False,
-    horizontal_scroll_only = False,
     right_click_menu = None,
     key = None,
     k = None,
@@ -1740,35 +1739,34 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                              List[List[Element]]                               |         layout         | Layout that will be shown in the Column container |
-|                                      str                                       |    background_color    | color of background of entire Column |
-|                           (int or None, int or None)                           |          size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
-|                           (int or None, int or None)                           |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                     float                                      |  size_subsample_width  | Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required. |
-|                                     float                                      | size_subsample_height  | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      bool                                      |       scrollable       | if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also |
-|                                      bool                                      |  vertical_scroll_only  | if True then no horizontal scrollbar will be shown if a scrollable column |
-|                                      bool                                      | horizontal_scroll_only | if True then no vertical scrollbar will be shown if a scrollable column |
-|                         List[List[ List[str] or str ]]                         |    right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                         str or int or tuple or object                          |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      bool                                      |        visible         | set visibility state of the element |
-|                                      str                                       |     justification      | set justification for the Column itself. Note entire row containing the Column will be affected |
-|                                      str                                       | element_justification  | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
-|                                      str                                       |   vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
-|                                      bool                                      |          grab          | If True can grab this element and move the window around. Default is False |
-|                                      bool                                      |        expand_x        | If True the column will automatically expand in the X direction to fill available space |
-|                                      bool                                      |        expand_y        | If True the column will automatically expand in the Y direction to fill available space |
-|                                      Any                                       |        metadata        | User metadata that can be set to ANYTHING |
-|                                      str                                       |   sbar_trough_color    | Scrollbar color of the trough |
-|                                      str                                       | sbar_background_color  | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
-|                                      str                                       |    sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
-|                                      int                                       |       sbar_width       | Scrollbar width in pixels |
-|                                      int                                       |    sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
-|                                      str                                       |    sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
-|                                      str                                       |      sbar_relief       | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                              List[List[Element]]                               |        layout         | Layout that will be shown in the Column container |
+|                                      str                                       |   background_color    | color of background of entire Column |
+|                           (int or None, int or None)                           |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
+|                           (int or None, int or None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                     float                                      | size_subsample_width  | Determines the size of a scrollable column width based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required. |
+|                                     float                                      | size_subsample_height | Determines the size of a scrollable height based on 1/size_subsample * required size. 1 = match the contents exactly, 2 = 1/2 contents size, 3 = 1/3. Can be a fraction to make larger than required.. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also |
+|                                      bool                                      | vertical_scroll_only  | if True then no horizontal scrollbar will be shown if a scrollable column |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      str                                       |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
+|                                      str                                       | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
+|                                      str                                       |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                      bool                                      |         grab          | If True can grab this element and move the window around. Default is False |
+|                                      bool                                      |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
+|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
+|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
 
 ### add_row
 
@@ -5807,6 +5805,8 @@ Parameter Descriptions:
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
+    Important Note!  The colors of the Menubar itself cannot be changed, only the menus shown after clicking the menubar
+    can be changed.  If you want to change the color the Menubar, then you will have to use the MenuarCustom element.
     Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
@@ -5833,8 +5833,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                        List[List[Tuple[str, List[str]]]                        |   menu_definition   | The Menu definition specified using lists (docs explain the format) |
-|                                      str                                       |  background_color   | color of the background |
-|                                      str                                       |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
+|                                      str                                       |  background_color   | color of the background of menus, NOT the Menubar |
+|                                      str                                       |     text_color      | text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black". |
 |                                      str                                       | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
 |                                   (int, int)                                   |        size         | Not used in the tkinter port |
 |                          (int, int)  or (None, None)                           |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
