@@ -5805,8 +5805,8 @@ Parameter Descriptions:
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
-    Important Note!  The colors of the Menubar itself cannot be changed, only the menus shown after clicking the menubar
-    can be changed.  If you want to change the color the Menubar, then you will have to use the MenuarCustom element.
+    Important Note!  The colors, font, look of the Menubar itself cannot be changed, only the menus shown AFTER clicking the menubar
+    can be changed.  If you want to change the style/colors the Menubar, then you will have to use the MenubarCustom element.
     Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
@@ -5835,13 +5835,13 @@ Parameter Descriptions:
 |                        List[List[Tuple[str, List[str]]]                        |   menu_definition   | The Menu definition specified using lists (docs explain the format) |
 |                                      str                                       |  background_color   | color of the background of menus, NOT the Menubar |
 |                                      str                                       |     text_color      | text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black". |
-|                                      str                                       | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                                      str                                       | disabled_text_color | color to use for text when item in submenu, not the menubar itself, is disabled. Can be in #RRGGBB format or a color name "black" |
 |                                   (int, int)                                   |        size         | Not used in the tkinter port |
 |                          (int, int)  or (None, None)                           |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. of submenus. Does NOT apply to the Menubar itself. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                         str or int or tuple or object                          |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |       visible       | set visibility state of the element |
