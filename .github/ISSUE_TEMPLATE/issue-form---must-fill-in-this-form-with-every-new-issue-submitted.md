@@ -60,7 +60,7 @@ Anything else you think would be helpful?
 These items may solve your problem. Please check those you've done by changing - [ ] to - [X]
 
 - [ ] Searched main docs for your problem  www.PySimpleGUI.org
-- [ ] Looked for Demo Programs that are similar to your goal Demos.PySimpleGUI.org
+- [ ] Looked for Demo Programs that are similar to your goal. It is recommend you use the Demo Browser! Demos.PySimpleGUI.org
 - [ ] If not tkinter - looked for Demo Programs for specific port
 - [ ] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
 - [ ] Run your program outside of your debugger (from a command line)
