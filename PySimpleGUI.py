@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.43 Unreleased"
+version = __version__ = "4.60.0.44 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -106,6 +106,9 @@ _change_log = """
         Backed out the changes from 4.60.0.38 (horizontal_scroll_only parameter).  Those changes broke code in the scrollable columns.  Need to make time to work on this feature more.
     4.60.0.43
         Added a print if get an exception trying to set the alpha channel after a window is created (troubleshooting a Mac problem)
+    4.60.0.44
+        Updated Menubar docstring to clarify the Menubar iself cannot have colors changed, only the submenus. Use MenubarCustom if you want full control
+        Format of file-signature changed
         
     """
 
@@ -8465,6 +8468,8 @@ class Menu(Element):
                 ['&Debugger', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
+    Important Note!  The colors of the Menubar itself cannot be changed, only the menus shown after clicking the menubar
+    can be changed.  If you want to change the color the Menubar, then you will have to use the MenuarCustom element.
     Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
@@ -8475,9 +8480,9 @@ class Menu(Element):
         """
         :param menu_definition:     The Menu definition specified using lists (docs explain the format)
         :type menu_definition:      List[List[Tuple[str, List[str]]]
-        :param background_color:    color of the background
+        :param background_color:    color of the background of menus, NOT the Menubar
         :type background_color:     (str)
-        :param text_color:          element's text color. Can be in #RRGGBB format or a color name "black"
+        :param text_color:          text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black".
         :type text_color:           (str)
         :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
         :type disabled_text_color:  (str)
@@ -23389,6 +23394,12 @@ def self_check_hash():
     curfile_hash = hashlib.sha256(entire_file_bytes)
     return curfile_hash.hexdigest()
 
+
+def read_last_line():
+    with open(__file__, "r",encoding="utf8") as file:
+        last_line = file.readlines()[-1]
+    return last_line
+
 # ==================================================#
 #
 # MM""""""""`M                     oo oo
@@ -25256,4 +25267,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-def get_signature(): return "2d8278028042a122720092f5dad1def42f4ded4aebf829b900471e5979ff749c7d2c01acba797eeb1da108377c2e60ab479c89920e282f340675d3b58ffec5bd2b47fad7c0f09b6aea63020993cde1537aa9259831e7f0f655fe15f8165748e8df52c0484edfd31c243d2691c090312d54ed9ff20a68792592144f10457e9fba5acd932e3991687645367ba6c59d7ba79a132167061d4b2303d0fc6943d90637fb0b1734097e26b9331f2c312297797a773b6127b09c6e4f0ff89c4d5acf60eba03701e99e8927ac1ba97f26cc57b5ee9037c1b59268c9c820c23a0f29e77433cccff0056d4d4c1138db50ea48833b501550cd5d29e0476cc768dec29f432e3c732230c65ef1b0f2273f8222bb6de1ff9fc5cda3ed058183c7af313bb602a4cbe34456995f1d53265f81b3d8e5bc8330361b52339f4cde32c0ca072d03f14a6fdb2b16577eee44813f2506d471c21f509e0a23899277ab5e43272b6599e736404360a28971083934753e8792b60954a455c36c43500f4a50aa0877f5b2616515aa1f0e77bdd6b0466b1e1169d2aa541aed99e881c78ca6f6960d2d18e06f7a291e710b2b3af8ad85c37d5181bccc064c7cd27716c28901a7596ab0455cdf0820a58f60ede8e5c0c0ae322de3be41e2e90e8ff406c9f8a0d477b6c51b0b3c36c30adb1ed9e688fecbb8640995eaf95b1e1aa740b6958ebfdf78e253d66d4ce781"
+#0fe0886d6c2dca2ecd44eff1a6136444321d685d9319ed24154df0139b6bc12d9fc0a2b9d0ce8c08efad5cb056075a94a2882a8e4807a49f540526c23024c03f5639010fd358d2b32c1f4156c7717605c586dfc8517e4f77650c8d8e64e79f48afebd5f3850fbde0eaae2458bcf8a637ccb005a309c1f61cb49409ee666a07fc543d93bd49196f68ee1a7a3b0d9276ef1261a38c8e5eb2043057393d569127b23f08263c5162c3ea29925377bf34958664bf7d1f981d8bb852a26e409b9380ffcc5bcffe6a9b70727346262227bb47c3602b578b053ec8d87887de578f4436775003089d83a59f3ba3b55a798d10f6b678a31b7310bc4385da39d69365821e1bb5ff41235b864e55d487cc54dff16f6542fce66d881e1f998006d3405c03b9dc457a540ee39da00aca43843ce9bd94bff6353d9567b6f9f67ef44fe7c2b1cdb716287d451c5bb931167ee75b4404c5475276c61f2c3e424f8394c99e950749eb27a287f6696064d4eda93006036984437a23a6b5d9d5e2f2a9cd6ece4c5ef3285b142a89183301ec0ef1991b1394ca805324221ab178f67862bf34a307878273983a053b6e3a14114ac6b64c481aa1fbb43e8843b421a6742d821043e3575a483567012b44b8ba9ce211c5175631474aba5d4994090485e7e1430cab30b5c3efe0b490f42ef2b54bc9a63d334a8516f948f6297f865f3928fe9572d4391d2008
