@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.46 Unreleased"
+version = __version__ = "4.60.0.47 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -113,6 +113,9 @@ _change_log = """
         Further refinement of Menubar docstring
     4.60.0.46
         Added suggestion of using the Demo Browser to the checklist item of "Look for Demo Programs similar to your problem"
+    4.60.0.47
+        Testing some importing methods
+        Delay rerouting stdout and stderr in Output and Multiline elements until window is being built instead of when element is initialized
         
     """
 
@@ -252,7 +255,7 @@ import calendar
 import datetime
 import textwrap
 
-import hashlib
+from hashlib import sha256 as hh
 import inspect
 import traceback
 import difflib
@@ -298,7 +301,6 @@ import re
 import tempfile
 import ctypes
 import platform
-
 
 pil_import_attempted = pil_imported = False
 
@@ -3512,10 +3514,12 @@ class Multiline(Element):
         self.expand_y = expand_y
         self.rstrip = rstrip
         self.wrap_lines = wrap_lines
-        if reroute_stdout:
-            self.reroute_stdout_to_here()
-        if reroute_stderr:
-            self.reroute_stderr_to_here()
+        self.reroute_stdout = reroute_stdout
+        self.reroute_stderr = reroute_stderr
+        # if reroute_stdout:
+        #     self.reroute_stdout_to_here()
+        # if reroute_stderr:
+        #     self.reroute_stderr_to_here()
         self.no_scrollbar = no_scrollbar
         self.hscrollbar = None      # The horizontal scrollbar
         sz = size if size != (None, None) else s
@@ -16008,6 +16012,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
                     element.Widget.config(insertbackground=theme_input_text_color())
 
+                if element.reroute_stdout:
+                    element.reroute_stdout_to_here()
+                if element.reroute_stderr:
+                    element.reroute_stderr_to_here()
+
                 # row_should_expand = True
             # -------------------------  CHECKBOX pleacement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -23390,13 +23399,13 @@ def get_versions():
     return versions
 
 
-def self_check_hash():
+def scheck_hh():
     with open(__file__, "r",encoding="utf8") as file:
         lines_in_file = file.readlines()
     combined_lines = '\n'.join(lines_in_file[:-1])
     entire_file_bytes = bytearray(combined_lines, encoding='utf8')
-    curfile_hash = hashlib.sha256(entire_file_bytes)
-    return curfile_hash.hexdigest()
+    cfileh = hh(entire_file_bytes)
+    return cfileh.hexdigest()
 
 
 def read_last_line():
@@ -25259,6 +25268,8 @@ _read_mac_global_settings()
 #     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
 #     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
 
+
+
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
@@ -25271,4 +25282,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#866ba539c4e2c0f4dfad4522b41a833c85f4c2897797bc612638f96467ad5f9d109ae37966364f26e9a0d71ed9d3f7046d621e9b78655479d030a4c9305c06f24a5c5f54816d85a852fefbc56eaccd17015521d98d28810ac35c881931659d5548e999f79d0ac2db316e88253fad4d40e394cca28d15d3ad101c9c4131213730021ee91d3cbd7687bc61d149a8a6b0097edcf3182c4b52e3e1ac1486e7075fa255d47676142dadbc7d6b4193573bc6359f78e6551da40495780c6b7b7dd36eca47fea0443511555d45c3e4c5691cd777a4787a5efdd617b635d0c7c5bab8fe13d72a7a0946c8b11b78a1349f3ca6225f95b98cd98ad4696ba206917f5375d614e27ef8c53d2aace1ba3ca02d7c8b8d13aa8c7a5f94043447c2dff8ae5f8af2666ad54fba615299fa93bcff4f6330e50b7b908b26fc8da2d469d21a2e54c0f292d2af8367df7b327cc3e5bbd67ccafdf66902f5b4fee73218e3be2c2338b9bdcf47b951ec1f7258a51c01459702684c1cd9049bb6be000bd6d43acdbdeabb17a98b8e0c10f08ad7535f05fe880fef7ef5df77de5169f1c7a06807afe917f6446e6f794bc4570af4cc3c9f58253041192b8faa40b74c4fae9180b3963dd9b13ff77af6c841af8a03eeb21bb727658596a7e82899d2a07a133f36f633817f65401162f09f24693a4b0aa6574dd746aaeb7c1445bbf0cb4b1429646231c9a711fd01
+#6251f2f25e006c4faa7301f386bfc06a8fe4a69c491049282749a65f095d38b0a18628fffb349b98fd82e2ab592fd32774f92e0e8206db6e561b253589b1d91bcdf316e8e8fa41c76aa31cfc4c1e15faa4ab3274c26aa8a9a6a5a77ee861f7d37ab3a86a2c94083d9bc1fe8c5d835639fa2f5c8d793b87924d10ab762d9c4fbbb07a965e360f50a7dc617bb83ac89d01586ecfe637b3723fcdb75809b0f1aa3e34044535823871a1dc0f6c8b225ce22f2933720b67cf07579186ff6984449b56424791ab0b8bb71b74e8d7cc010d421246ee89b2ae5c0972ccb09773b10c955ab4c676a86b073d9f104dfbdacf50e817441dd019b94284e49e98bbfc8743280f4d4b633c4ec751919bbddcbe724cc5bf3bf823dfcd49c74382f0558ff58e4002c2a02702fbf1ee77df3ac2207f106b841cd807cf6e991e01bdd54510a851a33734303f1a951ada894b41a19162328321f4f4398de6ab271fa083288dbea416568877de3eccce19a9b0df7176f264fbc6d5c074eeabf1f1bdb114cb121525c46ebca756ca332135fac33b4fd2cde052f77a074f3b1025a7604e0fafbbdb8db60e5d9fea50518b657371fdd5441fd52433079a6d37f59dca14ed3f75f082341f0c3cfc230cbb2eac43a59c315a5144a6611c935d9d2401ed5b3be356e537bb47ca172a45063893983469e9e2799e5406d90d84c844aff0158357c4e382b4756663
