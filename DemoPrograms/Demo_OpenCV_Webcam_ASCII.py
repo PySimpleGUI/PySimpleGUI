@@ -2,8 +2,6 @@ import cv2
 from PIL import Image
 import numpy as np
 import PySimpleGUI as sg
-font_size = 6
-USING_QT = False
 
 """
     Interesting program that shows your webcam's image as ASCII text.  Runs in realtime, producing a stream of
@@ -22,40 +20,34 @@ USING_QT = False
     pip install opencv-python
     
     On Linux / Mac use pip3 instead of pip
+    
+    Copyright 2022, PySimpleGUI
 """
 
 # The magic bits that make the ASCII stuff work shamelessly taken from https://gist.github.com/cdiener/10491632
 chars = np.asarray(list(' .,:;irsXA253hMHGS#9B&@'))
 SC, GCF, WCF = .1, 1, 7/4
 
-sg.theme('Black')   # make it look cool
+sg.theme('Black')   # make it look cool with white chars on black background
+font_size = 6
 
 # define the window layout
 # number of lines of text elements. Depends on cameras image size and the variable SC (scaller)
 NUM_LINES = 48
-if USING_QT:
-    layout = [[sg.Text(i, size_px=(800, 12),
-                    font=('Courier', font_size),
-                    key='-OUT-' + str(i))] for i in range(NUM_LINES)]
-else:
-    layout = [[sg.Text(i, size=(120, 1), font=('Courier', font_size),
-                    pad=(0, 0), key='-OUT-'+str(i))] for i in range(NUM_LINES)]
 
-layout += [[sg.Button('Exit', size=(5, 1)),
-            sg.Text('GCF', size=(4, 1)),
-            sg.Spin([round(i, 2) for i in np.arange(0.1, 20.0, 0.1)],
-                    initial_value=1,  key='-SPIN-GCF-', size=(5, 1)),
-            sg.Text('WCF', size=(4, 1)),
-            sg.Slider((1, 4), resolution=.05, default_value=1.75,
-                      orientation='h', key='-SLIDER-WCF-', size=(15, 15))]]
+layout  = [[[sg.Text(i,  font=('Courier', font_size), pad=(0, 0), key=('-OUT-', i))] for i in range(NUM_LINES)],
+           [sg.Text('GCF', s=9, justification='r'), sg.Slider((0.1, 20), resolution=.05, default_value=1, orientation='h', key='-SPIN-GCF-', size=(15, 15))],
+           [sg.Text('Font Size', s=9, justification='r'), sg.Slider((4, 20), resolution=1, default_value=font_size, orientation='h', key='-FONT SIZE-', size=(15, 15)),
+            sg.Push(), sg.Button('Exit')]]
 
 # create the window and show it without the plot
-window = sg.Window('Demo Application - OpenCV Integration', layout,
-                   location=(800, 400), font='Any 18')
+window = sg.Window('Demo Application - OpenCV - ASCII Chars Output', layout,  font='Any 18', resizable=True)
 
 # ---===--- Event LOOP Read and display frames, operate the GUI --- #
 # Setup the OpenCV capture device (webcam)
+
 cap = cv2.VideoCapture(0)
+
 while True:
     
     event, values = window.read(timeout=0)
@@ -66,7 +58,7 @@ while True:
 
     img = Image.fromarray(frame)  # create PIL image from frame
     GCF = float(values['-SPIN-GCF-'])
-    WCF = values['-SLIDER-WCF-']
+    WCF = 1.75
     # More magic that coverts the image to ascii
     S = (round(img.size[0] * SC * WCF), round(img.size[1] * SC))
     img = np.sum(np.asarray(img.resize(S)), axis=2)
@@ -74,7 +66,8 @@ while True:
     img = (1.0 - img / img.max()) ** GCF * (chars.size - 1)
 
     # "Draw" the image in the window, one line of text at a time!
+    font_size = int(values['-FONT SIZE-'])
     for i, r in enumerate(chars[img.astype(int)]):
-        window['-OUT-'+str(i)].update("".join(r))
+        window[('-OUT-', i)].update("".join(r), font=('Courier', font_size))
 
 window.close()
