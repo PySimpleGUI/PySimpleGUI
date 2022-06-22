@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.47 Unreleased"
+version = __version__ = "4.60.0.48 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -116,6 +116,9 @@ _change_log = """
     4.60.0.47
         Testing some importing methods
         Delay rerouting stdout and stderr in Output and Multiline elements until window is being built instead of when element is initialized
+    4.60.0.48
+        Additional window movement capability. If Control+Mouse movement feature is enabled, then Control+Arrow key will move the window 1 pixel
+            in the indicated direction
         
     """
 
@@ -10978,13 +10981,32 @@ class Window:
 
         :param event:            From tkinter and is not used
         :type event:             Any
-        :param alternate_to_key: If key is None, then use this value instead
-        :type alternate_to_key:  Any
         """
         self.LastButtonClicked = WINDOW_CONFIG_EVENT
         self.FormRemainedOpen = True
         self.user_bind_event = event
         _exit_mainloop(self)
+
+
+    def _move_callback(self, event):
+        """
+        Called when a control + arrow key is pressed.
+        This is a built-in window positioning key sequence
+
+        :param event:            From tkinter and is not used
+        :type event:             Any
+        """
+        if not self._is_window_created('Tried to move window using arrow keys'):
+            return
+        x,y = self.current_location()
+        if event.keysym == 'Up':
+            self.move(x, y-1)
+        elif event.keysym == 'Down':
+            self.move(x, y+1)
+        elif event.keysym == 'Left':
+            self.move(x-1, y)
+        elif event.keysym == 'Right':
+            self.move(x+1, y)
 
     """
     def _config_callback(self, event):
@@ -17230,6 +17252,12 @@ def StartupTK(window):
         root.bind("<Control-Button-1>", window._StartMoveUsingControlKey)
         root.bind("<Control-ButtonRelease-1>", window._StopMove)
         root.bind("<Control-B1-Motion>", window._OnMotionUsingControlKey)
+        # also enable movement using Control + Arrow key
+        root.bind("<Control-Left>", window._move_callback)
+        root.bind("<Control-Right>", window._move_callback)
+        root.bind("<Control-Up>", window._move_callback)
+        root.bind("<Control-Down>", window._move_callback)
+
     window.set_icon(window.WindowIcon)
 
     try:
@@ -24540,7 +24568,7 @@ def main_global_pysimplegui_settings():
 
     # ------------------------- Security Tab -------------------------
     security_tab = Tab('Security',
-                [[T('PySimpleGUI hashcode')], [T(self_check_hash())]],
+                [[T('PySimpleGUI hashcode')], [T(scheck_hh())]],
                        expand_x=True)
 
     settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab ]])
@@ -25268,8 +25296,6 @@ _read_mac_global_settings()
 #     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
 #     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
 
-
-
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
@@ -25282,4 +25308,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6251f2f25e006c4faa7301f386bfc06a8fe4a69c491049282749a65f095d38b0a18628fffb349b98fd82e2ab592fd32774f92e0e8206db6e561b253589b1d91bcdf316e8e8fa41c76aa31cfc4c1e15faa4ab3274c26aa8a9a6a5a77ee861f7d37ab3a86a2c94083d9bc1fe8c5d835639fa2f5c8d793b87924d10ab762d9c4fbbb07a965e360f50a7dc617bb83ac89d01586ecfe637b3723fcdb75809b0f1aa3e34044535823871a1dc0f6c8b225ce22f2933720b67cf07579186ff6984449b56424791ab0b8bb71b74e8d7cc010d421246ee89b2ae5c0972ccb09773b10c955ab4c676a86b073d9f104dfbdacf50e817441dd019b94284e49e98bbfc8743280f4d4b633c4ec751919bbddcbe724cc5bf3bf823dfcd49c74382f0558ff58e4002c2a02702fbf1ee77df3ac2207f106b841cd807cf6e991e01bdd54510a851a33734303f1a951ada894b41a19162328321f4f4398de6ab271fa083288dbea416568877de3eccce19a9b0df7176f264fbc6d5c074eeabf1f1bdb114cb121525c46ebca756ca332135fac33b4fd2cde052f77a074f3b1025a7604e0fafbbdb8db60e5d9fea50518b657371fdd5441fd52433079a6d37f59dca14ed3f75f082341f0c3cfc230cbb2eac43a59c315a5144a6611c935d9d2401ed5b3be356e537bb47ca172a45063893983469e9e2799e5406d90d84c844aff0158357c4e382b4756663
+#6ca9faed36557df95149c4c07c689231a96745791ae5e5b32897cfd5ecfb59a2c0c26e3b46ecffd0acadf1c6733ed4c684e3d19f1648a304dbced1eadbd4373857f04f2b617d29632c5f0cb7cc0afa3aafea510237671d4def42fd2ff2626a76f4a4e22258fc76945e0088406baf6dda530233a9b3b413b7a45af1632a1be63c4a848d6e0d2d8e6b15a76477fdfa30422a6765259e4ced4a07d5a95d235f556dbfbeecd5ade2acc9d3bd21149e7a42dec020893c83f57f57dd9797b2fdafa8520a7d1c7a54bdbda96a55bf039923fd9bad2892ad2aa950cdd98bdfebcdaea83a22b065ca0c6a81aa909d99d1c4846608787b5be21efb04cd9a0021406d8b33549d04f67ed83f62e0a5b49846e38f5b61e76a39e0b26e9335d7a7ca4b04ec66d73804547926fb08bf57c8b1a3e22694d1c46b3b102cb844c04788e0c8b909babb83c024d016bc0284b26eeb7043f71a1b2c5a6ee4d86d6e21aa2865c1eab0d6ab7f812d742a48f4c48532a3f3fa26fdea2575c6b3e82555d693eb00af590a448f149e8d6b55c942ccdbfe0b21bbeb291907016191ba9d652e8f8af129d78fcc9d2607b40a62414ef72a91f584dd8aa0aac12205ff17c1121dc5a5192dd36717c963c506e3593603d13939fbc8c77af652eabf4c9659dc45b76c6ce7d089cfddc850a5370feef866b77e15f3fd7727c89d48397d3f960e5dc514b79b97cc7223af
