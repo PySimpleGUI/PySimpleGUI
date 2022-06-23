@@ -1,5 +1,6 @@
 import pyglet
 import PySimpleGUI as sg
+import os
 
 """
     Demo - Using pyglet to get custom fonts into PySimpleGUI
@@ -17,8 +18,11 @@ import PySimpleGUI as sg
         http://scripts.sil.org/OFL
 """
 
-pyglet.font.add_file(r".\OpenFlame.ttf")
+font_file = os.path.join(os.path.dirname(__file__), "OpenFlame.ttf")
 
+pyglet.font.add_file(font_file)
+
+# sg.execute_command_subprocess(font_file)
 font1 = ("Open Flame", 40)      # Note - use the font "face name" not the filename when specifying the font
 font2 = ("Courier New", 40)
 font3 = ("Helvetica", 40)

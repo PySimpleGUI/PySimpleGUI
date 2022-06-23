@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.48 Unreleased"
+version = __version__ = "4.60.0.49 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -119,6 +119,9 @@ _change_log = """
     4.60.0.48
         Additional window movement capability. If Control+Mouse movement feature is enabled, then Control+Arrow key will move the window 1 pixel
             in the indicated direction
+    4.60.0.49
+        Added Window.set_size to match the other settings that are performed through method calls. There is also the Window.size property, but
+            since PySimpleGUI rarely uses properties, it makes sense to include a method as well as a property
         
     """
 
@@ -11417,6 +11420,25 @@ class Window:
             self.TKroot.update_idletasks()
         except:
             pass
+
+
+    def set_size(self, size):
+        """
+        Changes the size of the window, if possible. You can also use the Window.size prooerty
+        to set/get the size.
+
+        :param size: (width, height) of the desired window size
+        :type size:  (int, int)
+        """
+        if not self._is_window_created('Tried to change the size of the window prior to creation.'):
+            return
+        try:
+            self.TKroot.geometry("%sx%s" % (size[0], size[1]))
+            self.TKroot.update_idletasks()
+        except:
+            pass
+
+
 
     def set_min_size(self, size):
         """
@@ -25288,6 +25310,7 @@ if running_windows():
         print('Error using the taskbar icon patch', e)
 
 
+
 _read_mac_global_settings()
 # if running_mac():
 #     print('Your Mac patches are:')
@@ -25308,4 +25331,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6ca9faed36557df95149c4c07c689231a96745791ae5e5b32897cfd5ecfb59a2c0c26e3b46ecffd0acadf1c6733ed4c684e3d19f1648a304dbced1eadbd4373857f04f2b617d29632c5f0cb7cc0afa3aafea510237671d4def42fd2ff2626a76f4a4e22258fc76945e0088406baf6dda530233a9b3b413b7a45af1632a1be63c4a848d6e0d2d8e6b15a76477fdfa30422a6765259e4ced4a07d5a95d235f556dbfbeecd5ade2acc9d3bd21149e7a42dec020893c83f57f57dd9797b2fdafa8520a7d1c7a54bdbda96a55bf039923fd9bad2892ad2aa950cdd98bdfebcdaea83a22b065ca0c6a81aa909d99d1c4846608787b5be21efb04cd9a0021406d8b33549d04f67ed83f62e0a5b49846e38f5b61e76a39e0b26e9335d7a7ca4b04ec66d73804547926fb08bf57c8b1a3e22694d1c46b3b102cb844c04788e0c8b909babb83c024d016bc0284b26eeb7043f71a1b2c5a6ee4d86d6e21aa2865c1eab0d6ab7f812d742a48f4c48532a3f3fa26fdea2575c6b3e82555d693eb00af590a448f149e8d6b55c942ccdbfe0b21bbeb291907016191ba9d652e8f8af129d78fcc9d2607b40a62414ef72a91f584dd8aa0aac12205ff17c1121dc5a5192dd36717c963c506e3593603d13939fbc8c77af652eabf4c9659dc45b76c6ce7d089cfddc850a5370feef866b77e15f3fd7727c89d48397d3f960e5dc514b79b97cc7223af
+#761c7eece12bb0bbfe842f64e1b88c72397bcdfaa667cb9a1c52796a8b12a2f557ffce58c3903830da2a39f78fe051e5fcdf155201dba4f0805e2dae5826f98d25de065d0c0dbae17bd44af8b699c935e8ed49785126c09a94a2dfbd5a6f1f62149bf6f39e9c625f0b90e19e6d866e41d1db2bb4202ed4b8429ca9883e723c590391002ce98bd5959f26986ef1057351be79aef371cf813107c92f8be282a276be57973946bfa7171653cdaf48b96f595c064ad6213444f79a9c52d0bf1343be9c62212964dbbff18d320d2c71ce85afd3320c0dd3771a375436c8f2bc4fef5a4767f57bfac41591b3ebf416331e1c7da161672644c377cf303ea65d3883c5038f2d9cbcc55962a7af44e6ea962aa768915a2df5e8fe211ec994d7bf984382e51bf0b469b4e532fbba72bb4d52b1b70893366bdae1e1ed80d85d413bd35d77175ab0bf14989563b802580dc5c8d338af3302103250a9c35097fefca01360ccda1973ec8aead7863ef0a992337486149c7c20f45a9d95b3da201aa2681b83e5f7b4779a48fe7d79ee3671214ce5cc78b5585610f52e7751ad5cc2abf191db9f8db782180d4bf7a8fc81b13707008073e97d391f9688c1d8236c6e72cdc9f349fe0bf80a28242adebf99fe76729c895960344515bf9501b37768deaf390bd83a56609dc241c22cb8e2ed663623f039b8739b27113cee13225e574e8f70aaa0ff66
