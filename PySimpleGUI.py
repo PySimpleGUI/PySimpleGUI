@@ -8501,7 +8501,7 @@ class Menu(Element):
         :type size:                 (int, int)
         :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                    (int, int)  | (None, None)
-        :param tearoff:             if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+        :param tearoff:             if True, then can tear the menu off from the window and use as a floating window. Very cool effect
         :type tearoff:              (bool)
         :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
@@ -12666,7 +12666,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :type bar_font:              (str or (str, int[, str]) or None)
     :param font:                 specifies the font family, size to be used for the menu items
     :type font:                  (str or (str, int[, str]) or None)
-    :param tearoff:              if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+    :param tearoff:              if True, then can tear the menu off from the window and use as a floating window. Very cool effect
     :type tearoff:               (bool)
     :param pad:                  Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int).  TIP - 0 will make flush with titlebar
     :type pad:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
