@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.49 Unreleased"
+version = __version__ = "4.60.0.50 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -122,7 +122,9 @@ _change_log = """
     4.60.0.49
         Added Window.set_size to match the other settings that are performed through method calls. There is also the Window.size property, but
             since PySimpleGUI rarely uses properties, it makes sense to include a method as well as a property
-        
+    4.60.0.50
+        Fix for ColorChooser button filling in a None value when cancel from color choise dialog box.  Nothing will be filled in target if dialog cancelled
+                
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4964,8 +4966,9 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
             color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot, color=self.default_color)  # show the 'get file' dialog box
             color = color[1]  # save only the #RRGGBB portion
-            strvar.set(color)
-            self.TKStringVar.set(color)
+            if color is not None:
+                strvar.set(color)
+                self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
             if running_mac():
                 # Workaround for the "*.*" issue on Mac
