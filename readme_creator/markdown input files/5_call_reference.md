@@ -3005,7 +3005,6 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### move_to_center
 <!-- <+Window.move_to_center+> -->
 
-
 ### normal
 <!-- <+Window.normal+> -->
 
@@ -3041,6 +3040,9 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 
 ### set_min_size
 <!-- <+Window.set_min_size+> -->
+
+### set_size
+<!-- <+Window.set_size+> -->
 
 ### set_title
 <!-- <+Window.set_title+> -->

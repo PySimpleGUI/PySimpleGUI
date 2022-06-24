@@ -13733,6 +13733,21 @@ Parameter Descriptions:
 |--|--|--|
 | (int, int) | size | (width, height) tuple (int, int) of the desired window size in pixels |
 
+### set_size
+
+Changes the size of the window, if possible. You can also use the Window.size prooerty
+to set/get the size.
+
+```
+set_size(size)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (int, int) | size | (width, height) of the desired window size |
+
 ### set_title
 
 Change the title of the window
