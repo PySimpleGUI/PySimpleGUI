@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.50 Unreleased"
+version = __version__ = "4.60.0.51 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -124,6 +124,9 @@ _change_log = """
             since PySimpleGUI rarely uses properties, it makes sense to include a method as well as a property
     4.60.0.50
         Fix for ColorChooser button filling in a None value when cancel from color choise dialog box.  Nothing will be filled in target if dialog cancelled
+    4.60.0.51
+        vtop, vcenter, vbottom helper functions gets background_color parameter
+        vcenter and vbottom - added USING the expand_x and expand_y parms that were already defined.  (HOPE NOTHING BREAKS!)
                 
     """
 
@@ -12551,64 +12554,72 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
         return Column([[elem]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
 
 
-def vtop(elem_or_row, expand_x=None, expand_y=None):
+def vtop(elem_or_row, expand_x=None, expand_y=None, background_color=None):
     """
     Align an element or a row of elements to the top of the row that contains it
 
-    :param elem_or_row: the element or row of elements
-    :type elem_or_row:  Element | List[Element] | Tuple[Element]
-    :param expand_x:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_x:     (bool)
-    :param expand_y:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_y:     (bool)
-    :return:            A column element containing the provided element aligned to the top or list of elements (a row)
-    :rtype:             Column | List[Column]
+    :param elem_or_row:      the element or row of elements
+    :type elem_or_row:       Element | List[Element] | Tuple[Element]
+    :param expand_x:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x:          (bool)
+    :param expand_y:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y:          (bool)
+    :param background_color: Background color for container that is used by vtop to do the alignment
+    :type background_color:  str | None
+    :return:                 A column element containing the provided element aligned to the top or list of elements (a row)
+    :rtype:                  Column | List[Column]
     """
 
+
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
-        return [Column([[e]], pad=(0, 0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y) for e in elem_or_row]
+        return [Column([[e]], pad=(0, 0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y, background_color=background_color) for e in elem_or_row]
 
-    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y)
+    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y, background_color=background_color)
 
 
-def vcenter(elem_or_row, expand_x=None, expand_y=None):
+def vcenter(elem_or_row, expand_x=None, expand_y=None, background_color=None):
     """
     Align an element or a row of elements to the center of the row that contains it
 
-    :param elem_or_row: the element or row of elements
-    :type elem_or_row:  Element | List[Element] | Tuple[Element]
-    :param expand_x:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_x:     (bool)
-    :param expand_y:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_y:     (bool)
-    :return:            A column element containing the provided element aligned to the center or list of elements (a row)
-    :rtype:             Column | List[Column]
+    :param elem_or_row:      the element or row of elements
+    :type elem_or_row:       Element | List[Element] | Tuple[Element]
+    :param expand_x:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x:          (bool)
+    :param expand_y:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y:          (bool)
+    :param background_color: Background color for container that is used by vcenter to do the alignment
+    :type background_color:  str | None
+    :return:                 A column element containing the provided element aligned to the center or list of elements (a row)
+    :rtype:                  Column | List[Column]
     """
 
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
-        return [Column([[e]], pad=(0, 0), vertical_alignment='center') for e in elem_or_row]
+        return [Column([[e]], pad=(0, 0), vertical_alignment='center',expand_x=expand_x, expand_y=expand_y, background_color=background_color) for e in elem_or_row]
 
-    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='center')
+    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='center', expand_x=expand_x, expand_y=expand_y,background_color=background_color)
 
 
-def vbottom(elem_or_row, expand_x=None, expand_y=None):
+def vbottom(elem_or_row, expand_x=None, expand_y=None, background_color=None):
     """
     Align an element or a row of elements to the bottom of the row that contains it
 
-    :param elem_or_row: the element or row of elements
-    :type elem_or_row:  Element | List[Element] | Tuple[Element]
-    :param expand_x:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_x:     (bool)
-    :param expand_y:    If True/False the value will be passed to the Column Elements used to make this feature
-    :type expand_y:     (bool)
-    :return:            A column element containing the provided element aligned to the bottom or list of elements (a row)
-    :rtype:             Column | List[Column]
+    :param elem_or_row:      the element or row of elements
+    :type elem_or_row:       Element | List[Element] | Tuple[Element]
+    :param expand_x:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x:          (bool)
+    :param expand_y:         If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y:          (bool)
+    :param background_color: Background color for container that is used by vcenter to do the alignment
+    :type background_color:  str | None
+    :return:                 A column element containing the provided element aligned to the bottom or list of elements (a row)
+    :rtype:                  Column | List[Column]
     """
 
-    if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
-        return [Column([[e]], pad=(0, 0), vertical_alignment='bottom') for e in elem_or_row]
 
-    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='bottom')
+    if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
+        return [Column([[e]], pad=(0, 0), vertical_alignment='bottom', expand_x=expand_x, expand_y=expand_y, background_color=background_color) for e in elem_or_row]
+
+    return Column([[elem_or_row]], pad=(0, 0), vertical_alignment='bottom', expand_x=expand_x, expand_y=expand_y,background_color=background_color)
 
 
 def Titlebar(title='', icon=None, text_color=None, background_color=None, font=None, key=None, k=None):
@@ -25334,4 +25345,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#761c7eece12bb0bbfe842f64e1b88c72397bcdfaa667cb9a1c52796a8b12a2f557ffce58c3903830da2a39f78fe051e5fcdf155201dba4f0805e2dae5826f98d25de065d0c0dbae17bd44af8b699c935e8ed49785126c09a94a2dfbd5a6f1f62149bf6f39e9c625f0b90e19e6d866e41d1db2bb4202ed4b8429ca9883e723c590391002ce98bd5959f26986ef1057351be79aef371cf813107c92f8be282a276be57973946bfa7171653cdaf48b96f595c064ad6213444f79a9c52d0bf1343be9c62212964dbbff18d320d2c71ce85afd3320c0dd3771a375436c8f2bc4fef5a4767f57bfac41591b3ebf416331e1c7da161672644c377cf303ea65d3883c5038f2d9cbcc55962a7af44e6ea962aa768915a2df5e8fe211ec994d7bf984382e51bf0b469b4e532fbba72bb4d52b1b70893366bdae1e1ed80d85d413bd35d77175ab0bf14989563b802580dc5c8d338af3302103250a9c35097fefca01360ccda1973ec8aead7863ef0a992337486149c7c20f45a9d95b3da201aa2681b83e5f7b4779a48fe7d79ee3671214ce5cc78b5585610f52e7751ad5cc2abf191db9f8db782180d4bf7a8fc81b13707008073e97d391f9688c1d8236c6e72cdc9f349fe0bf80a28242adebf99fe76729c895960344515bf9501b37768deaf390bd83a56609dc241c22cb8e2ed663623f039b8739b27113cee13225e574e8f70aaa0ff66
+#28c10f5508ea3165693bb10025bed194bfb621d2db0722e1192b450154d6917e80ba08237d56e68531d26a71f487c7166483e057497eb2628014274eae4b9d355f79152bfb81bd382e1f5561bced21dd4f3e45678d8cad45edefba84010f2f6a62df3a4405725c56dff48d22a41ba2d9ee090a1089199f83c563e6668b27fb4dc419917d01a16a8979c561267b23f73f7f4dd34aa88b54e1ca1eb157100e04223f8ba958e87ba3f6e0c34ca5b7a1e6c8de5d08abdd84ba7f447851b153c1f76965bb73e0fe74e901413cb4809fdc2c7a0cd1565734a6d18030ea1d7d2b7cf46f5aaf232db587d78f939fcaba862cb071d8c277494c30cdc25fcc9c68047b7d759a92f45e95556fc4339bb7b4f1b9ef069860d693830f3a9cac75671e14634bb9fe4912b5c59c704ecf003e067cef615105bdfedf470707d86bb417bf2d12889df0f7258efc8a6d9075405783ff845076efa368c91cbc4d5d437791dd90c5c3cc36fef36deb6de910489686be0aad629a383b582e81c14ecae39b752488adf8e36dda014176356474afc3c5c36dc6f78dbf55beb8762f6cd0fe7840ae266a6b0befbb14ff1367271f7c37255b92f2ea7adc3045bc99b618273a4ca0708fe83b4376decde5e00a57fa62e7145bcbc5177e11ac3127c7a559063b3b749bfc5ab5db471bfb141a8a6343fd8a5402c93b037ff7002cbfc50b59ca4bec96b0ea5e5c3d
