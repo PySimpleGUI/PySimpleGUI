@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.51 Unreleased"
+version = __version__ = "4.60.0.52 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -127,6 +127,8 @@ _change_log = """
     4.60.0.51
         vtop, vcenter, vbottom helper functions gets background_color parameter
         vcenter and vbottom - added USING the expand_x and expand_y parms that were already defined.  (HOPE NOTHING BREAKS!)
+    4.60.0.52
+        justification parameter added to Listbox (default is left.. can be right and center now too)
                 
     """
 
@@ -2566,7 +2568,7 @@ class Listbox(Element):
     """
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
-                 bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
+                 bind_return_key=False, size=(None, None), s=(None, None), disabled=False, justification=None, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
@@ -2589,6 +2591,8 @@ class Listbox(Element):
         :type s:                           (int, int)  | (None, None) | int
         :param disabled:                   set disable state for element
         :type disabled:                    (bool)
+        :param justification:              justification for items in listbox. Valid choices - left, right, center.  Default is left
+        :type justification:               (str)
         :param auto_size_text:             True if element should be the same size as the contents
         :type auto_size_text:              (bool)
         :param font:                       specifies the font family, size, etc.  Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -2676,6 +2680,7 @@ class Listbox(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+        self.justification = justification
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata,
@@ -15899,9 +15904,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_frame = tk.Frame(tk_row_frame)
                 element.element_frame = element_frame
 
+                justification = tk.LEFT
+                if element.justification is not None:
+                    if element.justification.startswith('l'):
+                        justification = tk.LEFT
+                    elif element.justification.startswith('r'):
+                        justification = tk.RIGHT
+                    elif element.justification.startswith('c'):
+                        justification = tk.CENTER
+
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox = element.Widget = tk.Listbox(element_frame, height=element_size[1], width=width,
-                                                                selectmode=element.SelectMode, font=font, exportselection=False)
+                                                                selectmode=element.SelectMode, font=font, exportselection=False,
+                                                                justify=justification)
                 element.Widget.config(highlightthickness=0)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
@@ -15917,9 +15932,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.config(selectforeground=element.HighlightTextColor)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
-
-
-
 
                 if not element.NoScrollbar:
                     _make_ttk_scrollbar(element, 'v', toplevel_form)
@@ -25345,4 +25357,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#28c10f5508ea3165693bb10025bed194bfb621d2db0722e1192b450154d6917e80ba08237d56e68531d26a71f487c7166483e057497eb2628014274eae4b9d355f79152bfb81bd382e1f5561bced21dd4f3e45678d8cad45edefba84010f2f6a62df3a4405725c56dff48d22a41ba2d9ee090a1089199f83c563e6668b27fb4dc419917d01a16a8979c561267b23f73f7f4dd34aa88b54e1ca1eb157100e04223f8ba958e87ba3f6e0c34ca5b7a1e6c8de5d08abdd84ba7f447851b153c1f76965bb73e0fe74e901413cb4809fdc2c7a0cd1565734a6d18030ea1d7d2b7cf46f5aaf232db587d78f939fcaba862cb071d8c277494c30cdc25fcc9c68047b7d759a92f45e95556fc4339bb7b4f1b9ef069860d693830f3a9cac75671e14634bb9fe4912b5c59c704ecf003e067cef615105bdfedf470707d86bb417bf2d12889df0f7258efc8a6d9075405783ff845076efa368c91cbc4d5d437791dd90c5c3cc36fef36deb6de910489686be0aad629a383b582e81c14ecae39b752488adf8e36dda014176356474afc3c5c36dc6f78dbf55beb8762f6cd0fe7840ae266a6b0befbb14ff1367271f7c37255b92f2ea7adc3045bc99b618273a4ca0708fe83b4376decde5e00a57fa62e7145bcbc5177e11ac3127c7a559063b3b749bfc5ab5db471bfb141a8a6343fd8a5402c93b037ff7002cbfc50b59ca4bec96b0ea5e5c3d
+#81c3d611f0876569b714bfead31610fd397248595b3b2ebc96bd33600bbcbdcce50013a4f1471a65a24bc8b842b82e0c2083023fe4a9db7d76763f46b34df27cc47d5d27f38eaeec8824af4291b6cc9f53ccb9e4b73a37f3a6b6feb8a726076b105241559fd328fd30f3684e18dacc74c19fdb45077d4ef644fbfd9e7307063246f400f1765357036297d6d6dc9ab74593e6cfd8a0eb5449eea36fd76a65f46953ddbb992b54966e537aa735ff44ee7df9234163669a318e1d2aa8d530673fb0fb8ef3871ce280f977d29de0ec04e7eac393eb9bce1452d9e666de6b0391ba7f3f03395fed40586fa494611127a188a4a13cf703e20118da73a8ba33c17297f2f0b7f44b2677216786b5b32479021b03d233379c66d75aa971e5dd5b497f0759a014f2bb8fbed86ea30fb32fd49a9f1b2f53f6fd61e7e4f265e6a501e675f805079a6a1a2e5394d49bf8fa3911562d8f1c999f8775f0ad818e1e0f421c12190d426b49c426adbe84a0a5433e82b265407eea9758d283770069e854128d1ce66b66de7f59256920d1297076ea9560675f7950c24ab3bd2f60ad317ef8e8013ca06ce44802ddb44df756c35f312c34b0dd1b5e02cd2f947dfba588c90c7c3a366dbae4036bceb0c7ce18301ec5e7157212374939bc6e0ec22f7c1927ede9bbbb3e57b10c8fc39301492f47fe32d71361fe24400ea3be0c92de94e990d62d8ac662
