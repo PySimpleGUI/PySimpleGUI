@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.52 Unreleased"
+version = __version__ = "4.60.0.53 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -129,7 +129,8 @@ _change_log = """
         vcenter and vbottom - added USING the expand_x and expand_y parms that were already defined.  (HOPE NOTHING BREAKS!)
     4.60.0.52
         justification parameter added to Listbox (default is left.. can be right and center now too)
-                
+    4.60.0.53
+        Made settings dictionary multiline in test harness write-only.  New coupon code                
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25039,7 +25040,7 @@ def _create_main_window():
     frame6 = [[VPush()],[graph_elem]]
 
     global_settings_tab_layout = [[T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
-                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,8))],
+                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,8), write_only=True)],
                                   ]
 
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
@@ -25200,7 +25201,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '8D57E54186ADB10C4180',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'D11B305A347585E7A915',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -25336,7 +25337,6 @@ if running_windows():
         print('Error using the taskbar icon patch', e)
 
 
-
 _read_mac_global_settings()
 # if running_mac():
 #     print('Your Mac patches are:')
@@ -25344,6 +25344,9 @@ _read_mac_global_settings()
 #     print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
 #     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
 #     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
+
+
+
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
@@ -25357,4 +25360,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#81c3d611f0876569b714bfead31610fd397248595b3b2ebc96bd33600bbcbdcce50013a4f1471a65a24bc8b842b82e0c2083023fe4a9db7d76763f46b34df27cc47d5d27f38eaeec8824af4291b6cc9f53ccb9e4b73a37f3a6b6feb8a726076b105241559fd328fd30f3684e18dacc74c19fdb45077d4ef644fbfd9e7307063246f400f1765357036297d6d6dc9ab74593e6cfd8a0eb5449eea36fd76a65f46953ddbb992b54966e537aa735ff44ee7df9234163669a318e1d2aa8d530673fb0fb8ef3871ce280f977d29de0ec04e7eac393eb9bce1452d9e666de6b0391ba7f3f03395fed40586fa494611127a188a4a13cf703e20118da73a8ba33c17297f2f0b7f44b2677216786b5b32479021b03d233379c66d75aa971e5dd5b497f0759a014f2bb8fbed86ea30fb32fd49a9f1b2f53f6fd61e7e4f265e6a501e675f805079a6a1a2e5394d49bf8fa3911562d8f1c999f8775f0ad818e1e0f421c12190d426b49c426adbe84a0a5433e82b265407eea9758d283770069e854128d1ce66b66de7f59256920d1297076ea9560675f7950c24ab3bd2f60ad317ef8e8013ca06ce44802ddb44df756c35f312c34b0dd1b5e02cd2f947dfba588c90c7c3a366dbae4036bceb0c7ce18301ec5e7157212374939bc6e0ec22f7c1927ede9bbbb3e57b10c8fc39301492f47fe32d71361fe24400ea3be0c92de94e990d62d8ac662
+#55f8010029c6b5063311eff93cca8cefb486cb37b0e5721e89e645de041dee13e953b114549d101e3e254577174bab2d68bf2a4d0701a62cc9c3debd2d60034ce0c83d4babffcc98010b4f9b87189ebdc46e1d69371b9d757b5953cfcd7ec0751ff52c5624ac8f20c0b837db683f1016b3101fe642715d30ea9a8d68c4f7cc877e15884cedcd02fa57e7ccf20e73a84f5590441f243861b95636cf59551eedfb5904fb45c16b38597fedfe1840d88ae5395656874a15c63423705c6c6a9f386ab26086735648723ea8c8c574000bd53b0ce5385f2eed3570df54536f52e967cfb602731103afa45f58c0853c877790e83d7ddc6f4118c05d9ad1b07938e9c5267c85f921b6a7e017fe3c9135c965fc9d7767d108e75c6bed7b16af94215d7d69c8377a7894651aa0be327e8f862fd699983bfac48a1e37f84067c14a1477d740655bbe59bea73569e49b3298a37c466b6b7f2b23c19b985ccbc1cf8f46826cad1f8f28cc8ef716c68774fa87066a15c70f27d7d3f40ebe3ab8172a2171cf0fa2dd641767d339c5ecb6f4e108f033392f21ea03a788267164168168c2038f9409e82dd1afe8756992a6c889e29368973521be6d57f98ab4b1314e51d8618046aa9c0c6d53ed702b5b5479ffb217d95b8434e4cb81a2c1f9a70f6725ccb30f619208ab051e79d6a9bab54f8d7df17fbeeae5dc55a7f1ab8da016af685b4f870b50
