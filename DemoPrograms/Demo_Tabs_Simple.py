@@ -1,9 +1,16 @@
 #!/usr/bin/env python
+
+"""
+    Demo - Simple Tabs
+
+    How to use the Tab Element and the TabGroup Element
+
+    Copyright 2021 PySimpleGUI
+"""
+
 import PySimpleGUI as sg
 # Simple example of TabGroup element and the options available to it
-
 sg.theme('Dark Red')     # Please always add color to your window
-
 # The tab 1, 2, 3 layouts - what goes inside the tab
 tab1_layout = [[sg.Text('Tab 1')],
                [sg.Text('Put your layout in here')],
@@ -14,17 +21,16 @@ tab3_layout = [[sg.Text('Tab 3')]]
 tab4_layout = [[sg.Text('Tab 3')]]
 
 # The TabgGroup layout - it must contain only Tabs
-tab_group_layout = [[sg.Tab('Tab 1', tab1_layout, font='Courier 15', key='-TAB1-'),
+tab_group_layout = [[sg.Tab('Tab 1', tab1_layout, key='-TAB1-'),
                      sg.Tab('Tab 2', tab2_layout, visible=False, key='-TAB2-'),
                      sg.Tab('Tab 3', tab3_layout, key='-TAB3-'),
-                     sg.Tab('Tab 4', tab4_layout, visible=False, key='-TAB4-'),
-                     ]]
+                     sg.Tab('Tab 4', tab4_layout, visible=False, key='-TAB4-')]]
 
 # The window layout - defines the entire window
 layout = [[sg.TabGroup(tab_group_layout,
                        enable_events=True,
                        key='-TABGROUP-')],
-          [sg.Text('Make tab number'), sg.Input(key='-IN-', size=(3,1)), sg.Button('Invisible'), sg.Button('Visible'), sg.Button('Select')]]
+          [sg.Text('Make tab number'), sg.Input(key='-IN-', size=(3,1)), sg.Button('Invisible'), sg.Button('Visible'), sg.Button('Select'), sg.Button('Disable')]]
 
 window = sg.Window('My window with tabs', layout, no_titlebar=False)
 
@@ -41,5 +47,6 @@ while True:
         window[tab_keys[int(values['-IN-'])-1]].update(visible=True)
     if event == 'Select':
         window[tab_keys[int(values['-IN-'])-1]].select()
-
+    if event == 'Disable':
+        window[tab_keys[int(values['-IN-']) - 1]].update(disabled=True)
 window.close()
