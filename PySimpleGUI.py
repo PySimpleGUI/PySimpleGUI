@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.53 Unreleased"
+version = __version__ = "4.60.0.54 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -131,6 +131,8 @@ _change_log = """
         justification parameter added to Listbox (default is left.. can be right and center now too)
     4.60.0.53
         Made settings dictionary multiline in test harness write-only.  New coupon code                
+    4.60.0.54
+        alpha_channel added to set_options.  This sets the default value for the alpha_channel for all windows both user generated and PySimpleGUI generated (such as popups).
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -545,6 +547,7 @@ DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_TOOLTIP_OFFSET = (0, -20)
 DEFAULT_KEEP_ON_TOP = None
 DEFAULT_SCALING = None
+DEFAULT_ALPHA_CHANNEL = 1.0
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
 TOOLTIP_FONT = None
 #################### COLOR STUFF ####################
@@ -9533,7 +9536,7 @@ class Window:
                  element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
-                 alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
+                 alpha_channel=None, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, grab_anywhere_using_control=True, keep_on_top=None, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
@@ -9725,7 +9728,7 @@ class Window:
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
-        self._AlphaChannel = alpha_channel
+        self._AlphaChannel = alpha_channel if alpha_channel is not None else DEFAULT_ALPHA_CHANNEL
         self.Timeout = None
         self.TimeoutKey = TIMEOUT_KEY
         self.TimerCancelled = False
@@ -18185,7 +18188,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
-                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
+                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -18312,6 +18315,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param sbar_frame_color:                Scrollbar Color of frame around scrollbar (available only on some ttk themes)
     :type sbar_frame_color:                 (str)
     :param sbar_relief:                     Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+    :param alpha_channel                    Default alpha channel to be used on all windows
+    :type alpha_channel                     (float)
     :type sbar_relief:                      (str)
     :return:                                None
     :rtype:                                 None
@@ -18371,6 +18376,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_MODAL_WINDOWS_ENABLED
     global DEFAULT_MODAL_WINDOWS_FORCED
     global DEFAULT_TOOLTIP_OFFSET
+    global DEFAULT_ALPHA_CHANNEL
     global _pysimplegui_user_settings
     global ttk_part_overrides_from_options
     # global _my_windows
@@ -18556,6 +18562,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if tooltip_offset != (None, None):
         DEFAULT_TOOLTIP_OFFSET = tooltip_offset
 
+
+    if alpha_channel is not None:
+        DEFAULT_ALPHA_CHANNEL = alpha_channel
 
     # ---------------- ttk scrollbar section ----------------
     if sbar_background_color is not None:
@@ -25360,4 +25369,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#55f8010029c6b5063311eff93cca8cefb486cb37b0e5721e89e645de041dee13e953b114549d101e3e254577174bab2d68bf2a4d0701a62cc9c3debd2d60034ce0c83d4babffcc98010b4f9b87189ebdc46e1d69371b9d757b5953cfcd7ec0751ff52c5624ac8f20c0b837db683f1016b3101fe642715d30ea9a8d68c4f7cc877e15884cedcd02fa57e7ccf20e73a84f5590441f243861b95636cf59551eedfb5904fb45c16b38597fedfe1840d88ae5395656874a15c63423705c6c6a9f386ab26086735648723ea8c8c574000bd53b0ce5385f2eed3570df54536f52e967cfb602731103afa45f58c0853c877790e83d7ddc6f4118c05d9ad1b07938e9c5267c85f921b6a7e017fe3c9135c965fc9d7767d108e75c6bed7b16af94215d7d69c8377a7894651aa0be327e8f862fd699983bfac48a1e37f84067c14a1477d740655bbe59bea73569e49b3298a37c466b6b7f2b23c19b985ccbc1cf8f46826cad1f8f28cc8ef716c68774fa87066a15c70f27d7d3f40ebe3ab8172a2171cf0fa2dd641767d339c5ecb6f4e108f033392f21ea03a788267164168168c2038f9409e82dd1afe8756992a6c889e29368973521be6d57f98ab4b1314e51d8618046aa9c0c6d53ed702b5b5479ffb217d95b8434e4cb81a2c1f9a70f6725ccb30f619208ab051e79d6a9bab54f8d7df17fbeeae5dc55a7f1ab8da016af685b4f870b50
+#49ca358b9453bbb23a39fbacb76261c217c17da5f61c6d704c9d8bfb166f88ec2413a271d0d205891e1b8760ec6dff0c1701957776ff43828a060b1d6553eb745fec3b761f77d33e6917f0d4468260bf326d074feb000ffd0748931c08d022bbbd9b38b8532389b95bd1b611d4009ed55aa2bfffc0e75e435f3d261d50104084efaed7195efdd021398ce67ff11b9a8a0787da1de9a82ff5da1507441c67f85c0c152fe10f9536c452a6290802c91037f80ce816654b21586935af7648fd2bff4342b5732c84965612cb57a8980ce4ec1d7c7ce5006e7b185f12226ee1222f45611afc3d57b4b10c1f95db553a6fd4d63f938aa87ce5912434b95c4a391ce675b843318cb3ef85d794b2e4c98076f33229974b19a97b40febd5cb46f4c99fb6e4f1a65c08dfbec713223f8bff3c95590e149b480f15103f7f46c831e83efa047a371dcee1a5146e5537ca6216a2cd142d911b42f4c4d63523777d6a7a1ccbfc3853891ff26f207d1816fc680df3c2f36c08f0cc2f31135390d7f2abd82f67c6e0c5d73f194a10e22aca616ca1286f9e50e1e9ec01782665228962042c23562ae7858b76c9ba4e1a3eea33f862146724e47a48ef464d7874f54943bc10c4fc2b27902d3ff6a69d1c725176dfd09ce18e82e2d9961919817ed12b6ae795a07efdd9624a5f7496984de6927dfa5626d2b5f901270908a7846a8dfc8b0d1fc96702a
