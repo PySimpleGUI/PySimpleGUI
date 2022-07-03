@@ -5301,6 +5301,7 @@ Listbox(values,
     size = (None, None),
     s = (None, None),
     disabled = False,
+    justification = None,
     auto_size_text = None,
     font = None,
     no_scrollbar = False,
@@ -5341,6 +5342,7 @@ Parameter Descriptions:
 |                       (int, int) or  (int, None) or int                        |            size            | w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |             s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |          disabled          | set disable state for element |
+|                                      str                                       |       justification        | justification for items in listbox. Valid choices - left, right, center. Default is left |
 |                                      bool                                      |       auto_size_text       | True if element should be the same size as the contents |
 |                       (str or (str, int[, str]) or None)                       |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |        no_scrollbar        | Controls if a scrollbar should be shown. If True, no scrollbar will be shown |
@@ -14455,16 +14457,18 @@ Align an element or a row of elements to the bottom of the row that contains it
 ```
 vbottom(elem_or_row,
     expand_x = None,
-    expand_y = None)
+    expand_y = None,
+    background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Element or List[Element] or Tuple[Element] |   elem_or_row    | the element or row of elements |
+|                   bool                   |     expand_x     | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |     expand_y     | If True/False the value will be passed to the Column Elements used to make this feature |
+|               str or None                | background_color | Background color for container that is used by vcenter to do the alignment |
 | Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the bottom or list of elements (a row)
 
 Align an element or a row of elements to the center of the row that contains it
@@ -14472,16 +14476,18 @@ Align an element or a row of elements to the center of the row that contains it
 ```
 vcenter(elem_or_row,
     expand_x = None,
-    expand_y = None)
+    expand_y = None,
+    background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Element or List[Element] or Tuple[Element] |   elem_or_row    | the element or row of elements |
+|                   bool                   |     expand_x     | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |     expand_y     | If True/False the value will be passed to the Column Elements used to make this feature |
+|               str or None                | background_color | Background color for container that is used by vcenter to do the alignment |
 | Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the center or list of elements (a row)
 
 Align an element or a row of elements to the top of the row that contains it
@@ -14489,16 +14495,18 @@ Align an element or a row of elements to the top of the row that contains it
 ```
 vtop(elem_or_row,
     expand_x = None,
-    expand_y = None)
+    expand_y = None,
+    background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Element or List[Element] or Tuple[Element] | elem_or_row | the element or row of elements |
-|                   bool                   |  expand_x   | If True/False the value will be passed to the Column Elements used to make this feature |
-|                   bool                   |  expand_y   | If True/False the value will be passed to the Column Elements used to make this feature |
+| Element or List[Element] or Tuple[Element] |   elem_or_row    | the element or row of elements |
+|                   bool                   |     expand_x     | If True/False the value will be passed to the Column Elements used to make this feature |
+|                   bool                   |     expand_y     | If True/False the value will be passed to the Column Elements used to make this feature |
+|               str or None                | background_color | Background color for container that is used by vtop to do the alignment |
 | Column or List[Column] | **RETURN** | A column element containing the provided element aligned to the top or list of elements (a row)
 
 -----------------
