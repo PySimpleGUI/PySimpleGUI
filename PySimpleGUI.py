@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.54 Unreleased"
+version = __version__ = "4.60.0.55 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -133,6 +133,8 @@ _change_log = """
         Made settings dictionary multiline in test harness write-only.  New coupon code                
     4.60.0.54
         alpha_channel added to set_options.  This sets the default value for the alpha_channel for all windows both user generated and PySimpleGUI generated (such as popups).
+    4.60.0.55
+        Allow Browse/Chooser buttons (that have a target) to indicate a target key that is a tuple.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4904,6 +4906,7 @@ class Button(Element):
     def _find_target(self):
         target = self.Target
         target_element = None
+
         if target[0] == ThisRow:
             target = [self.Position[0], target[1]]
             if target[1] < 0:
@@ -4913,12 +4916,20 @@ class Button(Element):
         if target == (None, None):
             strvar = self.TKStringVar
         else:
-            if not isinstance(target, str):
-                if target[0] < 0:
-                    target = [self.Position[0] + target[0], target[1]]
-                target_element = self.ParentContainer._GetElementAtLocation(target)
-            else:
-                target_element = self.ParentForm.find_element(target)
+            # Need a try-block because if the target is not hashable, the "in" test will raise exception
+            try:
+                if target in self.ParentForm.AllKeysDict:
+                    target_element = self.ParentForm.AllKeysDict[target]
+            except:
+                pass
+            # if target not found or the above try got exception, then keep looking....
+            if target_element is None:
+                if not isinstance(target, str):
+                    if target[0] < 0:
+                        target = [self.Position[0] + target[0], target[1]]
+                    target_element = self.ParentContainer._GetElementAtLocation(target)
+                else:
+                    target_element = self.ParentForm.find_element(target)
             try:
                 strvar = target_element.TKStringVar
             except:
@@ -25369,4 +25380,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#49ca358b9453bbb23a39fbacb76261c217c17da5f61c6d704c9d8bfb166f88ec2413a271d0d205891e1b8760ec6dff0c1701957776ff43828a060b1d6553eb745fec3b761f77d33e6917f0d4468260bf326d074feb000ffd0748931c08d022bbbd9b38b8532389b95bd1b611d4009ed55aa2bfffc0e75e435f3d261d50104084efaed7195efdd021398ce67ff11b9a8a0787da1de9a82ff5da1507441c67f85c0c152fe10f9536c452a6290802c91037f80ce816654b21586935af7648fd2bff4342b5732c84965612cb57a8980ce4ec1d7c7ce5006e7b185f12226ee1222f45611afc3d57b4b10c1f95db553a6fd4d63f938aa87ce5912434b95c4a391ce675b843318cb3ef85d794b2e4c98076f33229974b19a97b40febd5cb46f4c99fb6e4f1a65c08dfbec713223f8bff3c95590e149b480f15103f7f46c831e83efa047a371dcee1a5146e5537ca6216a2cd142d911b42f4c4d63523777d6a7a1ccbfc3853891ff26f207d1816fc680df3c2f36c08f0cc2f31135390d7f2abd82f67c6e0c5d73f194a10e22aca616ca1286f9e50e1e9ec01782665228962042c23562ae7858b76c9ba4e1a3eea33f862146724e47a48ef464d7874f54943bc10c4fc2b27902d3ff6a69d1c725176dfd09ce18e82e2d9961919817ed12b6ae795a07efdd9624a5f7496984de6927dfa5626d2b5f901270908a7846a8dfc8b0d1fc96702a
+#5f5d11b1d5aede0782c3e256e2d646769e385039e8e58bc25647eb2873368ab11a6354762c7bd6ef6e276511eaa934ac5cd8a3cea0247b45b1c368e3f5f59b1412fcbd03f3b6a9e0c42e8b2bf8c92b1953aad3d58cf8712c11eb62c046d1b710863e1c03bfe71a28369e4b617ecc504a7296db4fc5d2f0080bfa58ae00d3ae3c8315dcd4259afe9214ccd3b78c62daa918d2e5091af1277fc11dc2eec08c35b726c2de32c2189ff8ced4900a2fdae8f6231545c6892e62e1e11d6918182d235162398b93451e648ad04d7beb9ed158e53181767fbfc5fb862eab6a4da6036b1c1d3742bdcf3a3e74652f1944ef1c6b4646dd7bae7fa8522f39a71179945df68bae32da4cf5105331cb408027aaad650fba79140e226ad6f41826c8529e176d3f1af8e4b91a913551567155c955600cf4975fa7b80ba1102b3008adcdff6cf562ed778d156173ca41fa3cdf3e2c2518d2d7ea50fdfbb3a34c9a27a1fecb49e4e8024cac2e6d3830623efae212b02635e8b3050b5091b214663aac7382755b3ee42ecd72aafac97ccc96977a7cd7b636acc668c6a067d9becc48271fa3ce31b7872dcac8c6061f7e82e3662fd399bc2e5d3f2c22f0514ea006288a58416d4548c97ea4488b3e39e57cb93bbfbd924a3df8d818cfd2d759b34c38657d83798a1da2653c2dc8585ce87f082e809af9968497b1cd35f9c769564469cc9376349d09f3
