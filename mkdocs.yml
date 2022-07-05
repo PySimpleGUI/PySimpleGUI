@@ -1,1 +1,4 @@
 site_name: PySimpleGUI
+theme:
+    name: mkdocs
+    custom_dir: docs_modification/
