@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.0.55 Unreleased"
+version = __version__ = "4.60.1.55 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -135,6 +135,12 @@ _change_log = """
         alpha_channel added to set_options.  This sets the default value for the alpha_channel for all windows both user generated and PySimpleGUI generated (such as popups).
     4.60.0.55
         Allow Browse/Chooser buttons (that have a target) to indicate a target key that is a tuple.
+    4.60.1.55
+        While not actually correct.... 4.60.1 was released in the middle of the development above... I'm changing the version to look as
+            if this release is based on 4.60.1.  This code DOES have the same code that's in 4.60.1 so it's more a matter of symantics.
+            Hoping this clears up confusion.  Sorry for the dot-release causing so much confusion.
+            
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25380,4 +25386,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5f5d11b1d5aede0782c3e256e2d646769e385039e8e58bc25647eb2873368ab11a6354762c7bd6ef6e276511eaa934ac5cd8a3cea0247b45b1c368e3f5f59b1412fcbd03f3b6a9e0c42e8b2bf8c92b1953aad3d58cf8712c11eb62c046d1b710863e1c03bfe71a28369e4b617ecc504a7296db4fc5d2f0080bfa58ae00d3ae3c8315dcd4259afe9214ccd3b78c62daa918d2e5091af1277fc11dc2eec08c35b726c2de32c2189ff8ced4900a2fdae8f6231545c6892e62e1e11d6918182d235162398b93451e648ad04d7beb9ed158e53181767fbfc5fb862eab6a4da6036b1c1d3742bdcf3a3e74652f1944ef1c6b4646dd7bae7fa8522f39a71179945df68bae32da4cf5105331cb408027aaad650fba79140e226ad6f41826c8529e176d3f1af8e4b91a913551567155c955600cf4975fa7b80ba1102b3008adcdff6cf562ed778d156173ca41fa3cdf3e2c2518d2d7ea50fdfbb3a34c9a27a1fecb49e4e8024cac2e6d3830623efae212b02635e8b3050b5091b214663aac7382755b3ee42ecd72aafac97ccc96977a7cd7b636acc668c6a067d9becc48271fa3ce31b7872dcac8c6061f7e82e3662fd399bc2e5d3f2c22f0514ea006288a58416d4548c97ea4488b3e39e57cb93bbfbd924a3df8d818cfd2d759b34c38657d83798a1da2653c2dc8585ce87f082e809af9968497b1cd35f9c769564469cc9376349d09f3
+#60c7c5bd20821789a1b9c913142a5e170e077e86608a2d5062caa7781701d55a4866cc0e147faa98abc44ba7e4fef31e23d2ec2cca1ee7003fa61442f79559515650150bcc86817c1de3659c812bc9fe9d765ed499a15af99e20c5fc5ac294791bbbd139fdc2b25308eef4384d76eee5c876940527427bc2c189ad2a51397af823b2ca9c63c6fc6ea1c02c21de531a7211cddd43860fdaa2d40ac91fb8292cda016490ca0d7c8d538808448c3ff5e14ea12bef6f12c857b9f9391df445e49a5e13ceb192feebdf12518f3c855fed1530352a7f9b333e2b92a389ff773bb983a4b3825f0691067caff0c373a8ab610f93a366ce15222fc303dbd03e57442f9e201026814844f6c6c4a1edaf88c4ca6415215246a79ba71b216720e8916049015ef23a7e1fd783ed430d42272605d0f722dd307c64dfefe72c76bfad4b2115862cb2f51fa39e27307ae82045463a400925e71aeb5f44b5dca0ed4e5f40d59dd8a543d10b5536cfa5bada41644c9c9b0394a28b0c5fdbd22ca8fd5f6917e5e73848243ca4181a92030d552248fcad3e6d4eee6e2572c4d2aafcae1a0e2f9643176acb8ae39698b2a0831ad7ff77a85cba40171861754ff5a19c9fdeab3fe95ba45caa48dca713c7f087fd817db50016a6aeff94ebcee7666660404e3399bcfe79f8ad85e72f08dc5613a199fd9c367e93f38d3b5bec55f9326a2adb32c1a1998fee
