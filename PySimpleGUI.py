@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from webbrowser import BackgroundBrowser
 
-version = __version__ = "4.60.1.55 Unreleased"
+version = __version__ = "4.60.1.56 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -139,6 +140,8 @@ _change_log = """
         While not actually correct.... 4.60.1 was released in the middle of the development above... I'm changing the version to look as
             if this release is based on 4.60.1.  This code DOES have the same code that's in 4.60.1 so it's more a matter of symantics.
             Hoping this clears up confusion.  Sorry for the dot-release causing so much confusion.
+    4.60.1.56
+        Fix for Window.extend_layout.  Was not picking up the background color of the container that the rows were being added to.
             
 
     """
@@ -10029,7 +10032,7 @@ class Window:
         :return:          (Window) self so could be chained
         :rtype:           (Window)
         """
-        column = Column(rows, pad=(0, 0))
+        column = Column(rows, pad=(0, 0), background_color=container.BackgroundColor)
         if self == container:
             frame = self.TKroot
         elif isinstance(container.Widget, TkScrollableFrame):
@@ -25386,4 +25389,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#60c7c5bd20821789a1b9c913142a5e170e077e86608a2d5062caa7781701d55a4866cc0e147faa98abc44ba7e4fef31e23d2ec2cca1ee7003fa61442f79559515650150bcc86817c1de3659c812bc9fe9d765ed499a15af99e20c5fc5ac294791bbbd139fdc2b25308eef4384d76eee5c876940527427bc2c189ad2a51397af823b2ca9c63c6fc6ea1c02c21de531a7211cddd43860fdaa2d40ac91fb8292cda016490ca0d7c8d538808448c3ff5e14ea12bef6f12c857b9f9391df445e49a5e13ceb192feebdf12518f3c855fed1530352a7f9b333e2b92a389ff773bb983a4b3825f0691067caff0c373a8ab610f93a366ce15222fc303dbd03e57442f9e201026814844f6c6c4a1edaf88c4ca6415215246a79ba71b216720e8916049015ef23a7e1fd783ed430d42272605d0f722dd307c64dfefe72c76bfad4b2115862cb2f51fa39e27307ae82045463a400925e71aeb5f44b5dca0ed4e5f40d59dd8a543d10b5536cfa5bada41644c9c9b0394a28b0c5fdbd22ca8fd5f6917e5e73848243ca4181a92030d552248fcad3e6d4eee6e2572c4d2aafcae1a0e2f9643176acb8ae39698b2a0831ad7ff77a85cba40171861754ff5a19c9fdeab3fe95ba45caa48dca713c7f087fd817db50016a6aeff94ebcee7666660404e3399bcfe79f8ad85e72f08dc5613a199fd9c367e93f38d3b5bec55f9326a2adb32c1a1998fee
+#1eb59a71aa2aea4c03420bf8a4fc2bfdd9e67600810a4b19145a6d0f396bf70f79df14baae3a9c72601f62a25a5996f67f2d6ff06c0a0e0d7864db352d543f3292cd5926b8243d7d243bce76299bf79e65922ddb666034cace04e5dfd2a970a5457266b0bf96ae7c9702dbbaf97b5f3cea977fea23d39a3f802f6b05b30c51da882feb361ba8536f1c8ac2055d3d1a26c5d0b8c8d6d38bc643df5b580efecc6f37c58ac845626200237791f7eda1e67e3aa4013a9bb3ac2c4fffbf067f3296e5776253a87a80356edb8216a736b45243cc4f8357381bc2d965e7bdcb32cfb95ab18d1f7ed7b1473b241f4e46e6fab39cec580cbfd76382df03c684acbb380cd34eab4c82f59173162aa9208ecc340c97fad176003b63b4e76af5fe8faff739c5b2e214dc904bd874f865523efe0c89cca8b6ddb574042ee2845906b6aed9050a0dbbab2502f4c9d6f5ef81eb6616ec56e1eab705198bbef6ea4cd44734a5d30b6d6da99dc7c9e6a2886c2bf6720f4f8aafaa1db7d4f028001f73128ef3a5bc372fdbb8e6619c9de30c6e200e79a36eb507f3c8722dbf1a62813275c9e7ee63859029c4b7082effc36840fd7315ec8db6579b87e5dc6a6fa2a82fa00e165740b1fe28d25997a231ec0e23dcd6ca54c981759e47632b3bfbbdd8a80956b8f83fc00fd70d80f7fcc6783c93ce5c4cc4666c85eba8e2efa62b80a246d56838351df4
