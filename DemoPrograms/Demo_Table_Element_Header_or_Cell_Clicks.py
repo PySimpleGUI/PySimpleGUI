@@ -15,6 +15,7 @@ import operator
 
     This demo shows how you can use these click events to sort your table by columns
 
+    Copyright 2022 PySimpleGUI
 """
 
 sg.theme('Light green 6')
@@ -55,6 +56,7 @@ layout = [[sg.Table(values=data[1:][:], headings=headings + ['Extra'], max_col_w
                     auto_size_columns=True,
                     display_row_numbers=False,
                     justification='right',
+                    right_click_selects=True,
                     num_rows=20,
                     alternating_row_color='lightyellow',
                     key='-TABLE-',
@@ -72,23 +74,33 @@ layout = [[sg.Table(values=data[1:][:], headings=headings + ['Extra'], max_col_w
 
 # ------ Create Window ------
 window = sg.Window('The Table Element', layout,
-                   ttk_theme='clam',
-                   resizable=True)
+                   # ttk_theme='clam',
+                   resizable=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, finalize=True)
+
+# Add the ability to double-click a cell
+window["-TABLE-"].bind('<Double-Button-1>' , "+-double click-")
 
 # ------ Event Loop ------
 while True:
     event, values = window.read()
     print(event, values)
-    if event == sg.WIN_CLOSED:
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break
+    if event == 'Edit Me':
+        sg.execute_editor(__file__)
+    elif event == 'Version':
+        sg.popup_scrolled(__file__, sg.get_versions(), location=window.current_location(), keep_on_top=True, non_blocking=True)
     if event == 'Double':
         for i in range(1, len(data)):
             data.append(data[i])
         window['-TABLE-'].update(values=data[1:][:])
     elif event == 'Change Colors':
         window['-TABLE-'].update(row_colors=((8, 'white', 'red'), (9, 'green')))
+    elif event == '-TABLE-+-double click-':
+        print('Last cell clicked was', window['-TABLE-'].get_last_clicked_position())
     if isinstance(event, tuple):
         # TABLE CLICKED Event has value in format ('-TABLE=', '+CLICKED+', (row,col))
+        # You can also call Table.get_last_clicked_position to get the cell clicked
         if event[0] == '-TABLE-':
             if event[2][0] == -1 and event[2][1] != -1:           # Header was clicked and wasn't the "row" column
                 col_num_clicked = event[2][1]
