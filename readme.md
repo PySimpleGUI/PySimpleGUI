@@ -93,7 +93,7 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
 </p>
 
 ## Recognition of Open Source Use
-In the Demo Programs or one of the PySimpleGUI Account's Repos these packages were used at least one time. Some of your are the goodies on the right of the GUI gap.  
+In the Demo Programs or one of the PySimpleGUI Account's Repos these packages were used at least one time. Some of you are the goodies on the right of the GUI gap.  
   
  If you use Open Source software in your project, be sure and supply information about the packages you used.  
 
