@@ -24,12 +24,13 @@ import webbrowser
     Copyright 2021 PySimpleGUI
 """
 
-version = '1.5.4'
+version = '1.6.0'
 __version__ = version.split()[0]
 
 '''
 Change log
-
+    1.6.0   12-July-2022
+        Fixed output filename to match the size indicated under the filename.
     1.5.4   10-May-2022
         Had to mess around with the entry point due to setuptools
     1.5.0   10-May-2022
@@ -80,8 +81,12 @@ def main():
             window['-ORIG WIDTH-'].update(image.size[0])
             if not values['-WIDTH-']:
                 window['-WIDTH-'].update(image.size[0])
+            else:
+                width = values['-WIDTH-']
             if not values['-HEIGHT-']:
                 window['-HEIGHT-'].update(image.size[1])
+            else:
+                height = values['-HEIGHT-']
             window['-ORIG HEIGHT-'].update(image.size[1])
 
             infilename = os.path.basename(infile)
@@ -92,7 +97,7 @@ def main():
                     outfileext = 'jpg'
             else:
                 outfileext = infileext[1:]  # strip off the .
-            outfile = f'{infilenameonly}{width}x{height}.{outfileext}'
+            outfile = f'{infilenameonly}_{width}x{height}.{outfileext}'
             outfullfilename = os.path.join(os.path.dirname(infile), outfile)
 
             if values['-DO NOT SAVE-']:
@@ -119,8 +124,8 @@ def main():
               [sg.Frame('Input Filename', [[sg.Input(key='-IN-', enable_events=True, s=80), sg.FileBrowse(), ],
                                            [sg.T('Original size'), sg.T(k='-ORIG WIDTH-'), sg.T('X'), sg.T(k='-ORIG HEIGHT-')]])],
               [sg.Frame('Output Filename', [[sg.In(k='-NEW FILENAME-', s=80), sg.FileBrowse(), ],
-                                            [sg.In(default_text=sg.user_settings_get_entry('-width-', ''), s=4, k='-WIDTH-'), sg.T('X'),
-                                             sg.In(default_text=sg.user_settings_get_entry('-height-', ''), s=4, k='-HEIGHT-')]])],
+                                            [sg.In(default_text=sg.user_settings_get_entry('-width-', ''), s=4, k='-WIDTH-', enable_events=True), sg.T('X'),
+                                             sg.In(default_text=sg.user_settings_get_entry('-height-', ''), s=4, k='-HEIGHT-', enable_events=True)]])],
               [sg.Frame('Convert To New Format', new_format_layout)],
               [sg.CBox('Encode to Base64 and leave on Clipboard', k='-BASE64-', default=sg.user_settings_get_entry('-base64-', True))],
               # [sg.CBox('Use PNG for all Base64 Encoding', default=True, k='-PNG CONVERT-')],
@@ -189,6 +194,8 @@ def main():
             webbrowser.open_new_tab(r'http://www.PySimpleGUI.com')
         elif event == '-PSGRESIZER-':
             webbrowser.open_new_tab(r'https://github.com/PySimpleGUI/psgresizer')
+        elif event in ('-WIDTH-', '-HEIGHT-'):
+            update_outfilename()
 
     if event != sg.WIN_CLOSED:
         sg.user_settings_set_entry('-autoclose-', values['-AUTOCLOSE-'])
