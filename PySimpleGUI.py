@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-from webbrowser import BackgroundBrowser
 
-version = __version__ = "4.60.1.56 Unreleased"
+version = __version__ = "4.60.1.57 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -142,7 +141,8 @@ _change_log = """
             Hoping this clears up confusion.  Sorry for the dot-release causing so much confusion.
     4.60.1.56
         Fix for Window.extend_layout.  Was not picking up the background color of the container that the rows were being added to.
-            
+    4.60.1.57
+        Fixed Text element's update method docstring to indicate that value can be "Any" type not just strings
 
     """
 
@@ -3926,7 +3926,7 @@ class Text(Element):
         when made visible.
 
         :param value:            new text to show
-        :type value:             (str)
+        :type value:             (Any)
         :param background_color: color of background
         :type background_color:  (str)
         :param text_color:       color of the text
@@ -25375,8 +25375,6 @@ _read_mac_global_settings()
 #     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
 
 
-
-
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
@@ -25389,4 +25387,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1eb59a71aa2aea4c03420bf8a4fc2bfdd9e67600810a4b19145a6d0f396bf70f79df14baae3a9c72601f62a25a5996f67f2d6ff06c0a0e0d7864db352d543f3292cd5926b8243d7d243bce76299bf79e65922ddb666034cace04e5dfd2a970a5457266b0bf96ae7c9702dbbaf97b5f3cea977fea23d39a3f802f6b05b30c51da882feb361ba8536f1c8ac2055d3d1a26c5d0b8c8d6d38bc643df5b580efecc6f37c58ac845626200237791f7eda1e67e3aa4013a9bb3ac2c4fffbf067f3296e5776253a87a80356edb8216a736b45243cc4f8357381bc2d965e7bdcb32cfb95ab18d1f7ed7b1473b241f4e46e6fab39cec580cbfd76382df03c684acbb380cd34eab4c82f59173162aa9208ecc340c97fad176003b63b4e76af5fe8faff739c5b2e214dc904bd874f865523efe0c89cca8b6ddb574042ee2845906b6aed9050a0dbbab2502f4c9d6f5ef81eb6616ec56e1eab705198bbef6ea4cd44734a5d30b6d6da99dc7c9e6a2886c2bf6720f4f8aafaa1db7d4f028001f73128ef3a5bc372fdbb8e6619c9de30c6e200e79a36eb507f3c8722dbf1a62813275c9e7ee63859029c4b7082effc36840fd7315ec8db6579b87e5dc6a6fa2a82fa00e165740b1fe28d25997a231ec0e23dcd6ca54c981759e47632b3bfbbdd8a80956b8f83fc00fd70d80f7fcc6783c93ce5c4cc4666c85eba8e2efa62b80a246d56838351df4
+#25bf18df3a8b2abcb541a5330c3a5cee7d9aef45c954d7fe6bacfdfc9fd8046396d3a7bf9fd42c42c0ef578934233d7eb4a03c29a39a15b8210d7d749cda7c4f79524f6b906ad465f0e60b976bbc3ca14c7a86fb7e77019f10285c7e96122f3b60767245809b0b14bcb83eb3a25f3dec68b7a282a61253a46e0afd374356ceb4817df59bfbc9da791275e48ce4470767ae29d84b475ad1d6ce49072481e2ebe25ef6e0016d7f6dc87ef6d7b3b3317f874ad5cfe781362600a0b46cdca4ca662a217ecc9039354d83ef84b186f881233a9595a46a0ddafd6c427256a0e640477a8edb6fd5ef53fb7f0c54c7e45f5b12b97897fabeae455e733091aa7ac3ea79223b7414cda4dd38406f02e77f802f63cf24de2cccdc63a54d983031962b6abc9808eb2c45aad48e121e129074891f367249f3999f26437b5fd0328ae7e174a989933ed9b28f2fc02b53212d5008e46e911770cbd00fa3b7b4684c49b73bd3046177276c80bf5c6d5f57ae257cfa19f5bf783749bd3dd417bdf5e714473810c4125bc3a8838930c1a73a30bdf49c03f21ddc65fe21acf3c61accf0fd62d067b294e9b24e18b7cd82b02fc4f2c534d66cc22cfdbcfab47c5cd95fe5dd88f19802e5df0c2d5cd0558dc2764c3bb9f5b9c0e530dd7fe945bae974ffbe793b36a6c7d0cae1470e8ea727409a6dde4a1b9692db0258aa8f41ee0db60efce1967a78ea35
