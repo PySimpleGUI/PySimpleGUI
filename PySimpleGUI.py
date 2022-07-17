@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.57 Unreleased"
+version = __version__ = "4.60.1.58 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -143,6 +143,10 @@ _change_log = """
         Fix for Window.extend_layout.  Was not picking up the background color of the container that the rows were being added to.
     4.60.1.57
         Fixed Text element's update method docstring to indicate that value can be "Any" type not just strings
+    4.60.1.58
+        Addition of without_titlebar paramter to Window.current_location.  Defaults to False.  If True, then the location of the main portion of the window
+            will be returned (i.e. will not have the titlebar)
+
 
     """
 
@@ -11380,24 +11384,31 @@ class Window:
 
 
 
-    def current_location(self, more_accurate=False):
+    def current_location(self, more_accurate=False, without_titlebar=False):
         """
         Get the current location of the window's top left corner.
         Sometimes, depending on the environment, the value returned does not include the titlebar,etc
         A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
         The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
         Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
+        If without_titlebar is set then the location of the root x,y is used which should not include the titlebar but
+            may be OS dependent.
 
-        :param more_accurate: If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account
-        :type more_accurate:  (bool)
-        :return:              The x and y location in tuple form (x,y)
-        :rtype:               Tuple[(int | None), (int | None)]
+        :param more_accurate:    If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account
+        :type more_accurate:     (bool)
+        :param without_titlebar: If True, return location of top left of main window area without the titlebar (may be OS dependent?)
+        :type without_titlebar:  (bool)
+        :return:                 The x and y location in tuple form (x,y)
+        :rtype:                  Tuple[(int | None), (int | None)]
         """
+
 
         if not self._is_window_created('tried Window.current_location'):
             return (None, None)
         try:
-            if more_accurate:
+            if without_titlebar is True:
+                x, y = self.TKroot.winfo_rootx(), self.TKroot.winfo_rooty()
+            elif more_accurate:
                 geometry = self.TKroot.geometry()
                 location = geometry[geometry.find('+') + 1:].split('+')
                 x, y = int(location[0]), int(location[1])
@@ -11407,6 +11418,7 @@ class Window:
             warnings.warn('Error in Window.current_location. Trouble getting x,y location\n' + str(e), UserWarning)
             x, y = (None, None)
         return (x,y)
+
 
     def current_size_accurate(self):
         """
@@ -25387,4 +25399,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#25bf18df3a8b2abcb541a5330c3a5cee7d9aef45c954d7fe6bacfdfc9fd8046396d3a7bf9fd42c42c0ef578934233d7eb4a03c29a39a15b8210d7d749cda7c4f79524f6b906ad465f0e60b976bbc3ca14c7a86fb7e77019f10285c7e96122f3b60767245809b0b14bcb83eb3a25f3dec68b7a282a61253a46e0afd374356ceb4817df59bfbc9da791275e48ce4470767ae29d84b475ad1d6ce49072481e2ebe25ef6e0016d7f6dc87ef6d7b3b3317f874ad5cfe781362600a0b46cdca4ca662a217ecc9039354d83ef84b186f881233a9595a46a0ddafd6c427256a0e640477a8edb6fd5ef53fb7f0c54c7e45f5b12b97897fabeae455e733091aa7ac3ea79223b7414cda4dd38406f02e77f802f63cf24de2cccdc63a54d983031962b6abc9808eb2c45aad48e121e129074891f367249f3999f26437b5fd0328ae7e174a989933ed9b28f2fc02b53212d5008e46e911770cbd00fa3b7b4684c49b73bd3046177276c80bf5c6d5f57ae257cfa19f5bf783749bd3dd417bdf5e714473810c4125bc3a8838930c1a73a30bdf49c03f21ddc65fe21acf3c61accf0fd62d067b294e9b24e18b7cd82b02fc4f2c534d66cc22cfdbcfab47c5cd95fe5dd88f19802e5df0c2d5cd0558dc2764c3bb9f5b9c0e530dd7fe945bae974ffbe793b36a6c7d0cae1470e8ea727409a6dde4a1b9692db0258aa8f41ee0db60efce1967a78ea35
+#0c08e8e88171b6e74cff2961ea2961846d80fdde2fac43128b330a4b53844085faae04e3d984a5bbe77e812f5b7e43da3a664524a83002f53c43aeca441842f1f4cf5117c7d7dbed46ba7836fc7e62b3eff0055b12ec6dcff52f87acfbfc094cc3fd562011491f636636eaa1569144d493276cbe78ea71980bf0374127e78c72263ffd19af63ad86cbc147c52e581f33a141fa8d4e0e42ecc371cdcd6258cbfb79e539b4044bb25c649be72a590be69856c8088d5375611a555eda3ac5949689dedb286d611e20283ab0ea3938c945378ddb05c31b370872772df09f2b895ddcb1c8b74ba05b0ec43752fa16eb9265a06b0dab6b194fb8502ef62e30b05158b9474d15e3b9cb8b508ad7598f1743d55b3406c7e75a796d4597a4a45a9fa5520190c5bc1a9b6320e649dc1ad91d96c817f87debae50b7927061ff7769a57765190a21b51416172e8cc28a8d53024d25cec68c9e74a98ef614bc56b0b945ba4bc6b4468a8c13defc5942f373cd3bb5830a72020fc9d572b059ec0084362c96a97a1e1496f470172a7c1f42199c7922c0c0db23c7a6f2fdac63c6bbd9fc3275b2adadc3e1d1578cd580fa3d6eaefe968ff0c88b2e09740742df71b5a83d1068fb0e11abfbc5afa21126d85aabc3a0ba3e55589371b3cc1e6366ffb65fd5bb0e19e333f68f41c93b0d7da82552333d454be92c50a3728def68e8998c88dad1def813
