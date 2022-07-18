@@ -56,8 +56,7 @@ def main():
             sg.execute_editor(__file__)
         elif event == 'Version':
             sg.popup_scrolled(__file__, sg.get_versions(), location=window.current_location(), keep_on_top=True, non_blocking=True)
-        if isinstance(event, tuple):
-            if event[0] == '-DEL-':
+        elif event[0] == '-DEL-':
                 window[('-ROW-', event[1])].update(visible=False)
     window.close()
 
