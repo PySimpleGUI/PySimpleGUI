@@ -48,8 +48,6 @@ def main():
         event, values = window.read()     # wake every hour
         print(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
-            if event == 'Exit':
-                sg.user_settings_set_entry('-location-', window.current_location())
             break
         if event == 'Add Item':
             window.metadata += 1
