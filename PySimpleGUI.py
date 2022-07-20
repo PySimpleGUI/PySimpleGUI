@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.58 Unreleased"
+version = __version__ = "4.60.1.59 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -146,7 +146,9 @@ _change_log = """
     4.60.1.58
         Addition of without_titlebar paramter to Window.current_location.  Defaults to False.  If True, then the location of the main portion of the window
             will be returned (i.e. will not have the titlebar)
-
+    4.60.1.59
+        Fix for crash if COLOR_SYSTEM_DEFAULT specified in parameter disabled_readonly_background_color or disabled_readonly_text_color for Input Element.
+        Also applied similar fix for Tab element's focus color
 
     """
 
@@ -15769,14 +15771,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
                 element.TKEntry.bind('<Return>', element._ReturnKeyHandler)
 
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                if text_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(fg=text_color, selectbackground=text_color)
 
-                if element.disabled_readonly_background_color is not None:
+                if element.disabled_readonly_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
-                if element.disabled_readonly_text_color is not None:
+                if element.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.config(fg=element.disabled_readonly_text_color)
 
                 element.Widget.config(highlightthickness=0)
@@ -16553,7 +16555,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style, borderwidth=element.BorderWidth)
                 if element.TabBorderWidth is not None:
                     style.configure(custom_style + '.Tab', borderwidth=element.TabBorderWidth)       # if ever want to get rid of border around the TABS themselves
-                if element.FocusColor is not None:
+                if element.FocusColor not in (None, COLOR_SYSTEM_DEFAULT):
                     style.configure(custom_style + '.Tab', focuscolor=element.FocusColor)
 
                 style.configure(custom_style + '.Tab', font=font)
@@ -16599,13 +16601,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tkscale.config(highlightthickness=0)
                 if element.ChangeSubmits:
                     tkscale.config(command=element._SliderChangedHandler)
-                if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     tkscale.configure(background=element.BackgroundColor)
                 if element.TroughColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.config(troughcolor=element.TroughColor)
                 if element.DisableNumericDisplay:
                     tkscale.config(showvalue=0)
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                if text_color not in (None, COLOR_SYSTEM_DEFAULT):
                     tkscale.configure(fg=text_color)
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 tkscale.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
@@ -16705,7 +16707,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         value = [i + element.StartingRowNumber] + value
                     id = treeview.insert('', 'end', text=value, iid=i + 1, values=value, tag=i)
                     element.tree_ids.append(id)
-                if element.AlternatingRowColor is not None:  # alternating colors
+                if element.AlternatingRowColor not in (None, COLOR_SYSTEM_DEFAULT):  # alternating colors
                     for row in range(0, len(element.Values), 2):
                         treeview.tag_configure(row, background=element.AlternatingRowColor)
                 if element.RowColors is not None:  # individual row colors
@@ -17011,7 +17013,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
 
-                if element.color is not None:
+                if element.color not in (None, COLOR_SYSTEM_DEFAULT):
                     style.configure(style_name, background=element.color)
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
 
@@ -25399,4 +25401,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0c08e8e88171b6e74cff2961ea2961846d80fdde2fac43128b330a4b53844085faae04e3d984a5bbe77e812f5b7e43da3a664524a83002f53c43aeca441842f1f4cf5117c7d7dbed46ba7836fc7e62b3eff0055b12ec6dcff52f87acfbfc094cc3fd562011491f636636eaa1569144d493276cbe78ea71980bf0374127e78c72263ffd19af63ad86cbc147c52e581f33a141fa8d4e0e42ecc371cdcd6258cbfb79e539b4044bb25c649be72a590be69856c8088d5375611a555eda3ac5949689dedb286d611e20283ab0ea3938c945378ddb05c31b370872772df09f2b895ddcb1c8b74ba05b0ec43752fa16eb9265a06b0dab6b194fb8502ef62e30b05158b9474d15e3b9cb8b508ad7598f1743d55b3406c7e75a796d4597a4a45a9fa5520190c5bc1a9b6320e649dc1ad91d96c817f87debae50b7927061ff7769a57765190a21b51416172e8cc28a8d53024d25cec68c9e74a98ef614bc56b0b945ba4bc6b4468a8c13defc5942f373cd3bb5830a72020fc9d572b059ec0084362c96a97a1e1496f470172a7c1f42199c7922c0c0db23c7a6f2fdac63c6bbd9fc3275b2adadc3e1d1578cd580fa3d6eaefe968ff0c88b2e09740742df71b5a83d1068fb0e11abfbc5afa21126d85aabc3a0ba3e55589371b3cc1e6366ffb65fd5bb0e19e333f68f41c93b0d7da82552333d454be92c50a3728def68e8998c88dad1def813
+#1b188be607d749e5ad218d51a3aa7d927da60c845baa0006ec47496db5b2a5d789e51321b9f6a31a751d2ccc521ae0f864bbfe5e69e1fe1c2b87914bfbf39e3c6fda8234b74d6194fb7094618532d335ad62fd11532166593cf0f4c929605976812a2fb7df7e8416292ad0d254705d968336691b8b398198812bc0197e478443b6ed876b913b9c20ad47cd3a74193d1c0861472db06dfc8e56ccd39a25101f90f87d52ea9f1c1504ec61b44c3869cb59e335f99a62cde834fd30ab391dc72185c5b1fd87315d36dedf07f14ffbce570233fdbc208311c930c388ba2e317af3ccd0afb66664a17a2727f73848a26999a6dcfa0142bd3a3aec05023775591b375af6175cc7d2089de8b08ae7fda01f79d80505016d75309cff2bb3b3ba15815e9e036ed20135169d626033bda96badcfff435ccd7090afa77dec5309f73b7adf9ff215bb00180dbd906a1031b5d0512eeb28b93a964ff6120b99cf05737cd2c1f0bbe8ee83016b0d8238eb13099fe2ec08d891aeb6e13e90a2d5206bcd7c7386deca9c97d0d5e76591f3fdc8c00c40cabd11f2232ae14f26d4950e5e0b501dfe304462f9e24c65a747342285d0761af954a4cbc06916ab9d1d3c361407cce3087acc77d8d31913c1842d2086d57ca703a1f8228dabceaa2c2ba5a2c35b7761ca29e04390a8c0aab86556ee9a4d772b06fd80cfbde8d13358aca86d2c1373b31a77
