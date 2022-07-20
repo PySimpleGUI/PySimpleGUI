@@ -35,21 +35,6 @@
     </div>
 </div>
 
-<script type="text/javascript">
-var sc_project=12622535; 
-var sc_invisible=1; 
-var sc_security="1d3e2cc1"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js"
-async></script>
-<noscript><div class="statcounter"><a title="Web Analytics
-Made Easy - Statcounter" href="https://statcounter.com/"
-target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
-alt="Web Analytics Made Easy - Statcounter"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-
 # ELEMENT AND FUNCTION CALL REFERENCE
 
 Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
@@ -12001,7 +11986,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |      value       | new text to show |
+|                Any                 |      value       | new text to show |
 |                str                 | background_color | color of background |
 |                str                 |    text_color    | color of the text |
 | (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
@@ -12094,7 +12079,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |      value       | new text to show |
+|                Any                 |      value       | new text to show |
 |                str                 | background_color | color of background |
 |                str                 |    text_color    | color of the text |
 | (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
@@ -12979,7 +12964,7 @@ Window(title,
     auto_close_duration = 3,
     icon = None,
     force_toplevel = False,
-    alpha_channel = 1,
+    alpha_channel = None,
     return_keyboard_events = False,
     use_default_focus = True,
     text_justification = None,
@@ -13174,16 +13159,19 @@ Sometimes, depending on the environment, the value returned does not include the
 A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
 The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
 Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
+If without_titlebar is set then the location of the root x,y is used which should not include the titlebar but
+may be OS dependent.
 
 ```
-current_location(more_accurate = False)
+current_location(more_accurate = False, without_titlebar = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool | more_accurate | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| bool |  more_accurate   | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| bool | without_titlebar | If True, return location of top left of main window area without the titlebar (may be OS dependent?) |
 | Tuple[(int or None), (int or None)] | **RETURN** | The x and y location in tuple form (x,y)
 
 ### ding
@@ -13947,16 +13935,19 @@ Sometimes, depending on the environment, the value returned does not include the
 A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
 The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
 Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
+If without_titlebar is set then the location of the root x,y is used which should not include the titlebar but
+may be OS dependent.
 
 ```
-CurrentLocation(more_accurate = False)
+CurrentLocation(more_accurate = False, without_titlebar = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool | more_accurate | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| bool |  more_accurate   | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| bool | without_titlebar | If True, return location of top left of main window area without the titlebar (may be OS dependent?) |
 | Tuple[(int or None), (int or None)] | **RETURN** | The x and y location in tuple form (x,y)
 
 ### Disable
@@ -19864,7 +19855,8 @@ set_options(icon = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
-    sbar_relief = None)
+    sbar_relief = None,
+    alpha_channel = None)
 ```
 
 Parameter Descriptions:
@@ -19933,7 +19925,7 @@ Parameter Descriptions:
 |                      int                       |           sbar_width            | Scrollbar width in pixels |
 |                      int                       |        sbar_arrow_width         | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
 |                      str                       |        sbar_frame_color         | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
-|                      str                       |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|  type sbar_relief:                      (str)  |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID :param alpha_channel Default alpha channel to be used on all windows |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -20014,7 +20006,8 @@ SetOptions(icon = None,
     sbar_width = None,
     sbar_arrow_width = None,
     sbar_frame_color = None,
-    sbar_relief = None)
+    sbar_relief = None,
+    alpha_channel = None)
 ```
 
 Parameter Descriptions:
@@ -20083,7 +20076,7 @@ Parameter Descriptions:
 |                      int                       |           sbar_width            | Scrollbar width in pixels |
 |                      int                       |        sbar_arrow_width         | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
 |                      str                       |        sbar_frame_color         | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
-|                      str                       |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|  type sbar_relief:                      (str)  |           sbar_relief           | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID :param alpha_channel Default alpha channel to be used on all windows |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
