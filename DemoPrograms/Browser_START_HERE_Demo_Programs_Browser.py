@@ -5,7 +5,7 @@ import warnings
 
 import PySimpleGUI as sg
 
-__version__ = '1.7.0'
+__version__ = '1.8.0'
 
 """
     PySimpleGUI Demo Program Browser
@@ -33,8 +33,13 @@ __version__ = '1.7.0'
         
     Keeps a "history" of the previously chosen folders to easy switching between projects
                 
+    Versions:
+        1.8.0 - Addition of option to show ALL file types, not just Python files
+                        
     Copyright 2021, 2022 PySimpleGUI.org
 """
+
+python_only = True
 
 def get_file_list_dict():
     """
@@ -50,7 +55,7 @@ def get_file_list_dict():
     demo_files_dict = {}
     for dirname, dirnames, filenames in os.walk(demo_path):
         for filename in filenames:
-            if filename.endswith('.py') or filename.endswith('.pyw'):
+            if python_only is not True or filename.endswith('.py') or filename.endswith('.pyw'):
                 fname_full = os.path.join(dirname, filename)
                 if filename not in demo_files_dict.keys():
                     demo_files_dict[filename] = fname_full
@@ -456,7 +461,7 @@ def make_window():
 
 
     left_col = sg.Column([
-        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-')],
+        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-', expand_x=True, expand_y=True)],
         [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), focus=True, enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder'), sg.B('Copy Path')],
@@ -468,7 +473,7 @@ def make_window():
         [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
-        [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)],
+        [sg.Multiline(size=(70, 21), write_only=True, expand_x=True, expand_y=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)],
         [sg.B('Settings'), sg.Button('Exit')],
         [sg.T('Demo Browser Ver ' + __version__)],
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
@@ -479,7 +484,8 @@ def make_window():
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-', tooltip='Enable to see the matches in the right hand column'),
                          sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-', tooltip='Disable to see ALL matches found in files'),
                          sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
-                         sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-')
+                         sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-'),
+                         sg.CB('Show ALL file types', default=not python_only, enable_events=True, k='-SHOW ALL FILES-'),
                                            ]],
                                          pad=(0,0), k='-OPTIONS BOTTOM-',  expand_x=True, expand_y=False),  expand_x=True, expand_y=False)
 
@@ -490,16 +496,16 @@ def make_window():
     layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
               [choose_folder_at_top],
               # [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True)],
-              [sg.Pane([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ], orientation='h', relief=sg.RELIEF_SUNKEN, k='-PANE-')],
+              [sg.Pane([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ], orientation='h', relief=sg.RELIEF_SUNKEN, expand_x=True, expand_y=True, k='-PANE-')],
               [options_at_bottom, sg.Sizegrip()]]
 
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
     window.set_min_size(window.size)
 
-    window['-DEMO LIST-'].expand(True, True, True)
-    window[ML_KEY].expand(True, True, True)
-    window['-PANE-'].expand(True, True, True)
+    # window['-DEMO LIST-'].expand(True, True, True)
+    # window[ML_KEY].expand(True, True, True)
+    # window['-PANE-'].expand(True, True, True)
 
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
@@ -521,6 +527,7 @@ def main():
     The main program that contains the event loop.
     It will call the make_window function to create the window.
     """
+    global python_only
     try:
         version = sg.version
         version_parts = version.split('.')
@@ -717,6 +724,17 @@ def main():
                     sg.clipboard_set(full_filename)
         elif event == 'Version':
             sg.popup_scrolled(sg.get_versions(), keep_on_top=True, non_blocking=True)
+        elif event == '-SHOW ALL FILES-':
+            python_only = not values[event]
+            file_list_dict = get_file_list_dict()
+            file_list = get_file_list()
+            window['-DEMO LIST-'].update(values=file_list)
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
+            window['-ML-'].update('')
+            window['-FIND NUMBER-'].update('')
+            window['-FIND-'].update('')
+            window['-FIND RE-'].update('')
+            window['-FILTER-'].update('')
     window.close()
 
 
