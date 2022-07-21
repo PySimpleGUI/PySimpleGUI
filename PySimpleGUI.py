@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.59 Unreleased"
+version = __version__ = "4.60.1.60 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -149,6 +149,8 @@ _change_log = """
     4.60.1.59
         Fix for crash if COLOR_SYSTEM_DEFAULT specified in parameter disabled_readonly_background_color or disabled_readonly_text_color for Input Element.
         Also applied similar fix for Tab element's focus color
+    4.60.1.60
+        Addition of set_option parameter hide_window_when_creating. If set to False then window will not be hidden while creating and moving
 
     """
 
@@ -565,6 +567,7 @@ DEFAULT_TOOLTIP_OFFSET = (0, -20)
 DEFAULT_KEEP_ON_TOP = None
 DEFAULT_SCALING = None
 DEFAULT_ALPHA_CHANNEL = 1.0
+DEFAULT_HIDE_WINDOW_WHEN_CREATING = True
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
 TOOLTIP_FONT = None
 #################### COLOR STUFF ####################
@@ -17282,16 +17285,17 @@ def StartupTK(window):
 
         # root.bind('<Cancel>', Debugger._build_main_debugger_window)
         # root.bind('<Pause>', Debugger._build_floating_window)
-    try:
-        if not running_mac() or \
-            (running_mac() and not window.NoTitleBar) or \
-            (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
+    if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True:
+        try:
+            if not running_mac() or \
+                (running_mac() and not window.NoTitleBar) or \
+                (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
 
-            # if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
-            #     root.wait_visibility(root)
-            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-    except Exception as e:
-        print('*** Exception setting alpha channel to zero while creating window ***', e)
+                # if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
+                #     root.wait_visibility(root)
+                root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        except Exception as e:
+            print('*** Exception setting alpha channel to zero while creating window ***', e)
 
 
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -18222,7 +18226,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
-                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None):
+                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
+                hide_window_when_creating=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -18349,9 +18354,11 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param sbar_frame_color:                Scrollbar Color of frame around scrollbar (available only on some ttk themes)
     :type sbar_frame_color:                 (str)
     :param sbar_relief:                     Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+    :type sbar_relief:                      (str)
     :param alpha_channel                    Default alpha channel to be used on all windows
     :type alpha_channel                     (float)
-    :type sbar_relief:                      (str)
+    :param hide_window_when_creating        If True then alpha will be set to 0 while a window is made and moved to location indicated
+    :type hide_window_when_creating         (bool)
     :return:                                None
     :rtype:                                 None
     """
@@ -18413,6 +18420,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_ALPHA_CHANNEL
     global _pysimplegui_user_settings
     global ttk_part_overrides_from_options
+    global DEFAULT_HIDE_WINDOW_WHEN_CREATING
     # global _my_windows
 
     if icon:
@@ -18621,6 +18629,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if sbar_width is not None:
         ttk_part_overrides_from_options.sbar_width = sbar_width
+
+    if hide_window_when_creating is not None:
+        DEFAULT_HIDE_WINDOW_WHEN_CREATING = hide_window_when_creating
 
     return True
 
@@ -25401,4 +25412,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1b188be607d749e5ad218d51a3aa7d927da60c845baa0006ec47496db5b2a5d789e51321b9f6a31a751d2ccc521ae0f864bbfe5e69e1fe1c2b87914bfbf39e3c6fda8234b74d6194fb7094618532d335ad62fd11532166593cf0f4c929605976812a2fb7df7e8416292ad0d254705d968336691b8b398198812bc0197e478443b6ed876b913b9c20ad47cd3a74193d1c0861472db06dfc8e56ccd39a25101f90f87d52ea9f1c1504ec61b44c3869cb59e335f99a62cde834fd30ab391dc72185c5b1fd87315d36dedf07f14ffbce570233fdbc208311c930c388ba2e317af3ccd0afb66664a17a2727f73848a26999a6dcfa0142bd3a3aec05023775591b375af6175cc7d2089de8b08ae7fda01f79d80505016d75309cff2bb3b3ba15815e9e036ed20135169d626033bda96badcfff435ccd7090afa77dec5309f73b7adf9ff215bb00180dbd906a1031b5d0512eeb28b93a964ff6120b99cf05737cd2c1f0bbe8ee83016b0d8238eb13099fe2ec08d891aeb6e13e90a2d5206bcd7c7386deca9c97d0d5e76591f3fdc8c00c40cabd11f2232ae14f26d4950e5e0b501dfe304462f9e24c65a747342285d0761af954a4cbc06916ab9d1d3c361407cce3087acc77d8d31913c1842d2086d57ca703a1f8228dabceaa2c2ba5a2c35b7761ca29e04390a8c0aab86556ee9a4d772b06fd80cfbde8d13358aca86d2c1373b31a77
+#58ea5183ca79b8f5c06d39a6767647bc90503b97f3440920f0f73bd13c61cf1119d3149b8c9f08dc7bfa4f04779b7f29581180b8d6b24f115838b1d2ecb2042aeba20b3722a1406b77f701e0b5f2f12e9e2365e0700356918a3e271d85f9501479785fc3f858553c787406d06b80b197106d6439f8f2516800a500dc0024aed92998c8b10fae87c4ee935dfcae6d9a9fa8abc2957ce8bc7ce875510a18674a251c0f2ca00d53de99c0fe32e90a8d9ac50494ea6ff84cd03951ed69402dec1e5554760444c87e1c0f97d12f954ec6b60a269d0b21c17b36d432b3771b83e72be99e95addb256eca43f9e6fe681672ea33747c738492f0fb666077e37dd15a7890cc5d2b8b830ef11d6d6f76a7a5611b4d7dd2e0cc00d60319d794d3201669500524ad6245cfab7c5fa5610f0144f58899fe20cc76644f5f3c2e24badd54148aa33dc9f13407c02c617098bec4012a460f99314c5186ebeb35f68849f656be5f148acb2133367144df77c34ff182704b61297d9efcaa5ab67065a515e4d8b1454b4d5da9b32074a81001d7b6aa5c482a2fcb7215ea4bcabfb5135e3bfdee1b7466d97fd2521d229ea2379251dd64d46f8f45696639d3917fdc4c3eabb78d7a94df46c6df2232efc43a25c6aaaefa7a308945c5acdf2452ab7169083e303875c78c676540c9ac27a44be4d070aa7b2c1410d744cefb620c88548eb152598a8beac8
