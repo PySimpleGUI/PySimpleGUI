@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.61 Unreleased"
+version = __version__ = "4.60.1.62 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -154,6 +154,9 @@ _change_log = """
     4.60.1.61
         Changed the documentation location to PySimpleGUI.org (updated some comments as well as the SDK Reference Window's links)
         New coupon code.  Make the Udemy button in the test harness now include the coupon code automatically
+    4.60.1.62
+        Removed the "NOT avoilable on the MAC" from file_types parameter in the docstrings
+        Use Withdraw to hide window during creation
 
     """
 
@@ -4729,7 +4732,7 @@ class Button(Element):
         :type target:                 str | (int, int)
         :param tooltip:               text, that will appear when mouse hovers over the element
         :type tooltip:                (str)
-        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).
         :type file_types:             Tuple[(str, str), ...]
         :param initial_folder:        starting path for folders and files
         :type initial_folder:         (str)
@@ -12877,7 +12880,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       filter file types Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+    :param file_types:       filter file types Default value = (("ALL Files", "*.* *"),).
     :type file_types:        Tuple[(str, str), ...]
     :param initial_folder:   starting path for folders and files
     :type initial_folder:
@@ -12936,7 +12939,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+    :param file_types:       Default value = (("ALL Files", "*.* *"),).
     :type file_types:        Tuple[(str, str), ...]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -12998,7 +13001,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+    :param file_types:        Default value = (("ALL Files", "*.* *"),).
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -13057,7 +13060,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        Default value = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+    :param file_types:        Default value = (("ALL Files", "*.* *"),).
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -17299,16 +17302,12 @@ def StartupTK(window):
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
         root.bind('<Pause>', window._callback_popout_window_create_keystroke)
 
-        # root.bind('<Cancel>', Debugger._build_main_debugger_window)
-        # root.bind('<Pause>', Debugger._build_floating_window)
     if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True:
         try:
             if not running_mac() or \
                 (running_mac() and not window.NoTitleBar) or \
                 (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
 
-                # if running_linux():         # a fix for the "jumping window" problem introduced by the Linux Windowing manager in 2022
-                #     root.wait_visibility(root)
                 root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
         except Exception as e:
             print('*** Exception setting alpha channel to zero while creating window ***', e)
@@ -17365,7 +17364,6 @@ def StartupTK(window):
         root.bind("<Control-Down>", window._move_callback)
 
     window.set_icon(window.WindowIcon)
-
     try:
         alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
         root.attributes('-alpha', alpha_channel)  # Make window visible again
@@ -20799,7 +20797,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type save_as:                   (bool)
     :param multiple_files:           if True, then allows multiple files to be selected that are returned with ';' between each filename
     :type multiple_files:            (bool)
-    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC
+    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),).
     :type file_types:                Tuple[Tuple[str,str]]
     :param no_window:                if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:                 (bool)
@@ -25428,4 +25426,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#68a54aeb138ba611cf9ca53347b1a7ef07af5cdb74e99c8a7652f464e1998797c6467a225850596d7edb0b63441a9effb96f5d9b376224e1b9d9d1b866576481e520e93bf7ea1d72846773da8a7695554a96cedc400b3b695df2c34659fe843fe6e7a661685786970b0a162aa8e8a3ba3bb14cd23a62f056ccda985de35d5827b595ffef9cbe3029edcd20f34f258791e28f287f7c2a4c9689da3198ac3dc95ddc4ada459225ae69e8dfbd202cd0d5fd517366f5cf37fa6a659765f333d6e1a3e80db1a5156dc088b742c63fa4f39da0154e8d2f69de460c4d54958df71416b624ac752d5f4f985bbaf36bd1db21d57c019aade66c5f8d3d3de8ea477766f105dffbf8d812fc56a8b64460831601956dbaa6126d6e505c826c17929fb73ff7e84bfd88d1cddd60079a983fec8ddae81ed42926fd3440b8cb6fd557fcf7750cf4b4ee6ddf31e9fe766f74af7c6b5db70075a8ff121d50f696fe84552f303103a4191dd8c9cb65559a673c05ca95c4300ba858c2a33a6067f9c0b2da44f51f81efd3d51bd2d60386f1f8e7196dedc9054b751ec354ade30604f50cbea77f467b9bc7d11e482a41f72e1cc8c7c3d385ccea604f4c3b110d8fa7d4ca732971a875e483ecf42927f2be67f66bc564cc26b326d9c3507309cfba106694b018dad513a51e7ae44d7158d5c552898b3bd3c1096b6d0139ec524a0b5202efbced81d3b586
+#21e7efb0287a1b3fe9daae4380280884f2eaf158bc1cf68e4f9b7413a850c3eae6f3e95a0153672d5c35447d5b1a59956e258827b1f6028365e593d31d2acd9ef7d154898ee1a5d6fe7c31a60bfca5f7bf4b95f6c1f945445fb4d2a627aa91ce0cf810713853289489097683183652d898ae789ce388294c2b606c767cf8fecd1ec37a83669144afa3874ef2e035f6e5c62d578e50c4bfc22ca5fceb75323c563b5a1a0b479006494856783de99f20ee6a6c67da9e503804f0a662fc2ef850afdc1292ba27de2bc816573a6efec5492b705e83ccbe07223f577a2bdc69a428473726e23deb5a0f330e86724abf56a4d3d8bc8d80ca711b9e58b0a71951162ea6b26dfda4bef8852263645bc2c3a2bf07418a47144fbff5776d13bc376aebd129c047b6308bed8b8d52f215784c3187fb233bec3dc6833fba293164feeb75ff5044f19d0d443b154b5183e66c880c6986e9131a188678e2af68adc192fafd22dd1b0bb9ab6a95975ae79b0373a2321fdef15ca406a9263ddfa996bfdee6ed92172132b2088c36c09ca1961a6eacd79963c424a425ab0e7661f3536da1f769ef12e98a9370bd73e5a407bd365eb5cefdf91f3f73cece49e4ce108026cdd4d3d70e3c7304c86dc953089cb2a35ce406f74d72591c0c7ecc3963823858fa8f79f133c3cce7e8a6a1e859f1147ffbbf2d2da1472ba52a896817a31e73fec16552fb8a
