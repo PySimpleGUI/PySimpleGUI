@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.60 Unreleased"
+version = __version__ = "4.60.1.61 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -151,6 +151,9 @@ _change_log = """
         Also applied similar fix for Tab element's focus color
     4.60.1.60
         Addition of set_option parameter hide_window_when_creating. If set to False then window will not be hidden while creating and moving
+    4.60.1.61
+        Changed the documentation location to PySimpleGUI.org (updated some comments as well as the SDK Reference Window's links)
+        New coupon code.  Make the Udemy button in the test harness now include the coupon code automatically
 
     """
 
@@ -224,13 +227,26 @@ port = 'PySimpleGUI'
     In addition to the normal publishing requirements of LGPL3+, these also apply:
     1. These and all comments are to remain in the source code
     2. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
-           1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
-              https://github.com/PySimpleGUI/PySimpleGUI
-           2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
-
-           THE official documentation location is:
-              Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
-              https://pysimplegui.readthedocs.io/en/latest/
+       1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
+          https://github.com/PySimpleGUI/PySimpleGUI
+       2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
+    
+       THE official documentation location is:
+          https://www.PySimpleGUI.org - Main documentation
+       There are also a lot of subdomains... many of which you can guess..
+          https://SDK.PySimpleGUI.org - The SDK Reference tab
+          https://Calls.PySimpleGUI.org - The SDK Reference tab
+          https://Cookbook.PySimpleGUI.org - The Cookbook tab
+          https://eCookbook.PySimpleGUI.org - The eCookbook located on Trinket
+          https://Anncouncements.PySimpleGUI.org - The Announcements Issue on GitHub
+          https://Install.PySimpleGUI.org - The "How to install" section of the docs
+          https://Upgrading.PySimpleGUI.org - The "How to upgrade" section of the docs
+          https://Udemy.PySimpleGUI.org - The Udemy course
+          https://GitHub.PySimpleGUI.org - The PySimpleGUI GitHub (also the located at PySimpleGUI.com)
+          https://Issues.PySimpleGUI.org - Open a new issue on GitHub
+          https://Bugs.PySimpleGUI.org - Open a new issue on GitHub
+          etc.....
+                
        If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
     3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file as per the license agreement
 
@@ -245,7 +261,7 @@ port = 'PySimpleGUI'
     If you're thinking of filing an Issue or posting a problem, Upgrade your software first
     There are constantly something new and interesting coming out of this project so stay current if you can 
 
-    The FASTEST WAY to learn PySimpleGUI is to begin to play with it, and to read the documentation.
+    The FASTEST WAY to learn PySimpleGUI is to begin to use it in conjunction with the materials provided by the project.
     http://www.PySimpleGUI.org
     http://Calls.PySimpleGUI.org
     http://Cookbook.PySimpleGUI.org
@@ -24776,37 +24792,37 @@ def main_sdk_help():
 
     """
     online_help_links = {
-        'Button': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#button-element',
-        'ButtonMenu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#buttonmenu-element',
-        'Canvas': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#canvas-element',
-        'Checkbox': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#checkbox-element',
-        'Column': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#column-element',
-        'Combo': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#combo-element',
-        'Frame': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#frame-element',
-        'Graph': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#graph-element',
-        'HorizontalSeparator': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#horizontalseparator-element',
-        'Image': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#image-element',
-        'Input': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#input-element',
-        'Listbox': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#listbox-element',
-        'Menu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#menu-element',
-        'MenubarCustom': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#menubarcustom-element',
-        'Multiline': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#multiline-element',
-        'OptionMenu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#optionmenu-element',
-        'Output': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#output-element',
-        'Pane': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#pane-element',
-        'ProgressBar': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#progressbar-element',
-        'Radio': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#radio-element',
-        'Slider': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#slider-element',
-        'Spin': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#spin-element',
-        'StatusBar': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#statusbar-element',
-        'Tab': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tab-element',
-        'TabGroup': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tabgroup-element',
-        'Table': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#table-element',
-        'Text': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#text-element',
-        'Titlebar': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#titlebar-element',
-        'Tree': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tree-element',
-        'VerticalSeparator': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#verticalseparator-element',
-        'Window': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#window',
+        'Button': r'https://PySimpleGUI.org/en/latest/call%20reference/#button-element',
+        'ButtonMenu': r'https://PySimpleGUI.org/en/latest/call%20reference/#buttonmenu-element',
+        'Canvas': r'https://PySimpleGUI.org/en/latest/call%20reference/#canvas-element',
+        'Checkbox': r'https://PySimpleGUI.org/en/latest/call%20reference/#checkbox-element',
+        'Column': r'https://PySimpleGUI.org/en/latest/call%20reference/#column-element',
+        'Combo': r'https://PySimpleGUI.org/en/latest/call%20reference/#combo-element',
+        'Frame': r'https://PySimpleGUI.org/en/latest/call%20reference/#frame-element',
+        'Graph': r'https://PySimpleGUI.org/en/latest/call%20reference/#graph-element',
+        'HorizontalSeparator': r'https://PySimpleGUI.org/en/latest/call%20reference/#horizontalseparator-element',
+        'Image': r'https://PySimpleGUI.org/en/latest/call%20reference/#image-element',
+        'Input': r'https://PySimpleGUI.org/en/latest/call%20reference/#input-element',
+        'Listbox': r'https://PySimpleGUI.org/en/latest/call%20reference/#listbox-element',
+        'Menu': r'https://PySimpleGUI.org/en/latest/call%20reference/#menu-element',
+        'MenubarCustom': r'https://PySimpleGUI.org/en/latest/call%20reference/#menubarcustom-element',
+        'Multiline': r'https://PySimpleGUI.org/en/latest/call%20reference/#multiline-element',
+        'OptionMenu': r'https://PySimpleGUI.org/en/latest/call%20reference/#optionmenu-element',
+        'Output': r'https://PySimpleGUI.org/en/latest/call%20reference/#output-element',
+        'Pane': r'https://PySimpleGUI.org/en/latest/call%20reference/#pane-element',
+        'ProgressBar': r'https://PySimpleGUI.org/en/latest/call%20reference/#progressbar-element',
+        'Radio': r'https://PySimpleGUI.org/en/latest/call%20reference/#radio-element',
+        'Slider': r'https://PySimpleGUI.org/en/latest/call%20reference/#slider-element',
+        'Spin': r'https://PySimpleGUI.org/en/latest/call%20reference/#spin-element',
+        'StatusBar': r'https://PySimpleGUI.org/en/latest/call%20reference/#statusbar-element',
+        'Tab': r'https://PySimpleGUI.org/en/latest/call%20reference/#tab-element',
+        'TabGroup': r'https://PySimpleGUI.org/en/latest/call%20reference/#tabgroup-element',
+        'Table': r'https://PySimpleGUI.org/en/latest/call%20reference/#table-element',
+        'Text': r'https://PySimpleGUI.org/en/latest/call%20reference/#text-element',
+        'Titlebar': r'https://PySimpleGUI.org/en/latest/call%20reference/#titlebar-element',
+        'Tree': r'https://PySimpleGUI.org/en/latest/call%20reference/#tree-element',
+        'VerticalSeparator': r'https://PySimpleGUI.org/en/latest/call%20reference/#verticalseparator-element',
+        'Window': r'https://PySimpleGUI.org/en/latest/call%20reference/#window',
     }
 
     NOT_AN_ELEMENT = 'Not An Element'
@@ -25246,7 +25262,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=F006AC77434776717B42')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -25255,7 +25271,7 @@ def main():
                 # webbrowser.open_new_tab(r'https://udemy.com/PySimpleGUI')
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'D11B305A347585E7A915',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'F006AC77434776717B42',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -25412,4 +25428,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#58ea5183ca79b8f5c06d39a6767647bc90503b97f3440920f0f73bd13c61cf1119d3149b8c9f08dc7bfa4f04779b7f29581180b8d6b24f115838b1d2ecb2042aeba20b3722a1406b77f701e0b5f2f12e9e2365e0700356918a3e271d85f9501479785fc3f858553c787406d06b80b197106d6439f8f2516800a500dc0024aed92998c8b10fae87c4ee935dfcae6d9a9fa8abc2957ce8bc7ce875510a18674a251c0f2ca00d53de99c0fe32e90a8d9ac50494ea6ff84cd03951ed69402dec1e5554760444c87e1c0f97d12f954ec6b60a269d0b21c17b36d432b3771b83e72be99e95addb256eca43f9e6fe681672ea33747c738492f0fb666077e37dd15a7890cc5d2b8b830ef11d6d6f76a7a5611b4d7dd2e0cc00d60319d794d3201669500524ad6245cfab7c5fa5610f0144f58899fe20cc76644f5f3c2e24badd54148aa33dc9f13407c02c617098bec4012a460f99314c5186ebeb35f68849f656be5f148acb2133367144df77c34ff182704b61297d9efcaa5ab67065a515e4d8b1454b4d5da9b32074a81001d7b6aa5c482a2fcb7215ea4bcabfb5135e3bfdee1b7466d97fd2521d229ea2379251dd64d46f8f45696639d3917fdc4c3eabb78d7a94df46c6df2232efc43a25c6aaaefa7a308945c5acdf2452ab7169083e303875c78c676540c9ac27a44be4d070aa7b2c1410d744cefb620c88548eb152598a8beac8
+#68a54aeb138ba611cf9ca53347b1a7ef07af5cdb74e99c8a7652f464e1998797c6467a225850596d7edb0b63441a9effb96f5d9b376224e1b9d9d1b866576481e520e93bf7ea1d72846773da8a7695554a96cedc400b3b695df2c34659fe843fe6e7a661685786970b0a162aa8e8a3ba3bb14cd23a62f056ccda985de35d5827b595ffef9cbe3029edcd20f34f258791e28f287f7c2a4c9689da3198ac3dc95ddc4ada459225ae69e8dfbd202cd0d5fd517366f5cf37fa6a659765f333d6e1a3e80db1a5156dc088b742c63fa4f39da0154e8d2f69de460c4d54958df71416b624ac752d5f4f985bbaf36bd1db21d57c019aade66c5f8d3d3de8ea477766f105dffbf8d812fc56a8b64460831601956dbaa6126d6e505c826c17929fb73ff7e84bfd88d1cddd60079a983fec8ddae81ed42926fd3440b8cb6fd557fcf7750cf4b4ee6ddf31e9fe766f74af7c6b5db70075a8ff121d50f696fe84552f303103a4191dd8c9cb65559a673c05ca95c4300ba858c2a33a6067f9c0b2da44f51f81efd3d51bd2d60386f1f8e7196dedc9054b751ec354ade30604f50cbea77f467b9bc7d11e482a41f72e1cc8c7c3d385ccea604f4c3b110d8fa7d4ca732971a875e483ecf42927f2be67f66bc564cc26b326d9c3507309cfba106694b018dad513a51e7ae44d7158d5c552898b3bd3c1096b6d0139ec524a0b5202efbced81d3b586
