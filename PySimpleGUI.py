@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.62 Unreleased"
+version = __version__ = "4.60.1.63 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -157,7 +157,9 @@ _change_log = """
     4.60.1.62
         Removed the "NOT avoilable on the MAC" from file_types parameter in the docstrings
         Use Withdraw to hide window during creation
-
+    4.60.1.63
+        Addition of checklist item when logging new issue to  GitHub - upgraded to latest version of PySimpleGUI on PyPI
+        Listbox justification parameter found to not be implemented on some early verions of tkinter so had to protect this situation. This new feature crached on the Pi for example
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2634,7 +2636,7 @@ class Listbox(Element):
         :type s:                           (int, int)  | (None, None) | int
         :param disabled:                   set disable state for element
         :type disabled:                    (bool)
-        :param justification:              justification for items in listbox. Valid choices - left, right, center.  Default is left
+        :param justification:              justification for items in listbox. Valid choices - left, right, center.  Default is left. NOTE - on some older versions of tkinter, not available
         :type justification:               (str)
         :param auto_size_text:             True if element should be the same size as the contents
         :type auto_size_text:              (bool)
@@ -15975,8 +15977,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox = element.Widget = tk.Listbox(element_frame, height=element_size[1], width=width,
-                                                                selectmode=element.SelectMode, font=font, exportselection=False,
-                                                                justify=justification)
+                                                                selectmode=element.SelectMode, font=font, exportselection=False)
+                # On OLD versions of tkinter the justify option isn't available
+                try:
+                    element.Widget.config(justify=justification)
+                except:
+                    pass
+
                 element.Widget.config(highlightthickness=0)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
@@ -17223,9 +17230,11 @@ def _convert_window_to_tk(window):
     master.title(window.Title)
     InitializeResults(window)
 
+
     PackFormIntoFrame(window, master, window)
 
     window.TKroot.configure(padx=window.Margins[0], pady=window.Margins[1])
+
 
     # ....................................... DONE creating and laying out window ..........................#
     if window._Size != (None, None):
@@ -23810,7 +23819,7 @@ GREEN_CHECK_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAJV0lEQVR4n
 
 def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
                                      python_exp, prog_exp, used_gui, gui_notes,
-                                     cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
+                                     cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_latest_pypi, cb_github,
                                      detailed_desc, code, project_details, where_found):
     body = \
 """
@@ -23873,6 +23882,7 @@ These items may solve your problem. Please check those you've done by changing -
 - [{}] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
 - [{}] Run your program outside of your debugger (from a command line)
 - [{}] Searched through Issues (open and closed) to see if already reported Issues.PySimpleGUI.org
+- [{}] Upgraded to the latest official release of PySimpleGUI on PyPI
 - [{}] Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released
 
 ## Detailed Description
@@ -23893,7 +23903,7 @@ These items may solve your problem. Please check those you've done by changing -
 
 
 """.format(python_exp, prog_exp, used_gui, gui_notes,
-                cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
+                cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_latest_pypi, cb_github,
                 detailed_desc, code if len(code) > 10 else '# Paste your code here')
 
 
@@ -24077,11 +24087,12 @@ def main_open_github_issue():
                       [In(size=(25, 1), k='-EXP NOTES-', expand_x=True)]]
 
     checklist = (('Searched main docs for your problem', 'www.PySimpleGUI.org'),
-                 ('Looked for Demo Programs that are similar to your goal.\nIt is recommend you use the Demo Browser!', 'http://Demos.PySimpleGUI.org'),
+                 ('Looked for Demo Programs that are similar to your goal.\nIt is recommend you use the Demo Browser!', 'https://Demos.PySimpleGUI.org'),
                  ('If not tkinter - looked for Demo Programs for specific port', ''),
                  ('For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)', ''),
                  ('Run your program outside of your debugger (from a command line)', ''),
-                 ('Searched through Issues (open and closed) to see if already reported', 'http://Issues.PySimpleGUI.org'),
+                 ('Searched through Issues (open and closed) to see if already reported', 'https://Issues.PySimpleGUI.org'),
+                 ('Upgraded to the latest official release of PySimpleGUI on PyPI', 'https://Upgrading.PySimpleGUI.org'),
                  ('Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released.', ''))
 
     checklist_col1 = Col([[CB(c, k=('-CB-', i)), T(t, k='-T{}-'.format(i), enable_events=True)] for i, (c, t) in enumerate(checklist[:4])], k='-C FRAME CBs1-')
@@ -24216,7 +24227,7 @@ def main_open_github_issue():
                 continue
 
             cb_dict = {'cb_docs': checkboxes[0], 'cb_demos': checkboxes[1], 'cb_demo_port': checkboxes[2], 'cb_readme_other': checkboxes[3],
-                       'cb_command_line': checkboxes[4], 'cb_issues': checkboxes[5], 'cb_github': checkboxes[6], 'detailed_desc': values['-ML DETAILS-'],
+                       'cb_command_line': checkboxes[4], 'cb_issues': checkboxes[5], 'cb_latest_pypi': checkboxes[6], 'cb_github': checkboxes[7], 'detailed_desc': values['-ML DETAILS-'],
                        'code': values['-ML CODE-'],
                        'project_details': values['-ML PROJECT DETAILS-'].rstrip(),
                        'where_found': values['-ML FOUND PSG-']}
@@ -25426,4 +25437,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#21e7efb0287a1b3fe9daae4380280884f2eaf158bc1cf68e4f9b7413a850c3eae6f3e95a0153672d5c35447d5b1a59956e258827b1f6028365e593d31d2acd9ef7d154898ee1a5d6fe7c31a60bfca5f7bf4b95f6c1f945445fb4d2a627aa91ce0cf810713853289489097683183652d898ae789ce388294c2b606c767cf8fecd1ec37a83669144afa3874ef2e035f6e5c62d578e50c4bfc22ca5fceb75323c563b5a1a0b479006494856783de99f20ee6a6c67da9e503804f0a662fc2ef850afdc1292ba27de2bc816573a6efec5492b705e83ccbe07223f577a2bdc69a428473726e23deb5a0f330e86724abf56a4d3d8bc8d80ca711b9e58b0a71951162ea6b26dfda4bef8852263645bc2c3a2bf07418a47144fbff5776d13bc376aebd129c047b6308bed8b8d52f215784c3187fb233bec3dc6833fba293164feeb75ff5044f19d0d443b154b5183e66c880c6986e9131a188678e2af68adc192fafd22dd1b0bb9ab6a95975ae79b0373a2321fdef15ca406a9263ddfa996bfdee6ed92172132b2088c36c09ca1961a6eacd79963c424a425ab0e7661f3536da1f769ef12e98a9370bd73e5a407bd365eb5cefdf91f3f73cece49e4ce108026cdd4d3d70e3c7304c86dc953089cb2a35ce406f74d72591c0c7ecc3963823858fa8f79f133c3cce7e8a6a1e859f1147ffbbf2d2da1472ba52a896817a31e73fec16552fb8a
+#7b071603b37f5083ab668f5f5d465049799d8ef6890245388ad9c06fa5cb3c2f5be59ee74d6b74adffa822c42ceaafd05dfc52ffe2dc336712e41062fddcbbb99ec33a32ad9716814eb5f6db2059d3ea716d2d255052302418f284462759442988c9d288fee75524b18b43f22d5ec37c66975c5f2e7979b22337b7c9e05edf2d41954827e8a138edc7e74e4bb7a09815624b44f6d4b7a90d7c2319b998e5e7bbae292d1478240d603e1bae91b44d1e683cc6a5897b99716490e191b3aa183d7ccf754238f896c0cfd894aae61f610d522da730fe1703c76c7646dfaeefdb31f1cec1f8a65e44b7bf19bca897542c558170387c332a312edf86d8ca509f509b15289226660c1860135483ef60243dfc0660728cea769c0a25b06440c4bd3e5b9545506225257c32f84511db4516367727b789c9727f2f0092cfcf14f3ae55279fd2170c9c2712859394bd7be04726c7be0197dc6039427d871d96a2a8b86d21cbf73d69534498ec330c975bd79d0e24bb58404ab5448e0bc18447f916477ee1f67e59da42c202496fdcee1e8b5cffbd53d21216f73bb910e10e906bd4342e59293c224e56ab65d759ca83b1893c0ccb821bd2dbc5e6a4193975123cdb787e99fe824b60486464e65eb3dab02d55a7f246b928f643c743358c39af3c017d9250eeec97835a1ac7b94bbb7336bc5905c2ec8189b9513326510db4465ddba5d4cf65
