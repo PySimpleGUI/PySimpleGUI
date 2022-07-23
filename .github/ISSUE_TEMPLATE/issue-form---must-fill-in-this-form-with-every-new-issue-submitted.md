@@ -65,6 +65,7 @@ These items may solve your problem. Please check those you've done by changing -
 - [ ] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
 - [ ] Run your program outside of your debugger (from a command line)
 - [ ] Searched through Issues (open and closed) to see if already reported Issues.PySimpleGUI.org
+- [ ] Have upgraded to the latest release of PySimpleGUI on PyPI (lastest official version)
 - [ ] Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released
 
 #### Detailed Description
