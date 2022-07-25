@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.63 Unreleased"
+version = __version__ = "4.60.1.64 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -160,6 +160,9 @@ _change_log = """
     4.60.1.63
         Addition of checklist item when logging new issue to  GitHub - upgraded to latest version of PySimpleGUI on PyPI
         Listbox justification parameter found to not be implemented on some early verions of tkinter so had to protect this situation. This new feature crached on the Pi for example
+    4.60.1.64
+        Allow set_options(window_location=None) to indicate the OS should provide the window location.  
+            This will stop the Alpha channel being set to 0 when the window is created
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9731,7 +9734,10 @@ class Window:
         self.DefaultElementSize = default_element_size if default_element_size is not None else DEFAULT_ELEMENT_SIZE
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
-        self.Location = location
+        if DEFAULT_WINDOW_LOCATION != (None, None) and location == (None, None):
+            self.Location = DEFAULT_WINDOW_LOCATION
+        else:
+            self.Location = location
         self.RelativeLoction = relative_location
         self.ButtonColor = button_color_to_tuple(button_color)
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -17311,7 +17317,9 @@ def StartupTK(window):
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
         root.bind('<Pause>', window._callback_popout_window_create_keystroke)
 
-    if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True:
+
+    # If location is None, then there's no need to hide the window.  Let it build where it is going to end up being.
+    if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True and window.Location is not None:
         try:
             if not running_mac() or \
                 (running_mac() and not window.NoTitleBar) or \
@@ -25437,4 +25445,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#7b071603b37f5083ab668f5f5d465049799d8ef6890245388ad9c06fa5cb3c2f5be59ee74d6b74adffa822c42ceaafd05dfc52ffe2dc336712e41062fddcbbb99ec33a32ad9716814eb5f6db2059d3ea716d2d255052302418f284462759442988c9d288fee75524b18b43f22d5ec37c66975c5f2e7979b22337b7c9e05edf2d41954827e8a138edc7e74e4bb7a09815624b44f6d4b7a90d7c2319b998e5e7bbae292d1478240d603e1bae91b44d1e683cc6a5897b99716490e191b3aa183d7ccf754238f896c0cfd894aae61f610d522da730fe1703c76c7646dfaeefdb31f1cec1f8a65e44b7bf19bca897542c558170387c332a312edf86d8ca509f509b15289226660c1860135483ef60243dfc0660728cea769c0a25b06440c4bd3e5b9545506225257c32f84511db4516367727b789c9727f2f0092cfcf14f3ae55279fd2170c9c2712859394bd7be04726c7be0197dc6039427d871d96a2a8b86d21cbf73d69534498ec330c975bd79d0e24bb58404ab5448e0bc18447f916477ee1f67e59da42c202496fdcee1e8b5cffbd53d21216f73bb910e10e906bd4342e59293c224e56ab65d759ca83b1893c0ccb821bd2dbc5e6a4193975123cdb787e99fe824b60486464e65eb3dab02d55a7f246b928f643c743358c39af3c017d9250eeec97835a1ac7b94bbb7336bc5905c2ec8189b9513326510db4465ddba5d4cf65
+#416b216aa64c2ea09223c68f1a284dc68a566a81fdf04c6f718b0a96a8ffe4f6797413a41bd8d68805488ece67fcee091d6780bfc505bcb97046253ff14af0390c667f066e4e236be737a51ab244a8399eaf06b2485e1372c544a99054f10a5304d269341cb5c8d0a4110ce879cad56e96dce482e6967db9fca689ca7364242afaf394003faf199e0330951bd7e665072ba75cffbcf066dafcb69a51038cc4a49026eff919c445491fdb144ee8a02ae69243af56dbeb4304112ce9c6db9b0fe2e516866bd0337cccf154985816b87bc15d29b599d47da108bcd599bbafb120803919817cbef855fd834643f247e8b86d040477719b0902aeb071ec68b8e0ada25f28bcb365471381467065203d9870a37b290758edf6d5d66fe31f061fd3fa4432488f5b1e629243ff619806e33daea187ddc2dbbd3a40c6b81bd11acbb687223a7ace479be5d52a68dc36182ae72f369f763f71082a5af805b2dfb23bb85890a596c67ba1d2e4354796d7a3da9f86a8eab135d0c97318d6ef665e9354ba4a9a0ea592aa43b165ff650784c3795c6aa494205ddd1d7660c2da88133ddc62ab3de4b9279b4f4c0ae766294f8bc8ab97ca88712f8ec70a0a1c6c51a2e78d27d6e30e808215bffa43779af037bdc68b6f47073d7687382160079d36f6f1159ccbb590e6e45ab1b5eb9a31e196d113a106cee4a0fb2644de95326ba4943e0a3433ff
