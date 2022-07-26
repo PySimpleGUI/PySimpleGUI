@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.1.64 Unreleased"
+version = __version__ = "4.60.1.65 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -163,6 +163,11 @@ _change_log = """
     4.60.1.64
         Allow set_options(window_location=None) to indicate the OS should provide the window location.  
             This will stop the Alpha channel being set to 0 when the window is created
+    4.60.1.65
+        Addition of new Mac Control Panel option and emergency patch for MacOS version 12.3+
+            If MacOS version 12.3 or greater than option is ON by default
+            When ON, the default Alpha channel for all windows is set to 0.99. 
+            This can either be turned off, or can be overridden by calling set_options in your application
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -785,6 +790,7 @@ ENABLE_TREEVIEW_869_PATCH = True
 ENABLE_MAC_NOTITLEBAR_PATCH = False
 ENABLE_MAC_MODAL_DISABLE_PATCH = False
 ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR = True
+ENABLE_MAC_ALPHA_99_PATCH= False
 
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
 ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS = ('SystemHighlightText', 'SystemHighlight')
@@ -22823,7 +22829,7 @@ available to make this process more atuomatic.
 MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False),
                   'Disable Modal Windows' : ('-mac feature disable modal windows-', True),
                   'Disable Grab Anywhere with Titlebar' : ('-mac feature disable grab anywhere with titlebar-', True),
-                  }
+                  'Set Alpha Channel to 0.99 for MacOS >= 12.3' : ('-mac feature disable Alpha 0.99', True)}
 
 def _read_mac_global_settings():
     """
@@ -22834,6 +22840,7 @@ def _read_mac_global_settings():
     global ENABLE_MAC_MODAL_DISABLE_PATCH
     global ENABLE_MAC_NOTITLEBAR_PATCH
     global ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR
+    global ENABLE_MAC_ALPHA_99_PATCH
 
     ENABLE_MAC_MODAL_DISABLE_PATCH = pysimplegui_user_settings.get(MAC_PATCH_DICT['Disable Modal Windows'][0],
                                                                    MAC_PATCH_DICT['Disable Modal Windows'][1])
@@ -22841,7 +22848,8 @@ def _read_mac_global_settings():
                                                                 MAC_PATCH_DICT['Enable No Titlebar Patch'][1])
     ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR = pysimplegui_user_settings.get(MAC_PATCH_DICT['Disable Grab Anywhere with Titlebar'][0],
                                                                 MAC_PATCH_DICT['Disable Grab Anywhere with Titlebar'][1])
-
+    ENABLE_MAC_ALPHA_99_PATCH = pysimplegui_user_settings.get(MAC_PATCH_DICT['Set Alpha Channel to 0.99 for MacOS >= 12.3'][0],
+                                                                MAC_PATCH_DICT['Set Alpha Channel to 0.99 for MacOS >= 12.3'][1])
 
 def _mac_should_apply_notitlebar_patch():
     """
@@ -22864,6 +22872,22 @@ def _mac_should_apply_notitlebar_patch():
 
     return False
 
+def _mac_should_set_alpha_to_99():
+
+    if not running_mac():
+        return False
+
+    if not ENABLE_MAC_ALPHA_99_PATCH:
+        return False
+
+    try:
+        if (float(platform.mac_ver()[0]) >= 12.3):
+            return True
+    except Exception as e:
+        warnings.warn('_mac_should_seet_alpha_to_99 Exception while trying check mac_ver. Error = {}'.format(e), UserWarning)
+        return False
+
+    return False
 
 
 def main_mac_feature_control():
@@ -25425,6 +25449,10 @@ if running_windows():
 
 
 _read_mac_global_settings()
+
+if _mac_should_set_alpha_to_99():
+    print('Applyting Mac OS 12.3+ Alpha Channel fix.  Your default Alpha Channel is now 0.99')
+    set_options(alpha_channel=0.99)
 # if running_mac():
 #     print('Your Mac patches are:')
 #     print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
@@ -25445,4 +25473,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#416b216aa64c2ea09223c68f1a284dc68a566a81fdf04c6f718b0a96a8ffe4f6797413a41bd8d68805488ece67fcee091d6780bfc505bcb97046253ff14af0390c667f066e4e236be737a51ab244a8399eaf06b2485e1372c544a99054f10a5304d269341cb5c8d0a4110ce879cad56e96dce482e6967db9fca689ca7364242afaf394003faf199e0330951bd7e665072ba75cffbcf066dafcb69a51038cc4a49026eff919c445491fdb144ee8a02ae69243af56dbeb4304112ce9c6db9b0fe2e516866bd0337cccf154985816b87bc15d29b599d47da108bcd599bbafb120803919817cbef855fd834643f247e8b86d040477719b0902aeb071ec68b8e0ada25f28bcb365471381467065203d9870a37b290758edf6d5d66fe31f061fd3fa4432488f5b1e629243ff619806e33daea187ddc2dbbd3a40c6b81bd11acbb687223a7ace479be5d52a68dc36182ae72f369f763f71082a5af805b2dfb23bb85890a596c67ba1d2e4354796d7a3da9f86a8eab135d0c97318d6ef665e9354ba4a9a0ea592aa43b165ff650784c3795c6aa494205ddd1d7660c2da88133ddc62ab3de4b9279b4f4c0ae766294f8bc8ab97ca88712f8ec70a0a1c6c51a2e78d27d6e30e808215bffa43779af037bdc68b6f47073d7687382160079d36f6f1159ccbb590e6e45ab1b5eb9a31e196d113a106cee4a0fb2644de95326ba4943e0a3433ff
+#42df3c1fbcf030736ec6216aa8ca1a022e989b4efafc3f703eb8e91f334fb787efebeaf2df0a1d2f9ae21da94f6d68e2f7fd7dd92410f7c97e19842e201fb16d714b0e00a3d17af1c52b04e81db1b9ef5ffb2982b1a315f3a435c9e741bcbccb44a3bec32d192f684bd71e633f324b7f6983996c1f05e3e38b3d9a503d786cd7a20f2fd5d64a225cec2273fd6615a5479f912ab171a68e33b7afea68b3c4fd97469ed2ae6f1e9f20d2345ebcc0c4949973955514ca1f537ac762afc1e7b0ea1cfdf4540a78a8c2d5ac4213e48064d7289ce9945e52b29e0341ac21c3aaff2b972a959c2c52f93319da70b4bf67d1814404dcd6870c2d4ed9ee10e83953c50f36385803b3800196dbc43faec58a91967a38be3dd18b73b5ca0445a90520b0f3e7afe943fd1f762eb094a9c256bd1bb5024e2e0fbb1289fb8b0a43e42bb362fe32bbf938be35d19d46de3555d7463a22f4714f1b4ad530301d925bf17c964bbb1c42e128483b991d7a342d1880028797210f31846fa51bfc145475f43176d9b80b5826f76a7a728ec91f46c5ec2ddbe3528a070e12dc11f95be6fbd427b9457b8894d9460219cdfb70aa07638d28031af20203bcac6753f4518e225626498d9695e7bd2deffcb7ad123e040958a703d16d9bdb5118b9329e2c6e092d15f7a5cceaaf34084109d26f2ac812c1bd6f4d3e1fc6495685acc597a30fc2e214acc712bd
