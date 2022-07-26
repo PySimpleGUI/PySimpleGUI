@@ -1888,7 +1888,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). NOT avoilable on the MAC |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),). |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -10082,6 +10082,12 @@ Test Harness and Settings Windows fit on small screens better
 ## 4.60.1 PySimpleGUI 22-May-2022
 
 * A patch-release that fixes crash if `horizontal_scrollbar=True` when making a `Listbox` element
+
+## 4.60.2 PySimpleGUI 26-Jul-2022
+
+* Emergency Patch Release for Mac OS 12.3 and greater
+	* Adds a PySimpleGUI Mac Control Panel Controlled patch that sets the Alpha channel to 0.99 by default for these users
+	* Is a workaround for a bug that was introduced into Mac OS 12.3
 
 ## Code Condition
 
