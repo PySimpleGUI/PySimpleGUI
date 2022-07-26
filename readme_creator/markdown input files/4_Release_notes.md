@@ -2579,6 +2579,15 @@ Test Harness and Settings Windows fit on small screens better
 * A patch-release that fixes crash if `horizontal_scrollbar=True` when making a `Listbox` element
 
 
+## 4.60.2 PySimpleGUI 26-Jul-2022
+
+* Emergency Patch Release for Mac OS 12.3 and greater
+	* Adds a PySimpleGUI Mac Control Panel Controlled patch that sets the Alpha channel to 0.99 by default for these users
+	* Is a workaround for a bug that was introduced into Mac OS 12.3
+
+
+
+
 ## Code Condition
 
     Make it run
