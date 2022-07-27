@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.2.65 Unreleased"
+version = __version__ = "4.60.3.66 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -170,6 +170,8 @@ _change_log = """
             This can either be turned off, or can be overridden by calling set_options in your application
     4.60.2.65
         Bumping version number to avoid confusion.  An emergency 4.60.2 release was posted to PyPI. This change was added to this current GitHub version of PySimpleGUI.  
+    4.60.3.66
+        Fixed bug in checking Mac OS version number that is being released as 4.60.3
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22882,8 +22884,13 @@ def _mac_should_set_alpha_to_99():
     if not ENABLE_MAC_ALPHA_99_PATCH:
         return False
 
+    # At this point, we're running a Mac and the alpha patch is enabled
+    # Final check is to see if Mac OS version is 12.3 or later
     try:
-        if (float(platform.mac_ver()[0]) >= 12.3):
+        platform_mac_ver = platform.mac_ver()[0]
+        mac_ver = platform_mac_ver.split('.')
+        if int(mac_ver[0]) >= 12 and int(mac_ver[0]) >= 3:
+            print("Mac OS Version is {} and patch enabled so applying the patch".format(platform_mac_ver))
             return True
     except Exception as e:
         warnings.warn('_mac_should_seet_alpha_to_99 Exception while trying check mac_ver. Error = {}'.format(e), UserWarning)
@@ -25475,4 +25482,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1a9333567613664f10403695223927920dab88982f88232991cb2e24502db72801125de8d29e94534fe3c6336087b686b19b57c30cabb33c71c2d5b57c62de59fecbc2475d381fb90538c1e6b4c21c50bda3c44eee3cacd152f5c54cd14b800ea2c49d11137dc864389b459242f778d69f6a3b4ebad557eef5a128f136be144e3d35e61bb0643b14bf7267a1445246cce84cbea0d2d639c6f3023c8508972d9171f50b488aec1440be05f6e6a721dbd9c0570e83b1063424bb8357eeefd9dbce7654dc0d631b08bd97c40caef114d68730d8d1c398ad6bfed994d386c092d66a051d320fc86b98dbadfd4c2bcf588c4f90c214f07975459299dfcf5b4eb53298c37998f0599f076365a999757b35376a502b7e5db1d0b772ac60eedca52d5ffb79f3611cad9b5fdd925bf6a7a271a83b9b6125310c5b1df4c0ee4de3c8a23eb9b4a18f0bd776def8e969381c77ef34a7716b1abe506fdb25da0faa8442d93297f3ec0f43cfce594b2a61ee7c9e1a1246ff6ddc2a75134825b52d944252470f1a5fbd737bbd6b562ca9f752ca9e82c84fa48eecb8aa47d9078e1dfdf028b3a5caf0b3480e944813f613414929662470090e41d2d7082b0b14e22b61eb346108e413d03ec4b59ded360d1e99d71a1fa3b9687057a8fd4b6db41504924a0aa57304bd362f7cd6d4f31a710b37a9517f4addb5aa384756222f367fba1399b12d8c0a
+#684933002bd0ea71e9a3cc6e3610bb58e218e52e88a42dc2b5cf0e898d002667ccab7c28b0d06211e68e6996dcff3708ebfb000d463f58f8221f8716ad99f6fc0681638b5326ecc4d7ef2414a083dd88e9e1cddec40dc2aae94f940d581ce1be12ed50ceefda74869471515e4d3b679922238a8e65d6710095dd11bbe269fd602d24382f536f737a04b40e19cf1738883d18f080741182fe5af320779741180fc07fc7697dda0f630d960fdfef538ea9378f8698aa50719df59e01bff061294861142addc5549157b2ca1d1161f8b42d037029ba02764266cfd990d7ce010851cda24b0a4044884a5b3977b8efec1ed31d043d16887242b14bdba3d4dc1ddb4afb2f6f11c1cde77cdddf625f3df17a890aec98ac6249770e9c50710f713a6516fe247e4709ba2c4b9f8555a8e5cc04da6479ae674fed6c010397b829c61faed19b1c1e74885ef1e82255905f34b4d87250d892930ccc993caadc0f8f4f17104d542c2221a2837674154107d4bcfc03e5c8c08228930cb1b334b6ed7215f19e960af017e3165b41bc7dc9ac94e26f7cc8437e4f74e5f1b2953444419f88dd62cacda91f302ef7d4035b5d22674bbb437d0aa4693866199892672a77a3770b997708d6a4a2ce9f42d5965b414e0d076de6f8f95d0d41993d4b232e461739bd0b71b479dbcae9a1b75fb806da61169c6b73a1bd27276e54e9561afe86bdaf7916c5
