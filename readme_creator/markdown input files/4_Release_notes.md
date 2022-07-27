@@ -2585,7 +2585,10 @@ Test Harness and Settings Windows fit on small screens better
 	* Adds a PySimpleGUI Mac Control Panel Controlled patch that sets the Alpha channel to 0.99 by default for these users
 	* Is a workaround for a bug that was introduced into Mac OS 12.3
 
+## 4.60.3 PySimpleGUI 27-Jul-2022
 
+* Emergency Patch Release for Mac OS 12.3 and greater
+	* Fixed bug in Mac OS version check in yesterday's 4.60.2 release
 
 
 ## Code Condition
