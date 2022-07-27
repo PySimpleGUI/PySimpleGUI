@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.67 Unreleased"
+version = __version__ = "4.60.3.68 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -174,6 +174,8 @@ _change_log = """
         Fixed bug in checking Mac OS version number that is being released as 4.60.3
     4.60.3.67
         Correctly check for Mac 12.3+ AND 13+ this time.
+    4.60.3.68
+        Roll in the changes being released to PyPI as 4.60.3
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22890,7 +22892,7 @@ def _mac_should_set_alpha_to_99():
     # Final check is to see if Mac OS version is 12.3 or later
     try:
         platform_mac_ver = platform.mac_ver()[0]
-        mac_ver = platform_mac_ver.split('.')
+        mac_ver = platform_mac_ver.split('.') if '.' in platform_mac_ver  else (platform_mac_ver, 0)
         if (int(mac_ver[0]) >= 12 and int(mac_ver[1]) >= 3) or int(mac_ver[0]) >= 13 :
             print("Mac OS Version is {} and patch enabled so applying the patch".format(platform_mac_ver))
             return True
@@ -25484,4 +25486,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#7d32a9721de9095d0d520bb28a59a75741fb7f06ece99929b15c6d0bb95e2af9e4e97cd550a1724728dd10d1c021294d9d50d19cdd9fadc64527d6863f788fcaa36e0066c28dfb2d4cdf670c25b2428e5191558942c5e9388e0ba9fba1d33e966bc0bb4353d36ad1f0eb6a52e70f15dda1ed6d2b06eb28be7f042e69e609c96638a6853b28a2b929a48a40a6acb369a809854651bf8ca5ef6083a2f7105c97bbfa414ac6bc12c2760192020b96df1e81e00a44b6865cecf56cd3a3d337eb1043a654f74b52525bafa970d56e948bba7d34dad512874ee059e19c29f5163e3ceaeca1ed17b7435913f88d5a830dbb62444920a6cf27f2ecd4700b006c01617d78a1391319558a217c56b422b03386267c547739cb2954b3c7821ec9fe7c25e91f44e91edb42ef3abaa84b851961bef5ce6f3fed888e53bd6a662c07b9d58cd551433a37aa5d3309f48ac3a8c01c39d729cf3bd5b37cc029b74ab98a108569fa7c1def6b3e2766b24722b1b32f4a933273379e414109be8138c6c58a5daa9710a339136bbb8471fadd463b0e2d2d5cf8eda9619e19b8cd506745fd490e128fbcc97471fb12a3f0e82b26e2a95a3bb3940574793fc502bbd9a3df1b3c6b6534c0dbd1e0a590a74f5b512e16df5a103b2bb32014d36592d8bf582ceb56714130ccaad07e93fd56f375c5be374630360ec1916e032e71b19b2e13f2481a12f32fcbf8
+#44a18acf480aaefd0a55e2eb97319efe70b97811c0548aafb2159962fadfee17eb6ad2f78e753b8e3bb8b485da31c3095800326e571df68a20e7264304176031db606c974bcb381eded73ae970a24d11b3c3491179c33ecf677c3cfc16aa29169ed6c5c14fa6f19baba80c9adc024cb4984010b4d9c2bf54add7fec48202fde9291a818ee0836868b7a21dc35d740eac9d2f4e3a9f7025013dd1d996d82418348e3f04d9904ea5309c99b0755dd0c66f54f80f26dd73ff47f0c1d345dcb278259e3f8e67b4956ec67d05086185cc27f71b18539c9f88f9f7155f89c79471d6b70cd24d1f3e91356823b618ddb84bb52ca753b879341cac2e01900e9d8cb77a9004ac9624deb2d584863d2730fc9a85fc9cf5d28026c341ecbf44bf4eb200863f7bbd217000d850ca54b8711f1d0d8dbeaf35c599e43f4d19e4aa929f5f46fc37e0869909201fd0e8cd3f74dae910fde987996d6d2d157191f59894ad5ccba7cce496cc0a9e5f339d245aa7b41b7a218d8c2d53d91660184f04eac787eb6eb95413dc05b537c72dc60b39a6c339139269446a6effbce27e0db45da919040bb21ba4f474a0a12be7dd884c57c1fb37b9834a88f2ef0f4f0e8f5fc72e0337535555603df501bd856921176740a98758c7b6aed1240efa14e31baca230d62cfd3ff462b46f575794af766b3a2278e96966269feec750395c58a783f30ca20562b752
