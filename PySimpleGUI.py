@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.68 Unreleased"
+version = __version__ = "4.60.3.69 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -176,6 +176,8 @@ _change_log = """
         Correctly check for Mac 12.3+ AND 13+ this time.
     4.60.3.68
         Roll in the changes being released to PyPI as 4.60.3
+    4.60.3.69
+        Test to see if the additional pack of Notebook in Tab code was causing expansion problems        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16552,17 +16554,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
                 # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
+
+
                 form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
-                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
-                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+                # July 28 2022 removing the expansion and pack as a test
+                # expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                # form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
 
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
-                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    element.TKFrame.configure(background=element.BackgroundColor,
-                                              highlightbackground=element.BackgroundColor,
-                                              highlightcolor=element.BackgroundColor)
+                if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    element.TKFrame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
 
                 # if element.BorderWidth is not None:
                 #     element.TKFrame.configure(borderwidth=element.BorderWidth)
@@ -25486,4 +25489,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#44a18acf480aaefd0a55e2eb97319efe70b97811c0548aafb2159962fadfee17eb6ad2f78e753b8e3bb8b485da31c3095800326e571df68a20e7264304176031db606c974bcb381eded73ae970a24d11b3c3491179c33ecf677c3cfc16aa29169ed6c5c14fa6f19baba80c9adc024cb4984010b4d9c2bf54add7fec48202fde9291a818ee0836868b7a21dc35d740eac9d2f4e3a9f7025013dd1d996d82418348e3f04d9904ea5309c99b0755dd0c66f54f80f26dd73ff47f0c1d345dcb278259e3f8e67b4956ec67d05086185cc27f71b18539c9f88f9f7155f89c79471d6b70cd24d1f3e91356823b618ddb84bb52ca753b879341cac2e01900e9d8cb77a9004ac9624deb2d584863d2730fc9a85fc9cf5d28026c341ecbf44bf4eb200863f7bbd217000d850ca54b8711f1d0d8dbeaf35c599e43f4d19e4aa929f5f46fc37e0869909201fd0e8cd3f74dae910fde987996d6d2d157191f59894ad5ccba7cce496cc0a9e5f339d245aa7b41b7a218d8c2d53d91660184f04eac787eb6eb95413dc05b537c72dc60b39a6c339139269446a6effbce27e0db45da919040bb21ba4f474a0a12be7dd884c57c1fb37b9834a88f2ef0f4f0e8f5fc72e0337535555603df501bd856921176740a98758c7b6aed1240efa14e31baca230d62cfd3ff462b46f575794af766b3a2278e96966269feec750395c58a783f30ca20562b752
+#2e0b57511846af73abeb4fd6e2a041a6cfb890f50624dba74a4f29cb0ba5d10baf004f939091ab1cecd53d8570be6530e95058950b4c55309900a282775fa3cc4894e3a1d4e24817a86b3c76a07308412c97930b017734529fd3908a136ab4bd1dddb7c0b46cb1a20149246a89e942aff221b1c8234f6f425b74a79eed3fc13819f76af700a12930f2dda18c437b4cc74122c7a2b071d9e57dbad66fa986278d66161a9ee3649dd519e606792d5c92b3c232d827db19b3bc622a9ecb3ad348db5260bb72598c49104f9df5fbc3a63854594337d5cf33f419f3bbcf82c63528e4ed96892f8d1ac4543a24ef6582d73933051c2f312c05ea15e1bccee9ef2c340f95393a603287655e7acfce7eeffa833f337d6276db6d21b8b4412dda5243267893a59e79df648237be933fa5ac41a9c6b747ac4943da2d85fd6c112bf197e6e5ea23498f98fa551302af8eda4f3ae25a2064dbeb9e95b5333d16fce93954eb6e89cd71f394e64b38411a9819238aa12b7367c7e2ccd9b941222e5f4f893137d8f053872ad96c69c5399e2eb65937ebcf97862fec70c8bb640cb150882cf634a159942f8bf44583361a252bd99b7b5f6e6b9b15644b5ba02861a2c83ca6f20a227ee91b6bb7b6e89189e120251c427627f56fa893f96b38acd516ba210dcf1b616eb92723602db908a1c48417ca82713b9f291baf95b80bd44ebcddbbf8e4352d
