@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.69 Unreleased"
+version = __version__ = "4.60.3.70 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -178,6 +178,9 @@ _change_log = """
         Roll in the changes being released to PyPI as 4.60.3
     4.60.3.69
         Test to see if the additional pack of Notebook in Tab code was causing expansion problems        
+    4.60.3.70
+        Debug Print - fix for bug caused by no_button being set with non_blocking... a lesson in thorough testing... assumption was either blocking OR no_button (or else app would
+            close without seeing the output... unless something else blocked. (DOH)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17889,13 +17892,13 @@ class _DebugWin():
         else:
             print(*args, sep=sepchar, end=endchar)
         # This is tricky....changing the button type depending on the blocking parm. If blocking, then the "Quit" button should become a normal button
-        if blocking:
+        if blocking and not self.no_button:
             self.quit_button.BType = BUTTON_TYPE_READ_FORM
             try:                    # The window may be closed by user at any time, so have to protect
                 self.quit_button.update(text='Click to continue...')
             except:
                 self.window = None
-        else:
+        elif not self.no_button:
             self.quit_button.BType = BUTTON_TYPE_CLOSES_WIN_ONLY
             try:                    # The window may be closed by user at any time, so have to protect
                 self.quit_button.update(text='Quit')
@@ -17903,9 +17906,9 @@ class _DebugWin():
                 self.window = None
 
         try:                        # The window may be closed by user at any time, so have to protect
-            if blocking:
+            if blocking and not self.no_button:
                 self.window['-PAUSE-'].update(visible=False)
-            else:
+            elif not self.no_button:
                 self.window['-PAUSE-'].update(visible=True)
         except:
             self.window = None
@@ -17924,7 +17927,7 @@ class _DebugWin():
             elif not paused and event == TIMEOUT_EVENT and not blocking:
                 break
             elif event == '-PAUSE-':
-                if blocking:            # if blocking, ignore the pause button entirely
+                if blocking or self.no_button:            # if blocking or shouldn't have been a button event, ignore the pause button entirely
                     continue
                 if paused:
                     self.window['-PAUSE-'].update(text='Pause')
@@ -25489,4 +25492,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2e0b57511846af73abeb4fd6e2a041a6cfb890f50624dba74a4f29cb0ba5d10baf004f939091ab1cecd53d8570be6530e95058950b4c55309900a282775fa3cc4894e3a1d4e24817a86b3c76a07308412c97930b017734529fd3908a136ab4bd1dddb7c0b46cb1a20149246a89e942aff221b1c8234f6f425b74a79eed3fc13819f76af700a12930f2dda18c437b4cc74122c7a2b071d9e57dbad66fa986278d66161a9ee3649dd519e606792d5c92b3c232d827db19b3bc622a9ecb3ad348db5260bb72598c49104f9df5fbc3a63854594337d5cf33f419f3bbcf82c63528e4ed96892f8d1ac4543a24ef6582d73933051c2f312c05ea15e1bccee9ef2c340f95393a603287655e7acfce7eeffa833f337d6276db6d21b8b4412dda5243267893a59e79df648237be933fa5ac41a9c6b747ac4943da2d85fd6c112bf197e6e5ea23498f98fa551302af8eda4f3ae25a2064dbeb9e95b5333d16fce93954eb6e89cd71f394e64b38411a9819238aa12b7367c7e2ccd9b941222e5f4f893137d8f053872ad96c69c5399e2eb65937ebcf97862fec70c8bb640cb150882cf634a159942f8bf44583361a252bd99b7b5f6e6b9b15644b5ba02861a2c83ca6f20a227ee91b6bb7b6e89189e120251c427627f56fa893f96b38acd516ba210dcf1b616eb92723602db908a1c48417ca82713b9f291baf95b80bd44ebcddbbf8e4352d
+#1fc04cbae65e4e9bbfd8c882d7db778995052e8af750268b2de6803c6ea81ab1faa4f416e47959fb828e1a43da8b6a876289a2426ef816f95867d500d9a34bca3fea0b5c8d8986d2b93aa36b0ff234e583500215d0bad9dea0b650625e04c7dffefdd38f21f8d2eeb0a5cf86793ff51f739482df8a9c32d89ff105de042ddcac20e06f12dd4a11f8b3ced779ce5a67cd7f1a2324dfcf1881eb8fd8379eebd42949107917c216d9c3e2a1f8e9b00c9c35e3b91a5eb05f05397bc4c465a6feff1842494c3224e9f3d148faf8422db3d1c8265e7240fe95eb3b1e5ac08bc09adac34d97ebdb4409cffa935319bacc200dd793ec0947b49d7394cd98d86e584bec113c5bee7c95ff4717a7d656c55bf9bcf635abcea9c3367510a970cd71177b232c571579794b2e291608fc06c9227fe995599c4dec829c1da207d439cc75ab11aeed649791a3c8df8cc1445ef16e2f0616859c7a0febc1126e6a2ca57c5cdf89a3d30d3cecbba1b1d3a451869cdae59a3cf441c44efe0d7988555fea6202e083a3af873c0a40a426fc32e0bf95c7c41dc05c0b7eea27b9609d96849299ce6f4f314d278d17cd31eabc4f8aad66c2381126f1f90f286c0b8e23fabe53ed7f4219224298d6d8459899e9090fa600f75e27079c0e46abde66a7e30e43dd9fee96fef4be95de9a7ce38208c5284e1227f74aba642bf5c7d00e1828901ab154c904c3ca
