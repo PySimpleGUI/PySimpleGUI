@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.70 Unreleased"
+version = __version__ = "4.60.3.71 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -181,6 +181,9 @@ _change_log = """
     4.60.3.70
         Debug Print - fix for bug caused by no_button being set with non_blocking... a lesson in thorough testing... assumption was either blocking OR no_button (or else app would
             close without seeing the output... unless something else blocked. (DOH)
+    4.60.3.71
+        "Window closed" check added to update methods for elements. This will prevent a crash and instead show an error popup
+            Will be helpful for users that forget to check for closed window event in their event loop and try to call update after window closed. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1616,6 +1619,12 @@ class Element():
         """
         self._generic_callback_handler('')
 
+    def _this_elements_window_closed(self):
+        if self.ParentForm is not None:
+            return self.ParentForm.is_closed()
+
+        return True
+
     def _user_bind_callback(self, bind_string, event, propagate=True):
         """
         Used when user binds a tkinter event directly to an element
@@ -2202,6 +2211,11 @@ class Input(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Input.update - The window was closed')
+            return
+
         if disabled is True:
             self.TKEntry['state'] = 'readonly' if self.UseReadonlyForDisable else 'disabled'
         elif disabled is False:
@@ -2400,6 +2414,12 @@ class Combo(Element):
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Combo.update - The window was closed')
+            return
+
+
         if values is not None:
             try:
                 self.TKCombo['values'] = values
@@ -2578,6 +2598,11 @@ class OptionMenu(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in OptionMenu.update - The window was closed')
+            return
+
 
         if values is not None:
             self.Values = values
@@ -2777,6 +2802,10 @@ class Listbox(Element):
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Listbox.update - The window was closed')
             return
 
         if disabled is True:
@@ -3007,6 +3036,11 @@ class Radio(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Radio.update - The window was closed')
+            return
+
+
         if value is not None:
             try:
                 if value is True:
@@ -3213,6 +3247,11 @@ class Checkbox(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Checkbox.update - The window was closed')
+            return
+
+
         if value is not None:
             value = bool(value)
             try:
@@ -3384,6 +3423,10 @@ class Spin(Element):
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Spin.update - The window was closed')
             return
 
         if values != None:
@@ -3651,6 +3694,11 @@ class Multiline(Element):
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Multiline.update - The window was closed')
+            return
+
 
         if autoscroll is not None:
             self.Autoscroll = autoscroll
@@ -3991,6 +4039,11 @@ class Text(Element):
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Text.update - The window was closed')
+            return
+
         if value is not None:
             self.DisplayText = str(value)
             self.TKStringVar.set(str(value))
@@ -4330,6 +4383,10 @@ class StatusBar(Element):
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in StatusBar.update - The window was closed')
             return
 
         if value is not None:
@@ -5175,6 +5232,11 @@ class Button(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Button.update - The window was closed')
+            return
+
+
         if self.UseTtkButtons:
             style_name = self.ttk_style_name        # created when made initial window (in the pack)
             # style_name = str(self.Key) + 'custombutton.TButton'
@@ -5438,6 +5500,11 @@ class ButtonMenu(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in ButtonMenu.update - The window was closed')
+            return
+
+
         if menu_definition is not None:
             self.MenuDefinition = copy.deepcopy(menu_definition)
             top_menu = self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff, font=self.ItemFont, tearoffcommand=self._tearoff_menu_callback)
@@ -5638,6 +5705,11 @@ class ProgressBar(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return False
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in ProgressBar.update - The window was closed')
+            return
+
+
         if self.ParentForm.TKrootDestroyed:
             return False
 
@@ -5782,6 +5854,11 @@ class Image(Element):
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Image.update - The window was closed')
+            return
+
 
         if source is not None:
             if isinstance(source, bytes):
@@ -6008,6 +6085,10 @@ class Canvas(Element):
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Canvas.update - The window was closed')
             return
 
         if background_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -6530,6 +6611,10 @@ class Graph(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Graph.update - The window was closed')
+            return
+
         if background_color is not None and background_color != COLOR_SYSTEM_DEFAULT:
             self._TKCanvas2.configure(background=background_color)
 
@@ -6994,6 +7079,10 @@ class Frame(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Frame.update - The window was closed')
+            return
+
         if visible is False:
             self._pack_forget_save_settings()
             # self.TKFrame.pack_forget()
@@ -7308,6 +7397,11 @@ class Tab(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Tab.update - The window was closed')
+            return
+
 
         state = 'normal'
         if disabled is not None:
@@ -7781,6 +7875,11 @@ class Slider(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Slider.update - The window was closed')
+            return
+
+
         if range != (None, None):
             self.TKScale.config(from_=range[0], to_=range[1])
         if value is not None:
@@ -8189,6 +8288,10 @@ class Column(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Column.update - The window was closed')
+            return
+
         if self.expand_x and self.expand_y:
             expand = tk.BOTH
         elif self.expand_x:
@@ -8319,6 +8422,11 @@ class Pane(Element):
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Pane.update - The window was closed')
+            return
+
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
@@ -8660,6 +8768,10 @@ class Menu(Element):
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
 
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Menu.update - The window was closed')
+            return
+
         if menu_definition is not None:
             self.MenuDefinition = copy.deepcopy(menu_definition)
 
@@ -8909,6 +9021,10 @@ class Table(Element):
         :type row_colors:             List[Tuple[int, str] | Tuple[Int, str, str]]
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Table.update - The window was closed')
             return
 
         if values is not None:
@@ -9342,6 +9458,10 @@ class Tree(Element):
         :type visible:  (bool)
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Tree.update - The window was closed')
             return
 
         if values is not None:
@@ -25492,4 +25612,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1fc04cbae65e4e9bbfd8c882d7db778995052e8af750268b2de6803c6ea81ab1faa4f416e47959fb828e1a43da8b6a876289a2426ef816f95867d500d9a34bca3fea0b5c8d8986d2b93aa36b0ff234e583500215d0bad9dea0b650625e04c7dffefdd38f21f8d2eeb0a5cf86793ff51f739482df8a9c32d89ff105de042ddcac20e06f12dd4a11f8b3ced779ce5a67cd7f1a2324dfcf1881eb8fd8379eebd42949107917c216d9c3e2a1f8e9b00c9c35e3b91a5eb05f05397bc4c465a6feff1842494c3224e9f3d148faf8422db3d1c8265e7240fe95eb3b1e5ac08bc09adac34d97ebdb4409cffa935319bacc200dd793ec0947b49d7394cd98d86e584bec113c5bee7c95ff4717a7d656c55bf9bcf635abcea9c3367510a970cd71177b232c571579794b2e291608fc06c9227fe995599c4dec829c1da207d439cc75ab11aeed649791a3c8df8cc1445ef16e2f0616859c7a0febc1126e6a2ca57c5cdf89a3d30d3cecbba1b1d3a451869cdae59a3cf441c44efe0d7988555fea6202e083a3af873c0a40a426fc32e0bf95c7c41dc05c0b7eea27b9609d96849299ce6f4f314d278d17cd31eabc4f8aad66c2381126f1f90f286c0b8e23fabe53ed7f4219224298d6d8459899e9090fa600f75e27079c0e46abde66a7e30e43dd9fee96fef4be95de9a7ce38208c5284e1227f74aba642bf5c7d00e1828901ab154c904c3ca
+#51534a560e555e10adba7036dc5457298451e1d08ec3e361101d2e89ccb1892ed85a4b93bbfd0b3c8037029ce7e1f5860f8d9f5e082830f262ff8e586421e16de491ce0bb9da6d81d7a79f4f1c721186345be685f44d4ab03742b7aceb8168b5aa292c31fb33f938634f39f103c5bfbd8e98fd944f9bc9573251928c0cf49031043b5f13b410faaa43ccc94426cf1ea38506d074effd107cd9d2ab4a486cf0476db2bf06e6d19e492e5092e9c6bcabd4515584c0d044c5fcb66202a31882fea2098a1b7d0e0c55d1dbd2e798dcd274595335c8876a97f063493d05abc35b41bba7afba2037776c9bc45e4bf027bde0773dfc48afc0d5a046b713330c8eebbd47f5555072c93ad08fb4fdbb743caa18007c05d1c6393ce2d7e375bc38f986670578c84fa3b7597c0743ef757fe2277492ab72bdf5bc4d97083387e794f6a70b5fb6440878fdd42b516495e94a92511e4621f7f09f4b213d1085b29ec7254cf8464b310c4a1a88f7b996d7913bd3a6aa7d5f8673ecbccf8451811f7db5d8b2b87ddf8ad2d6e61ff89aff034ca3538359b1dff8dacf1063bc2a339b8e11b3e02706b039f4342ba0d2168a9ad5546fd4ffab7c8c4b2ac1f85941c070bcc75b87e67077a1caae0f23919c196663005ce948b1e7d21ffc16ac8f033871cec2b4d39b4d49bd47c789fc5a74c8d9ba94f2cf8d4d11e950d92fc88a777180bc7be8f86d01
