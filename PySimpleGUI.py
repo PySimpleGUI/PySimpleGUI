@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.71 Unreleased"
+version = __version__ = "4.60.3.72 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -184,6 +184,9 @@ _change_log = """
     4.60.3.71
         "Window closed" check added to update methods for elements. This will prevent a crash and instead show an error popup
             Will be helpful for users that forget to check for closed window event in their event loop and try to call update after window closed. 
+    4.60.3.72
+        Output element now automatically sets auto_refresh to True.   Should this not be desired, switch to using the Multiline element.  There will likely be
+            no impact to this change as it seems like the windows are alredy refreshing OK, but adding it just to be sure.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4701,7 +4704,7 @@ class Output(Multiline):
         # self.expand_y = expand_y
 
         super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll,
-                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata,
+                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, auto_refresh=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata,
                          sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
     #
     # @property
@@ -25612,4 +25615,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#51534a560e555e10adba7036dc5457298451e1d08ec3e361101d2e89ccb1892ed85a4b93bbfd0b3c8037029ce7e1f5860f8d9f5e082830f262ff8e586421e16de491ce0bb9da6d81d7a79f4f1c721186345be685f44d4ab03742b7aceb8168b5aa292c31fb33f938634f39f103c5bfbd8e98fd944f9bc9573251928c0cf49031043b5f13b410faaa43ccc94426cf1ea38506d074effd107cd9d2ab4a486cf0476db2bf06e6d19e492e5092e9c6bcabd4515584c0d044c5fcb66202a31882fea2098a1b7d0e0c55d1dbd2e798dcd274595335c8876a97f063493d05abc35b41bba7afba2037776c9bc45e4bf027bde0773dfc48afc0d5a046b713330c8eebbd47f5555072c93ad08fb4fdbb743caa18007c05d1c6393ce2d7e375bc38f986670578c84fa3b7597c0743ef757fe2277492ab72bdf5bc4d97083387e794f6a70b5fb6440878fdd42b516495e94a92511e4621f7f09f4b213d1085b29ec7254cf8464b310c4a1a88f7b996d7913bd3a6aa7d5f8673ecbccf8451811f7db5d8b2b87ddf8ad2d6e61ff89aff034ca3538359b1dff8dacf1063bc2a339b8e11b3e02706b039f4342ba0d2168a9ad5546fd4ffab7c8c4b2ac1f85941c070bcc75b87e67077a1caae0f23919c196663005ce948b1e7d21ffc16ac8f033871cec2b4d39b4d49bd47c789fc5a74c8d9ba94f2cf8d4d11e950d92fc88a777180bc7be8f86d01
+#54c63d17a99934dfa65a4956e090c2db506c1cfd5f48804d961c3e0ee7a1739fc22451894d3a48186f0c2928aac9d792d6a5e38f1363091e98f6e6a8a35b0c07c378d5b4a864c9b57f42085ca82537e97b5ba54f0dad628e9dded23db2d2082badcbc63a6483cc8502c4a8b0bdbef68364ef48f64d61427484d7ec0695761748963ff1345f85247a170223863667a551a0fb13e2c9d8e4b79beed67d12849e2b12b191121058c681e3cfa5ed3e5bf7ee6c565516bda525d7073a43c4623126549f3af682cc9f3f7b7b24c79c1467b0f12e5fe4c10c5fcf9583c356e52414e516de5e29161fdedad880fb0282a5dba3a255c05418d16cb095968ce56c83104a3a46eebbcf001b397c9a61a79ac4fc46adce58ca7ba4498f1290ddd052b5de763579135ed21eeca62886d056520ae768bb471a3db5adafbb627c49b5c265e1ab910e9a341e5b4d7b2b5f33f810bb19131635f6e6f93513575eaef4b90bcedca13ac6f5ecf2d9745a92bc49ac257b47c4ffe411f04f156863fd284fb0bf57e0ea5ea29d0ec66fb19483e341d6395c7e9023df34607671f1590d2d8aa26999920525cfc80e6ea930fbb9c5af55381adf9a834d75c57003163d7b0011e5e9e1b4e3538d884460b0257387da794d2d2363c33ecac8b046a574715572909d0e5be330cfc4e8992462ade775e7787796ed73e794ebaa3c16622e02488631d0e9fec34878
