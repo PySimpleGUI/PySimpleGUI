@@ -12072,11 +12072,14 @@ class Window:
         if not pil_import_attempted:
             try:
                 import PIL as PIL
-                from PIL import ImageGrab
+                try:
+                    from PIL import ImageGrab
+                except ImportError:
+                    import pyscreenshot as ImageGrab
                 from PIL import Image
                 pil_imported = True
                 pil_import_attempted = True
-            except:
+            except ImportError:
                 pil_imported = False
                 pil_import_attempted = True
                 print('FAILED TO IMPORT PIL!')
