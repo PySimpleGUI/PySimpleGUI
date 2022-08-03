@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.72 Unreleased"
+version = __version__ = "4.60.3.73 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -187,6 +187,10 @@ _change_log = """
     4.60.3.72
         Output element now automatically sets auto_refresh to True.   Should this not be desired, switch to using the Multiline element.  There will likely be
             no impact to this change as it seems like the windows are alredy refreshing OK, but adding it just to be sure.
+    4.60.3.73
+        Addition of Window.key_is_good(key) method.  Returns True if key is used in the window. Saves from having to understand the window's key dictionary.
+            Makes for easier code completion versus writing  "if key in window.key_dict"
+    
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12154,6 +12158,20 @@ class Window:
         :rtype:  Dict[Any, Element]
         """
         return self.AllKeysDict
+
+
+    def key_is_good(self, key):
+        """
+        Checks to see if this is a good key for this window
+        If there's an element with the key provided, then True is returned
+        :param key:     The key to check
+        :type key:      str | int | tuple | object
+        :return:        True if key is an element in this window
+        :rtype:         bool
+        """
+        if key in self.key_dict:
+            return True
+        return False
 
     # def __enter__(self):
     #     """
@@ -25615,4 +25633,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#54c63d17a99934dfa65a4956e090c2db506c1cfd5f48804d961c3e0ee7a1739fc22451894d3a48186f0c2928aac9d792d6a5e38f1363091e98f6e6a8a35b0c07c378d5b4a864c9b57f42085ca82537e97b5ba54f0dad628e9dded23db2d2082badcbc63a6483cc8502c4a8b0bdbef68364ef48f64d61427484d7ec0695761748963ff1345f85247a170223863667a551a0fb13e2c9d8e4b79beed67d12849e2b12b191121058c681e3cfa5ed3e5bf7ee6c565516bda525d7073a43c4623126549f3af682cc9f3f7b7b24c79c1467b0f12e5fe4c10c5fcf9583c356e52414e516de5e29161fdedad880fb0282a5dba3a255c05418d16cb095968ce56c83104a3a46eebbcf001b397c9a61a79ac4fc46adce58ca7ba4498f1290ddd052b5de763579135ed21eeca62886d056520ae768bb471a3db5adafbb627c49b5c265e1ab910e9a341e5b4d7b2b5f33f810bb19131635f6e6f93513575eaef4b90bcedca13ac6f5ecf2d9745a92bc49ac257b47c4ffe411f04f156863fd284fb0bf57e0ea5ea29d0ec66fb19483e341d6395c7e9023df34607671f1590d2d8aa26999920525cfc80e6ea930fbb9c5af55381adf9a834d75c57003163d7b0011e5e9e1b4e3538d884460b0257387da794d2d2363c33ecac8b046a574715572909d0e5be330cfc4e8992462ade775e7787796ed73e794ebaa3c16622e02488631d0e9fec34878
+#60beb4ed7b3bb54b2f4dd6f9773f5534f39291204c7d6933ccc7e9940648f26497cd16269f42907320bb1c7efe5c314c8426efa8adffc9d1851dc19b2fd7ee93bdd4d845992561deaf899d9bfa4ced8250b23c482ad7594507b15c34af397c0dde512a2b25a4ad5ce52d40793e0a941404c668d7c9345edbfaa1aa24a272bba5ff6f5364690ac1c980578101216540d0c553ec10876a01e83216bcfb6d90afd0080d674d3a3ebda29bc1adc5f777b3dfe1e1ae5879fe45f15ad191bcdd42c7ae10d2eeac8a613d45d30e7ee635679bce1973667ffb3cc9f672f4c5ab20310e47ab876320de0045d7a3bb963c9c5b39f7e4b11747c95fb71bc9def53f85bf806ca92f8d491d5c5b8f5a975c6736461e19ee37e7b3a4649a48fcbaf99b4b51efe13b967ffb26540daa90a3c9d0514cf4d45bbd0c6102053511ab54607f37a0fca78e45e1f75cf06eddd818ba77eb21bc668981c54236dde7ae3753383a1ed5c0e0ad20aba2fd08d87f76ce5745a9f15634c6f9d709851715a8888ef259c6930803a49e8d0a391110753782d7da25d730d817b69a8242889bf2b8f447f08fb0fa5043cde17acd68df86bff69d01ded2ea768b7c43c85278c2956382df800957cdfcb996c41c6a7d1df46a65be851b27d665f0c56e989c264c6b64c23ebaa13c5c526134fa935343320d4716beaa6900d92998284dbbbae1a35d204adb2391ae3109
