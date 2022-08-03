@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.73 Unreleased"
+version = __version__ = "4.60.3.74 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -190,6 +190,8 @@ _change_log = """
     4.60.3.73
         Addition of Window.key_is_good(key) method.  Returns True if key is used in the window. Saves from having to understand the window's key dictionary.
             Makes for easier code completion versus writing  "if key in window.key_dict"
+    4.60.3.74
+        Combo - if readonly, then set the select colors to be "transparent" (text=text color, background=background color)
     
     """
 
@@ -16029,6 +16031,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         combostyle.configure(style_name, arrowcolor=element.button_arrow_color)
                     if element.button_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                         combostyle.configure(style_name, background=element.button_background_color)
+                    if element.Readonly is True:
+                        if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                            combostyle.configure(style_name, selectforeground=element.TextColor)
+                        if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                            combostyle.configure(style_name, selectbackground=element.BackgroundColor)
+
 
                 except Exception as e:
                     _error_popup_with_traceback('Combo Element error {}'.format(e),
@@ -25633,4 +25641,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#60beb4ed7b3bb54b2f4dd6f9773f5534f39291204c7d6933ccc7e9940648f26497cd16269f42907320bb1c7efe5c314c8426efa8adffc9d1851dc19b2fd7ee93bdd4d845992561deaf899d9bfa4ced8250b23c482ad7594507b15c34af397c0dde512a2b25a4ad5ce52d40793e0a941404c668d7c9345edbfaa1aa24a272bba5ff6f5364690ac1c980578101216540d0c553ec10876a01e83216bcfb6d90afd0080d674d3a3ebda29bc1adc5f777b3dfe1e1ae5879fe45f15ad191bcdd42c7ae10d2eeac8a613d45d30e7ee635679bce1973667ffb3cc9f672f4c5ab20310e47ab876320de0045d7a3bb963c9c5b39f7e4b11747c95fb71bc9def53f85bf806ca92f8d491d5c5b8f5a975c6736461e19ee37e7b3a4649a48fcbaf99b4b51efe13b967ffb26540daa90a3c9d0514cf4d45bbd0c6102053511ab54607f37a0fca78e45e1f75cf06eddd818ba77eb21bc668981c54236dde7ae3753383a1ed5c0e0ad20aba2fd08d87f76ce5745a9f15634c6f9d709851715a8888ef259c6930803a49e8d0a391110753782d7da25d730d817b69a8242889bf2b8f447f08fb0fa5043cde17acd68df86bff69d01ded2ea768b7c43c85278c2956382df800957cdfcb996c41c6a7d1df46a65be851b27d665f0c56e989c264c6b64c23ebaa13c5c526134fa935343320d4716beaa6900d92998284dbbbae1a35d204adb2391ae3109
+#1288dab26218e811ea0e13c3cee6f606643928f79f0cacaad59bb497fe638bdb04320ca197f0dbd7f3aa1c02209fc92d4e5ca37512db0636020bef997b3587fe3e657250d2f561b6675fd1036e5ac3f5d7d02ca4d72c44b2f49d4dbf089b46711840d436b74317618c86a2cff31f9372c85230080b5add63cfe25d5119f6d90cb8a64aaab11249fcd576ad5ef5c90ebc2e631d034b857e987e6db385e88de8008db38bbc5c2279d734dd94232b19bd7d34650a145ff806a43980c4568070c25f9d879c780d8c3b60ad2803355075c501559b41c07738cff8a01faf3b0335a62c96eed986d2f7b3c84e9b5f356c2671e30938720fab9f088ad3117d9575f26cfa8e94a74ffd7e0e3fbcf7fbb5011cd8bb3e36635af61216fe892a9b6d21c21c3f51eb472d449811f852ceb88b8178ee0450fd2bedf4fecaaf56f2f5766a75b1f33a7a494747b381584174b3dcffa6f9e3ad6de82656c1a5ee93729b2c147ed3f0439293dcec35703754aa751aea4317aef1a1eb29a9a7ca736d3519444b43d66dc826eecaf9f575948ece372da6f9042284da0ca430753bf11e8abc057ea3b40d65d853ddde4008a8220e43f3611d0b9fb5714220818c6977b291d7efb8b5d3d76df02a7b852c41a1f8cd99d206869752bdeef555326792163eae79f4cd760b69dee0989e7c2572fc2481b2007af8e2874e2e50786c59756ff40716dee5b07c66
