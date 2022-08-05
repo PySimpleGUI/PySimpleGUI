@@ -824,14 +824,25 @@ def AxesGrid():
 
 #  The magic function that makes it possible.... glues together tkinter and pyplot using Canvas Widget
 def draw_figure(canvas, figure):
+    if not hasattr(draw_figure, 'canvas_packed'):
+        draw_figure.canvas_packed = {}
     figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
     figure_canvas_agg.draw()
-    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
+    widget = figure_canvas_agg.get_tk_widget()
+    if widget not in draw_figure.canvas_packed:
+        draw_figure.canvas_packed[widget] = figure
+        widget.pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
+
 
 def delete_figure_agg(figure_agg):
     figure_agg.get_tk_widget().forget()
+    try:
+        draw_figure.canvas_packed.pop(figure_agg.get_tk_widget())
+    except Exception as e:
+        print(f'Error removing {figure_agg} from list', e)
     plt.close('all')
+
 
 # -------------------------------- GUI Starts Here -------------------------------#
 # fig = your figure you want to display.  Assumption is that 'fig' holds the      #
@@ -873,6 +884,9 @@ while True:
     choice = values['-LISTBOX-'][0]                 # get first listbox item chosen (returned as a list)
     func = fig_dict[choice]                         # get function to call from the dictionary
     window['-MULTILINE-'].update(inspect.getsource(func))  # show source code to function in multiline
-    fig = func()                                    # call function to get the figure
-    figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)  # draw the figure
+    try:
+        fig = func()                                    # call function to get the figure
+        figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)  # draw the figure
+    except Exception as e:
+        print('Exception in fucntion', e)
 window.close()
