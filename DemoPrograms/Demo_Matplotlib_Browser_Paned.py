@@ -837,14 +837,23 @@ def AxesGrid():
 
 
 def draw_figure(canvas, figure):
+    if not hasattr(draw_figure, 'canvas_packed'):
+        draw_figure.canvas_packed = {}
     figure_canvas_agg = FigureCanvasTkAgg(figure, canvas)
     figure_canvas_agg.draw()
-    figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
+    widget = figure_canvas_agg.get_tk_widget()
+    if widget not in draw_figure.canvas_packed:
+        draw_figure.canvas_packed[widget] = figure
+        widget.pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
 
 
 def delete_figure_agg(figure_agg):
     figure_agg.get_tk_widget().forget()
+    try:
+        draw_figure.canvas_packed.pop(figure_agg.get_tk_widget())
+    except Exception as e:
+        print(f'Error removing {figure_agg} from list', e)
     plt.close('all')
 
 
@@ -881,13 +890,11 @@ layout = [[sg.Text('Matplotlib Plot Test', font=('ANY 18'))],
           [sg.Col(col_listbox), col_instructions], ]
 
 # create the form and show it without the plot
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI',
-                   layout, resizable=True, finalize=True)
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, resizable=True, finalize=True)
 
 canvas_elem = window['-CANVAS-']
 multiline_elem = window['-MULTILINE-']
 figure_agg = None
-
 while True:
     event, values = window.read()
     if event in (sg.WIN_CLOSED, 'Exit'):
@@ -902,6 +909,8 @@ while True:
     func = fig_dict[choice]
     # show source code to function in multiline
     window['-MULTILINE-'].update(inspect.getsource(func))
-    fig = func()                                    # call function to get the figure
-    figure_agg = draw_figure(
-        window['-CANVAS-'].TKCanvas, fig)  # draw the figure
+    try:
+        fig = func()                                    # call function to get the figure
+        figure_agg = draw_figure(window['-CANVAS-'].TKCanvas, fig)  # draw the figure
+    except Exception as e:
+        print('Error in plotting', e)
