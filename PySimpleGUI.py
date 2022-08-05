@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.74 Unreleased"
+version = __version__ = "4.60.3.75 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -192,6 +192,9 @@ _change_log = """
             Makes for easier code completion versus writing  "if key in window.key_dict"
     4.60.3.74
         Combo - if readonly, then set the select colors to be "transparent" (text=text color, background=background color)
+    4.60.3.75
+        Better description of bar_color parm for the ProgressMeter element and the one_line_progress_meter function
+        Combo element - addition of select parameter to enable easier selection of the contents of clearing of the selection of the contents.
     
     """
 
@@ -2385,7 +2388,7 @@ class Combo(Element):
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
-    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None)):
+    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None), select=None):
         """
         Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
@@ -2414,6 +2417,8 @@ class Combo(Element):
         :type visible:       (bool)
         :param size:         width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
         :type size:          (int, int)
+        :param select:       if True, then the text will be selected, if False then selection will be cleared
+        :type select:        (bool)
         """
         if size != (None, None):
             if isinstance(size, int):
@@ -2489,6 +2494,10 @@ class Combo(Element):
             # self.TKCombo.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
             self._visible = visible
+        if select is True:
+           self.TKCombo.select_range(0, tk.END)
+        elif select is False:
+           self.TKCombo.select_clear()
 
     def get(self):
         """
@@ -5609,7 +5618,7 @@ class ProgressBar(Element):
         :type size_px:           (int, int) | (None, None)
         :param auto_size_text:   Not sure why this is here
         :type auto_size_text:    (bool)
-        :param bar_color:        The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :param bar_color:        The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background.
         :type bar_color:         (str, str) or str
         :param style:            Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
         :type style:             (str)
@@ -16022,6 +16031,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         combostyle.configure(style_name, foreground=element.TextColor)
                         combostyle.configure(style_name, selectbackground=element.TextColor)
                         combostyle.configure(style_name, insertcolor=element.TextColor)
+                        combostyle.map(style_name, fieldforeground=[('readonly', element.TextColor)])
                     if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                         combostyle.configure(style_name, selectforeground=element.BackgroundColor)
                         combostyle.map(style_name, fieldbackground=[('readonly', element.BackgroundColor)])
@@ -17741,8 +17751,8 @@ class QuickMeter(object):
         :type *args:          (Any)
         :param orientation:   'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
         :type orientation:    (str)
-        :param bar_color:     color of a bar line
-        :type bar_color:      (str, str)
+        :param bar_color:     The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background.
+        :type bar_color:      (str, str) or str
         :param button_color:  button color (foreground, background)
         :type button_color:   (str, str) or str
         :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
@@ -17863,8 +17873,8 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     :type key:            str | int | tuple | object
     :param orientation:   'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
     :type orientation:    (str)
-    :param bar_color:     color of a bar line
-    :type bar_color:      Tuple(str, str)
+    :param bar_color:     The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background.
+    :type bar_color:      (str, str) or str
     :param button_color:  button color (foreground, background)
     :type button_color:   (str, str) or str
     :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
@@ -25641,4 +25651,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1288dab26218e811ea0e13c3cee6f606643928f79f0cacaad59bb497fe638bdb04320ca197f0dbd7f3aa1c02209fc92d4e5ca37512db0636020bef997b3587fe3e657250d2f561b6675fd1036e5ac3f5d7d02ca4d72c44b2f49d4dbf089b46711840d436b74317618c86a2cff31f9372c85230080b5add63cfe25d5119f6d90cb8a64aaab11249fcd576ad5ef5c90ebc2e631d034b857e987e6db385e88de8008db38bbc5c2279d734dd94232b19bd7d34650a145ff806a43980c4568070c25f9d879c780d8c3b60ad2803355075c501559b41c07738cff8a01faf3b0335a62c96eed986d2f7b3c84e9b5f356c2671e30938720fab9f088ad3117d9575f26cfa8e94a74ffd7e0e3fbcf7fbb5011cd8bb3e36635af61216fe892a9b6d21c21c3f51eb472d449811f852ceb88b8178ee0450fd2bedf4fecaaf56f2f5766a75b1f33a7a494747b381584174b3dcffa6f9e3ad6de82656c1a5ee93729b2c147ed3f0439293dcec35703754aa751aea4317aef1a1eb29a9a7ca736d3519444b43d66dc826eecaf9f575948ece372da6f9042284da0ca430753bf11e8abc057ea3b40d65d853ddde4008a8220e43f3611d0b9fb5714220818c6977b291d7efb8b5d3d76df02a7b852c41a1f8cd99d206869752bdeef555326792163eae79f4cd760b69dee0989e7c2572fc2481b2007af8e2874e2e50786c59756ff40716dee5b07c66
+#458121b878f84f8ebb21d9bbd848321df974fe664ac5f7102ba40f9c9796ce6cbaa13faa97c984f76246c4161f9e61cdbb133824a8efa910fe8d061dbaf5fc3d48632258b94565891e1c932902881c7e2d829aaa4baa803c20ce73b3728be6f560c880edc0d3763049c70195481d9626b6df3a6603db89e4f6b3712f1e74b110b98ff72c0d407da345ebfd18ae30b433522ced89f6e99a03791499d9a511451b429d5b101da972ca4ca07cd283371feac6dbb20c6bf960c6e532d0a15a8100497da7c4fa506d7b5971603986e0a84bd13453ab634cc0290745371e4c70bfbad001bb21e79417bc5a0c7d0a4d6f0e0b806fe4f87dce613e182aabeb63b9e2ad06d056f3c805ef080d70a48655fef5fc087ae0f5bfc74e2ab98c2f2f679515f5243566937dd24f2ae03d3c80d5772f31e30de204490293311ee81f59547966c08be19f20ae10297b9c9833c267df6f0b928e7ddbb5ff9552baab67613ce5ede658e207d4ac78a338b5b116c7b2157d42a09facba04720d8f99cc24c834e68af2518c070097285ca4d2e6f3d6f6398fb91d59685f2ca6990d29c7eb90463a4404180238e54ddede0896576b5ea491c0868338589b082d236c768884b7d037762bd23c6e0eea8e1aa6e39b55737d8bfff5d3a897d75a82c7c836fa07b8749cf10ab695f9f9f1c0d2a0ea736098d6b90d8e72d0ef2015235a576cfed00266be8a82d9
