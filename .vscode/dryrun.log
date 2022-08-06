@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/snaiel/Coding/python/PySimpleGUI'
+make: Leaving directory '/home/snaiel/Coding/python/PySimpleGUI'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+

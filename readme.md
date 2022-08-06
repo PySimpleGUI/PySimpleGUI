@@ -15,6 +15,19 @@
   </tr>
 </table>
 
+# Announcements
+
+## PySimpleGUI Tip of the Day - upgrading to GitHub version....
+29 July 2022
+
+Want to run the latest version of PySimpleGUI from GitHub? If you previously pip installed PySimpleGUI, then it's easy-ish.
+
+## REPL.IT - Working again...
+2 August 2022
+
+For quite a while there was a problem using REPL.IT. Windows could not be opened at any specific location. They were always made at 0,0. Thanks to an awesome engineer there named Toby, the problem has been fixed. If you use a tkinter template, then his fix is included. Here's an example from Demo Programs project that I created earlier today that you'll find here: https://replit.com/@PySimpleGUI/DemoPrograms
+
+# The Project
 
 
 Transforms the tkinter, Qt, WxPython, and Remi (browser-based) GUI frameworks into a simpler interface.  The window definition is simplified by using Python core data types understood by beginners (lists and dictionaries). Further simplification happens by changing event handling from a callback-based model to a message passing one.  
