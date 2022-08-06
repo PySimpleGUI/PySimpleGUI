@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.75 Unreleased"
+version = __version__ = "4.60.3.76 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -195,6 +195,9 @@ _change_log = """
     4.60.3.75
         Better description of bar_color parm for the ProgressMeter element and the one_line_progress_meter function
         Combo element - addition of select parameter to enable easier selection of the contents of clearing of the selection of the contents.
+    4.60.3.76
+        Changed the _this_elements_window_closed to use a flag "quick_check" for cheking is the window is closed.  Found that calling tkinter.update takes over 500ms sometimes!
+            For appllications that call update frequently, this caused a catestrophic slowdown for complex windows.
     
     """
 
@@ -1631,9 +1634,9 @@ class Element():
         """
         self._generic_callback_handler('')
 
-    def _this_elements_window_closed(self):
+    def _this_elements_window_closed(self, quick_check=True):
         if self.ParentForm is not None:
-            return self.ParentForm.is_closed()
+            return self.ParentForm.is_closed(quick_check=quick_check)
 
         return True
 
@@ -11374,16 +11377,23 @@ class Window:
         self.Rows = None
         self.TKroot = None
 
-    def is_closed(self):
+    def is_closed(self, quick_check=None):
         """
         Returns True is the window is maybe closed.  Can be difficult to tell sometimes
-
-        :return:    True if the window was closed or destroyed
-        :rtype:     (bool)
+        NOTE - the call to TKroot.update was taking over 500 ms sometimes so added a flag to bypass the lengthy call.
+        :param quick_quick: If True, then don't use the root.update call, only check the flags
+        :type quick_check:  bool
+        :return:            True if the window was closed or destroyed
+        :rtype:             (bool)
         """
 
         if self.TKrootDestroyed or self.TKroot is None:
             return True
+
+        # if performing a quick check only, then skip calling tkinter for performance reasons
+        if quick_check is True:
+            return False
+
         # see if can do an update... if not, then it's been destroyed
         try:
             rc = self.TKroot.update()
@@ -25651,4 +25661,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#458121b878f84f8ebb21d9bbd848321df974fe664ac5f7102ba40f9c9796ce6cbaa13faa97c984f76246c4161f9e61cdbb133824a8efa910fe8d061dbaf5fc3d48632258b94565891e1c932902881c7e2d829aaa4baa803c20ce73b3728be6f560c880edc0d3763049c70195481d9626b6df3a6603db89e4f6b3712f1e74b110b98ff72c0d407da345ebfd18ae30b433522ced89f6e99a03791499d9a511451b429d5b101da972ca4ca07cd283371feac6dbb20c6bf960c6e532d0a15a8100497da7c4fa506d7b5971603986e0a84bd13453ab634cc0290745371e4c70bfbad001bb21e79417bc5a0c7d0a4d6f0e0b806fe4f87dce613e182aabeb63b9e2ad06d056f3c805ef080d70a48655fef5fc087ae0f5bfc74e2ab98c2f2f679515f5243566937dd24f2ae03d3c80d5772f31e30de204490293311ee81f59547966c08be19f20ae10297b9c9833c267df6f0b928e7ddbb5ff9552baab67613ce5ede658e207d4ac78a338b5b116c7b2157d42a09facba04720d8f99cc24c834e68af2518c070097285ca4d2e6f3d6f6398fb91d59685f2ca6990d29c7eb90463a4404180238e54ddede0896576b5ea491c0868338589b082d236c768884b7d037762bd23c6e0eea8e1aa6e39b55737d8bfff5d3a897d75a82c7c836fa07b8749cf10ab695f9f9f1c0d2a0ea736098d6b90d8e72d0ef2015235a576cfed00266be8a82d9
+#567068f650589bd23f1cff459b19da29ca120410c641aacbc1acc2e49891c795990e1431bf9038f9d39e622f9f801ec18e8cdc096a08a73b777dec1185e3a11596a3c82217cf842a04236903bd1852d2b1553fcf67c12095fd2d8ab589c8e264f314b2a02d36661d857729602ab0f66d47a36a8774d223d5cddc137b74ac1d31cb9342334d9cc9f74a7d6158896bacb9c9f8ae8da52f92ebb37e9bd3d76633e0a03b7732df0c4b940838b48e4a2bab6f62fc5fa72af8c5927e1d5896f5e2f9b4709fd934e3066831afcdb0b58c438847348afd3976505eaac0ae73f4f3bc7efd781ce9847f3911470a2d94491dd14c738311813899ca35d4416beef0ca9f9f2fafcc745c37468d5fc89ea154798162364a45e320acf0caa6d9432bec5a056aab626ca4fd8f033d5dbbeb11c0ea1da7ef61b29e82b29c6c3f9463eea8129c31dcc8b517b7f84d7211a06a1901b34df3a523adf2f1a267fb1bc7ec23e260e29e2326be969a02e0a20a715f1c54e0c6b1b52613733c524f2727815c8159b80f575a93082c78182f2e5c82206f97b8335cf85461a01971c3f3b8fc16bb64246735c0219266d08bf018e552aebbdd3b25dc93ceae3dc7d9ee4acf420351ab99a5994041f28f493d2e5fd8d920b09eee9f2796ebffbf67dfad0f0b6d8e1ba8417e6065dcdd47492525a0a3d05f7adf47e06c5e6fe8447754872be7ce1bcb78c4d0e3fe
