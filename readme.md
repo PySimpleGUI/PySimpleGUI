@@ -17,15 +17,15 @@
 
 # Announcements
 
-## PySimpleGUI Tip of the Day - upgrading to GitHub version....
-29 July 2022
-
+### [(29 July 2022) PySimpleGUI Tip of the Day - upgrading to GitHub version....](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1199261557)
 Want to run the latest version of PySimpleGUI from GitHub? If you previously pip installed PySimpleGUI, then it's easy-ish.
 
-## REPL.IT - Working again...
-2 August 2022
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1199261557)
 
+### [(2 August 2022) REPL.IT - Working again...](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1201663287)
 For quite a while there was a problem using REPL.IT. Windows could not be opened at any specific location. They were always made at 0,0. Thanks to an awesome engineer there named Toby, the problem has been fixed. If you use a tkinter template, then his fix is included. Here's an example from Demo Programs project that I created earlier today that you'll find here: https://replit.com/@PySimpleGUI/DemoPrograms
+
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1201663287)
 
 # The Project
 
