@@ -35,6 +35,16 @@
     </div>
 </div>
 
+## Announcements
+#### [(06 August, 2022 Eating Your Own Dog Food)](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207243789)
+Eating your own dog food is a lesson I learned way back in the early days of my career. The more runtime you as a developer, team, or company can get on your own products the better.
+
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207243789)
+#### [(07 August, 2022 Still Committed....)](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207383181)
+If you've been following this project, using PySimpleGUI since 2018, then you've likely noticed a "slow-down" in activities that are visible here on GitHub. I've mentioned a few times over the past weeks that this was and is happening.
+
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207383181)
+
 ## PyPI Statistics & Versions
 
 | TK | TK 2.7 | Qt| WxPython | Web (Remi) |

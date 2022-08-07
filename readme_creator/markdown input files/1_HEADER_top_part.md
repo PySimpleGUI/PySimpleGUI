@@ -62,8 +62,7 @@ HOW DO I INSERT IMAGES ???
     </div>
 </div>
 
-
-
+## Announcements
 
 ## PyPI Statistics & Versions
 

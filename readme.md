@@ -16,16 +16,16 @@
 </table>
 
 # Announcements
+<!-- Announcements -->
+### [(06 August, 2022 Eating Your Own Dog Food)](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207243789)
+Eating your own dog food is a lesson I learned way back in the early days of my career. The more runtime you as a developer, team, or company can get on your own products the better.
 
-### [(29 July 2022) PySimpleGUI Tip of the Day - upgrading to GitHub version....](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1199261557)
-Want to run the latest version of PySimpleGUI from GitHub? If you previously pip installed PySimpleGUI, then it's easy-ish.
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207243789)
+### [(07 August, 2022 Still Committed....)](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207383181)
+If you've been following this project, using PySimpleGUI since 2018, then you've likely noticed a "slow-down" in activities that are visible here on GitHub. I've mentioned a few times over the past weeks that this was and is happening.
 
-read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1199261557)
-
-### [(2 August 2022) REPL.IT - Working again...](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1201663287)
-For quite a while there was a problem using REPL.IT. Windows could not be opened at any specific location. They were always made at 0,0. Thanks to an awesome engineer there named Toby, the problem has been fixed. If you use a tkinter template, then his fix is included. Here's an example from Demo Programs project that I created earlier today that you'll find here: https://replit.com/@PySimpleGUI/DemoPrograms
-
-read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1201663287)
+read the rest [here](https://github.com/PySimpleGUI/PySimpleGUI/issues/142#issuecomment-1207383181)
+<!-- Announcements -->
 
 # The Project
 
