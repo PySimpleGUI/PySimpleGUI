@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.76 Unreleased"
+version = __version__ = "4.60.3.77 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -198,6 +198,8 @@ _change_log = """
     4.60.3.76
         Changed the _this_elements_window_closed to use a flag "quick_check" for cheking is the window is closed.  Found that calling tkinter.update takes over 500ms sometimes!
             For appllications that call update frequently, this caused a catestrophic slowdown for complex windows.
+    4.60.3.77
+        New Window method - get_scaling - gets the scaling value from tkinter.  Returns DEFAULT_SCALING if error.
     
     """
 
@@ -12193,6 +12195,25 @@ class Window:
         if key in self.key_dict:
             return True
         return False
+
+    def get_scaling(self):
+        """
+        Returns the current scaling value set for this window
+
+        :return:    Scaling according to tkinter. Returns DEFAULT_SCALING if error
+        :rtype:     float
+        """
+
+        if not self._is_window_created('Tried Window.set_scaling'):
+            return DEFAULT_SCALING
+        try:
+            scaling = self.TKroot.tk.call('tk', 'scaling')
+        except Exception as e:
+            if not SUPPRESS_ERROR_POPUPS:
+                _error_popup_with_traceback('Window.get_scaling() - tkinter reported error', e)
+            scaling = DEFAULT_SCALING
+
+        return scaling
 
     # def __enter__(self):
     #     """
@@ -25661,4 +25682,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#567068f650589bd23f1cff459b19da29ca120410c641aacbc1acc2e49891c795990e1431bf9038f9d39e622f9f801ec18e8cdc096a08a73b777dec1185e3a11596a3c82217cf842a04236903bd1852d2b1553fcf67c12095fd2d8ab589c8e264f314b2a02d36661d857729602ab0f66d47a36a8774d223d5cddc137b74ac1d31cb9342334d9cc9f74a7d6158896bacb9c9f8ae8da52f92ebb37e9bd3d76633e0a03b7732df0c4b940838b48e4a2bab6f62fc5fa72af8c5927e1d5896f5e2f9b4709fd934e3066831afcdb0b58c438847348afd3976505eaac0ae73f4f3bc7efd781ce9847f3911470a2d94491dd14c738311813899ca35d4416beef0ca9f9f2fafcc745c37468d5fc89ea154798162364a45e320acf0caa6d9432bec5a056aab626ca4fd8f033d5dbbeb11c0ea1da7ef61b29e82b29c6c3f9463eea8129c31dcc8b517b7f84d7211a06a1901b34df3a523adf2f1a267fb1bc7ec23e260e29e2326be969a02e0a20a715f1c54e0c6b1b52613733c524f2727815c8159b80f575a93082c78182f2e5c82206f97b8335cf85461a01971c3f3b8fc16bb64246735c0219266d08bf018e552aebbdd3b25dc93ceae3dc7d9ee4acf420351ab99a5994041f28f493d2e5fd8d920b09eee9f2796ebffbf67dfad0f0b6d8e1ba8417e6065dcdd47492525a0a3d05f7adf47e06c5e6fe8447754872be7ce1bcb78c4d0e3fe
+#0f6c75c1d2bce0a15439cb127b26e6216cd55062a7cde9f0d3cc27065afe8b6c9002b61a87afbd77f67a836f56a2c73f59727ab77d34f20806c9f7c3aa78c8dd92b82c531a2378888974f65f1f8f54d33ff5838c6904505eb018e1ac5dd8f2b8da3dcf9b63a97f071da8ee8cd80257b878949c1a25e9133ec28379e1af3129bb28c4ec874769c6a123118affc767384a9e33c88149e06c3d8afdee4e72ae20a6cb6d05db1ff6c0f0354ec02a32c782ac21a16e7a8c8da700179659158cabedcc66376b9d036243ef0c4f784dfb79101d347b29166c141fde877308d67d5c83bb26832530e65b7a26a57f017e2efffe88320f97edc0067b49d995dd833d45fdda42653050e144895bfd08f13df343f292b1d7dfe75aca96816e0eb1229072df206af7d56c58a24972dcf6427abd0060af3f7c6adb0e2749645e10c0cb967a41046c734b6cee9e02b29585e44516eac0b03c80e3432f069dc450fb211e04c305099f1376ca2031a18ea94c91ff9421a7a8b931406128adb115c8193abab6378f077497acc3d7bbdf4cd645f2c6a66eb6e777f0a0ece0cabb7a1bd7b5da5ef85a5fc80f265784b4354f366011b3f6f662a22f6a8882a602dd9c5bb0534ceb668e680936492360db5f3a65b477c6d49775899b2d3bc28f65096bef623d78d55246775178841691508f5b1fb2940d7f4389d71390969799b65de9c573279f9e1dd1ba
