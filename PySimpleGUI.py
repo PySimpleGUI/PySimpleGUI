@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.77 Unreleased"
+version = __version__ = "4.60.3.78 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -200,6 +200,8 @@ _change_log = """
             For appllications that call update frequently, this caused a catestrophic slowdown for complex windows.
     4.60.3.77
         New Window method - get_scaling - gets the scaling value from tkinter.  Returns DEFAULT_SCALING if error.
+    4.60.3.78
+        Custom Titlebar - Support added to Window.minimize, Window.maximize, and Window.normal
     
     """
 
@@ -1477,48 +1479,11 @@ class Element():
 
         """
         # If this is a minimize button for a custom titlebar, then minimize the window
-        if self.Key == TITLEBAR_MINIMIZE_KEY:
-            if running_linux():
-                self.ParentForm.TKroot.wm_attributes("-type", "normal")
-                # self.ParentForm.TKroot.state('icon')
-                # return
-                # self.ParentForm.maximize()
-                self.ParentForm.TKroot.wm_overrideredirect(False)
-                # self.ParentForm.minimize()
-                # self.ParentForm.TKroot.wm_overrideredirect(False)
-                self.ParentForm.TKroot.iconify()
-                # self._skip_first_restore_callback = True
-                self.ParentForm.TKroot.bind('<Button-1>', self._titlebar_restore)
-            else:
-                self.ParentForm.TKroot.wm_overrideredirect(False)
-                self.ParentForm.Minimize()
-                self.ParentForm.TKroot.bind('<Expose>', self._titlebar_restore)
-        elif self.Key == TITLEBAR_MAXIMIZE_KEY:
-            if self.ParentForm.maximized:
-                self.ParentForm.normal()
-            else:
-                self.ParentForm.maximize()
-        elif self.Key == TITLEBAR_CLOSE_KEY:
-            self.ParentForm._OnClosingCallback()
-        else:
-            self._generic_callback_handler(self.DisplayText)
+        if self.Key in (TITLEBAR_MINIMIZE_KEY, TITLEBAR_MAXIMIZE_KEY, TITLEBAR_CLOSE_KEY):
+            self.ParentForm._custom_titlebar_callback(self.Key)
+        self._generic_callback_handler(self.DisplayText)
         return
 
-    def _titlebar_restore(self, event):
-        if running_linux():
-            # if self._skip_first_restore_callback:
-            #     self._skip_first_restore_callback = False
-            #     return
-            self.ParentForm.TKroot.unbind('<Button-1>')
-            self.ParentForm.TKroot.deiconify()
-
-            # self.ParentForm.TKroot.wm_overrideredirect(True)
-            self.ParentForm.TKroot.wm_attributes("-type", 'dock')
-
-        else:
-            self.ParentForm.TKroot.unbind('<Expose>')
-            self.ParentForm.TKroot.wm_overrideredirect(True)
-        self.ParentForm.normal()
 
     def _ReturnKeyHandler(self, event):
         """
@@ -11077,8 +11042,12 @@ class Window:
         """
         if not self._is_window_created('tried Window.minimize'):
             return
-        self.TKroot.iconify()
+        if self.use_custom_titlebar is True:
+            self._custom_titlebar_minimize()
+        else:
+            self.TKroot.iconify()
         self.maximized = False
+
 
     def maximize(self):
         """
@@ -11103,14 +11072,17 @@ class Window:
         """
         if not self._is_window_created('tried Window.normal'):
             return
-        if self.TKroot.state() == 'iconic':
-            self.TKroot.deiconify()
+        if self.use_custom_titlebar:
+            self._custom_titlebar_restore()
         else:
-            if not running_linux():
-                self.TKroot.state('normal')
+            if self.TKroot.state() == 'iconic':
+                self.TKroot.deiconify()
             else:
-                self.TKroot.attributes('-fullscreen', False)
-        self.maximized = False
+                if not running_linux():
+                    self.TKroot.state('normal')
+                else:
+                    self.TKroot.attributes('-fullscreen', False)
+            self.maximized = False
 
 
     def _StartMoveUsingControlKey(self, event):
@@ -12214,6 +12186,71 @@ class Window:
             scaling = DEFAULT_SCALING
 
         return scaling
+
+
+    def _custom_titlebar_restore_callback(self, event):
+        self._custom_titlebar_restore()
+
+
+    def _custom_titlebar_restore(self):
+        if running_linux():
+            # if self._skip_first_restore_callback:
+            #     self._skip_first_restore_callback = False
+            #     return
+            self.TKroot.unbind('<Button-1>')
+            self.TKroot.deiconify()
+
+            # self.ParentForm.TKroot.wm_overrideredirect(True)
+            self.TKroot.wm_attributes("-type", 'dock')
+
+        else:
+            self.TKroot.unbind('<Expose>')
+            self.TKroot.wm_overrideredirect(True)
+        if self.TKroot.state() == 'iconic':
+            self.TKroot.deiconify()
+        else:
+            if not running_linux():
+                self.TKroot.state('normal')
+            else:
+                self.TKroot.attributes('-fullscreen', False)
+        self.maximized = False
+
+
+    def _custom_titlebar_minimize(self):
+        if running_linux():
+            self.TKroot.wm_attributes("-type", "normal")
+            # self.ParentForm.TKroot.state('icon')
+            # return
+            # self.ParentForm.maximize()
+            self.TKroot.wm_overrideredirect(False)
+            # self.ParentForm.minimize()
+            # self.ParentForm.TKroot.wm_overrideredirect(False)
+            self.TKroot.iconify()
+            # self._skip_first_restore_callback = True
+            self.TKroot.bind('<Button-1>', self._custom_titlebar_restore_callback)
+        else:
+            self.TKroot.wm_overrideredirect(False)
+            self.TKroot.iconify()
+            self.TKroot.bind('<Expose>', self._custom_titlebar_restore_callback)
+
+
+    def _custom_titlebar_callback(self, key):
+        """
+        One of the Custom Titlbar buttons was clicked
+        :param key:
+        :return:
+        """
+        if key == TITLEBAR_MINIMIZE_KEY:
+            self._custom_titlebar_minimize()
+        elif key == TITLEBAR_MAXIMIZE_KEY:
+            if self.maximized:
+                self.normal()
+            else:
+                self.maximize()
+        elif key == TITLEBAR_CLOSE_KEY:
+            self._OnClosingCallback()
+
+
 
     # def __enter__(self):
     #     """
@@ -25682,4 +25719,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0f6c75c1d2bce0a15439cb127b26e6216cd55062a7cde9f0d3cc27065afe8b6c9002b61a87afbd77f67a836f56a2c73f59727ab77d34f20806c9f7c3aa78c8dd92b82c531a2378888974f65f1f8f54d33ff5838c6904505eb018e1ac5dd8f2b8da3dcf9b63a97f071da8ee8cd80257b878949c1a25e9133ec28379e1af3129bb28c4ec874769c6a123118affc767384a9e33c88149e06c3d8afdee4e72ae20a6cb6d05db1ff6c0f0354ec02a32c782ac21a16e7a8c8da700179659158cabedcc66376b9d036243ef0c4f784dfb79101d347b29166c141fde877308d67d5c83bb26832530e65b7a26a57f017e2efffe88320f97edc0067b49d995dd833d45fdda42653050e144895bfd08f13df343f292b1d7dfe75aca96816e0eb1229072df206af7d56c58a24972dcf6427abd0060af3f7c6adb0e2749645e10c0cb967a41046c734b6cee9e02b29585e44516eac0b03c80e3432f069dc450fb211e04c305099f1376ca2031a18ea94c91ff9421a7a8b931406128adb115c8193abab6378f077497acc3d7bbdf4cd645f2c6a66eb6e777f0a0ece0cabb7a1bd7b5da5ef85a5fc80f265784b4354f366011b3f6f662a22f6a8882a602dd9c5bb0534ceb668e680936492360db5f3a65b477c6d49775899b2d3bc28f65096bef623d78d55246775178841691508f5b1fb2940d7f4389d71390969799b65de9c573279f9e1dd1ba
+#83f70a4f12f4720eb62a39598caf6f1a888cb7ea8a194031ffc2cec0372aa77f6d737a89c4f2cdff578a4693aae75f826e69c93d40b9b88d7de467a53956d3a2bf31038c4264ea0a0590edd5e024ce7404d11ec710812e7a38b78509ad268a2b1fafc0e16c9b9eae696f9104146adfd53451e4a1f587a2073aa7bb5411a03108bf51ffaa8fab0db64b3334c604c570e31b45a4337b4d96957c3b2dd156af33f21c7b3f4998d2f999d6c11761bd178eabfdd1941e7068ea44f5e197dc2d207fd11fb62e00bd9a69e1fd3254aebe9bf2f328fb8622ac37984065a048f12495f4d1c37d1231921a0f96f58564032ee18b4df16f2451f9fa1c7f00fac7bbcfd5a3a9b0db5c4edc73d60c387477e0d05da39e69b0a7eaf29ef65b3f5d6a658d3fb151a89da5c286205fe9ab4755c3528489d2bd0e0f59b8a92df7fd54521741e14dfafd34e59883768331ee6c1e31f3c228259bc9fb0cd8aa4c8bc423f624e31bc70912d0c255a62b53e17beab7cebe8f595a5435efab8db7375292d8c50caaaa418ed27dbb9fe1d099947d02e33f3f8d418bb7b894a98d479f9a5758b20673fa357c33c0e48d20fdda2e492b377321e1f8987a92c7f74026e123df71a047f0966fe447c176edcc5baa4af65a6f240512e33cb7691c3e605bfe9b95866cee4154eb9c48195937e5be31461df9b38604e166a4019e0871226ce719232fecdd7503f006
