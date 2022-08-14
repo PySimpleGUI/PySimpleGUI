@@ -23,7 +23,7 @@ import PySimpleGUI as sg
     Copyright 2022 PySimpleGUI.org
 """
 
-
+# sg.theme('dark red')
 
 def TextButton(text):
     """
@@ -47,7 +47,7 @@ def main():
 
     # The window's layout
     layout = [[TextButton(text) for text in button_text],
-              [sg.Text(k='-STATUS-')],
+              [sg.Text(font='_ 14', k='-STATUS-')],
               [sg.Ok(), sg.Exit()]]
 
     window = sg.Window('Custom Mouseover Highlighting Buttons', layout, finalize=True)
