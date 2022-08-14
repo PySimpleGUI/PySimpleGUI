@@ -47,6 +47,7 @@ def main():
 
     # The window's layout
     layout = [[TextButton(text) for text in button_text],
+              [sg.Text(k='-STATUS-')],
               [sg.Ok(), sg.Exit()]]
 
     window = sg.Window('Custom Mouseover Highlighting Buttons', layout, finalize=True)
@@ -70,7 +71,7 @@ def main():
                 if event[1] == 'EXIT':
                     window[button_key].update(text_color=sg.theme_button_color_text(), background_color=sg.theme_button_color_background())
             else:   # a "normal" button click (Text clicked) so print the text which we put into the tuple
-                print('Button pressed = ', event[1])
+                window['-STATUS-'].update(f'Button pressed = {event[1]}')
     window.close()
 
 
