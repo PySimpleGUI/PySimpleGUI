@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.79 Unreleased"
+version = __version__ = "4.60.3.80 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -203,10 +203,14 @@ _change_log = """
     4.60.3.78
         Custom Titlebar - Support added to Window.minimize, Window.maximize, and Window.normal
     4.60.3.79
-        Fix for Mulitline showing constand error messages after a Window is closed. 
-        Fix for correctly restoring stdout, stderr after they've been rerouted. THIS CODE IS NOT YET COMPLETE! Shooting fo rthis weekend to get it done!
+        Fix for Mulitline showing constant error messages after a Window is closed. 
+        Fix for correctly restoring stdout, stderr after they've been rerouted. THIS CODE IS NOT YET COMPLETE! Shooting for this weekend to get it done!
         Image element - more speicific with tkinter when chaning to a new image so that pypy would stop crashing due to garbage collect not running. 
             This change didn't fix the pypy problem but it also didn't hurt the code to have it
+    4.60.3.80
+        Quick and dirty addition of Alt-shortcuts for Buttons (like exists for Menus)
+            For backward compatablity, must be enabled using set_options with use_button_shortcuts=True
+        Fixed docstring errors in set_options docstring
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -637,6 +641,7 @@ DEFAULT_ALPHA_CHANNEL = 1.0
 DEFAULT_HIDE_WINDOW_WHEN_CREATING = True
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
 TOOLTIP_FONT = None
+DEFAULT_USE_BUTTON_SHORTCUTS = False
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -4954,6 +4959,13 @@ class Button(Element):
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         if key is None and k is None:
             _key = self.ButtonText
+            if DEFAULT_USE_BUTTON_SHORTCUTS is True:
+                pos = _key.find(MENU_SHORTCUT_CHARACTER)
+                if pos != -1:
+                    if pos < len(MENU_SHORTCUT_CHARACTER) or _key[pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
+                        _key = _key[:pos] + _key[pos + len(MENU_SHORTCUT_CHARACTER):]
+                    else:
+                        _key = _key.replace('\\'+MENU_SHORTCUT_CHARACTER, MENU_SHORTCUT_CHARACTER)
         else:
             _key = key if key is not None else k
         if highlight_colors is not None:
@@ -5244,7 +5256,18 @@ class Button(Element):
             # style_name = str(self.Key) + 'custombutton.TButton'
             button_style = ttk.Style()
         if text is not None:
-            self.TKButton.configure(text=text)
+            btext = text
+            if DEFAULT_USE_BUTTON_SHORTCUTS is True:
+                pos = btext.find(MENU_SHORTCUT_CHARACTER)
+                if pos != -1:
+                    if pos < len(MENU_SHORTCUT_CHARACTER) or btext[pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
+                        btext = btext[:pos] + btext[pos + len(MENU_SHORTCUT_CHARACTER):]
+                    else:
+                        btext = btext.replace('\\'+MENU_SHORTCUT_CHARACTER, MENU_SHORTCUT_CHARACTER)
+                        pos = -1
+                if pos != -1:
+                    self.TKButton.config(underline=pos)
+            self.TKButton.configure(text=btext)
             self.ButtonText = text
         if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
             bc = button_color_to_tuple(button_color, self.ButtonColor)
@@ -15739,8 +15762,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = DEFAULT_BUTTON_COLOR
 
                 bd = element.BorderWidth
-
+                pos = -1
+                if DEFAULT_USE_BUTTON_SHORTCUTS is True:
+                    pos = btext.find(MENU_SHORTCUT_CHARACTER)
+                    if pos != -1:
+                        if pos < len(MENU_SHORTCUT_CHARACTER) or btext[pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
+                            btext = btext[:pos] + btext[pos + len(MENU_SHORTCUT_CHARACTER):]
+                        else:
+                            btext = btext.replace('\\'+MENU_SHORTCUT_CHARACTER, MENU_SHORTCUT_CHARACTER)
+                            pos = -1
                 tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height, justify=tk.CENTER, bd=bd, font=font)
+                if pos != -1:
+                    tkbutton.config(underline=pos)
                 try:
                     if btype != BUTTON_TYPE_REALTIME:
                         tkbutton.config( command=element.ButtonCallBack)
@@ -15858,6 +15891,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = stringvar
                 element.Location = (row_num, col_num)
                 btext = element.ButtonText
+                pos = -1
+                if DEFAULT_USE_BUTTON_SHORTCUTS is True:
+                    pos = btext.find(MENU_SHORTCUT_CHARACTER)
+                    if pos != -1:
+                        if pos < len(MENU_SHORTCUT_CHARACTER) or btext[pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
+                            btext = btext[:pos] + btext[pos + len(MENU_SHORTCUT_CHARACTER):]
+                        else:
+                            btext = btext.replace('\\'+MENU_SHORTCUT_CHARACTER, MENU_SHORTCUT_CHARACTER)
+                            pos = -1
                 btype = element.BType
                 if element.AutoSizeButton is not None:
                     auto_size = element.AutoSizeButton
@@ -15876,6 +15918,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = DEFAULT_BUTTON_COLOR
                 bd = element.BorderWidth
                 tkbutton = element.Widget = ttk.Button(tk_row_frame, text=btext, width=width)
+                if pos != -1:
+                    tkbutton.config(underline=pos)
                 if btype != BUTTON_TYPE_REALTIME:
                     tkbutton.config(command=element.ButtonCallBack)
                 else:
@@ -18539,7 +18583,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
-                hide_window_when_creating=None):
+                hide_window_when_creating=None, use_button_shortcuts=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -18667,10 +18711,12 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type sbar_frame_color:                 (str)
     :param sbar_relief:                     Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
     :type sbar_relief:                      (str)
-    :param alpha_channel                    Default alpha channel to be used on all windows
-    :type alpha_channel                     (float)
-    :param hide_window_when_creating        If True then alpha will be set to 0 while a window is made and moved to location indicated
-    :type hide_window_when_creating         (bool)
+    :param alpha_channel:                   Default alpha channel to be used on all windows
+    :type alpha_channel:                    (float)
+    :param hide_window_when_creating:       If True then alpha will be set to 0 while a window is made and moved to location indicated
+    :type hide_window_when_creating:        (bool)
+    :param use_button_shortcuts:            If True then Shortcut Char will be used with Buttons
+    :type use_button_shortcuts:             (bool)
     :return:                                None
     :rtype:                                 None
     """
@@ -18733,6 +18779,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global _pysimplegui_user_settings
     global ttk_part_overrides_from_options
     global DEFAULT_HIDE_WINDOW_WHEN_CREATING
+    global DEFAULT_USE_BUTTON_SHORTCUTS
     # global _my_windows
 
     if icon:
@@ -18945,6 +18992,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if hide_window_when_creating is not None:
         DEFAULT_HIDE_WINDOW_WHEN_CREATING = hide_window_when_creating
 
+    if use_button_shortcuts is not None:
+        DEFAULT_USE_BUTTON_SHORTCUTS = use_button_shortcuts
     return True
 
 
