@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.80 Unreleased"
+version = __version__ = "4.60.3.81 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -211,6 +211,11 @@ _change_log = """
         Quick and dirty addition of Alt-shortcuts for Buttons (like exists for Menus)
             For backward compatablity, must be enabled using set_options with use_button_shortcuts=True
         Fixed docstring errors in set_options docstring
+    4.60.3.81
+        Completed restoration of stdout & stderr
+            If an Output Element is used or a Multline element to reroute stdout and/or stderr, then this hasn't worked quite right in the past
+            Hopefuly now, it does.  A LIFO list (stack) is used to keep track of the current output device and is scrubbed for closed windows and restored if one is closed
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3625,8 +3630,6 @@ class Multiline(Element):
         self.WriteOnly = write_only
         self.AutoRefresh = auto_refresh
         key = key if key is not None else k
-        self.previous_stdout = None
-        self.previous_stderr = None
         self.reroute_cprint = reroute_cprint
         self.echo_stdout_stderr = echo_stdout_stderr
         self.Justification = 'left' if justification is None else justification
@@ -3638,10 +3641,6 @@ class Multiline(Element):
         self.wrap_lines = wrap_lines
         self.reroute_stdout = reroute_stdout
         self.reroute_stderr = reroute_stderr
-        # if reroute_stdout:
-        #     self.reroute_stdout_to_here()
-        # if reroute_stderr:
-        #     self.reroute_stderr_to_here()
         self.no_scrollbar = no_scrollbar
         self.hscrollbar = None      # The horizontal scrollbar
         sz = size if size != (None, None) else s
@@ -3856,33 +3855,32 @@ class Multiline(Element):
         """
         Sends stdout (prints) to this element
         """
-        Window._rerouted_stdout_stack.insert(0, (self.ParentForm, self, sys.stdout))
-        self.previous_stdout = sys.stdout
+        # if nothing on the stack, then need to save the very first stdout
+        if len(Window._rerouted_stdout_stack) == 0:
+            Window._original_stdout = sys.stdout
+        Window._rerouted_stdout_stack.insert(0, (self.ParentForm, self))
         sys.stdout = self
 
     def reroute_stderr_to_here(self):
         """
         Sends stderr to this element
         """
-        Window._rerouted_stderr_stack.insert(0, (self.ParentForm, self, sys.stderr))
-        self.previous_stderr = sys.stderr
+        if len(Window._rerouted_stderr_stack) == 0:
+            Window._original_stderr = sys.stderr
+        Window._rerouted_stderr_stack.insert(0, (self.ParentForm, self))
         sys.stderr = self
 
     def restore_stdout(self):
         """
         Restore a previously re-reouted stdout back to the original destination
         """
-        if self.previous_stdout:
-            sys.stdout = self.previous_stdout
-            self.previous_stdout = None  # indicate no longer routed here
+        Window._restore_stdout()
 
     def restore_stderr(self):
         """
         Restore a previously re-reouted stderr back to the original destination
         """
-        if self.previous_stderr:
-            sys.stderr = self.previous_stderr
-            self.previous_stderr = None  # indicate no longer routed here
+        Window._restore_stderr()
 
     def write(self, txt):
         """
@@ -3891,8 +3889,6 @@ class Multiline(Element):
         :param txt: text of output
         :type txt:  (str)
         """
-        if self._this_elements_window_closed():
-            Window._restore_stdout()
         try:
             self.update(txt, append=True)
             # if need to echo, then send the same text to the destinatoin that isn't thesame as this one
@@ -3901,7 +3897,6 @@ class Multiline(Element):
                     sys.stdout.write(txt)
                 elif sys.stderr != self:
                     sys.stderr.write(txt)
-                # self.previous_stdout.write(txt)
         except:
             pass
 
@@ -3918,19 +3913,14 @@ class Multiline(Element):
 
     def __del__(self):
         """
-        If this Widget is deleted, be sure and restore the old stdout, stderr
-        """
-        # These trys are here because found that if the init fails, then
-        # the variables holding the old stdout won't exist and will get an error
+        AT ONE TIME --- If this Widget is deleted, be sure and restore the old stdout, stderr
+        Now the restore is done differently. Do not want to RELY on Python to call this method
+        in order for stdout and stderr to be restored.  Instead explicit restores are called.
 
-        try:
-            self.restore_stdout()
-        except Exception as e:
-            pass
-        try:
-            self.restore_stderr()
-        except:
-            pass
+        """
+
+        return
+
 
     Get = get
     Update = update
@@ -9750,8 +9740,10 @@ class Window:
     _floating_debug_window_build_needed = False
     _main_debug_window_build_needed = False
     # rereouted stdout info. List of tuples (window, element, previous destination)
-    _rerouted_stdout_stack = []             # type: List[Tuple[Window, Element, Any]]
-    _rerouted_stderr_stack = []             # reroutred sterr info. List of tuples (window, element, previous destination)
+    _rerouted_stdout_stack = []             # type: List[Tuple[Window, Element]]
+    _rerouted_stderr_stack = []             # type: List[Tuple[Window, Element]]
+    _original_stdout = None
+    _original_stderr = None
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
@@ -11365,7 +11357,6 @@ class Window:
         Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
         """
-        self._restore_stdout()
 
         try:
             del Window._active_windows[self]  # will only be in the list if window was explicitly finalized
@@ -11396,6 +11387,11 @@ class Window:
         # Free up anything that was held in the layout and the root variables
         self.Rows = None
         self.TKroot = None
+
+        self._restore_stdout()
+        self._restore_stderr()
+
+
 
     def is_closed(self, quick_check=None):
         """
@@ -11449,6 +11445,8 @@ class Window:
                 self.LastButtonClicked = WINDOW_CLOSE_ATTEMPTED_EVENT
         if self.close_destroys_window:
             self.RootNeedsDestroying = True
+        self._restore_stdout()
+        self._restore_stderr()
 
     def disable(self):
         """
@@ -12300,12 +12298,29 @@ class Window:
     @classmethod
     def _restore_stdout(cls):
         for item in cls._rerouted_stdout_stack:
-            (window, element, previous_stdout) = item   # type: (Window, Element, Any)
+            (window, element) = item   # type: (Window, Element)
             if not window.is_closed():
-                sys.stdout = previous_stdout
+                sys.stdout = element
                 break
-
         cls._rerouted_stdout_stack = [item for item in cls._rerouted_stdout_stack if not item[0].is_closed()]
+        if len(cls._rerouted_stdout_stack) == 0 and cls._original_stdout is not None:
+            sys.stdout = cls._original_stdout
+        # print('Restored stdout... new stack:',  [item[0].Title for item in cls._rerouted_stdout_stack ])
+
+
+    @classmethod
+    def _restore_stderr(cls):
+        for item in cls._rerouted_stderr_stack:
+            (window, element) = item   # type: (Window, Element)
+            if not window.is_closed():
+                sys.stderr = element
+                break
+        cls._rerouted_stderr_stack = [item for item in cls._rerouted_stderr_stack if not item[0].is_closed()]
+        if len(cls._rerouted_stderr_stack) == 0 and cls._original_stderr is not None:
+            sys.stderr = cls._original_stderr
+        # print('Restored stderr... new stack:',  [item[0].Title for item in cls._rerouted_stderr_stack ])
+
+
 
 
 
