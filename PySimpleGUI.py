@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.78 Unreleased"
+version = __version__ = "4.60.3.79 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -202,7 +202,11 @@ _change_log = """
         New Window method - get_scaling - gets the scaling value from tkinter.  Returns DEFAULT_SCALING if error.
     4.60.3.78
         Custom Titlebar - Support added to Window.minimize, Window.maximize, and Window.normal
-    
+    4.60.3.79
+        Fix for Mulitline showing constand error messages after a Window is closed. 
+        Fix for correctly restoring stdout, stderr after they've been rerouted. THIS CODE IS NOT YET COMPLETE! Shooting fo rthis weekend to get it done!
+        Image element - more speicific with tkinter when chaning to a new image so that pypy would stop crashing due to garbage collect not running. 
+            This change didn't fix the pypy problem but it also didn't hurt the code to have it
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -333,7 +337,6 @@ port = 'PySimpleGUI'
 
     "Thank you" has fueled this project. I'm incredibly grateful to have users that are in turn grateful. It's a feedback loop of gratitude. What a fantastic thing!
 """
-
 # all of the tkinter involved imports
 import tkinter as tk
 from tkinter import filedialog
@@ -3684,7 +3687,7 @@ class Multiline(Element):
             return
 
         if self._this_elements_window_closed():
-            _error_popup_with_traceback('Error in Multiline.update - The window was closed')
+            # _error_popup_with_traceback('Error in Multiline.update - The window was closed')
             return
 
 
@@ -3848,6 +3851,7 @@ class Multiline(Element):
         """
         Sends stdout (prints) to this element
         """
+        Window._rerouted_stdout_stack.insert(0, (self.ParentForm, self, sys.stdout))
         self.previous_stdout = sys.stdout
         sys.stdout = self
 
@@ -3855,6 +3859,7 @@ class Multiline(Element):
         """
         Sends stderr to this element
         """
+        Window._rerouted_stderr_stack.insert(0, (self.ParentForm, self, sys.stderr))
         self.previous_stderr = sys.stderr
         sys.stderr = self
 
@@ -3881,10 +3886,17 @@ class Multiline(Element):
         :param txt: text of output
         :type txt:  (str)
         """
+        if self._this_elements_window_closed():
+            Window._restore_stdout()
         try:
             self.update(txt, append=True)
+            # if need to echo, then send the same text to the destinatoin that isn't thesame as this one
             if self.echo_stdout_stderr:
-                self.previous_stdout.write(txt)
+                if sys.stdout != self:
+                    sys.stdout.write(txt)
+                elif sys.stderr != self:
+                    sys.stderr.write(txt)
+                # self.previous_stdout.write(txt)
         except:
             pass
 
@@ -3893,10 +3905,11 @@ class Multiline(Element):
         Flush parameter was passed into a print statement.
         For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
         """
-        try:
-            self.previous_stdout.flush()
-        except:
-            pass
+        # try:
+        #     self.previous_stdout.flush()
+        # except:
+        #     pass
+        return
 
     def __del__(self):
         """
@@ -3904,6 +3917,7 @@ class Multiline(Element):
         """
         # These trys are here because found that if the init fails, then
         # the variables holding the old stdout won't exist and will get an error
+
         try:
             self.restore_stdout()
         except Exception as e:
@@ -5876,6 +5890,9 @@ class Image(Element):
                 # return  # an error likely means the window has closed so exit
 
         if image is not None:
+            self.tktext_label.configure(image='')           # clear previous image
+            if self.tktext_label.image is not None:
+                del self.tktext_label.image
             if type(image) is not bytes:
                 width, height = size[0] if size[0] is not None else image.width(), size[1] if size[1] is not None else image.height()
             else:
@@ -5894,7 +5911,7 @@ class Image(Element):
         if filename is None and image is None and visible is None and size == (None, None):
             # Using a try because the image may have been previously deleted and don't want an error if that's happened
             try:
-                self.tktext_label.configure(width=1, height=1, bd=0)
+                self.tktext_label.configure(image='', width=1, height=1, bd=0)
                 self.tktext_label.image = None
             except:
                 pass
@@ -9709,6 +9726,9 @@ class Window:
     _counter_for_ttk_widgets = 0
     _floating_debug_window_build_needed = False
     _main_debug_window_build_needed = False
+    # rereouted stdout info. List of tuples (window, element, previous destination)
+    _rerouted_stdout_stack = []             # type: List[Tuple[Window, Element, Any]]
+    _rerouted_stderr_stack = []             # reroutred sterr info. List of tuples (window, element, previous destination)
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
@@ -11303,6 +11323,7 @@ class Window:
         :parm without_event: if True, then do not cause an event to be generated, "silently" close the window
         :type without_event: (bool)
         """
+
         try:
             self.TKroot.update()
         except:
@@ -11321,6 +11342,8 @@ class Window:
         Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
         """
+        self._restore_stdout()
+
         try:
             del Window._active_windows[self]  # will only be in the list if window was explicitly finalized
         except:
@@ -12249,6 +12272,17 @@ class Window:
                 self.maximize()
         elif key == TITLEBAR_CLOSE_KEY:
             self._OnClosingCallback()
+
+
+    @classmethod
+    def _restore_stdout(cls):
+        for item in cls._rerouted_stdout_stack:
+            (window, element, previous_stdout) = item   # type: (Window, Element, Any)
+            if not window.is_closed():
+                sys.stdout = previous_stdout
+                break
+
+        cls._rerouted_stdout_stack = [item for item in cls._rerouted_stdout_stack if not item[0].is_closed()]
 
 
 
@@ -25168,7 +25202,8 @@ def main_sdk_help():
                         [T(size=(80, 1), font='Courier 10 underline', k='-DOC LINK-', enable_events=True)]], pad=(0, 0), expand_x=True, expand_y=True, vertical_alignment='t')
     layout = [[button_col, mline_col]]
     layout += [[CBox('Summary Only', enable_events=True, k='-SUMMARY-'), CBox('Display Only PEP8 Functions', default=True, k='-PEP8-')]]
-    # layout += [[Button('Exit', size=(15, 1))]]
+    # layout = [[Column(layout, scrollable=True, p=0, expand_x=True, expand_y=True, vertical_alignment='t'), Sizegrip()]]
+    layout += [[Button('Exit', size=(15, 1)), Sizegrip()]]
 
     window = Window('SDK API Call Reference', layout, resizable=True, use_default_focus=False, keep_on_top=True, icon=EMOJI_BASE64_THINK, finalize=True, right_click_menu=MENU_RIGHT_CLICK_EDITME_EXIT)
     window['-DOC LINK-'].set_cursor('hand1')
@@ -25251,7 +25286,6 @@ def main_sdk_help():
     except Exception as e:
         _error_popup_with_traceback('Exception in SDK reference', e)
     window.close()
-
 
 #                     oo
 #
