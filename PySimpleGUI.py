@@ -25795,7 +25795,7 @@ if running_windows():
 _read_mac_global_settings()
 
 if _mac_should_set_alpha_to_99():
-    print('Applyting Mac OS 12.3+ Alpha Channel fix.  Your default Alpha Channel is now 0.99')
+    print('Applying Mac OS 12.3+ Alpha Channel fix.  Your default Alpha Channel is now 0.99')
     set_options(alpha_channel=0.99)
 # if running_mac():
 #     print('Your Mac patches are:')
