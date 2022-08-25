@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.81 Unreleased"
+version = __version__ = "4.60.3.82 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -215,6 +215,8 @@ _change_log = """
         Completed restoration of stdout & stderr
             If an Output Element is used or a Multline element to reroute stdout and/or stderr, then this hasn't worked quite right in the past
             Hopefuly now, it does.  A LIFO list (stack) is used to keep track of the current output device and is scrubbed for closed windows and restored if one is closed
+    4.60.3.82
+        Addition of Style Names for horizaontal and vertical ttk scrollbars - hsb_style_name and vsb_style_name so that scrollbar colors can be changed in user code
         
     """
 
@@ -1263,6 +1265,12 @@ class Element():
         # self.pad_used = (0, 0)  # the amount of pad used when was inserted into the layout
         self._popup_menu_location = (None, None)
         self.pack_settings = None
+        self.vsb_style_name = None           # ttk style name used for the verical scrollbar if one is attached to element
+        self.hsb_style_name = None           # ttk style name used for the horizontal scrollbar if one is attached to element
+        self.vsb_style = None                # The ttk style used for the vertical scrollbar if one is attached to element
+        self.hsb_style = None                # The ttk style used for the horizontal scrollbar if one is attached to element
+        self.hsb = None                      # The horizontal scrollbar if one is attached to element
+        self.vsb = None                      # The vertical scrollbar if one is attached to element
         ## TTK Scrollbar Settings
         self.ttk_part_overrides = TTKPartOverrides(sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
@@ -15209,11 +15217,13 @@ def _make_ttk_scrollbar(element, orientation, window):
         # style_name_thumb = _make_ttk_style_name('.Vertical.TScrollbar.thumb', element)
         element.vsb_style = style
         element.vsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.yview, style=style_name)
+        element.vsb_style_name = style_name
     else:
         orient = 'horizontal'
         style_name = _make_ttk_style_name('.Horizontal.TScrollbar', element)
         element.hsb_style = style
         element.hsb = ttk.Scrollbar(element.element_frame, orient=orient, command=element.Widget.xview, style=style_name)
+        element.hsb_style_name = style_name
 
 
     # ------------------ Get the colors using heirarchy of element, window, options, settings ------------------
@@ -25817,4 +25827,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#83f70a4f12f4720eb62a39598caf6f1a888cb7ea8a194031ffc2cec0372aa77f6d737a89c4f2cdff578a4693aae75f826e69c93d40b9b88d7de467a53956d3a2bf31038c4264ea0a0590edd5e024ce7404d11ec710812e7a38b78509ad268a2b1fafc0e16c9b9eae696f9104146adfd53451e4a1f587a2073aa7bb5411a03108bf51ffaa8fab0db64b3334c604c570e31b45a4337b4d96957c3b2dd156af33f21c7b3f4998d2f999d6c11761bd178eabfdd1941e7068ea44f5e197dc2d207fd11fb62e00bd9a69e1fd3254aebe9bf2f328fb8622ac37984065a048f12495f4d1c37d1231921a0f96f58564032ee18b4df16f2451f9fa1c7f00fac7bbcfd5a3a9b0db5c4edc73d60c387477e0d05da39e69b0a7eaf29ef65b3f5d6a658d3fb151a89da5c286205fe9ab4755c3528489d2bd0e0f59b8a92df7fd54521741e14dfafd34e59883768331ee6c1e31f3c228259bc9fb0cd8aa4c8bc423f624e31bc70912d0c255a62b53e17beab7cebe8f595a5435efab8db7375292d8c50caaaa418ed27dbb9fe1d099947d02e33f3f8d418bb7b894a98d479f9a5758b20673fa357c33c0e48d20fdda2e492b377321e1f8987a92c7f74026e123df71a047f0966fe447c176edcc5baa4af65a6f240512e33cb7691c3e605bfe9b95866cee4154eb9c48195937e5be31461df9b38604e166a4019e0871226ce719232fecdd7503f006
+#42663486b530def72b9a3742b6807f494b9497159f9888a99b3a9ebed9539c24386f7c749635a851014ba58e21cabdd7b7f9873a7abebab37c4fb4f6958af5af3ee06acada854d6251ea26f30af6dea7a78a60958267ab77221191cb8eae5b45cd1d2d353a5558268ede7d23486e6a53ec36a42ecd7a90a4ab85909634f56231eb63facb6c55dc260346d67d2a8528f8af08797e0a4c700a3d1fd0ceedb4d05fcd5f0e66d8f5e50b327833665622f9bb45224fd1fd0f427575a2973df3c95cee107a2f465bda05f8c2fd4a6be095e44bc21ca1fb6a3e69d5a7e877ccdb73a995d15bd40d882618dc95ea9d01c71bd212bd6444108be77087ef767f8560923026e14b450749e08a4723b8e516747db6e1f8097f5ccd11ba2cfe0503682d4eb5ac7c08d54dd9836159c1a3328fe5e670b288b50143ae8440ec447c79f1db25116b2e2a23bd04a79b18024bfd8fe7a297e0a168f374eb730dc9b61ff0fc76b366333eb27ec4bfbfd334367ba322f894618d15b9b9c75e278894bb3ad64eb0a0a900bdc33e040bc68289ac2e8e5c12867d50b7f7ecb32666206bfb39a4832f0dc8ad80ddb6f040d14d0e9157af77e95422a9439658075c117113c60e512ce4e06690cf23fb929de405cd5206d419bd1f0ebc661d9d6f61e62425965c5994755f6a13be328581acee16cb2ac01e01174ace8c4000572e89f77372c3e98e213104de29
