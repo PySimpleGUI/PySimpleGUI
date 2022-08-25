@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.82 Unreleased"
+version = __version__ = "4.60.3.83 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -217,7 +217,9 @@ _change_log = """
             Hopefuly now, it does.  A LIFO list (stack) is used to keep track of the current output device and is scrubbed for closed windows and restored if one is closed
     4.60.3.82
         Addition of Style Names for horizaontal and vertical ttk scrollbars - hsb_style_name and vsb_style_name so that scrollbar colors can be changed in user code
-        
+    4.60.3.83
+        Output element - now automatically rereoutes cprint to here as well. Assumption is that you want stuff to go here without
+            needing to specify each thing.  If want more control, then use the Multline directly
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4705,9 +4707,7 @@ class Output(Multiline):
         # self.expand_x = expand_x
         # self.expand_y = expand_y
 
-        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll,
-                 key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, autoscroll=True, auto_refresh=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata,
-                         sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll, key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, reroute_cprint=True, autoscroll=True, auto_refresh=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata, sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
     #
     # @property
     # def tk_out(self):
