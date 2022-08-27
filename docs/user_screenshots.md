@@ -1,13 +1,10 @@
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/02/2018 17:23:57
 
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 09/02/2018 17:23:57
 OK, so this didn't catch on the way I had hoped.... 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/16/2018 21:26:51
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 09/16/2018 21:26:51
 I'm finding some cool examples being posted on GitHub.... if user's won't post them, I sure will!  What I'm finding are surprising.  The calculator example isn't just a calculator, the author created a new button class based on PySimpleGUI.ReadFormButton
 
 ![calculator](https://user-images.githubusercontent.com/13696193/45601112-b0316580-b9d5-11e8-9f42-38acdfd5db93.jpg)
@@ -15,10 +12,8 @@ I'm finding some cool examples being posted on GitHub.... if user's won't post t
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 09/30/2018 21:37:08
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 09/30/2018 21:37:08
 Hey! Here are some screenshots of a web automation tool overlay I'm building with with PSG. It is letting me quickly implement without clunky nuance requirements, and provide nice functionality that I really wasn't planning on doing before finding PSG. Thanks!
 
 ![image](https://user-images.githubusercontent.com/29800532/46262855-5fd9fd80-c4d5-11e8-8664-f094f2149105.png)
@@ -40,62 +35,48 @@ Hey! Here are some screenshots of a web automation tool overlay I'm building wit
 PSG is awesome!
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/30/2018 21:51:14
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 09/30/2018 21:51:14
 Thank you! This is SO helpful to us all. I've already picked up several ideas from what you've done and I'm sure others will too.  And thank you for downloading and using the PSG logo 👍  It's better than the default tkinter logo in my opinion. 
 This kind of post is greatly appreciated to say the least!
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 09/30/2018 22:01:09
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 09/30/2018 22:01:09
 Haha no problem and thanks for the tool itself. About the icon.... don't look too hard at these screenshots!
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 10/02/2018 20:18:39
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 10/02/2018 20:18:39
 Here's another screenshot with a new theme I'm still working on...
 
 ![image](https://user-images.githubusercontent.com/29800532/46385695-7924aa80-c68b-11e8-9ecc-c8a5afdad61d.png)
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 10/03/2018 21:54:34
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 10/03/2018 21:54:34
 @eagleEggs  Just thought of a cool feature for you to use.  Maybe your buttons already take care of this, but could work out nicely.... that feature is Menus.  And in particular the tear-off menus.  They essentially become floating toolbars without icons and instead use text.
 
 ![floating menu-toolbar](https://user-images.githubusercontent.com/13696193/46441704-59e25780-c735-11e8-8d94-9884a4e7c987.jpg)
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 10/04/2018 01:55:57
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 10/04/2018 01:55:57
 That is pretty cool. Will be looking into it.
 
 ------------------------------
+[@iris-chang](https://github.com/iris-chang) 10/24/2018 07:04:44
 
-
-[@iris-chang](https://github.com/iris-chang)
-### 10/24/2018 07:04:44
 The most interesting thing I've got in my program:
 ![image](https://user-images.githubusercontent.com/12161426/47411983-5460b600-d7a5-11e8-98b6-961113b0b050.png)
 
 Basically a fancied up version of listBox where the user can choose multiple options. Saw it in other programs and wanted one for my own. It also has an advantage over listbox (I think) because when I had a lot of fields on a form, the regular listbox doesn't keep track of the selected values when the focus moves away. So instead, I use this like a popup to keep track of what was selected and allow modifications.
 
 ------------------------------
+[@AltoRetrato](https://github.com/AltoRetrato) 10/29/2018 17:45:47
 
-
-[@AltoRetrato](https://github.com/AltoRetrato)
-### 10/29/2018 17:45:47
 I didn't see any tree element screenshot, so here's a sample from a program I'm writing:
 
 ![tree_256](https://user-images.githubusercontent.com/22997468/47669247-420dc000-db89-11e8-8999-d2c509320fd5.png)
@@ -103,20 +84,16 @@ I didn't see any tree element screenshot, so here's a sample from a program I'm 
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 11/04/2018 00:22:20
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 11/04/2018 00:22:20
 Spun off some functionality from my larger testing tool for easy use of specific functionality still using PSG :)
 
 ![image](https://user-images.githubusercontent.com/29800532/47958669-1aae5d00-dfa6-11e8-8f61-b8244488040d.png)
 
 
 ------------------------------
+[@john144](https://github.com/john144) 11/04/2018 03:03:06
 
-
-[@john144](https://github.com/john144)
-### 11/04/2018 03:03:06
 A program I wrote in Python using PSG. I use the old-fashioned `descript.ion` files from the MSDOS days. (Old, but I don't know any better alternative for Windows.) I use comments to label my code, audio, and video files, but need a way to search for them by comment. This is my home-grown solution.
 
 The back end of the screenshot of the program you see is a SQLite database that maps files to their respective descriptions. The database was built by another Python program. (There are three separate Python programs, and I need to integrate them.) The front end to this query program is PySimpleGUI using the latest version of the Table element to display the result set. The PySimpleGUI code is only 70 lines in a 118-line program, including comments and blank lines. You can customize the result set by choosing different databases, and customizing your search using custom queries using SQL or full text search. You can further filter your results using the filter pattern that I picked up from another of Mike's examples. You are looking here at part of my Projects/Python folder, filtered by the keyword 'simple'.
@@ -132,10 +109,8 @@ You can select a folder or a file and click on `Open`. Opening a folder opens th
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/04/2018 03:06:11
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/04/2018 03:06:11
 Ah, yes, double clicking.  Let me look at how to make that happen.  It'll be another version of select submits.
 
 DONE... added... if you set the parameter `bind_return_key` to True then it will return an event for both the return key and double-clicks, just like listbox does.
@@ -146,10 +121,8 @@ https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/654
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 11/12/2018 17:58:27
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 11/12/2018 17:58:27
 Completely revamping my GUI as when I gave it to users it was way too convoluted. Here are a few shots of an extremely simplified main menu, and pop out windows for those options. I'm learning a lot about how to design for users now, which actually simplifies the application overall and makes less work lol:
 
 ![image](https://user-images.githubusercontent.com/29800532/48366002-8cf40100-e67a-11e8-8f68-d95e539e254c.png)
@@ -159,28 +132,22 @@ Also, spun off functionality from that tool to make htis GUI as well. Super easy
 ![image](https://user-images.githubusercontent.com/29800532/48366144-f116c500-e67a-11e8-8669-8c0abdd02298.png)
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/12/2018 18:05:10
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/12/2018 18:05:10
 Woooowww!  Are those "real" screenshots??  You did images on your buttons and made them really big.  They like a mobile interface.  Very nice.   All of this will translate over to Qt easily should you ever go that way.  Even button images should work.    The downside is all that sizing you did will have to be redone.
 
 I really like the looks of theses.
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 11/12/2018 18:52:03
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 11/12/2018 18:52:03
 Haha thanks. Yea they all expect mobile stuff now and if it doesn't look clean and obvious no one will use it :/ It does help to simplify your app though when thinking about it from their perspective!
 
 I took what was 11 tabs and a big window, into 3 buttons on a smaller window. Phew.
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 11/16/2018 03:08:43
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 11/16/2018 03:08:43
 Here are some new screenshots of a major UI overhaul in making a test framework on top of Selenium:
 
 ![image](https://user-images.githubusercontent.com/29800532/48595428-91dade00-e922-11e8-982b-d65539549124.png)
@@ -195,10 +162,8 @@ Build:
 Yes, that is a temp password for a local DB - No worries.
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/18/2018 16:54:32
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/18/2018 16:54:32
 ![lidar gui](https://user-images.githubusercontent.com/13696193/48675586-a8eb1d00-eb28-11e8-9c7a-a479d7b45d9c.png)
 
 
@@ -206,20 +171,16 @@ Ran into this one while cruising GitHub.  I'm seeing some nice looking GUIs!
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/18/2018 16:55:15
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/18/2018 16:55:15
 ![snag-0258](https://user-images.githubusercontent.com/13696193/48574787-10f9f300-e8de-11e8-859f-2a38100605f4.jpg)
 
 Another GUI found on GitHub
 
 
 ------------------------------
+[@john144](https://github.com/john144) 11/20/2018 20:12:20
 
-
-[@john144](https://github.com/john144)
-### 11/20/2018 20:12:20
 I needed a log window that supported multi-colored text. I was using the TKinter Text widget, but that required me to write my entire UI using TKinter, even though I wanted to use PySimpleGUI. I tried subclassing the PySimpleGUI Multiline element and adding a couple of methods that access the `TKText` attribute. Taking the program I wrote using TKinter, I rewrote my entire GUI using PySimpleGUI and this subclass. It cut the lines of GUI code by 50%. The only thing I lost was the ability to resize the window and the widgets it contained. The learning value is that if a PySimpleGUI doesn't do exactly what you want, you can still sub-class it and add your own functionality, without disturbing the base code.
 
 Here is a quick sample screen shot using this subclassed Multiline element. If there is any interest, I can upload a small demo program consisting of about 80 lines of code. I figured this might be useful where you are logging test cases and want to highlight critical results. 
@@ -232,10 +193,8 @@ I am also including a screen shot of my SynchDir program, which synchronizes dir
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/20/2018 22:08:30
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/20/2018 22:08:30
 I typically named tkinter variables consistently.  For the elements', their base widget object starts with TK. For example, the slider's tkinter widget is a Scale.  
 
 The scale object that's used for a slider is named element.TKScale.  
@@ -247,10 +206,8 @@ etc
 You can easily "go around" the PySimpleGUI SDK to access a variety of features.  There was an officially sanctioned one that I recently gave to someone that I have now forgotten.
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 11/24/2018 05:46:53
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 11/24/2018 05:46:53
 Just finalized and released EHX tool officially. Thanks again for a great tool to quickly build GUI's. It definitely played a part in completing this project with it's flexibility and your active support.
 
 Again here is a screenshot and a few from the larger tool that this derives from this which is near completion. I'm looking forward to using PSG again on my next project :D
@@ -272,25 +229,19 @@ Working on graph visualizations... But I love the heat map and need to get it mo
 Also very cool MIT license icons used: https://octicons.github.com/
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:43:40
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/28/2018 15:43:40
 
 ![image](https://user-images.githubusercontent.com/5184182/49162162-5106a000-f2f8-11e8-8873-d56682df7d33.png)
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:48:19
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/28/2018 15:48:19
 Very cool.. I like the Make More Readable... it does that well!
 
 ------------------------------
+[@kennard42](https://github.com/kennard42) 11/28/2018 15:54:53
 
-
-[@kennard42](https://github.com/kennard42)
-### 11/28/2018 15:54:53
 > 
 > 
 > Very cool.. I like the Make More Readable... it does that well!
@@ -298,47 +249,37 @@ Very cool.. I like the Make More Readable... it does that well!
 Thanks, I am confronted with a challenge though and I don't know where to ask my question.   I want some semi-complicated rules to apply to the input numbers.  I felt I was on the right path until I added the keybinding so that I could capture  pageup and down to advance the records.   Where would I pose this question in detail?
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:56:18
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 11/28/2018 15:56:18
 Open a new issue and post it.  
 
 https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/new
 
 
 ------------------------------
+[@btnpushnmunky](https://github.com/btnpushnmunky) 12/14/2018 16:50:36
 
-
-[@btnpushnmunky](https://github.com/btnpushnmunky)
-### 12/14/2018 16:50:36
 Box calculator for print jobs:
 
 ![boxcalculator](https://github.com/btnpushnmunky/boxcalculator/raw/master/screen.png)
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 12/14/2018 23:09:55
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 12/14/2018 23:09:55
 Did you use Columns to lay out your window?
 
 It looks great. 
 
 ------------------------------
+[@btnpushnmunky](https://github.com/btnpushnmunky) 12/15/2018 00:26:31
 
-
-[@btnpushnmunky](https://github.com/btnpushnmunky)
-### 12/15/2018 00:26:31
 Nope. Just rows and set sizes for the elements.
 
 And thank you. :-)
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 03/25/2019 15:44:50
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 03/25/2019 15:44:50
 Just an update. PSG rules.
 
 ![image](https://user-images.githubusercontent.com/29800532/54933556-3c779480-4ef3-11e9-94ab-ab3734ae300f.png)
@@ -348,10 +289,8 @@ Just an update. PSG rules.
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/25/2019 19:53:34
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 03/25/2019 19:53:34
 Woooooowwwwwww!
 
 This is Reddit post territory for sure.  OMG, this looks amazing.  
@@ -361,10 +300,8 @@ People often post asking "is it possible to make tkinker look good".  Stuff like
 This was beautifully done.  Nice job.  I'm sure your users love it.
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 13:30:45
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 03/26/2019 13:30:45
 Thanks! I'll put up a post here this week.
 
 There are also a few other windows used from the main window, which is for customizing reports, viewing graphs, and viewing license. The build window also has that sl button which converts the window to include some extended optional functionality. It stands for sideload which loads a module that is not packaged in the build so you can modify functions and reimport at runtime. So in total there are 8 windows that work perfectly!
@@ -372,10 +309,8 @@ There are also a few other windows used from the main window, which is for custo
 Using PSG has been really fluid. It's been a lot of fun, thanks for continuing support!
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/26/2019 13:49:46
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 03/26/2019 13:49:46
 It's beautiful stuff you've done.
 
 This sounds like the project went WAY WAY WAY beyond your initial vision for it.  You've continued to iterate and make it better every time I see it.
@@ -392,10 +327,8 @@ https://www.reddit.com/r/Python/comments/b5nmkx/i_made_a_gui_for_youtubedl_but_i
 Then sure as hell your's will!
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 14:19:29
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 03/26/2019 14:19:29
 Haha it has gone beyond original scope definitely. Now I think of it as an application, not just a tool or script.
 
 Essentially it's a wrapper around Selenium and PyAutoGUI. But I've added lots of custom functionality and flexibility for the purpose of cutting out a lot of flak, so a user doesn't need to know how to code or understand loops, functions, variables, and such but still build maintainable code.  All of that complex logic is built into the backend so they just need to pass basic info to it from the scripts they make.
@@ -411,10 +344,8 @@ But I'm not sure why people think that about PSG at all, but I suppose it's in h
 Thanks again for the kind words!
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/26/2019 14:34:35
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 03/26/2019 14:34:35
 Woowww! (again).  You're saving the company a FORTUNE and you're also stepping the quality level up a LOT.  If your 2 weeks turned into 11 minutes, then holy shit, you've not only done the work, but now you've got a team available for 2 full weeks.  OMG, companies would kill for that kind of return.  
 
 Your boss better step up at bonus time, or before.  I would consider broaching the subject in some manner with him / the company. "You can't get when you don't ask for" has served me very well in business.  And you sure as hell deserve something special for what you've done.
@@ -423,10 +354,8 @@ I don't think you're wrapping anything.  You've built a full application that us
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 14:44:22
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 03/26/2019 14:44:22
 Yea! It was an amazing feeling when I walked into the office last week and didn't know that a new build had dropped. I started chatting with my coworker and he said that he ran it right when it dropped that morning and it all passed; logs, sql data, and report was made. I was like, oh cool. But then it hit me that he just clicked a button and in 11 minutes it was done. Usually it's a whole process across two weeks where the whole team allocates a full schedule to test it. That's when we fully felt the magnitude of what it was :D Amazing.
 
 Ironically, it was the testers who used the app to build the scripts. Which may get a bit awkward... But this just means they can focus on more complex manual testing and not the mundane repetitions.
@@ -435,35 +364,27 @@ Also I'm in talks right now actually about what you're saying, thanks for the ad
 And I think you're right about using python packages :)
 
 ------------------------------
+[@killyone](https://github.com/killyone) 06/20/2019 04:15:02
 
-
-[@killyone](https://github.com/killyone)
-### 06/20/2019 04:15:02
 ![image](https://user-images.githubusercontent.com/5907420/59818085-08402400-92e8-11e9-897f-5041fdcb62b2.png)
 
 
 Hello, it's my first exercise with PySimpleGUI and I'm very happy with the results, if you get creative you can get good results, the only thing I had problems with was the transparency of the images, I will continue studying, I was with Kivy because of his ability to export to mobile systems, I really like the approach of this library, I thank the creators, and it would be really great to have something like this for mobile, in the end I could solve my doubts by reviewing the code of the library, since in the documentation there is still no information of some things in specific, greetings!
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 06/26/2019 19:38:03
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 06/26/2019 19:38:03
 @killyone if you find places in the documentation http://www.PySimpleGUI.org that is lacking, please post it as an Issue.  As you may have read over the past few weeks, there's is a lot of effort being spent on the documentation.
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 06/27/2019 02:43:56
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 06/27/2019 02:43:56
 @killyone Do you have any more screen shots you can share?  You app was looking REALLY good and I Can't wait to see how it turns out, or even what it look like along the way.  I'm SURE lots of us will find inspiration in what you did.  I know I have a lot of ideas now about layout, font sizes, etc.   You've made a nice looking "pattern" of sorts.
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 08/07/2019 23:34:58
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 08/07/2019 23:34:58
 This one is from @SuperMechaDeathChrist.  Hoping to get more soon!
 
 
@@ -471,10 +392,8 @@ This one is from @SuperMechaDeathChrist.  Hoping to get more soon!
 
 
 ------------------------------
+[@IsaacLance](https://github.com/IsaacLance) 08/10/2019 03:43:47
 
-
-[@IsaacLance](https://github.com/IsaacLance)
-### 08/10/2019 03:43:47
 I used PySimpleGUI to display information over my automated Twitch stream. (Twitch Plays Chess) (https://www.twitch.tv/chess_magnet)
 
 
@@ -495,10 +414,8 @@ There are some features that aren't represented due to taking the screenshots wh
 
 
 ------------------------------
+[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 08/11/2019 09:52:53
 
-
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy)
-### 08/11/2019 09:52:53
 Here are a few that can be found on this download manager's GitHub site:
 https://github.com/Aboghazala/Hanash
 
@@ -508,38 +425,30 @@ https://github.com/Aboghazala/Hanash
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/23/2019 23:32:40
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/23/2019 23:32:40
 ![image](https://user-images.githubusercontent.com/46163555/63628842-c29c2200-c5dc-11e9-8a68-20880e12a10b.png)
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 08/24/2019 03:27:25
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 08/24/2019 03:27:25
 Ok, now it's getting there. Here I'm using PSGWeb for a powershell management concept (Everything is procedural - No hardcoding any of the data):
 
 ![image](https://user-images.githubusercontent.com/29800532/63632049-7f9e7680-c5fd-11e9-973b-d226b17e471b.png)
 
 
 ------------------------------
+[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/25/2019 22:30:11
 
-
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist)
-### 08/25/2019 22:30:11
 I'm not sure if someone already tried something similar, but here is a mini video player that plays my favorite music videos from youtube.
 
 ![ezgif com-optimize](https://user-images.githubusercontent.com/31192003/63656691-f56d2400-c75c-11e9-817b-fe139db7f4d9.gif)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/25/2019 22:32:31
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/25/2019 22:32:31
 Uhhhh.,..... no.... this isn't a cruel joke?
 
 How are you getting sound?
@@ -547,56 +456,42 @@ How are you getting sound?
 No one's posted anything like it.  I'm dying to see the code!!  WOW.  This is a first as far as I know.
 
 ------------------------------
+[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/25/2019 23:56:16
 
-
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist)
-### 08/25/2019 23:56:16
 @PySimpleGUI  I get the direct link to a video from a normal youtube link using pafy (I made another program to scrap my playlist that had 400+ videos). The video is being played using the python bindings for vlc (you also need to install vlc but that can be done in any platform). With that, you can create and control a video window that you can also embed into a tkinter canvas element. The rest is just the classic gui scheme. It works very well, although it's still a little messy, I can share the code when it's cleaner.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/26/2019 13:33:07
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/26/2019 13:33:07
 @killyone  Have you released your software anywhere?  The screenshot you posted is unique among PSG applications I've seen.  It would be awesome to see your code & graphic assets.  There continues to be questions, over and over, about "How can I make tkinter not look ugly?" (-sigh-)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/26/2019 19:06:38
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/26/2019 19:06:38
 I understand if you don't want to share your code publicly until it's in the state you want it to be in.  You can send it privately if you want.  I don't need the entire program.  I'm just interested in your layout and your event loop / drawing calls.  It doesn't need to run.  You don't need, of course, to include any Keys that you may need to get access to YouTube APIs.
 
 I'm working on another project that could really benefit from this is why I'm asking.  If you feel more comfortable, email just those bits to sourcecode@PySimpleGUI.org
 
 
 ------------------------------
+[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/27/2019 09:54:13
 
-
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist)
-### 08/27/2019 09:54:13
 @PySimpleGUI I sent you the code for the video player, let me know if you can get it to run
 
 ------------------------------
+[@viniciushenr](https://github.com/viniciushenr) 10/02/2019 23:13:24
 
-
-[@viniciushenr](https://github.com/viniciushenr)
-### 10/02/2019 23:13:24
 @killyone I don't understand why was excluded my comment, but my email are in my profile, so if you still would wish send me the code, I thank you.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/02/2019 23:31:59
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/02/2019 23:31:59
 I just assumed you guys had done your communicating.  This isn't a forum, it's a place to post screenshots.  That's why the comments are being deleted.
 
 ------------------------------
+[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 10/31/2019 02:23:51
 
-
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist)
-### 10/31/2019 02:23:51
 This is a "splash screen"-like function using PySimpleGUI (tkinter, Windows). It basically is just a program with an animated picture and a cancel option that interrupts the execution of the whole program. It supports transparency and fast load of the animated picture. You can adjust the speed of the animation, the wait time, and other options.
 ![ezgif com-video-to-gif](https://user-images.githubusercontent.com/31192003/67912084-5b579c80-fb4e-11e9-9acb-208e373a1ae6.gif)
 
@@ -604,12 +499,9 @@ You can call this function at the start of your program to emulate a splash scre
 link to code: https://github.com/SuperMechaDeathChrist/Widgets/blob/master/Splash.py
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/22/2019 15:39:35
 
 
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/22/2019 15:39:35
-
-[@A serial oscilloscope](https://github.com/A serial oscilloscope)
 I had forgotten about this project, but stumbled back onto it today.   I think a screenshot is certainly in order for this one.  VERY nice.
 
 Project's GitHub https://github.com/dilawar/SerialScope
@@ -618,10 +510,8 @@ Project's GitHub https://github.com/dilawar/SerialScope
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/06/2019 16:10:09
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/06/2019 16:10:09
 Recently posted screenshots by @JitsuP who has only been using Python for 3 months (astounding).  Even more impressive is that this multi-windowed GUI took only 3 days in total to write.  WOW!  
 
 It's even multithreaded....
@@ -637,26 +527,20 @@ It's even multithreaded....
 
 
 ------------------------------
+[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 01/02/2020 21:30:42
 
-
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist)
-### 01/02/2020 21:30:42
 This is a PySimpleGUI-tk app with an embedded internet browser based on cefpython. Needs a little tkinter tweaking for entry elements to work normally, but it works surprisingly well and in less than 100 lines of code. I guess now the sky is the limit if you combine it with flask/django or anything web-based.
 ![browser_example](https://user-images.githubusercontent.com/31192003/71693310-c5203c80-2d71-11ea-9cd2-59b0ea84222f.gif)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/03/2020 00:53:45
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/03/2020 00:53:45
 WOW @SuperMechaDeathChrist another amazing thing!  That's incredible!  Especially since it's the plain PySimpleGUI, not Qt.
 
 ------------------------------
+[@sharathraj-tech](https://github.com/sharathraj-tech) 03/27/2020 17:06:56
 
-
-[@sharathraj-tech](https://github.com/sharathraj-tech)
-### 03/27/2020 17:06:56
 ![Capture](https://user-images.githubusercontent.com/11161087/77781242-40487480-707b-11ea-8cd6-5c5e2c9f9ebb.JPG)
 
 ![Admin Dashboard](https://user-images.githubusercontent.com/11161087/77781024-df20a100-707a-11ea-9546-cc3b6d86c801.JPG)
@@ -665,14 +549,12 @@ WOW @SuperMechaDeathChrist another amazing thing!  That's incredible!  Especiall
 It was a great start anyhow! Loved using PySimpleGUI. Wish to learn more on other controls. Made a great help for my ML Project
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/27/2020 17:36:18
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/27/2020 17:36:18
 @thesoftbincoder 
 
+[@PySimpleGUI](https://github.com/PySimpleGUI) Thank you so much for sharing!
 
-### Thank you so much for sharing!
 
 It looks like more than "a great start".  There are a lot of people that would love to have GUIs that look this nice.
 
@@ -685,10 +567,8 @@ When you think you're ready, post it on Reddit too.  People love to see projects
 Thank you for taking the time to post something.
 
 ------------------------------
+[@Ruakuu](https://github.com/Ruakuu) 04/30/2020 09:07:13
 
-
-[@Ruakuu](https://github.com/Ruakuu)
-### 04/30/2020 09:07:13
 ![Screenshot from 2020-04-30 03-58-11](https://user-images.githubusercontent.com/64561775/80692496-41fcc200-8a97-11ea-932c-5368a298848d.png)
 ![Screenshot from 2020-04-30 04-11-25](https://user-images.githubusercontent.com/64561775/80693567-d1ef3b80-8a98-11ea-8820-daa85b06c271.png)
 I love this framework so much, it allowed me to start programming GUI very fast. I'm building an image managing system much like DigiKam but more focused on the image tagging, this will specialize on metadata handling and image clasification.
@@ -696,10 +576,8 @@ I love this framework so much, it allowed me to start programming GUI very fast.
 What I also wanted to share is that, in the need of a treeview with checkboxes and seeing that it would be very complicated to code it from outside, decided to implement the functionality directly in PySimpleGUI so I now have a native Tree element with working checkboxes if you guys are interested.
 
 ------------------------------
+[@Zain-Bin-Arshad](https://github.com/Zain-Bin-Arshad) 05/31/2020 07:43:59
 
-
-[@Zain-Bin-Arshad](https://github.com/Zain-Bin-Arshad)
-### 05/31/2020 07:43:59
 Hello @PySimpleGUI, I have created a PDF-Viewer using THE AWESOME PSG.
 
 ![pdf](https://user-images.githubusercontent.com/49767636/83328539-26a2f380-a29d-11ea-993c-887ef9cfe77b.gif)
@@ -733,17 +611,13 @@ Thanks @PySimpleGUI, this is for you
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 05/31/2020 17:38:58
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 05/31/2020 17:38:58
 @Zain-Bin-Arshad I am genuinely thrilled at your success!   Thank you for taking the time to not only share your creation but for providing some extremely helpful feedback.  👍 
 
 ------------------------------
+[@ChristianReizner](https://github.com/ChristianReizner) 06/06/2020 15:50:19
 
-
-[@ChristianReizner](https://github.com/ChristianReizner)
-### 06/06/2020 15:50:19
 Hello to everyone,
 
 i am not really a software developer, so i am all the more grateful for any simplification. My partner sometimes gives astrological consultations and the online platform she uses limited her database to 100 entries. Since this database gets very full very quickly, I promised to write a small program that will pull her client data from the platform into a local database (sqlite3) for her. This escalated quickly. Now it has become a tool for the whole consulting business and it grows with her demands.
@@ -768,10 +642,8 @@ i am not really a software developer, so i am all the more grateful for any simp
 
 
 ------------------------------
+[@mbilalakmal](https://github.com/mbilalakmal) 06/07/2020 02:07:48
 
-
-[@mbilalakmal](https://github.com/mbilalakmal)
-### 06/07/2020 02:07:48
 **Hope you are having a good day @PySimpleGUI** 
 I made this for a course assignment about genetic algorithms and their performance.
 I have published this on my [GitHub](https://github.com/mbilalakmal/SimpleGA) if someone is curious.
@@ -785,10 +657,8 @@ Basically you specify all the parameters and after running the algorithm multipl
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2020 10:48:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/07/2020 10:48:55
 Wow!  Just WOW to the posts over the past few weeks from users.
 
 I'm so impressed by what people are making!  Thrilled for everyone!
@@ -800,10 +670,8 @@ Thank you to @thesoftbincoder @Ruakuu @Zain-Bin-Arshad @ChristanReizner  for pos
 Fantastic users here!
 
 ------------------------------
+[@sharathraj-tech](https://github.com/sharathraj-tech) 06/08/2020 03:38:01
 
-
-[@sharathraj-tech](https://github.com/sharathraj-tech)
-### 06/08/2020 03:38:01
 This project was developed as a prototype on ATM Transactions. Users need to Upload their Iris Image and later while they withdraw amount they need to upload their iris image again. After algorithm processes the iris data. The amount will be successfully withdrawn.
 
 **This is the Customer Dashboard**
@@ -826,10 +694,8 @@ Thank You For such a wonderful Package.
 Hope to get more components Soon.
 
 ------------------------------
+[@martinmeteor](https://github.com/martinmeteor) 06/14/2020 15:36:26
 
-
-[@martinmeteor](https://github.com/martinmeteor)
-### 06/14/2020 15:36:26
 Hello @PySimpleGUI, 
 I have made this GUI for analyzing meteor spectra. You can read video files with meteor spectra, transform the images to an orthographic projection, register meteor images and add them, convert to 1-dim spectra and calibrate them and plot the final result. You can look at the code [here](https://github.com/meteorspectroscopy/meteor-spectrum), but I warn you, the code is quite a mess. To see how it works, look [here](https://meteorspectroscopy.org/2020/03/27/meteor-spectra-analysis-new-version/)
 the theory behind it is found at https://meteorspectroscopy.org/
@@ -847,10 +713,8 @@ I hope, somebody else may find this useful.
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/15/2020 10:45:26
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/15/2020 10:45:26
 WOW!
 
 Another 2 more apps added to the parade of impressive creations.  These are so very exciting to see and demonstrate the crazy span of applications PySimpleGUI is being used for.  Just look at these last 2 posts:
@@ -865,19 +729,15 @@ REALLY REALLY want / need to get a user gallery going so these can be properly s
 I'm wowed every time!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/15/2020 11:05:45
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/15/2020 11:05:45
 @mbilalakmal If forgot to comment on your awesome looking GUI and ask for your GitHub address.  You mention one exists in your screenshot post, but don't provide the address.  I'm sure others would enjoy seeing your work.
 
 Thank you for taking the time to post screenshots and info!
 
 ------------------------------
+[@mbilalakmal](https://github.com/mbilalakmal) 06/16/2020 06:47:32
 
-
-[@mbilalakmal](https://github.com/mbilalakmal)
-### 06/16/2020 06:47:32
 > @mbilalakmal If forgot to comment on your awesome looking GUI and ask for your GitHub address. You mention one exists in your screenshot post, but don't provide the address. I'm sure others would enjoy seeing your work.
 > 
 > Thank you for taking the time to post screenshots and info!
@@ -885,10 +745,8 @@ Thank you for taking the time to post screenshots and info!
 I have added the repo link in my original comment. I'm glad you liked it.
 
 ------------------------------
+[@kovadarra](https://github.com/kovadarra) 06/17/2020 10:28:51
 
-
-[@kovadarra](https://github.com/kovadarra)
-### 06/17/2020 10:28:51
 ![grafik](https://user-images.githubusercontent.com/58000806/84886138-ad790e00-b09c-11ea-933c-404a5476d8ca.png)
 [Pup Quiz](https://github.com/kovadarra/pupquiz) facilitates vocabulary acquisition by quizzing words using spaced repetition principles: words just learned / which user recently got wrong are quizzed more often than those which they've guessed correctly. On the side it shows pictures of puppies that cheer you on. :)
 ![grafik](https://user-images.githubusercontent.com/58000806/84886430-1791b300-b09d-11ea-8534-c1658df63a8a.png)
@@ -896,10 +754,8 @@ It's not stable yet (I get, what seems at random occasions, repeated messages ab
 Edit: [Demo video](https://www.youtube.com/watch?v=l-omUDVW778).
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/26/2020 14:23:44
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/26/2020 14:23:44
 I really like this UI!  The circular "Add Vocabulary" parts of your window are really nice.  Excellent job polishing that portion.
 
 The mainloop not in the main thread is a known problem and there is a suggested workaround along with an explanation for when this will happen.
@@ -909,28 +765,22 @@ https://pysimplegui.readthedocs.io/en/latest/#multiple-threads
 
 
 ------------------------------
+[@vohe](https://github.com/vohe) 07/04/2020 15:43:31
 
-
-[@vohe](https://github.com/vohe)
-### 07/04/2020 15:43:31
 ![Audiorecorder (spotify)](https://user-images.githubusercontent.com/7021635/86515989-6a00fc80-be1d-11ea-89c9-08411c829eb7.png)
 
 A little Programm, that records files form a webside (actually open.spotify) store them as mp3, tag them, sort them into directorys , notify the user when a new song is beginning. 
 Just like the old compact cassette recorder but with cutting the songs in single files
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 07/04/2020 19:46:19
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 07/04/2020 19:46:19
 Very nice @vohe !  Thanks for posting it!
 I like they use of tabs.  Great , simple layout.  I might have to use that idea for settings sometime. It's never dawned on me before to put them into a tab like that.
 
 ------------------------------
+[@vohe](https://github.com/vohe) 07/04/2020 21:28:44
 
-
-[@vohe](https://github.com/vohe)
-### 07/04/2020 21:28:44
 > Very nice @vohe ! Thanks for posting it!
 > I like they use of tabs. Great , simple layout. I might have to use that idea for settings sometime. It's never dawned on me before to put them into a tab like that.
 
@@ -940,10 +790,8 @@ I mess around with the gettext.py (locale settings)...
 Nice time, stay healthy
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 07/04/2020 23:41:41
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 07/04/2020 23:41:41
 You can open an Issue to request enhancements, ask questions, report problems, etc.  
 
 There are instructions posted here:
@@ -957,12 +805,9 @@ https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&templat
 
 
 
-
 ------------------------------
+[@vohe](https://github.com/vohe) 07/05/2020 16:45:42
 
-
-[@vohe](https://github.com/vohe)
-### 07/05/2020 16:45:42
 Thank you,
 first of all i got it as i like (but not so elegant) First of all it works.
 ![english](https://user-images.githubusercontent.com/7021635/86537489-b61c7180-beef-11ea-9b65-4d11b0a4d515.png)
@@ -971,10 +816,8 @@ first of all i got it as i like (but not so elegant) First of all it works.
 
 
 ------------------------------
+[@vohe](https://github.com/vohe) 08/02/2020 17:28:23
 
-
-[@vohe](https://github.com/vohe)
-### 08/02/2020 17:28:23
 Hi folks,
 here is another one i playing with....
 The TreeElement is not as flexible as i want it. But many things are possible. 
@@ -983,10 +826,8 @@ The TreeElement is not as flexible as i want it. But many things are possible.
 I got the functionallity i want, but the interface isn't that what i like to get. I test another way, may i think of a a cloud of hierarchical buttons ... lets see.. later
 
 ------------------------------
+[@dfatka](https://github.com/dfatka) 08/03/2020 22:01:21
 
-
-[@dfatka](https://github.com/dfatka)
-### 08/03/2020 22:01:21
 My first software [project](https://github.com/dfatka/paletteswapper) that deserves a mention (and that populated my fresh Github account... did I say I'm quite new?).
 The bars for each color have the color of the original image and the other-colored text elements actually update, so it directly shows which color should turn to which. Wanted to enclose them in the Column element, but that can't change its `background_color` with `update` function.
 ***
@@ -995,10 +836,8 @@ The bars for each color have the color of the original image and the other-color
 
 
 ------------------------------
+[@vohe](https://github.com/vohe) 08/05/2020 13:31:05
 
-
-[@vohe](https://github.com/vohe)
-### 08/05/2020 13:31:05
 In addition to get a Folder Browser running , which does not
 - show hidden files,
 - throws errors on Permissions
@@ -1010,10 +849,8 @@ i wrote my own....
 
 
 ------------------------------
+[@vohe](https://github.com/vohe) 08/08/2020 11:11:29
 
-
-[@vohe](https://github.com/vohe)
-### 08/08/2020 11:11:29
 Ready to go, 
 I found that putting move than 3000 elements in a sg.treedata() structure works, but as i close that there'll be a huge garbage collection of tkinter under the hood.
 So my directory popup window isn't usable for a 'normal' user directory, especially if the show hidden files option is active.
@@ -1026,17 +863,13 @@ Have Fun, stay healthy.
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/09/2020 18:44:38
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/09/2020 18:44:38
 @vohe you've been busy!
 
 ------------------------------
+[@moabdali](https://github.com/moabdali) 08/12/2020 05:31:19
 
-
-[@moabdali](https://github.com/moabdali)
-### 08/12/2020 05:31:19
 ![image](https://user-images.githubusercontent.com/64987634/89836775-15902180-db2d-11ea-80cd-c39d432bcc4d.png)
 
 
@@ -1046,17 +879,13 @@ GitHub.com/MOABdali/megaCheckers if anyone wants to try it.  Please keep in mind
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2020 11:03:50
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/12/2020 11:03:50
 Megacheckers looks awesome!  All of the stuff people are making are impressive.  This game is really advanced looking.  I'm super-impressed.  Lots of stuff happening.  
 
 ------------------------------
+[@PySimpleSQL](https://github.com/PySimpleSQL) 08/25/2020 20:27:00
 
-
-[@PySimpleSQL](https://github.com/PySimpleSQL)
-### 08/25/2020 20:27:00
 Well, where to start??  I started using PySimpleGUI in the last week or so.  I'm absolutely hooked!  What a breath of fresh air it's been. I'm fairly new to programming in python and I've always avoided it due to the lack of rapid GUI development tools.  PySimpleGUI sucked me right it, and now I'm picking up python at a blistering pace and absolutely loving the language.  Thanks for such a simple, straight forward tool!
 
 With that said, in the last week I've been brushing up on Python, learning PySimpleGUI inside and out, learning about Git (I'm a Subversion user from way back, so Git is new to me as well).  Add to that researching packaging in python and a host of other things that are still a bit foreign to me.  I use MS Access a lot, as well as LibreOffice base (and don't really care for either of them!).  Now that I found this incredible PySimpleGUI, I absolutely had to have a good, simple to use database binding but couldn't find one.  Your hard work has inspired me to create a companion module, PySimplSQL that makes writing database front-ends amazingly simple along with PySimpleGUI.  With the addition of 3 or 4 lines of code, PySimpleSQL allows for full add/edit/delete of records while managing and respecting foreign key relationships in the database.
@@ -1073,10 +902,8 @@ Here is a more capable screenshot - This was written in under 200 lines of code 
 I look forward to learning more and contributing so that others can enjoy fast, easy database GUI interface programming.  I just wanted to share the project now that it's starting to take shape.  There's plenty of bugs yet and a lot to do, but the early promise is amazing so far!
 
 ------------------------------
+[@aajshaw](https://github.com/aajshaw) 09/26/2020 13:25:57
 
-
-[@aajshaw](https://github.com/aajshaw)
-### 09/26/2020 13:25:57
 At the start of lockdown in the UK I had been learning church bell ringing for about a year and wanted to carry on practising and learning the methods even though all bell ringing was on hold. I started developing an app on Raspberry Pi that would play some of the bells but leave me the option to play others and hopefully get them in the right places. I had all of the components in place and working using Q&A character cell interface and was trying to get a useful GUI going with tkinter when I more or less stumbled across MySimpleGUI.
 
 The ropes have a simple 2 frame animation and a red bell is displayed above each rope as it should be rung, think bouncing ball for sing-along.
@@ -1087,10 +914,8 @@ On the technical side the images are updated by a thread calling the write_event
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 09/27/2020 10:26:20
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 09/27/2020 10:26:20
 Thanks @aajshaw for the really unusual use of PySimpleGUI!  That's most certainly a first.  Bonus points for using multi-threading to get the overlapping tones.
 
 The first time I ever saw how bells work was in this video about a song I play on the piano that was played using a clock tower:
@@ -1101,10 +926,8 @@ That must feel pretty amazing to play an instrument that has such massive reach!
 If you don't mind sharing your code, please post a link to your Repo.  I'm sure others could learn something from what you did.  I know I would learn something.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 09/27/2020 10:36:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 09/27/2020 10:36:55
 @PySimpleSQL was a beautiful window!  I love the layouts.  Clean and you're using button graphic, something rarely done.
 
 The application of PySimpleGUI with databases hasn't been very thoroughly explored.  I think one problem is the Table element lack of advanced features like clicking columns to sort.  It's far from being an Excel-like experience.
@@ -1120,19 +943,15 @@ Love what you're doing!  I'm sure you're likely already doing it, but be sure an
 Thanks for taking the time to share!!  Highly motivational on many fronts.
 
 ------------------------------
+[@aajshaw](https://github.com/aajshaw) 09/28/2020 16:33:39
 
-
-[@aajshaw](https://github.com/aajshaw)
-### 09/28/2020 16:33:39
 The link to the bell ringing simulator is [https://github.com/aajshaw/Ensenble](url), in the comments there is some bell ringing terminology but it means something to other bell ringers.
 
 FYI: The heaviest bell in the tower where I ring is 2599lb or 1179Kg if you work in these new-fangled units, it does take a bit of puff to get it going.
 
 ------------------------------
+[@holypython](https://github.com/holypython) 10/05/2020 20:03:05
 
-
-[@holypython](https://github.com/holypython)
-### 10/05/2020 20:03:05
 Hi everyone,
 
 We have just published our first Python Library: [Watermarkd](https://github.com/holypython/Watermarkd). It's in alpha stage and it allows batch watermarking photos with GUI component in addition to watermarking individual photos, something bloggers, entrepreneurs and photographers may find useful. (Watermark spreading algorithm improvement is in the works!)
@@ -1162,10 +981,8 @@ Have a great week,
 Holypython Team
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/06/2020 12:40:09
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/06/2020 12:40:09
 @holypython Nice!  And congrats!
 
 Some of my favorite utilities that I've written have similarly simple interfaces.  The new readme talks about a "GUI Gap".  Your program is a great example.  If a typical user wanted to add a watermark, and the problem was solved using Python, the potential users would be perhaps limited due to the command line requirement for usage.   But adding a GUI, even a simple one, bridges that gap and opens up the program to anyone.
@@ -1173,10 +990,8 @@ Some of my favorite utilities that I've written have similarly simple interfaces
 You've got a ton of interesting tutorials as well.  PIL is a great library that works really well with PySimpleGUI.  Nice work on the tutorials on ways to integrate the two.
 
 ------------------------------
+[@holypython](https://github.com/holypython) 10/06/2020 15:21:20
 
-
-[@holypython](https://github.com/holypython)
-### 10/06/2020 15:21:20
 @PySimpleGUI Thank you for such a great GUI library, it really did add a new dimension to our work and bridged the gaps. Also thanks for the kind words! 👍 
 
 We'll be looking into further synergies with GUI applications such as combining it with Database applications. Seems to be another fantastic match with PySimpleGUI in general.
@@ -1184,10 +999,8 @@ We'll be looking into further synergies with GUI applications such as combining 
 If you have any suggestions, ideas or synergies that you'd like to explore further with Holypython.com we'd love to hear them any time! 👍 
 
 ------------------------------
+[@amantotek](https://github.com/amantotek) 10/12/2020 14:56:34
 
-
-[@amantotek](https://github.com/amantotek)
-### 10/12/2020 14:56:34
 ![20201011PSGegMultilineColorV05](https://user-images.githubusercontent.com/7591528/95759999-672a6900-0ca2-11eb-8990-4d65ac57eba8.png)
 Python source code here: https://github.com/amantotek/python-hal/releases/tag/v06
 Run with: python3 PSGegMultilineColor.py
@@ -1196,10 +1009,8 @@ Demonstrates PySimpleGUI Multiline getting coloured
   b) using tags specifying colours as each line is appended to the Multiline
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/12/2020 16:33:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/12/2020 16:33:55
 Thanks for your addition @amantotek. 
 
 I see your technique is to directly access the underlying tkinter widget to insert tags.  I'm wondering if maybe the color handling code wasn't present when you wrote your code.   The `cprint` and other [techniques presented in the Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/#recipe-printing-4a4-using-cprint-function-color-printing-to-print-to-multiline) will do the tag insert for you.
@@ -1233,10 +1044,8 @@ One advantage of using cprint is that the code is portable across the PySimpleGU
 
 
 ------------------------------
+[@gregorystorer](https://github.com/gregorystorer) 10/14/2020 07:03:30
 
-
-[@gregorystorer](https://github.com/gregorystorer)
-### 10/14/2020 07:03:30
 ![Selection_125](https://user-images.githubusercontent.com/24841837/95954111-8b26af80-0e46-11eb-965d-3d6c7ac5924e.png)
 I needed a way to quickly subscribe to RSS feeds in my RSS reader, some sites no longer provide RSS feeds, and using RSS Bridge, Tiny Tiny RSS and a shell script, I created an easier way to combine the various strings together.  
 Then I wanted a GUI instead of having to go to the terminal, went searching and found PySimpleGUI and was quickly able to convert the script and provide a GUI front end.  
@@ -1245,10 +1054,8 @@ At the testing stage, I found I right-clicked in the username box and the contex
 It's true I didn't need the right click - but it was great to work it out and pull it all together.  I've now got a natty little GUI that I can start up, paste in a username, click Subscribe and have it automatically open a new tab in my web browser and subscribe to the feed. 
 
 ------------------------------
+[@alexBoldea](https://github.com/alexBoldea) 10/15/2020 19:44:28
 
-
-[@alexBoldea](https://github.com/alexBoldea)
-### 10/15/2020 19:44:28
 Hey hey, first app all done. 
 Huge "Thank you" to the whole PySimpleGUI team, you guys are awesome!!
 
@@ -1260,10 +1067,8 @@ Huge "Thank you" to the whole PySimpleGUI team, you guys are awesome!!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/16/2020 03:26:07
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/16/2020 03:26:07
 Thank you @alexBoldea !
 
 I love the watermark!  I like the theme, but I wasn't able to pick it out from the list.  I cheated and sampled the background.  To verify it, I switched the test harness's theme with Dark Grey  6, which of course matched.
@@ -1285,26 +1090,20 @@ Thanks for sharing.
 I want to make posts your likes happen as an ongoing thing that'is easy for everyone.
 
 ------------------------------
+[@alexBoldea](https://github.com/alexBoldea) 10/16/2020 09:19:12
 
-
-[@alexBoldea](https://github.com/alexBoldea)
-### 10/16/2020 09:19:12
 I love the demo copier, it gives me the idea to add on the duplicate finder a window to scan the extensions of all files and have the user add what they want to remove. Glad you liked the watermark!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/16/2020 14:23:36
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/16/2020 14:23:36
 You've sparked my interest in themes and user settings so I created a new design pattern/demo that shows how to easily add a theme button to switch themes on programs.  I'm pushing a more modular demo program design now too with the window creation in one function and the event loop in a `main()` function.  This will solve some problems people are hitting by not having their code inside of a function.
 
 Thanks for the great inspiration.  I'm able to learn something new from every user.
 
 ------------------------------
+[@mainer-hat](https://github.com/mainer-hat) 10/27/2020 15:56:03
 
-
-[@mainer-hat](https://github.com/mainer-hat)
-### 10/27/2020 15:56:03
 Here are screenshots of a reverse polish calculator that uses PySimpleGUI as the front end to a text mode python program. Both the calculator and GUI programs are about 850 lines of code and comments. The combination runs, and looks almost identical, under Linux, MS Windows 10, and MAC OS! In Linux it runs on both intel and arm based systems. The only real problem has been with keyboard input under all of those systems. I have had to create a "key translator" to deal with all of the various key codes returned.
 
 ![Screenshot from 2020-10-27 11-20-18](https://user-images.githubusercontent.com/46383650/97326760-b4820b00-184a-11eb-83e3-e0ded7928eef.png)
@@ -1321,13 +1120,10 @@ Here are screenshots of a reverse polish calculator that uses PySimpleGUI as the
 
 
 ------------------------------
+[@d-flood](https://github.com/d-flood) 11/01/2020 23:49:39
 
-
-[@d-flood](https://github.com/d-flood)
-### 11/01/2020 23:49:39
 
 I started to pick up some programming for the first-time during lockdown. My goal was to enhance my research. I made a few straight tkinter apps before discovering PSG. I am very happy with PSG--it has made is possible for a humanities PhD student to create a few handy tools for myself in hours rather than days. This is just a note taking app--I wanted to make something that stored specific tags for each note. I study ancient Greek manuscripts and I have been experimenting with the best way to store and organize my observations. Perhaps this custom solution will suit me best. The app builds Tree element data from a json file. I found it has been helpful to make the DPI awareness load from a settings file that can be edited from the menu bar.
-
 
 https://github.com/d-flood/Manuscript_Notepad
 
@@ -1335,19 +1131,15 @@ https://github.com/d-flood/Manuscript_Notepad
 
 
 ------------------------------
+[@PyICoder](https://github.com/PyICoder) 11/02/2020 07:27:14
 
-
-[@PyICoder](https://github.com/PyICoder)
-### 11/02/2020 07:27:14
 My own youtube playlist player, input a playlist url and play the playlist.
 ![image](https://user-images.githubusercontent.com/54691311/97840869-a3e1f280-1c99-11eb-9337-8055e3680987.png)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/06/2020 03:58:25
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/06/2020 03:58:25
 wow !! What a month!!!
 
 @d-flood
@@ -1366,21 +1158,16 @@ Are there any values that you want to save between runs?  I am thinking about th
 
 ----------------------------
 
-
 Keep the pictures and your wonderful stories coming!
 
 ------------------------------
+[@PyICoder](https://github.com/PyICoder) 11/06/2020 04:35:52
 
-
-[@PyICoder](https://github.com/PyICoder)
-### 11/06/2020 04:35:52
 @PySimpleGUI I don't have a repo for the player, but here is the gist! https://gist.github.com/PyICoder/e5437d6fa7a9d3fea785138a762dacad
 
 ------------------------------
+[@Kodikuu](https://github.com/Kodikuu) 11/06/2020 12:18:24
 
-
-[@Kodikuu](https://github.com/Kodikuu)
-### 11/06/2020 12:18:24
 My completed audio visualiser, and the start of my next project, a system monitor (specific to my PC unfortunately).
 
 ![desktop](https://user-images.githubusercontent.com/16600839/98252428-d6c60800-1f71-11eb-8068-bce7d97460bf.gif)
@@ -1391,10 +1178,8 @@ The visualiser renders at 200FPS blocking on audio capture, the monitor renders 
 Edit; I completely eschew things like layouts, window borders, buttons, etc, in favour of just a raw transparent graph layer that I draw to.
 
 ------------------------------
+[@Kodikuu](https://github.com/Kodikuu) 11/06/2020 18:01:53
 
-
-[@Kodikuu](https://github.com/Kodikuu)
-### 11/06/2020 18:01:53
 ![image](https://user-images.githubusercontent.com/16600839/98399289-1405c500-205a-11eb-8d33-ed92aaac6259.png)
 A small widget showing the currently playing song, powered by WebNowPlaying
 
@@ -1404,40 +1189,32 @@ https://gist.github.com/Kodikuu/ead98c53a4dfad4631959e57ce1fad3a
 Edit; It occurs to me that i'm using a font most people won't have. This is the font; https://fonts.google.com/specimen/Oxanium
 
 ------------------------------
+[@jason990420](https://github.com/jason990420) 11/25/2020 12:56:45
 
-
-[@jason990420](https://github.com/jason990420)
-### 11/25/2020 12:56:45
 One script to add paragraphs with justy text into sg.Graph, the speed to show the result take time longer than normal, maybe one second, for each character processed and printed on Graph. Now setting, only for full a paragraph, are font, color, location and line spacing. View function only.
 
 ![image](https://user-images.githubusercontent.com/55352169/100229770-b6c9a900-2f5f-11eb-8440-aa3fc983601e.png)
 
 
 ------------------------------
+[@jason990420](https://github.com/jason990420) 11/25/2020 21:26:16
 
-
-[@jason990420](https://github.com/jason990420)
-### 11/25/2020 21:26:16
 Work for multi-Graph now, but more slow, may take couple seconds ... depend on how much the content and how many Graph.
 Scrollbar still work, but not shown here (not automatical).
 
 ![image](https://user-images.githubusercontent.com/55352169/100282952-87d72580-2fa7-11eb-9901-9f6dcb376732.png)
 
 ------------------------------
+[@mo-han](https://github.com/mo-han) 12/09/2020 00:47:23
 
-
-[@mo-han](https://github.com/mo-han)
-### 12/09/2020 00:47:23
 a simple yet convenient file rename dialog:
 
 ![](https://user-images.githubusercontent.com/9916948/101477038-9c44f600-3989-11eb-8b2d-58a3bd362c21.png)
 
 
 ------------------------------
+[@d-flood](https://github.com/d-flood) 12/23/2020 13:20:24
 
-
-[@d-flood](https://github.com/d-flood)
-### 12/23/2020 13:20:24
 I have been very pleased to rewrite a tkinter app of mine with PySimpleGUIQt. The app loads an XML file and facilitates easy viewing of the XML TEI encoded data and editing of specific attributes and elements in the file. Since I need a dynamic layout, I thought PSG might be off the table. Fortunately, I tried out Mike's suggestion to others to change the visibility parameter to make it _appear_ dynamic. In the GIFs below, the "Variation Units" and "Basetext" frames are behaving just like the dynamic layout I had previously coded with pure tkinter. Previously, I was destroying and repacking text labels. This PSG version simply hides any text that is not currenlty needed. In the "Basetext" frame, each Greek word with an index number under it is a single Text element. Each number in the "Variation Units" frame is also an individual Text element. I can't know how many Text elements will be needed, but programmatically hiding and unhiding them is working very well. I also appreciate how easy it was to add color themes. These are two that I came up with. The first one is "Parchment" and uses the real parchment and ink colors of the ancient manuscripts I study. The second one is my ideal "Dark Mode."
 
 I appreciate PSG because I had really wanted to rewrite this tool so that it was more reliable for my own research, but it takes me (a humanities research with a little self-taught knowledge of Python) too long to build a tkinter layout.
@@ -1448,18 +1225,14 @@ I appreciate PSG because I had really wanted to rewrite this tool so that it was
 https://github.com/d-flood/apparatus-explorer
 
 ------------------------------
+[@ingoogni](https://github.com/ingoogni) 12/28/2020 13:30:50
 
-
-[@ingoogni](https://github.com/ingoogni)
-### 12/28/2020 13:30:50
 ![recorder](https://user-images.githubusercontent.com/22236628/103217587-3957d680-4919-11eb-8921-527609cbe8bb.png)
 
 
 ------------------------------
+[@jason990420](https://github.com/jason990420) 12/31/2020 20:08:31
 
-
-[@jason990420](https://github.com/jason990420)
-### 12/31/2020 20:08:31
 One script to create a table with some dynamic functions, tkinter code reuqired. No full test !
 
 [Source Code](https://github.com/jason990420/PySimpleGUI-Solution/issues/17)
@@ -1467,10 +1240,8 @@ One script to create a table with some dynamic functions, tkinter code reuqired.
 ![image](https://user-images.githubusercontent.com/55352169/103424390-df8c3080-4be6-11eb-83ac-e8ba862bc6e4.png)
 
 ------------------------------
+[@jason990420](https://github.com/jason990420) 02/02/2021 10:18:38
 
-
-[@jason990420](https://github.com/jason990420)
-### 02/02/2021 10:18:38
 Binary Viewer
 
 ![image](https://user-images.githubusercontent.com/55352169/106585980-e52cbb80-6582-11eb-9bf8-9b593ca3631e.png)
@@ -1478,15 +1249,10 @@ Binary Viewer
 Source code: https://github.com/jason990420/PySimpleGUI-Projects/blob/master/Binary%20Viewer.pyw
 
 ------------------------------
+[@techtanic](https://github.com/techtanic) 02/03/2021 16:11:53
 
 
-[@techtanic](https://github.com/techtanic)
-### 02/03/2021 16:11:53
 
-# A script/software for automatically enrolling/joining 100% discounted Udemy courses for free. Get Paid Udemy courses for free with just a few clicks.
-
-
-[@Repo: https://github.com/techtanic/Udemy-Course-Grabber](https://github.com/Repo: https://github.com/techtanic/Udemy-Course-Grabber)
 ![](https://cdn.discordapp.com/attachments/678549756942876692/806556442383220786/unknown.png)
 ![](https://cdn.discordapp.com/attachments/678549756942876692/806555709260693524/image_5.png)
 ![](https://cdn.discordapp.com/attachments/678549756942876692/806555017057796136/image_4.png)
@@ -1494,10 +1260,8 @@ Source code: https://github.com/jason990420/PySimpleGUI-Projects/blob/master/Bin
 @MikeTheWatchGuy how is it.
 
 ------------------------------
+[@frici11](https://github.com/frici11) 02/09/2021 19:52:20
 
-
-[@frici11](https://github.com/frici11)
-### 02/09/2021 19:52:20
 I made a ticker (news and/or data, e.g. stock exchange) and I hope it can be inserted into any kind of window,
 Attached a short video with first test window embedded the ticker.
 
@@ -1506,10 +1270,8 @@ https://user-images.githubusercontent.com/78821165/107419822-833afb80-6b18-11eb-
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/09/2021 22:39:11
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/09/2021 22:39:11
 @techtanic  and @frici11 !  Thank you for the posts!!  LOVE seeing PySimpleGUI windows.  Without failure, there's something to learn from every post.
 
 @frici11  - do you have a link to a repo you can share?
@@ -1517,18 +1279,14 @@ https://user-images.githubusercontent.com/78821165/107419822-833afb80-6b18-11eb-
 @techtanic  - I like that you used the multiline.print method. I don't see it used all that often in code other than my own.  If you print from a number of different functions, you may like the sg.cprint function.  It will enable you to set the output to a particualr multiline, then throughout you entire application, you can call sg.cprint() without having to know the name of the  window nor the key of the multilne.  
 
 ------------------------------
+[@frici11](https://github.com/frici11) 02/09/2021 22:59:20
 
-
-[@frici11](https://github.com/frici11)
-### 02/09/2021 22:59:20
 I have just created a repo: https://github.com/frici11/ticker
 (tickerpy is the point itself, tickertest.py is just for testing it)
 
 ------------------------------
+[@pgbowers](https://github.com/pgbowers) 03/02/2021 14:55:14
 
-
-[@pgbowers](https://github.com/pgbowers)
-### 03/02/2021 14:55:14
 ![Guess_screenshot1](https://user-images.githubusercontent.com/2387580/109666338-7a50af00-7b45-11eb-8ba6-e37bcdc17fe9.png)
 Hi, I have just opened a new repo for my PySimpleGui explorations:
 https://github.com/pgbowers/PySimpleGUI
@@ -1536,17 +1294,13 @@ Not much but it's a start !
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/02/2021 15:23:56
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/02/2021 15:23:56
 Love it @pgbowers!  Keep making stuff!!  Made my day with this post.
 
 ------------------------------
+[@vinniec](https://github.com/vinniec) 03/04/2021 20:44:34
 
-
-[@vinniec](https://github.com/vinniec)
-### 03/04/2021 20:44:34
 A project from a year ago, a gui to test all the methods of re.
 All flags are present, there is a help for the syntax and you can save all experiments.
 i wanted to add annotations, tests, and also some kind of gamification but in the end i didn't do it.
@@ -1559,10 +1313,8 @@ Unfortunately on my phone the "termux-api" doesn't work, so I can't push myself 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/05/2021 00:31:16
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/05/2021 00:31:16
 @vinniec thanks for the screenshots!
 
 Have you tried pydroid3?  It's what I recommend for Android.  I've been able to use OpenCV with it.  Lately, I noticed the rotating the phone no longer causes the program to restart.  There was something before that caused this to happen but it seems to be fixed now.  
@@ -1578,10 +1330,8 @@ Great to see you're pushing the envelope and trying lots of new ways of doing th
 
 
 ------------------------------
+[@vinniec](https://github.com/vinniec) 03/05/2021 08:50:42
 
-
-[@vinniec](https://github.com/vinniec)
-### 03/05/2021 08:50:42
 Yes I have tried pydroid3 and it is able to start the second application in tk, but I feel that the solution with termux is more independent.
 One interesting thing would be to understand if the applications you make with pysimpleguiqt can be compiled for android as well, I had read that both pyside and pyqt5 had this possibility.
 if I have well understood what they are for, trinket and repl.it are a good thing, but I would use them more as a demonstration because usually I would prefer that what I use is not network dependent (of course it depends on what I want to do).
@@ -1589,36 +1339,28 @@ Anyway thanks to you for working on this library, I also saw your music project 
 
 
 ------------------------------
+[@ill13](https://github.com/ill13) 03/08/2021 22:03:07
 
-
-[@ill13](https://github.com/ill13)
-### 03/08/2021 22:03:07
 Just some UI testing stuff!
 ![demo](https://user-images.githubusercontent.com/10509740/110387619-dfb60b80-802f-11eb-92ab-f4eb8b03c6cb.gif)
 
 All PySimpleGUI, with a bit of recoloring with tkinter (and at least one frame of ms vscode!)
 
 ------------------------------
+[@EntPyle](https://github.com/EntPyle) 03/09/2021 20:46:19
 
-
-[@EntPyle](https://github.com/EntPyle)
-### 03/09/2021 20:46:19
 @ill13 Love that look. Would be great if you could share a gist or repo 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/09/2021 20:55:32
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/09/2021 20:55:32
 @ill13 VERY nice work indeed!
 
 Would love to see your code!  
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/10/2021 16:42:53
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/10/2021 16:42:53
 ![Ml8rxsYCoW](https://user-images.githubusercontent.com/46163555/110664775-b44d3100-8195-11eb-81c7-4c3baab01bf7.gif)
 
 
@@ -1700,10 +1442,8 @@ if __name__ == '__main__':
 
 
 ------------------------------
+[@ThomasFreedman](https://github.com/ThomasFreedman) 03/17/2021 14:40:26
 
-
-[@ThomasFreedman](https://github.com/ThomasFreedman)
-### 03/17/2021 14:40:26
 Here's my contribution, my 1st real app using PySimpleGUI. It's a custom query builder to search for content on IPFS:
 
 ![image](https://user-images.githubusercontent.com/11077042/111485603-c0407200-8704-11eb-94b8-d196d31e8cb6.png)
@@ -1715,14 +1455,12 @@ Here's my contribution, my 1st real app using PySimpleGUI. It's a custom query b
  It was truly a pleasure working with PSG. Mike has done some fantastic work bringing this to us to use. Thank you Mike!!!  
 
 ------------------------------
+[@pgbowers](https://github.com/pgbowers) 03/25/2021 14:59:48
 
-
-[@pgbowers](https://github.com/pgbowers)
-### 03/25/2021 14:59:48
 Hi again, my second effort with PSG is an app to monitor the temperature of the CPU on a Raspberry PI 4b:
 
+[@pgbowers](https://github.com/pgbowers) Raspi_CPU_Temperature_Monitor
 
-### Raspi_CPU_Temperature_Monitor
 ![Monitor screenshot](https://raw.githubusercontent.com/pgbowers/Raspi_CPU_Temperature_Monitor/main/CPU_Temp_Screen1.png)
 
 A GUI temperature monitor developed with PySimpleGUI.    
@@ -1739,10 +1477,8 @@ Check it out here: https://github.com/pgbowers/Raspi_CPU_Temperature_Monitor
 
 
 ------------------------------
+[@neovich](https://github.com/neovich) 04/04/2021 08:23:29
 
-
-[@neovich](https://github.com/neovich)
-### 04/04/2021 08:23:29
 Hi Guys, 
 
 I thought this might interest people. This is a screenshot of something unique . 
@@ -1765,18 +1501,14 @@ In future I intend making this as an OSC version , running nodal PIs for dmx dis
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 12:37:46
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/04/2021 12:37:46
 Hi @neovich  I'm.... stunned.... STUNNED
 
 
 ------------------------------
+[@ThomasFreedman](https://github.com/ThomasFreedman) 04/04/2021 15:25:45
 
-
-[@ThomasFreedman](https://github.com/ThomasFreedman)
-### 04/04/2021 15:25:45
 - @neovich DMX example -
 
 Bravo, extraordinary work sir! I have a couple of quick questions that others may find important.
@@ -1788,17 +1520,13 @@ As a RaspPi 4 user myself, did you find any noteworthy obstacles you had to over
 Thx for posting this, very impressive! 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 21:46:26
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/04/2021 21:46:26
 @ThomasFreedman your work is on fire too! 🔥 It's not like you're slacking off.  
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 22:05:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/04/2021 22:05:55
 @neovich .... your dedication to your project is really impressive.... and your patience of dealing with PySimpleGUI (ahem,,and me) is commendable.
 
 ![image](https://user-images.githubusercontent.com/46163555/113522583-c1c8c180-956f-11eb-812d-237a4da58f57.png)
@@ -1813,10 +1541,8 @@ Thanks for sticking with PySimpleGUI and with your project.  It looks fantastic 
 The Dial element that is part of PySimpleGUI+ coming later this year may be a good addition.  And the Gauge could be a winner too.  Both are creations of @jason990420 . Keep on making stuff!  It's good for everyone.
 
 ------------------------------
+[@neovich](https://github.com/neovich) 04/04/2021 22:59:10
 
-
-[@neovich](https://github.com/neovich)
-### 04/04/2021 22:59:10
 *Bravo, extraordinary work sir! I have a couple of quick questions that
 others may find important.*
 
@@ -1867,10 +1593,8 @@ wrote:
 
 
 ------------------------------
+[@neovich](https://github.com/neovich) 04/05/2021 05:28:37
 
-
-[@neovich](https://github.com/neovich)
-### 04/05/2021 05:28:37
 Another screen shot of other projects... ( yes, I have a few )
 ![msg play - pic 1](https://user-images.githubusercontent.com/49742791/113540442-84257080-9623-11eb-8437-0da3bbe0ad88.png)
 ![msg play - pic 2](https://user-images.githubusercontent.com/49742791/113540456-8d164200-9623-11eb-8da2-a7c47e43fd37.png)
@@ -1878,10 +1602,8 @@ Another screen shot of other projects... ( yes, I have a few )
 
 
 ------------------------------
+[@neovich](https://github.com/neovich) 04/05/2021 13:31:15
 
-
-[@neovich](https://github.com/neovich)
-### 04/05/2021 13:31:15
 Hi All PySimpleGUIans,
 A  screenshot using Tkinter only. Demos sliders and a VU meter . This is a demo example from  actual code that I use.
 The VU meter and slider(s) integrates into a DSP unit ( via lan ) , a BSS Blu 100 DSP unit to be exact.
@@ -1893,10 +1615,8 @@ As I keep saying, Mike is the best and I don't actually know him ! I owe him man
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 13:47:19
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/05/2021 13:47:19
 @neovich I might cry... ok, maybe iI did a little....
 
 This SO BEAUTIFUL!
@@ -1904,17 +1624,13 @@ This SO BEAUTIFUL!
 It looks like you're using ttk sliders.  This isn't PySimpleGUI I would assume as I don't yet support ttk sliders.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 14:09:21
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/05/2021 14:09:21
 @neovich please email me!  mike@PySimpleGUI.org.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 14:29:46
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/05/2021 14:29:46
 > I owe him many coffees yet !
 
 These screenshots are a fantastic trade!  No coffee required.   You've given me something coffee will never be able to actually provide... pure joy.
@@ -1922,10 +1638,8 @@ These screenshots are a fantastic trade!  No coffee required.   You've given me 
 I'm dying to know if the shot that says "This is Tkinter Only" is PySimpleGUI or tkinter.  I have a feeling it's not PySimpleGUI, but, I can't tell.
 
 ------------------------------
+[@neovich](https://github.com/neovich) 04/05/2021 23:32:07
 
-
-[@neovich](https://github.com/neovich)
-### 04/05/2021 23:32:07
 Thank you for the kind words.   In response to the above comment. Is this Tkinter only ? My word  it is. 
 100 percent is ONLY PySimpleGUI.  I don't even know what ttk is really. Can I post code here or some other pages to prove this.
 There are no other dependancies in my code either.   
@@ -1933,26 +1647,20 @@ There are no other dependancies in my code either.
  
 
 ------------------------------
+[@pamoroso](https://github.com/pamoroso) 04/21/2021 14:05:25
 
-
-[@pamoroso](https://github.com/pamoroso)
-### 04/21/2021 14:05:25
 Here's a screenshot of [Spacestills](https://github.com/pamoroso/spacestills), a NASA TV still frame viewer.
 
 ![spacestills](https://user-images.githubusercontent.com/10342479/115567113-2fd4ee80-a2bb-11eb-89bd-03ca3864be85.jpg)
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/21/2021 15:07:41
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/21/2021 15:07:41
 @pamoroso I LOVE what you've been doing with PySimpleGUI on replit.  Blows me away what you're doing!  And thank you for the support over the years.  🙏
 
 ------------------------------
+[@daemon2021](https://github.com/daemon2021) 04/28/2021 08:26:39
 
-
-[@daemon2021](https://github.com/daemon2021)
-### 04/28/2021 08:26:39
 Hi all,
 I've just made a good use of the "Gray Gray Gray" theme defined in PySimpleGUI 4.40.0.
 Together with the options `ttk_theme = sg.THEME_VISTA` and `use_ttk_buttons = True` I finally got a "look&feel" that is close to native on Windows 10.
@@ -1971,10 +1679,8 @@ Thank you guys! PySimpleGUI is a fantastic platform and the level of your suppor
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/28/2021 20:43:34
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/28/2021 20:43:34
 @daemon2021 It was MORE than a fair trade.... appreciate your help.
 
 It's easy to work on this project when these kinds of images are posted.  Twitter had a couple of nice ones this week too.  It's hard not to want to help you fine, grateful, guys and gals make the software you dream of making.  It's a shared accomplishment.  I feel some of the happiness you feel.  It's a truly joyful experience in the end.  I've not had products that have been as rewarding as this project has been.  It's different being an 'enabling' technology.
@@ -1982,10 +1688,8 @@ It's easy to work on this project when these kinds of images are posted.  Twitte
 Keep on building and posting!!
 
 ------------------------------
+[@elibroftw](https://github.com/elibroftw) 05/02/2021 00:27:51
 
-
-[@elibroftw](https://github.com/elibroftw)
-### 05/02/2021 00:27:51
 Here is 1.5 years of developing my [Music Player ](https://github.com/elibroftw/music-caster) using PySimpleGUI.
 ![image](https://user-images.githubusercontent.com/21298211/116798206-46e5be80-aabb-11eb-819d-dd8b6a229368.png)
 mini-mode
@@ -1994,10 +1698,8 @@ mini-mode
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 03:01:47
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 05/02/2021 03:01:47
 @elibroftw INCREDIBLE.  Instant smile and admiration.
 
 I rarely, never actually , make suggestions, but I'm gonna go out on a limb just for fun because you've embraced dark so well.
@@ -2006,56 +1708,44 @@ Consider trying a version with a custom titlebar added.  You can do that with a 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 03:02:42
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 05/02/2021 03:02:42
 To be clear, these are already homeruns!  LOL
 
 ------------------------------
+[@elibroftw](https://github.com/elibroftw) 05/02/2021 03:29:23
 
-
-[@elibroftw](https://github.com/elibroftw)
-### 05/02/2021 03:29:23
 The dark theme is based on the matte black color scheme. It's actually the number one Firefox theme. 
 
 I tried the custom bar before and the biggest problem is that the window icon does not show up in the taskbar as one would expect. The other issue is that although the title bar is dark, it looks fake. The font looked weird (probably my fault) and the disabled maximize button was misaligned. I just need the taskabr icon issue fixed. Fix should be easy (I think deiconify or something, googling the issue yields a stackoverflow.com answer). 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 04:31:22
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 05/02/2021 04:31:22
 The taskbar is a difficult challenge. I make one when the window is minimized.  It was just a thought. Was I said, not all good ideas.  But, every now and then a good one happens.
 
 Congrats on fabulous GUI!  Thank you for sharing.
 
 ------------------------------
+[@Fethbita](https://github.com/Fethbita) 05/20/2021 15:10:13
 
-
-[@Fethbita](https://github.com/Fethbita)
-### 05/20/2021 15:10:13
 I created an Electronic Machine Readable Travel Document (eMRTD) reader and verifier with face recognition included. I used PySimpleGUI. Here is a gif of [eMRTD_face_access](https://github.com/Fethbita/eMRTD_face_access):
 
 ![a demo of the program](https://raw.githubusercontent.com/Fethbita/eMRTD_face_access/main/docs/images/demo.gif)
 
 ------------------------------
+[@ghost](https://github.com/ghost) 05/27/2021 07:20:01
 
-
-[@ghost](https://github.com/ghost)
-### 05/27/2021 07:20:01
 A Small Utility Made Using pysimplegui For Quickly Editing Text Cases Comes Handy When Dealing With Large Text
 [https://github.com/LP-Codes/Text-Case-Converter-Editor](https://github.com/LP-Codes/Text-Case-Converter-Editor) 
 ![image](https://user-images.githubusercontent.com/66465441/119782575-fb6fd600-bee9-11eb-992a-cc24d12d0c16.png)
 
 
 ------------------------------
+[@ghost](https://github.com/ghost) 06/24/2021 05:44:57
 
+[@ghost](https://github.com/ghost) A Simple Random-Password Generator
 
-[@ghost](https://github.com/ghost)
-### 06/24/2021 05:44:57
-
-### A Simple Random-Password Generator
 
 https://github.com/LP-Codes/Python-Random-Password-GUI
 
@@ -2066,19 +1756,15 @@ https://github.com/LP-Codes/Python-Random-Password-GUI
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/25/2021 23:17:59
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/25/2021 23:17:59
 Keep making stuff @LP-Codes !  
 There's a new clipboard function you might find useful in the latest released PySimpleGUI, but it's only "safe" on Windows as the contents may not remain on other platforms.  Tkinter still doesn't retain the clipboard contents after the window exits except on Windows.
 
 
 ------------------------------
+[@vinniec](https://github.com/vinniec) 08/07/2021 07:57:36
 
-
-[@vinniec](https://github.com/vinniec)
-### 08/07/2021 07:57:36
 I tried [my past application](https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-791053626) on pinephone (this is one of the reasons why I had wanted to try pysimplegui a while ago). It works fine:
 ![ppp1](https://user-images.githubusercontent.com/710699/128593320-9eb54fe3-7649-4fa0-893e-4946ebc1469a.jpg)
 
@@ -2095,45 +1781,36 @@ The same when I change the screen to the horizontal orientation, instead of resi
 I was wondering if there is a way to make an interface that dynamically changes the size also adapting its content.
 
 ------------------------------
+[@jason990420](https://github.com/jason990420) 08/07/2021 11:00:56
 
-
-[@jason990420](https://github.com/jason990420)
-### 08/07/2021 11:00:56
 User defined element: [class Fold](https://github.com/jason990420/PySimpleGUI-Solution/issues/88)
 
 ![Fold](https://user-images.githubusercontent.com/55352169/128599441-aa1fc879-c88e-48a9-9d5c-856f1bbf6d2e.gif)
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/07/2021 16:30:26
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/07/2021 16:30:26
 There's a demo `Demo_Column_Collapsible_Sections.py` that shows the collapsable sections that are used in a number of built-in PySimpleGUI windows.  The test harness `sg.main()` uses one and the open github issue window `sg.main_open_github_issue()` also uses on.
 
 To get the entire window to grow and shrink, the critical piece is the use of the `pin()` helper function.  It is `pin` that both reserves the space and also enables a nearly complete collapse of the layout/window.
 
 
-[@Demo Program](https://github.com/Demo Program)
 https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Column_Collapsible_Sections.py
 
 ![bFMFWthH2G](https://user-images.githubusercontent.com/46163555/128607171-d6ce5683-7890-46f8-8908-edfd224ff165.gif)
 
 
 
-[@sg.main()](https://github.com/sg.main())
 ![EhFQy6gaHl](https://user-images.githubusercontent.com/46163555/128607117-c4c9848a-9cfd-4c67-bd19-56bb11527937.gif)
 
 
 
-[@sg.main_open_github_issue()](https://github.com/sg.main_open_github_issue())
 ![eqYKWKRkUF](https://user-images.githubusercontent.com/46163555/128607125-7ed1ae83-9376-4322-bc68-c1d182a9626a.gif)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/07/2021 16:34:34
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/07/2021 16:34:34
 @vinniec 
 
 > I was wondering if there is a way to make an interface that dynamically changes the size also adapting its content.
@@ -2145,10 +1822,8 @@ You're in an environment that's really unique. I don't have an answer that's at 
 These are always really really great to see!!
 
 ------------------------------
+[@AyhamSaffar](https://github.com/AyhamSaffar) 08/11/2021 00:21:44
 
-
-[@AyhamSaffar](https://github.com/AyhamSaffar)
-### 08/11/2021 00:21:44
 I made a scientific app <:
 
 ![Perfect Result](https://user-images.githubusercontent.com/76114207/128950253-adabcde5-2013-4e9d-be3b-40bbbc947922.png)
@@ -2162,17 +1837,13 @@ I am so grateful for the library and all the support. Mike & Jason u guys are am
 Cant wait to show this off when i get back to uni!
 
 ------------------------------
+[@AyhamSaffar](https://github.com/AyhamSaffar) 08/11/2021 20:12:34
 
-
-[@AyhamSaffar](https://github.com/AyhamSaffar)
-### 08/11/2021 20:12:34
 omd u put my thing on ur twitter. I am so flattered, especially by the deathstar analogy.  Cheers Mike!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/11/2021 20:28:32
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/11/2021 20:28:32
 UUhhhh..... @AyhamSaffar I should have asked permission I think.... maybe I should put a disclaimer on this issue:
 
 "Warning - I will show off your work and be proud of what you make"
@@ -2199,10 +1870,8 @@ I keep trying to find the words to describe the elation at seeing what's being m
 Thank you for being OK with me Tweeting out your creation!!  
 
 ------------------------------
+[@AyhamSaffar](https://github.com/AyhamSaffar) 08/12/2021 01:37:41
 
-
-[@AyhamSaffar](https://github.com/AyhamSaffar)
-### 08/12/2021 01:37:41
 All this positivity has really made my week!
 
 Yea i mean i tried getting into TKinter at the start but it just felt like there where way too many steps to do anything and the code wasn't super intuitive. I never felt confident enough to start anything.
@@ -2214,10 +1883,8 @@ I didn't realise PSG had a wiki. Is [this](https://en.everybodywiki.com/PySimple
 Also i think the project details section is a great idea. It has been really interesting and humbling scrolling through this thread.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2021 01:42:20
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/12/2021 01:42:20
 https://github.com/PySimpleGUI/PySimpleGUI/wiki
 
 The GitHub Wiki!
@@ -2225,10 +1892,8 @@ The GitHub Wiki!
 Totally get that humbled thing... I feel that way every morning. It's all pretty nuts, but FUN, so we're meeting that goal.  What a fun goal to have... fun.... pretty sneaky huh?  "You're having way too much fun!"   "Yea, but that's the goal!"    "Oh oh yea... carry on..."
 
 ------------------------------
+[@readicculus](https://github.com/readicculus) 08/30/2021 22:16:48
 
-
-[@readicculus](https://github.com/readicculus)
-### 08/30/2021 22:16:48
 I made a GUI for creating batch jobs that run detection pipelines against many pre-defined datasets.  This work is to help support aerial surveys of seals and polar bears.  We collect millions of images per year, and this GUI is intended to make it easier for the researchers to run detection(and some day tracking or other pipelines).
 
 ![image](https://user-images.githubusercontent.com/3818801/131410876-c3ba93ac-1c0d-4147-9c04-54b2eebe8e04.png)
@@ -2253,10 +1918,8 @@ PySimpleGUI is sweet!  It's designed to be easy for beginners but still allows f
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/31/2021 00:40:51
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/31/2021 00:40:51
 >  Thanks again for all you do!
 
 Seeing results like these make it really really easy to do my part.  You're the one making the hard stuff!  
@@ -2269,23 +1932,18 @@ Thank you so so much for sharing!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/31/2021 13:09:22
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/31/2021 13:09:22
 
 @readicculus I'm not sure if you're trying for a retro look with the ------- lines between sections.  If you prefer a solid line, you can use a HorizonalSeparator element
-
 
 Here's how they look different:
 ![image](https://user-images.githubusercontent.com/46163555/131508042-05505690-e1f6-4c01-9840-f40bf05f5163.png)
 
 
 ------------------------------
+[@hseera](https://github.com/hseera) 09/04/2021 07:29:45
 
-
-[@hseera](https://github.com/hseera)
-### 09/04/2021 07:29:45
 Recently developed an AWS SQS workbench utility using PySimpleGUI for Windows that allows sending and viewing messages to AWS SQS. It is useful for those whom don't have much knowledge of how to use AWS CLI/SDK. OR find annoying logging into AWS console every time they want to do work with SQS.
 
 I have used multiple facets of PySimpleGUI for this utility. It uses multithreading, File browse/save, table, layout, using eventing to display console msg in a multiline text etc features provided by PySimpleGUI.
@@ -2300,10 +1958,8 @@ I have used multiple facets of PySimpleGUI for this utility. It uses multithread
  
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 09/04/2021 14:37:53
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 09/04/2021 14:37:53
 @hseera AWESOME software!  I yesterday discovered your work and was showed some of it to @Chr0nicT yesterday afternoon on Discord!
 
 ![image](https://user-images.githubusercontent.com/46163555/132098195-4bb4386e-cc60-4dc9-a68c-ccfe6827496f.png)
@@ -2315,20 +1971,16 @@ https://github.com/hseera/aws-python-utilities#13-sqs-workbench
 Thank you so much for posting a screenshot here!  It is so very helpful for others to see the universe of possibilities.
 
 ------------------------------
+[@hseera](https://github.com/hseera) 09/25/2021 11:30:05
 
-
-[@hseera](https://github.com/hseera)
-### 09/25/2021 11:30:05
 Just developed an AWS S3 Viewer application using PySimpleGUI. You can navigate all the buckets in S3 in your account. You can search for a file name. If it exists, it prints the full path in the console.
 
 ![image](https://user-images.githubusercontent.com/59352356/134769839-7840abd4-99a9-4ba6-bdfe-9ddcb08243ef.png)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 09/25/2021 18:13:19
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 09/25/2021 18:13:19
 Love it @hseera  !  
 
 I detect the Reddit Theme I believe in your window if I'm seeing it correctly.  
@@ -2336,10 +1988,8 @@ I detect the Reddit Theme I believe in your window if I'm seeing it correctly.
 Very nice look.  A friend was talking on Friday to me about this S3 Region problem...of finding where things are located.
 
 ------------------------------
+[@hseera](https://github.com/hseera) 09/25/2021 22:55:50
 
-
-[@hseera](https://github.com/hseera)
-### 09/25/2021 22:55:50
 > Love it @hseera !
 > 
 > I detect the Reddit Theme I believe in your window if I'm seeing it correctly.
@@ -2351,10 +2001,8 @@ Yes, I am using Reddit theme. I feel it is easier on the eyes.
 Yes that was another of my reason to build this tool. Now just trying to figure out how to delete the data in the tree and repaint it when I select a different region.
 
 ------------------------------
+[@mechanicalnull](https://github.com/mechanicalnull) 10/22/2021 12:04:54
 
-
-[@mechanicalnull](https://github.com/mechanicalnull)
-### 10/22/2021 12:04:54
 I used PySimpleGUI for a [recent project](https://github.com/mechanicalnull/fuzzwatch) to illustrate what a fuzzer is doing, and it made things look pretty good without a ton of code. It was able to handle all the things I wanted to do and wasn't too hard to figure out. Just wanted to share and say thanks!
 
 ![fuzzwatch_ui](https://user-images.githubusercontent.com/43920110/138450454-4132f4ab-f402-4d34-ba6a-4c91fe45dce3.gif)
@@ -2362,10 +2010,8 @@ I used PySimpleGUI for a [recent project](https://github.com/mechanicalnull/fuzz
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/22/2021 14:51:31
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/22/2021 14:51:31
 @mechanicalnull THANK YOU!!
 
 ![image](https://user-images.githubusercontent.com/46163555/138475561-64b25d75-1acc-4193-b5d9-f3b7e9e8abc6.png)
@@ -2377,10 +2023,8 @@ Nothing motivates me more than seeing screenshots!
 
 
 ------------------------------
+[@Scania-Creations-16](https://github.com/Scania-Creations-16) 10/31/2021 04:14:25
 
-
-[@Scania-Creations-16](https://github.com/Scania-Creations-16)
-### 10/31/2021 04:14:25
 I made a Music Player using PySimpleGUI
 
 
@@ -2394,10 +2038,8 @@ Thanks a lot PySimpleGUI :smiley:
 Without You,I would've made no GUI programs :heart: :heart: :heart: :heart: :heart: 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 10/31/2021 19:16:54
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 10/31/2021 19:16:54
 You're quite welcome.
 
 **Thank you** @Scania-Creations-16 for posting your screenshot!  Awesome awesome creation!  I'm impressed!
@@ -2409,10 +2051,8 @@ Can you post a link to your code?
 I'm sure there are things that others can learn.  If you're a beginner, then I'm definitely interested in seeing what you did.  Beginners tend to do crazy things that others (including me) wouldn't think to do.  I've learned a lot from beginners.  Don't worry about showing your code.  We've all, every one of us, have been where you are in your education of Python.
 
 ------------------------------
+[@Scania-Creations-16](https://github.com/Scania-Creations-16) 11/01/2021 04:11:56
 
-
-[@Scania-Creations-16](https://github.com/Scania-Creations-16)
-### 11/01/2021 04:11:56
 > You're quite welcome.
 > 
 > **Thank you** @Scania-Creations-16 for posting your screenshot! Awesome awesome creation! I'm impressed!
@@ -2434,10 +2074,8 @@ I will surely post my code when the project is completed  :100:
 and Once again, Thank You Sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo much PySimpleGUI :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: 
 
 ------------------------------
+[@Scania-Creations-16](https://github.com/Scania-Creations-16) 11/04/2021 02:55:59
 
-
-[@Scania-Creations-16](https://github.com/Scania-Creations-16)
-### 11/04/2021 02:55:59
 Created a Simple Youtube Downloader using PySimpleGUI :blush: 
 
 ![yt1](https://user-images.githubusercontent.com/91425738/140249931-76fdda21-fbdf-42a0-81a7-add95ab122b6.png)
@@ -2451,19 +2089,15 @@ Created a Simple Youtube Downloader using PySimpleGUI :blush:
 :heart::heart::heart::heart::heart:   PySimpleGUI   :heart::heart::heart::heart::heart:
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/04/2021 18:35:41
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/04/2021 18:35:41
 Very nice!
 
 Love all the graphics you're including your GUIs.  It adds a level up from the basic elements.  Great work!   Thank you for posting them.  I get a motivational boost every time I see something new created. Keep building!  💗💗💗
 
 ------------------------------
+[@luflopes](https://github.com/luflopes) 11/19/2021 21:30:33
 
-
-[@luflopes](https://github.com/luflopes)
-### 11/19/2021 21:30:33
 I made a small system to control and report performance indicators data for a "company" using PySimpleGUI. **Thank all you!**
 
 **1) Login page:**
@@ -2489,27 +2123,21 @@ I made a small system to control and report performance indicators data for a "c
 
 
 ------------------------------
+[@pamoroso](https://github.com/pamoroso) 11/19/2021 21:33:35
 
-
-[@pamoroso](https://github.com/pamoroso)
-### 11/19/2021 21:33:35
 @luflopes Love the design and color palette.
 
 ------------------------------
+[@luflopes](https://github.com/luflopes) 11/19/2021 21:40:50
 
-
-[@luflopes](https://github.com/luflopes)
-### 11/19/2021 21:40:50
 > @luflopes Love the design and color palette.
 
 Thank you @pamoroso .
 I'm happy you liked this.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/20/2021 12:17:53
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/20/2021 12:17:53
 Totally agree!  Very nice use of color!  I like it!
 
 Thank you @luflopes for taking the time to post it!  Love seeing these.  Really helps with motivation to see many things being built!
@@ -2583,27 +2211,21 @@ Produced this window:
 [ EDIT 2 ] - Oh wow, you did a lot of windows I didn't scroll back far enough the first time to see all FIVE windows!  Very nice!
 
 ------------------------------
+[@luflopes](https://github.com/luflopes) 11/21/2021 20:02:49
 
-
-[@luflopes](https://github.com/luflopes)
-### 11/21/2021 20:02:49
 Thank you @PySimpleGUI.
 This way to create with the graph element is much simple and very good. I love it!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/22/2021 15:50:58
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/22/2021 15:50:58
 @luflopes  - I had just finished making a lesson that made a bar chart so I had the code literally open in PyCharm.  All I had to do was add labels and draw the axes.  I kept it super simple in the lesson and drew the bars and values on top.  All I did was copy your colors (love those colors) and data.  
 
 I did a tiny sliver compared to what you've accomplished.  I like your icon for the calendar too.  Lots to like about what you posted. Thank you for sharing your work!  No doubt, it will be helpful to others (I've already benefited by seeing it and taking ideas from you 😀)
 
 ------------------------------
+[@frici11](https://github.com/frici11) 11/23/2021 13:41:00
 
-
-[@frici11](https://github.com/frici11)
-### 11/23/2021 13:41:00
 I have just finished an app in PySimpleGUI. (portfolio evaluation with analyzing cash flows, calculating yield rates, currency effects etc.)
 Although they are not in english (sorry), but I share 3 screens, with two comments:
 1.) The charts you can see are also in PSG. I made three classes upon sg.Graph: column, line, pie/donut.
@@ -2616,10 +2238,8 @@ Although they are not in english (sorry), but I share 3 screens, with two commen
 I love PSG, it's a huge help. Thank you!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/23/2021 14:57:40
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/23/2021 14:57:40
 ![image](https://user-images.githubusercontent.com/46163555/143047359-4604c104-0aa6-46ac-a8ab-8389e217e638.png)
 
 What a way to start my day!
@@ -2630,10 +2250,8 @@ I'm thrilled you've made something so useful to you and inspirational to me and 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/23/2021 15:28:51
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/23/2021 15:28:51
 I LOVE what you did with the Graph Element too!  
 
 I just finished recording that lesson and you've shown exactly what I was explaining in that lesson... that the Graph Element is a "Gateway Element"... you can make new elements, new types of graphs, it's a blank canvas ready to be painted.... I really like that Donut Chart.  It's incredible how you've got a piece that's selected and pulled out to show it.  
@@ -2648,10 +2266,8 @@ Are **all of your Graphs from PySimpleGUI???**  Even the one with the marker?
 
 
 ------------------------------
+[@frici11](https://github.com/frici11) 11/23/2021 16:26:01
 
-
-[@frici11](https://github.com/frici11)
-### 11/23/2021 16:26:01
 Thank you so much, your words mean much to me.
 I really appreciate the concept and amazing work behind PySimpleGUI.
 
@@ -2697,18 +2313,14 @@ This e-mail and any attachment may contain confidential and/or privileged inform
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 11/23/2021 17:41:29
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 11/23/2021 17:41:29
 Your attachment didn't come through because you're replying to a GitHub email.  It'll post the text here in the issue but won't include any attachments.  You'll have to follow the link at the bottom of the email and post the code in the issue, or post it in a GitHub repo or a Gist.  I'm CERTAINLY interested and I'm **sure** other users would be too!
 
 
 ------------------------------
+[@frici11](https://github.com/frici11) 11/23/2021 18:32:26
 
-
-[@frici11](https://github.com/frici11)
-### 11/23/2021 18:32:26
 Sorry, now I have uploaded it into my repo. Hope that it can be accessed.
 (If someone would use it, some documentation can be useful - but until now I didn't write anything...)
 
@@ -2738,19 +2350,15 @@ This e-mail and any attachment may contain confidential and/or privileged inform
 
 
 ------------------------------
+[@Vresod](https://github.com/Vresod) 11/23/2021 23:47:10
 
-
-[@Vresod](https://github.com/Vresod)
-### 11/23/2021 23:47:10
 Here is my program! It edits Among Us files. 👍
 
 ![AUE-P](https://user-images.githubusercontent.com/40863375/143146218-e6d0b3a9-4369-4808-aaa8-c0d91da0a1db.png)
 
 ------------------------------
+[@andrewmk](https://github.com/andrewmk) 12/02/2021 16:07:45
 
-
-[@andrewmk](https://github.com/andrewmk)
-### 12/02/2021 16:07:45
 A utility to remotely administer websites by running commands over SSH, and generate templated text from a structured input form. I'll no doubt be adding more functionality to this as we come up with new ideas.
 
 ![Screenshot 2021-12-07](https://user-images.githubusercontent.com/1872642/145014749-a344841d-6934-484d-9955-977f5e3470bc.png)
@@ -2758,10 +2366,8 @@ A utility to remotely administer websites by running commands over SSH, and gene
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/02/2021 16:14:05
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/02/2021 16:14:05
 I would like to point out that @andrewmk went from never hearing of PySimpleGUI, from starting from scratch to being DONE in 3 days.  That's an incredible achievement!  AND he wrote a nice piece of code I'm turning into a Recipe and a Demo Program too!  AND it involved multiprocessing and multithreading.  That's brain-surgery level stuff.  
 ![image](https://user-images.githubusercontent.com/46163555/144459932-37a651da-f0a3-46bf-abcb-85ebd95cb1a4.png)
 
@@ -2772,10 +2378,8 @@ Thanks so much for stopping in @andrewmk and sharing your experience.  It was re
 
 
 ------------------------------
+[@andrewmk](https://github.com/andrewmk) 12/02/2021 17:08:31
 
-
-[@andrewmk](https://github.com/andrewmk)
-### 12/02/2021 17:08:31
 > I would like to point out that @andrewmk went from never hearing of PySimpleGUI, from starting from scratch to being DONE in 3 days. That's an incredible achievement! AND he wrote a nice piece of code I'm turning into a Recipe and a Demo Program too! AND it involved multiprocessing and multithreading. That's brain-surgery level stuff.
 
 If there's one thing I'm good at it's learning from examples. And you've provided all the examples, so thank you!
@@ -2783,10 +2387,8 @@ If there's one thing I'm good at it's learning from examples. And you've provide
 
 
 ------------------------------
+[@andrewmk](https://github.com/andrewmk) 12/05/2021 00:39:31
 
-
-[@andrewmk](https://github.com/andrewmk)
-### 12/05/2021 00:39:31
 GUI for the xkcd_password module (https://github.com/redacted/XKCD-password-generator).
 
 This code reaches through the chain link fence around PySimpleGUI and does some unpleasant things... I can't help thinking that there might be a better way of doing it but I couldn't find one.
@@ -2856,26 +2458,20 @@ window.close()
 ```
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/07/2021 13:57:09
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/07/2021 13:57:09
 I forgot to put MikeTheWatchGuy on the whitelist
 
 
 ------------------------------
+[@WaterReNu](https://github.com/WaterReNu) 12/08/2021 17:34:51
 
-
-[@WaterReNu](https://github.com/WaterReNu)
-### 12/08/2021 17:34:51
 ![auto-op](https://user-images.githubusercontent.com/54043211/145255870-32219224-f533-4e29-8483-ef87cb473501.jpg)
 Work in progress, it is a dynamic display, refreshing ever 1/2 second.
 
 ------------------------------
+[@dmitrijbes](https://github.com/dmitrijbes) 12/13/2021 12:43:43
 
-
-[@dmitrijbes](https://github.com/dmitrijbes)
-### 12/13/2021 12:43:43
 Small tool for screenshot comparison: [Detailist](https://github.com/dmitrijbes/detailist)
 
 Thank You for a great library!
@@ -2885,10 +2481,8 @@ Definitely my future go-to for a simple, internally used interfaces!
 <img src="https://user-images.githubusercontent.com/15231915/145809840-40ace3ae-15a6-44ba-998c-3ac09d79ed11.png" alt="Detailist screenshot" width="600" height="649">
 
 ------------------------------
+[@andrewmk](https://github.com/andrewmk) 12/19/2021 13:29:03
 
-
-[@andrewmk](https://github.com/andrewmk)
-### 12/19/2021 13:29:03
 Simple GUI for using wget to download individual web pages or spider whole web sites. Use with caution against other people's servers - play nicely. Someone asked if I could archive 3400 web pages at work the other day. I used CLI wget but wished I had this.
 
 [[Edited: I've added Linux compatibility.]]
@@ -3025,10 +2619,8 @@ window.close()
 ```
 
 ------------------------------
+[@johanjohan](https://github.com/johanjohan) 12/19/2021 17:07:16
 
-
-[@johanjohan](https://github.com/johanjohan)
-### 12/19/2021 17:07:16
 Hey all,
 
 here is the gui for control of smart led lights. It is my first PSG project, still it was very possible to find all information needed. Thanks!
@@ -3120,19 +2712,15 @@ def prettify(window):
 
 
 ------------------------------
+[@andrewmk](https://github.com/andrewmk) 12/19/2021 17:24:12
 
-
-[@andrewmk](https://github.com/andrewmk)
-### 12/19/2021 17:24:12
 > The code is straight forward. Basically I got rid of all decorations, where the slider-'knobs' were the hardest to find...
 
 I like the flat look. Very modern.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/20/2021 13:15:26
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/20/2021 13:15:26
 WOOOOWWWWW!  @johanjohan what a BEAUTIFUL window!
 
 I assumed when I first saw it that you made your own sliders, much like shown in another screenshot above.  It may be worth me looking into adding more of the Graph Element based elements in the future (the PySimpleGUI+ project that has the Dial element).
@@ -3144,24 +2732,18 @@ I think this window shows just how not-ugly tkinter can be.   Yes, it takes work
 Thank you so much.... this one post has given me so many ideas to work with.
 
 ------------------------------
+[@johanjohan](https://github.com/johanjohan) 12/20/2021 14:44:04
 
-
-[@johanjohan](https://github.com/johanjohan)
-### 12/20/2021 14:44:04
 wow @PySimpleGUI , you amaze me. As you say, all are standard elements stripped of their decorations. I added exponential scales to the sliders, so they have more room in the lower ranges. What really hooked me, is that it just looks the same on Android and works out of the box. Totally amazing!! Well done @PySimpleGUI.
 
 ------------------------------
+[@pamoroso](https://github.com/pamoroso) 12/20/2021 14:47:24
 
-
-[@pamoroso](https://github.com/pamoroso)
-### 12/20/2021 14:47:24
 @johanjohan Great interface. How do you run it on Android?
 
 ------------------------------
+[@johanjohan](https://github.com/johanjohan) 12/20/2021 15:25:43
 
-
-[@johanjohan](https://github.com/johanjohan)
-### 12/20/2021 15:25:43
 @pamoroso thanks! Manually copied the files over. Didn't check whether git was there. I open the main python file in Pydroid3 (10$ or free with ads) and run it. Need to install needed modules via pip before, but so far no issues, even cv2, numpy etc is there. You may need to set PYTHONPATH etc in the code before importing any modules as the filesystem is different.
 Then some more font sizes need to be changed. That was all.
 I was amazed to find out, that even an aged tablet running _Android 5_ runs the app fine. So happy to save another unsupported piece of electro-junk from the mountain of eternal scrap.
@@ -3199,10 +2781,8 @@ For internal prototypes that is perfect. To my knowledge, one cannot release it 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/20/2021 15:41:30
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/20/2021 15:41:30
 WWWOOOOOOWWWWW @johanjohan  thank you for that photo!!
 
 ![image](https://user-images.githubusercontent.com/46163555/146793694-9d1d7bba-5654-4394-ab7f-60460b7d2b6f.png)
@@ -3214,34 +2794,26 @@ Yea, PyDriod3 rocks!  I don't have many demos for it posted under the [PyDroid3 
 
 
 ------------------------------
+[@johanjohan](https://github.com/johanjohan) 12/20/2021 19:25:31
 
-
-[@johanjohan](https://github.com/johanjohan)
-### 12/20/2021 19:25:31
 yes @PySimpleGUI, stunning and crazy. Then 3 days later I found out that iOS doesn't even have python. And if you somehow install it, there is no tkinter. Very walled. I find that hard to believe. Is there a way to cope with that?
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 12/21/2021 22:25:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 12/21/2021 22:25:55
 I haven't found anything that runs on my iPad.  I've got a Chromebook that won't install the PyDroid3 security check that would enable the pro features so even Android is far from perfect.  Hoping to get a native APK solution down the road.  It's the next big step for PySimpleGUI.
 
 ------------------------------
+[@autostatic](https://github.com/autostatic) 12/27/2021 15:43:43
 
-
-[@autostatic](https://github.com/autostatic)
-### 12/27/2021 15:43:43
 Thanks for this library and all the best for 2022! [rtcqs](https://github.com/autostatic/rtcqs) is using PySimpleGUIQt for the GUI to show the results of the checks.
 ![rtcqs_gui](https://user-images.githubusercontent.com/477316/147486841-24164ebf-9190-4ade-838e-8c64f68b501e.png)
 ![rtcqs_about](https://user-images.githubusercontent.com/477316/147486857-6057aa0f-abbc-49ad-9769-f1db23a20e87.png)
 
 
 ------------------------------
+[@Cornbrother](https://github.com/Cornbrother) 01/07/2022 18:47:55
 
-
-[@Cornbrother](https://github.com/Cornbrother)
-### 01/07/2022 18:47:55
 Honestly such a great resource, so many engineers forget that their projects need to be used by humans..
 
 https://github.com/Cornbrother/Pfennig-Pouch
@@ -3250,26 +2822,20 @@ https://github.com/Cornbrother/Pfennig-Pouch
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/07/2022 18:56:17
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/07/2022 18:56:17
 @Cornbrother .... I LOVE those fonts!!  And I've never seen someone make a Frame Title like that.  It's a thrill (I'm serious, it's a thrill) to learn from PySimpleGUI users ways PySimpleGUI can be used.  Thank you for posting a screenshot!!
 
 ------------------------------
+[@Cornbrother](https://github.com/Cornbrother) 01/07/2022 20:09:09
 
-
-[@Cornbrother](https://github.com/Cornbrother)
-### 01/07/2022 20:09:09
 > @Cornbrother .... I LOVE those fonts!! And I've never seen someone make a Frame Title like that. It's a thrill (I'm serious, it's a thrill) to learn from PySimpleGUI users ways PySimpleGUI can be used. Thank you for posting a screenshot!!
 
 yeah it was something I kinda visualised in my head to spice things up a bit and I thought it worked out. It would be neat if you could place multiple titles within a frame so that you could create either vertical row labels, or do more complex versions of this kind of detailing.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/07/2022 21:29:49
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/07/2022 21:29:49
 @autostatic Thank you for the rare PySimpleGUIQt screenshot!  You posted while I was very distracted, I'm sorry for only now commenting.  
 
 I like that you used the Tab title to show status.  I've not seen that done.... anywhere that comes to mind, forgetting PySimpleGUI.  Thank you for teaching me another trick/technique that can be used in any implementation.  Simply had never come to mind as something that could be done.  
@@ -3277,19 +2843,15 @@ I like that you used the Tab title to show status.  I've not seen that done.... 
 Thank you for taking the time to post your GUIs here!
 
 ------------------------------
+[@autostatic](https://github.com/autostatic) 01/08/2022 10:07:56
 
-
-[@autostatic](https://github.com/autostatic)
-### 01/08/2022 10:07:56
 Thanks! Got the inspiration from KeepassXC and also QJackCtl I think. The latter uses images but that doesn't work (yet?) in PySimpleGuiQt. Keep up the amazing work!
 
 Jeremy
 
 ------------------------------
+[@shullaw](https://github.com/shullaw) 01/13/2022 02:19:24
 
-
-[@shullaw](https://github.com/shullaw)
-### 01/13/2022 02:19:24
 A data retrieval application I've been working on.  Inserts data into an excel template.  The (custom) buttons react on hover and console output is routed to the multiline object.  Used the PSG multithread method.  Comes out to 48MB once packaged with `pyinstaller`.  Only thing that I really would like to fix is the actual text in the multiline to expand on event and the icon on the task bar to be my .ico file (probably a Windows issue). 
 
 I’m just seeing the psgtray repo so that might be my answer!
@@ -3300,38 +2862,30 @@ Thanks!
 
 
 ------------------------------
+[@tostos5963](https://github.com/tostos5963) 01/13/2022 15:26:56
 
-
-[@tostos5963](https://github.com/tostos5963)
-### 01/13/2022 15:26:56
 Mahjong solitaire programmed with PySimpleGUI.
 ![MahjongSolitaire](https://user-images.githubusercontent.com/15520094/149358695-c47b5956-785f-4bc5-a74c-050bfb56fee7.PNG)
 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/13/2022 20:19:36
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/13/2022 20:19:36
 I stumbled onto @tostos5963 Mahjong Solitaire recently and am glad to see it posted here!  
 
 I also recently stumbled onto another game that @jason990420 wrote a long time ago but I don't think it's been posted here anywhere.  I'm seeing more and more games written with PySimpleGUI and they're really well done!  I recall Jason being the first to published a real game... it was a Klondike Solitaire game, it came from nowhere and was shocking to see as he extended PySimpleGUI considerably in order to write it.  Card animations, etc, had never been done in PySimpleGUI before and I couldn't believe what I was seeing.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/13/2022 20:20:56
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/13/2022 20:20:56
 @shullaw those are some buttons to envy!  What fun!  The text and buttons pop straight out of the window.
 
 To answer your question about icons in your EXE file, take a look at the `psgcompiler` project.  It shows where you can put the icon file so that the EXE has it.  The icon on the taskbar should match the windows already though.  hmmmm... feel free to open an issue.
 
 ------------------------------
+[@shullaw](https://github.com/shullaw) 01/13/2022 21:27:25
 
-
-[@shullaw](https://github.com/shullaw)
-### 01/13/2022 21:27:25
 For sure I'll check it out!
 
 Edit:
@@ -3343,20 +2897,16 @@ Final edit (I promise):
 I guess I was incorrect!  It does appear in the task bar.  I do remember Windows initially not showing, but I think that is a Windows specific problem with storing an icon cache.
 
 ------------------------------
+[@tostos5963](https://github.com/tostos5963) 01/13/2022 22:13:15
 
-
-[@tostos5963](https://github.com/tostos5963)
-### 01/13/2022 22:13:15
 This is a gif animated version of Mahjong solitaire.
 https://github.com/tostos5963/PySimpleGUI-MahjongSolitaire
 ![PySimpleGUI-MahjongSolitaire](https://user-images.githubusercontent.com/15520094/149417117-f2acfa8e-a197-4180-a391-cf6cde28cdef.gif)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/14/2022 10:41:47
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/14/2022 10:41:47
 @shullaw tip for ya in case you've not discover it.... if you use `set_options` to set the icon for your application, rather than specifying in the `Window` creation, then ALL windows, including popups, will use this icon.  I recommend using a Base64 encoded PNG files for this icon as it works across all Operating systems when using base64 strings.  Glad you got it sorted out!
 
 @tostos5963 NICE GIF!  ShareX is what I use to make GIFs for readmes, etc, because they are tiny somehow.  Brilliant idea to show a GIF for your game.... nice work indeed!
@@ -3364,10 +2914,8 @@ https://github.com/tostos5963/PySimpleGUI-MahjongSolitaire
 This is the most enjoyable Issue on any PySimpleGUI repo!
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 01/16/2022 15:01:47
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 01/16/2022 15:01:47
 [round buttons implementation](https://github.com/DeusAres/roundButtons) with highlight, idling and disabled state on tk version
 
 ![unknown_2022 01 16-14 37_1](https://user-images.githubusercontent.com/60852205/149665438-b7f6bc47-0fc9-49b2-adf4-bd90f3c7e9d4.gif)
@@ -3375,17 +2923,13 @@ This is the most enjoyable Issue on any PySimpleGUI repo!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/16/2022 15:10:43
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/16/2022 15:10:43
 @DeusAres beautiful work!   I love the custom highlighting you added.  It added a level of sophistication and attractiveness that is not typical.  Nice job!
 
 ------------------------------
+[@WaterReNu](https://github.com/WaterReNu) 01/16/2022 21:53:25
 
-
-[@WaterReNu](https://github.com/WaterReNu)
-### 01/16/2022 21:53:25
 Hi Mike, looks like we have solved our issues - it was related to core over utlization, so we had to go down the path of asynchronous threading, plus a lot better non blocking handling of timing loops.
 
 1 week to go before first customer uses the new controller as a replacement for the old technology. Still a lot to do of course.
@@ -3412,10 +2956,8 @@ Paul
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/17/2022 18:34:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/17/2022 18:34:55
 Hi @WaterReNu !!  Definitely don't delete anything!  And thank you for posting the screenshot and images!   I'm so happy things are going in a positive direction for your team.
 
 ![image](https://user-images.githubusercontent.com/46163555/149822051-4f2a53d2-2b77-4dcf-ab13-1abe5ac724ed.png)
@@ -3429,10 +2971,8 @@ You've got a really clean-looking product.  Certainly doesn't look like a protot
 
 
 ------------------------------
+[@vohe](https://github.com/vohe) 01/23/2022 13:53:09
 
-
-[@vohe](https://github.com/vohe)
-### 01/23/2022 13:53:09
 The Januar Version is ready to go.
 I manged it , finally, to work without lastfm. For everyone who can use this:
 Audiorecorder,, records (e.g.) spotify web player - with free account. 
@@ -3446,10 +2986,8 @@ vohe
 feel free to download at: https://github.com/vohe/Audiorecorder
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 01/24/2022 12:06:52
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 01/24/2022 12:06:52
 https://github.com/DeusAres/python-poker-game
 
 ![ezgif-3-523b1dd597](https://user-images.githubusercontent.com/60852205/150779961-1cf6273c-0ef7-406a-85f6-09e19dd48694.gif)
@@ -3459,18 +2997,14 @@ Obviously the GUI was the easy part!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/24/2022 15:23:32
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/24/2022 15:23:32
 @vohe Nice!  I was going to comment over the weekend that the link provided is giving a 404 error, but waited, and glad I did since it now works, wish a screenshot and everything!  NICELY DONE!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/24/2022 15:28:45
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/24/2022 15:28:45
 @DeusAres WHOA!
 
 > Obviously the GUI was the easy part!
@@ -3491,10 +3025,8 @@ As I ponder the "Gallery" feature, I'm feeling the urge to include the ability t
 
 
 ------------------------------
+[@WaterReNu](https://github.com/WaterReNu) 01/27/2022 20:10:58
 
-
-[@WaterReNu](https://github.com/WaterReNu)
-### 01/27/2022 20:10:58
 Hi Mike,
 
 this is 99% complete, some buttons to be added. Shows the ability of pysimplegui. All of the layout is done in about 120 code lines, without compressing lines into each other.
@@ -3512,10 +3044,8 @@ I will get around to watching your course - bought it as one way to show support
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/27/2022 21:31:02
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/27/2022 21:31:02
 @WaterReNu your work is _**incredible**_!
 
 Thank you **SO much** for the support and for posting screenshots.  What an amazing application to have completed!
@@ -3530,10 +3060,8 @@ I'm really impressed that your team did so well with this when you started being
 
 
 ------------------------------
+[@WaterReNu](https://github.com/WaterReNu) 01/27/2022 23:00:52
 
-
-[@WaterReNu](https://github.com/WaterReNu)
-### 01/27/2022 23:00:52
 Mike,
 
 the checkbox indicators are very useful, and we take it a step further in testing. While that screen above produces logic driven status indicators, our other process windows take a different approach....
@@ -3555,10 +3083,8 @@ draw_point3 = irrigation_pressure_graph.move(-1,0)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 01/27/2022 23:21:27
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 01/27/2022 23:21:27
 Yes yes yes yes and yes on screen shot images.  
 
 I'm working on a gallery feature to make it easier for us all to share screenshots.
@@ -3576,19 +3102,15 @@ It's so much more **fun** when it's easy.  😃
 ![Core Usage](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/CPU%20Cores%20Dashboard%202.gif)
 
 ------------------------------
+[@kcl1s](https://github.com/kcl1s) 02/02/2022 00:35:46
 
-
-[@kcl1s](https://github.com/kcl1s)
-### 02/02/2022 00:35:46
 A little OpenCV gesture detection exercise. GUI in 7 lines of code with list comprehension.
 ![gestures ss](https://user-images.githubusercontent.com/13920899/152074284-5cb96a57-141b-458f-8ac5-a774e1938ee3.png)
 
 
 ------------------------------
+[@kcl1s](https://github.com/kcl1s) 02/02/2022 01:01:13
 
-
-[@kcl1s](https://github.com/kcl1s)
-### 02/02/2022 01:01:13
 My in progress OpenCV robot mobile platform 
 Control tab using graph element to display an echo return from servo sweep with ultrasonic sensor.
 ![robotGui](https://user-images.githubusercontent.com/13920899/152075942-c42bf63b-a380-4f09-b0d8-38d779959c21.png)
@@ -3597,10 +3119,8 @@ Face mesh tab showing 2 different frame images
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/02/2022 01:01:39
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/02/2022 01:01:39
 > GUI in 7 lines of code 
 
 ![image](https://user-images.githubusercontent.com/46163555/152076781-5435a95b-5789-45dd-945a-b813d27428f3.png)
@@ -3608,19 +3128,15 @@ Face mesh tab showing 2 different frame images
 That's stunning to hear... wow!!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/02/2022 01:13:44
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/02/2022 01:13:44
 @kcl1s thank you for taking the time to post these screenshots!  They're so inspirational to see.
 
 They're genuinesly the kind of things that makes me want to wake up and get started every day.
 
 ------------------------------
+[@cosme12](https://github.com/cosme12) 02/02/2022 01:50:45
 
-
-[@cosme12](https://github.com/cosme12)
-### 02/02/2022 01:50:45
 Well, here is the small project I'm working on with PySimpleGUI. There is a small Tennis Club that wanted to stop using excel sheets to track reservations and the small shop sells. The software uses 2 screens. The main screen where you track all the sales and the second screen where you book the reservations. Note: everything is in Spanish
 
 ![principal](https://user-images.githubusercontent.com/6611118/152079523-81e55c60-239f-4252-a088-909f114d4574.png)
@@ -3661,10 +3177,8 @@ Keep it up with the great work, and know this work gets people jobs!!
 
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/04/2022 09:56:34
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/04/2022 09:56:34
 Greeting Card Maker
 
 Since I retired (68y) I found it necessary to combat my flailing memory. I decided to take up learning pythom but it was rather meaningless since I hate doing uninteresting exercises. I discovered PySimpleGUI. I found it difficult at first until I read Mike's note to design the window line by line and it all fell into place for me. I had a real project since I wanted to send cards to family and especially my grandkids. Now comes the real crunch. I have to learn python but I am sorting it out as I go
@@ -3672,26 +3186,20 @@ Since I retired (68y) I found it necessary to combat my flailing memory. I decid
 .
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/04/2022 10:50:50
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/04/2022 10:50:50
 @eliffile wow a beautiful message to wake to and begin the day!  I'm thrilled it's the first thing I read.  Ever since seeing your post the other day your story has been on my mind and how remarkable it is that you've built this incredibly detailed application.  I've never seen a beginner at programming do something like this right out of the gates!  Honestly, never.  Please keep building!  Your pace of learning is genius.  Thank you so much for sharing your work and your story. I'm inspired!
 
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 02/04/2022 12:41:58
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 02/04/2022 12:41:58
 @eliffile that's a great project! 😍
 Can I ask you to upload it on a repository? I would love to take a look at the code on how you managed the card previewing
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/05/2022 10:16:38
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/05/2022 10:16:38
 
 Hi Mattia,
 
@@ -3707,7 +3215,6 @@ correctly.
 Regards,
 
 -- 
-
 Maarten
 
 NSW
@@ -3715,10 +3222,8 @@ Australia
 
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/05/2022 10:34:17
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/05/2022 10:34:17
 Hi,
 
 Thank you for the very kind words. It was extremely difficult when I 
@@ -3738,7 +3243,6 @@ working on it.
 Thank you for the amazing building blocks.
 
 -- 
-
 Maarten Venter
 
 NSW
@@ -3746,16 +3250,14 @@ Australia
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/05/2022 13:09:31
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/05/2022 13:09:31
 Hi Maarten!  It was your GUI that finally made the connection in my head that I've been searching for.  I've noted a phenomenon over the past 3 years about PySimpleGUI and users that have not made GUIs before, but from seemingly nowhere arrive, as you have, with a massively complex GUI that's mindblowing in the genius of it all.  The way you used sliders for positioning was so clever.  
 
 What I've noticed is that the PySimpleGUI building blocks are simple, easy to understand, and as you're finding with some practice, simple to assemble.  With enough time and patience large, complex creations are not only possible, but I've seen them happen numerous times.  Your GUI  in particular made the connection.
 
+[@PySimpleGUI](https://github.com/PySimpleGUI) Minecraft!
 
-### Minecraft!
 
 Minecraft is the analogy I've been searching for.  I kept thinking "Legos" for all this time, but that's a physical not a computing world concept.  I've been missing the computer model and Minecraft is that model.  
 
@@ -3766,10 +3268,8 @@ Thank you for the inspiration!  As I've scribbled in my lab book many times... i
  We all are exchanging ideas and inspiration equally.  I get back just as much as you're getting.  Thank you!
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/06/2022 09:04:59
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/06/2022 09:04:59
 On 04-02-2022 23:42, Mattia wrote:
 > @eliffile [1] that's a great project! 😍
 > Can I ask you to upload it on a repository? I would love to take a
@@ -3777,7 +3277,6 @@ On 04-02-2022 23:42, Mattia wrote:
 > 
 
 > --
-
 > Reply to this email directly, view it on GitHub [2], or unsubscribe
 > [3].
 > Triage notifications on the go with GitHub Mobile for iOS [4] or
@@ -3790,11 +3289,9 @@ On 04-02-2022 23:42, Mattia wrote:
 
 > ------
 
-
 Regards,
 
 -- 
-
 Maarten Venter
 
 NSW
@@ -3807,10 +3304,8 @@ Australia
 ![GreetingCardMaker1](https://user-images.githubusercontent.com/98583882/159427328-cc9de232-bb0f-486e-8228-3bb08a82a88a.png)
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 02/06/2022 14:15:24
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 02/06/2022 14:15:24
 Hi @eliff, where did you upload the files? I couldn't find them on your repositories
 
 I suppose you attached the files to the email, but it didn't work.
@@ -3824,10 +3319,8 @@ Also @PySimpleGUI maybe this messagess need to be edited, I see a  token in the 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/06/2022 14:32:34
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/06/2022 14:32:34
 @eliffile You must come back to GitHub in order to post images. Replying to an email will not include them in the GitHub issue you're replying to.  If you follow the link at the bottom, then you can see what your email replies look like.  I suggest **_always_** clicking the link at the bottom of the email if you are going to reply so that you can paste images in and the other "junk" doesn't get posted that emails often include.
 
 Anytime you get an email from GitHub about an issue, and you want to "reply", click this link at the bottom of the email so that you are replying on the GitHub site itself:
@@ -3838,10 +3331,8 @@ Anytime you get an email from GitHub about an issue, and you want to "reply", cl
 BTW - you're doing **_GREAT_**... you're a **genius** if you've not been told (I have a feeling you have).   You're WAY ahead of schedule in your learning.  I don't believe you are struggling in the least bit.  You're thriving.  I find programming difficult, every day.  As you pointed out, reading other people's code is challenging.  It's one of the most difficult things you can do in programming.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/06/2022 21:04:27
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/06/2022 21:04:27
 @eliffile  Maarten, you cannot reply to the GitHub emails.  You need to click the link at the bottom that says "view it on github".
 
 Click the link in this message that you get and you'll see that your email replies have a lot of trash that shows up and the images (if you included any) will not be visible.  You must use the GitHub site to reply to Issues if you want to avoid the trash and especially if you want any images to show up.
@@ -3849,10 +3340,8 @@ Click the link in this message that you get and you'll see that your email repli
 I do see you've uploaded your project to GitHub!  Very nice!  You're doing great!  Just be sure to use the GitHub site to reply to comments that you see arrive in email.
 
 ------------------------------
+[@bouc79](https://github.com/bouc79) 02/06/2022 22:41:19
 
-
-[@bouc79](https://github.com/bouc79)
-### 02/06/2022 22:41:19
 Example of integration between pysimplegui and pygame with real-time interaction between the two windows
 [Link](https://gitlab.com/_BOUC_/pysimplegui-pygame-integration-demo)
 
@@ -3868,10 +3357,8 @@ Example of integration between pysimplegui and pygame with real-time interaction
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/07/2022 01:20:01
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/07/2022 01:20:01
 @bouc79 Wowwwwww!  With Pygame 2.0 even!  YESSSSSSSSSSSSSssssssssssssss! (with a snake-hiss-accent ![image](https://user-images.githubusercontent.com/46163555/152710596-7e2688f9-06ce-44e3-910b-4a9a2620b489.png))
 ![image](https://user-images.githubusercontent.com/46163555/152710658-cd6b8983-c9f0-4943-b964-3c52d2ad651c.png)
 
@@ -3879,10 +3366,8 @@ I've had an outstanding issue that it's not working, but evidently is now!  What
 
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 02/08/2022 08:58:44
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 02/08/2022 08:58:44
 I'm currently working on a POD website uploader, good for niches and when uploading same type of content in dimensions and "category" and oh boy, it was a journey, but I am 90% done!
 
 It features a listbox that it's linked to an image previewer, that gets loaded through a thread
@@ -3897,10 +3382,8 @@ But I learned a lot of new things while working at this, and threading/multiproc
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/08/2022 14:07:12
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/08/2022 14:07:12
 I like the look @DeusAres and the description of your journey in making a highly responsive app using background processing.  
 
 I did some searching and still can't quite figure out the specific description of:
@@ -3920,10 +3403,8 @@ Thanks for taking the time to not just upload a screenshot, but a description of
 
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 02/08/2022 16:07:11
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 02/08/2022 16:07:11
 @PySimpleGUI 
 POD aka print on demand websites are sites where you can sell/buy artwok to be placed on products, that are printed when bought
 
@@ -3931,10 +3412,8 @@ The site where I to sell my artworks don't features a multiple images uploading 
 
 
 ------------------------------
+[@WAUthethird](https://github.com/WAUthethird) 02/16/2022 04:39:00
 
-
-[@WAUthethird](https://github.com/WAUthethird)
-### 02/16/2022 04:39:00
 I've created a program that utilizes text generation AI to make text conversion (such as converting text between first person and second person) fast and easy. The initial window asks what AI model you'd like and determines whether your computer can run it. If you have a GPU, you're given more options to play with.
 <img width="609" alt="Screen Shot 2022-02-15 at 9 21 58 PM" src="https://user-images.githubusercontent.com/17788745/154195675-56df8b5b-9d9b-47ce-8319-367214779178.png">
 After choosing a model, you're opened up to this screen. I've filled out the table with a few examples.
@@ -3951,28 +3430,22 @@ I'm really happy I used PySimpleGUI for this project. I definitely ended up usin
 [Code](https://github.com/WAUthethird/gpt-fewshot-batcher)
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/16/2022 17:06:49
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/16/2022 17:06:49
 Love it William ( @WAUthethird )!    ![image](https://user-images.githubusercontent.com/46163555/154317948-4844f294-6800-4f6a-81b7-f63709db5de1.png) I like AI GUIs, especially with being able to visually adjust parameters like you've got with the sliders.  I also used sliders for Threshold and Confidence in the YOLO demo.  Being able to change in real time or without having to restart the entire application is a real timesaver and advantage of using a GUI.  I like seeing 3 windows in your one application.  Very nice!
 
  
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/20/2022 06:53:03
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/20/2022 06:53:03
 ![Postcard Maker](https://user-images.githubusercontent.com/98583882/154831842-33be850f-c71f-43c1-83e1-fb675ebd72cc.png)
 
 I made the stamps with photos of my grandkids in Photoshop then turned them into buttons. Picking a stamp places it on the Card Base. The photo and writings follow when I click MakeCard. Positions are adjusted with the sliders. Just having a ton of fun. Thank you. I have Tim Tams - they go well with coffee.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/21/2022 01:28:50
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/21/2022 01:28:50
 Absolutely LOVE 💗 what you're doing @eliffile!
 
 Using sliders the way you did for positioning is **so clever**.
@@ -3982,10 +3455,8 @@ You may like Tabs in the future should you have a lot of settings that you can t
 Very different color scheme this time and it too is a really well-done palette like your last one.  Impressive is an understatement.  It's nice to see someone with your artistic skills using PySimpleGUI.  I'm envious... keep posting what you make!
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/21/2022 07:05:07
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/21/2022 07:05:07
 On 21-02-2022 12:29, PySimpleGUI wrote:
 > Absolutely LOVE 💗 what you're doing @eliffile [1]!
 > 
@@ -4005,7 +3476,6 @@ On 21-02-2022 12:29, PySimpleGUI wrote:
 > 
 
 > --
-
 > Reply to this email directly, view it on GitHub [2], or unsubscribe
 > [3].
 > Triage notifications on the go with GitHub Mobile for iOS [4] or
@@ -4016,7 +3486,6 @@ On 21-02-2022 12:29, PySimpleGUI wrote:
 > Links:
 
 > ------
-
 > [1] https://github.com/eliffile
 > [2] 
 > https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1046385741
@@ -4042,7 +3511,6 @@ Cheers,
 Maarten
 
 -- 
-
 Maarten Venter
 
 NSW
@@ -4050,10 +3518,8 @@ Australia
 
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 02/26/2022 05:17:23
 
-
-[@eliffile](https://github.com/eliffile)
-### 02/26/2022 05:17:23
 The stamp is selected on the default Tab
 ![PCM2](https://user-images.githubusercontent.com/98583882/155830128-288a9e5b-6f5d-4d71-abbb-cdb17839fa35.jpg)
 Then a photo is selected and manipulated for size and cropping
@@ -4064,10 +3530,8 @@ A variation on the previous version of the Postcard Maker this time using Tabs w
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 02/26/2022 20:47:06
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 02/26/2022 20:47:06
 Very nice Marteen!  I mentioned Tabs and less than a week later I see a new GUI from you with Tabs integrated into your application.  You're absolutely right..... tabs are quite useful when you've got limited real estate.  I've used them where the entire window is taken up by tabs so that switching to a new tab is like switching to an entirely different window, as well as smaller portions of the window, like you've done in your latest version.  
 
 I've been pondering your placement controls using sliders.  Short of using a Graph element so that you're dragging items around visually with the mouse, I am not sure of a better technique than what you've implemented.  A slider gives you better fine-granularity controls than using just the mouse.  With just a mouse (dragging images around), it's hard to "nudge" something a few pixels in one direction or another. 
@@ -4077,15 +3541,12 @@ There may be a hybrid kind of interface possible where an item to change is sele
 Great stuff!  Thanks for taking the time to post what you're making.
 
 ------------------------------
+[@Zilversmit](https://github.com/Zilversmit) 02/28/2022 00:22:25
 
-
-[@Zilversmit](https://github.com/Zilversmit)
-### 02/28/2022 00:22:25
 This is the GUI I designed for a cli Python program that manipulates a database.
 There are six buttons, the first three are pre-defined searches that produce reports. The fifth button
 
 allows the user to submit a SQL command to the database. This button triggers a pop--up window
-
 where the command may be typed in.  Another choice is to direct data to a CSV file for analysis in 
 a spreadsheet program.
 
@@ -4103,10 +3564,8 @@ this is the pop-up window:
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 03/03/2022 19:59:59
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 03/03/2022 19:59:59
 My application is WSA Sideloader, which can sideload Android apps on Windows Subsystem for Android on Windows 11 with minimal effort. Thanks to PySimpleGUI and tools like pynsist which helps with distributing the program, I have been easily able to code it based on what I know about Python so far.
 
 ![image](https://user-images.githubusercontent.com/44692189/156643293-2c4f4f27-392c-46aa-ad56-489be14f2c85.png)
@@ -4116,10 +3575,8 @@ It is currently available to download on both GitHub and Microsoft Store :)
 https://github.com/infinitepower18/WSA-Sideloader
 
 ------------------------------
+[@resnbl](https://github.com/resnbl) 03/07/2022 22:17:13
 
-
-[@resnbl](https://github.com/resnbl)
-### 03/07/2022 22:17:13
 Here is something very essential (or not...) for Doctor Who fans:
 ![tardis-show-small](https://user-images.githubusercontent.com/33208090/157126262-44cd4525-15de-4195-b6ee-39855845b741.png)
 
@@ -4131,10 +3588,8 @@ https://github.com/resnbl/pyTardis
 P.S.: Don't Blink!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/08/2022 22:12:47
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/08/2022 22:12:47
 SO many awesome posts!  @Zilversmit , @infinitepower18 , @resnbl thank you for taking the time to share what you've made and for the kind messages.   PySimpleGUI users have been so encouraging.  It really helps and is greatly appreciated.
 
 ![image](https://user-images.githubusercontent.com/46163555/157334139-cd16b3bd-a01b-4249-94e7-ce13b5ad19fa.png)
@@ -4142,10 +3597,8 @@ SO many awesome posts!  @Zilversmit , @infinitepower18 , @resnbl thank you for t
 Database, Android, and Image processing.... really diverse set of applications. 
 
 ------------------------------
+[@DeusAres](https://github.com/DeusAres) 03/14/2022 22:37:40
 
-
-[@DeusAres](https://github.com/DeusAres)
-### 03/14/2022 22:37:40
 How I wish universe was this simple to create!
 
 Made this demo for testing an algorithm for image distribution on a canvas
@@ -4154,42 +3607,32 @@ Made this demo for testing an algorithm for image distribution on a canvas
 
 
 ------------------------------
+[@NFadhlurrahman](https://github.com/NFadhlurrahman) 03/20/2022 13:47:20
 
-
-[@NFadhlurrahman](https://github.com/NFadhlurrahman)
-### 03/20/2022 13:47:20
 I made a tool for managing Python packages but uses GUI instead of CLI. It can install and uninstall packages, and see packages you have installed.
 
 ![image](https://user-images.githubusercontent.com/95117217/159165374-e81edb9d-341c-45df-9222-2ad6e2adad83.png)
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 03/20/2022 13:49:41
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 03/20/2022 13:49:41
 @NFadhlurrahman do you have a link to the repo? Would like to try it.
 
 ------------------------------
+[@NFadhlurrahman](https://github.com/NFadhlurrahman) 03/20/2022 14:01:09
 
-
-[@NFadhlurrahman](https://github.com/NFadhlurrahman)
-### 03/20/2022 14:01:09
 @infinitepower18 Sure! [Here it is.](https://github.com/NFadhlurrahman/package-manager-gui)
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 03/22/2022 07:14:12
 
-
-[@eliffile](https://github.com/eliffile)
-### 03/22/2022 07:14:12
 ![GreetingCardMaker1](https://user-images.githubusercontent.com/98583882/159427328-cc9de232-bb0f-486e-8228-3bb08a82a88a.png)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/24/2022 15:53:14
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/24/2022 15:53:14
 @NFadhlurrahman I really like what you've made and I'm learning a lot looking through your code.  I'm trying to make it 3.6 compatible as the `run` call isn't available in 3.6.  There are some tricks you did that I'm studying, copying learning from.  I need to make sure there are clear examples in the Demo Programs that show how to get results back from the `execute_command_subprocess` call.  
 
 For example, I _**think**_ this gets the right result for doing the "Get Info" operation:
@@ -4212,10 +3655,8 @@ https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/emojis/t
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/24/2022 16:02:11
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/24/2022 16:02:11
 @eliffile ... Wow Marten... your GUIs are mind-blowing.  I can't believe how much you pack into a single window!
 
 I have a suggestion/experiment for you to try.... 
@@ -4243,35 +3684,27 @@ sg.Window('Window Title', layout).read(close=True)
 Thank you for taking the time to post your work!  It's always fun to see what you're making.
 
 ------------------------------
+[@eliffile](https://github.com/eliffile) 03/24/2022 21:46:02
 
-
-[@eliffile](https://github.com/eliffile)
-### 03/24/2022 21:46:02
 Thank you, @PySimpleGUI . It really works well. I have updated the picture you your site (#10) but the links no longer work. Github and I don't seem to get along. I just don't get my head around it. Not a complaint. Thanks for the wonderful library that you have created. The possibilities are endless. 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 03/25/2022 17:24:08
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 03/25/2022 17:24:08
 @eliffile as always, you're quite welcome.  I hope to have The PySimpleGUI Catalog project up and running in the coming weeks so that posting screenshots will be built-in and trivial to share.  I usually drag and drop or copy and paste them into the GitHub comment.  
 
 Hmmmmm..... I'll do The Catalog project in multiple steps so that getting a screenshot taken and posted here, in this GitHub issue is easy.  That'll be a way to get started and be useful much sooner than waiting for the entire project to complete.  I'll make `psgscreenshot` place the image of your window on the clipboard so that tit can be pasted into the Issue.  I recall learning how tricky it is to place images on the clipboard last year.
 
 ------------------------------
+[@gfcwfzkm](https://github.com/gfcwfzkm) 04/06/2022 15:08:50
 
-
-[@gfcwfzkm](https://github.com/gfcwfzkm)
-### 04/06/2022 15:08:50
 As promised in a 3 months old issue about image resizing, I'm posting my screenshot to the finished application here
 ![Screenshot 2022-04-06 170717](https://user-images.githubusercontent.com/5095323/162006830-7abc3992-78e7-4c48-b65b-686e82d13605.png)
 This is a tool to convert it to an image format, that I have developed to suit small microcontrollers better - check if out if you're curious! https://github.com/gfcwfzkm/PIF-Image-Format
 
 ------------------------------
+[@schlopp96](https://github.com/schlopp96) 04/06/2022 21:17:33
 
-
-[@schlopp96](https://github.com/schlopp96)
-### 04/06/2022 21:17:33
 Yo @MikeTheWatchGuy ! What's up man!
 
 Recently created a video-to-audio file converter also capable of downloading videos, or _just the audio_ from said videos, from YouTube. I call it _**V2Mp3**_ (Video to Mp3).
@@ -4282,29 +3715,23 @@ Recently created a video-to-audio file converter also capable of downloading vid
 This is just the initial release version - I plan to add some more features such as a button to allow choosing the directory to save  downloaded/converted files.
 
 ------------------------------
+[@wrwetzel](https://github.com/wrwetzel) 04/16/2022 12:27:46
 
-
-[@wrwetzel](https://github.com/wrwetzel)
-### 04/16/2022 12:27:46
 Per request from PySimpleGUI here is a screenshot of Birdland. I actually thought I posted one several months ago but I don't see it.
 ![birdland](https://user-images.githubusercontent.com/898959/163674955-a83b5809-a7c6-4409-b511-0882014b96b5.png)
 
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/16/2022 13:08:06
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/16/2022 13:08:06
 ![image](https://user-images.githubusercontent.com/46163555/163676135-526eb817-c6fd-4dc9-a46b-401947af5d2b.png)
 
 @wrwetzel you certainly didn't post a shot of that!  W.O.W.   !
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/16/2022 19:21:39
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/16/2022 19:21:39
 Yo Doc @schlopp96 !
 
 Very nice work on V2Mp3.. drop a link to your repo if you're ok with sharing your work.  Thanks for taking the time to post a screenshot!  
@@ -4314,17 +3741,13 @@ Very nice work on V2Mp3.. drop a link to your repo if you're ok with sharing you
 Come back with anything you add too... don't be shy 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 04/16/2022 19:23:26
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 04/16/2022 19:23:26
 @gfcwfzkm ... you've certainly way outdone the little psgresizer app I use to do my conversions and resizing.  I really like the round color swatches!  
 
 ------------------------------
+[@schlopp96](https://github.com/schlopp96) 04/17/2022 01:08:06
 
-
-[@schlopp96](https://github.com/schlopp96)
-### 04/17/2022 01:08:06
 > Yo Doc @schlopp96 !
 > 
 > Very nice work on V2Mp3.. drop a link to your repo if you're ok with sharing your work. Thanks for taking the time to post a screenshot!
@@ -4340,29 +3763,23 @@ I really appreciate the kind words!
 Edit: Posted the wrong repository link.... Fixed! 
 
 ------------------------------
+[@hseera](https://github.com/hseera) 05/01/2022 11:03:33
 
-
-[@hseera](https://github.com/hseera)
-### 05/01/2022 11:03:33
 Per request from PySimpleGUI here is a screenshot of AWS Cloudfront utility I created using PySimpleGUI. It allows you to delete, invalidate, enable or disable a cloudfront distribution.
 ![cloudfront-manager](https://user-images.githubusercontent.com/59352356/166143098-ed907d23-2366-4b70-803b-b97cc530efee.png)
 .
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 05/01/2022 12:40:06
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 05/01/2022 12:40:06
 Hi! Here is an update on my GUI, thanks to the awesome work of PySimpleGUI making it easy for me :)
 
 ![image](https://user-images.githubusercontent.com/29800532/166146409-e37eefaf-6392-425e-90db-adeae0aaba71.png)
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 05/02/2022 15:50:00
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 05/02/2022 15:50:00
 Recently redesigned my PySimpleGUI based application WSA Sideloader with a modern looking UI in version 1.2!
 
 ![image](https://user-images.githubusercontent.com/44692189/166264588-9a02a01b-0317-4460-a800-0816f6d4686a.png)
@@ -4372,17 +3789,13 @@ Recently redesigned my PySimpleGUI based application WSA Sideloader with a moder
 Anyone with Windows 11 can try out my program by downloading from either [GitHub releases](https://github.com/infinitepower18/WSA-Sideloader/releases) or [Microsoft Store](https://apps.microsoft.com/store/detail/wsa-sideloader/XP8K140DLVSC0L). More updates are coming over the next few months!
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 05/14/2022 00:51:44
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 05/14/2022 00:51:44
 @infinitepower18 I like the look of your GUI; colors and buttons. Also nice to have rounded windows I'm guessing from Windows 11.
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 05/31/2022 06:58:52
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 05/31/2022 06:58:52
 ı create my own text editor
 but not just text editor
 1- text editor 2-code editor 3-python runner 4- terminal
@@ -4408,19 +3821,15 @@ https://github.com/ArchKubi/PythonChan/tree/main/Gnuchan-TextEditor
 
 
 ------------------------------
+[@eagleEggs](https://github.com/eagleEggs) 05/31/2022 18:14:11
 
-
-[@eagleEggs](https://github.com/eagleEggs)
-### 05/31/2022 18:14:11
 @ArchKubi this looks super nice.
 
 I'd also like to have a numbered line within a multiline. Looked for solutions in the past but came up with nothing. If you find any let me know - I'll also start looking at it again.
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 05/31/2022 18:48:51
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 05/31/2022 18:48:51
 too much missing in my project ı'm noob python user
 1: ı don't know how ı write multiline number column ı search google and github no one use pysimplegui
 ı found solution but this is tkinter not pysimplegui
@@ -4432,26 +3841,20 @@ too much missing in my project ı'm noob python user
 can you help my project? @eagleEggs 
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 05/31/2022 19:16:45
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 05/31/2022 19:16:45
 why there is no PySimpleGUI community discord server
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 05/31/2022 19:21:13
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 05/31/2022 19:21:13
 > why there is no PySimpleGUI community discord server
 
 It's not how I want the project to be structured.  The discussion feature isn't enabled on GitHub and the PySimpleGUI social media accounts are shut down for similar reasons.  
 
 ------------------------------
+[@wrwetzel](https://github.com/wrwetzel) 06/01/2022 20:37:29
 
-
-[@wrwetzel](https://github.com/wrwetzel)
-### 06/01/2022 20:37:29
 I know that this is an issue for screenshots but perhaps a link to the site of a project using PySimpleGUI would also be welcome I believe that "Birdland Musician's Assistant" is ready for testing from a few 'friendly' users. If, in addition to being a PySimpleGUI user, you are also a musician, especially if you have a collection of PDF fakebooks, then you might find this interesting. And the person with the id of 'PySimpleGUI' specifically asked to see this several weeks ago. 
 
     https://birdland.wrwetzel.com/
@@ -4460,10 +3863,8 @@ Thanks,
 Bill
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/02/2022 10:59:03
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/02/2022 10:59:03
 Hiya @wrwetzel (Bill)!  It's "mike" here with the @PySimpleGUI account name.  
 
 This is indeed an ideal place to share that you're opening up your application for testing!  I love it!  Thank you for making your post.  The WIKI is another location that you can post in, but it gets very little traffic.
@@ -4474,10 +3875,8 @@ If it's OK with you, I'll also add a post to the Announcements section about the
 
 
 ------------------------------
+[@wrwetzel](https://github.com/wrwetzel) 06/02/2022 19:09:14
 
-
-[@wrwetzel](https://github.com/wrwetzel)
-### 06/02/2022 19:09:14
 Mike,
 
 Please don't add a post to the Announcements just yet. One of your PySimpleGUI users in Germany is testing in a new environment and found several rough edges. I'd like to wait until I resolve those before talking to a wider audience.
@@ -4492,10 +3891,8 @@ Thanks,
 Bill
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/02/2022 19:20:36
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/02/2022 19:20:36
 > Please don't add a post to the Announcements just yet
 
 No problem... it's why I asked first.
@@ -4505,10 +3902,8 @@ I'll give it a try later for sure!
 Lemme know when you're ready for some attention via an announcement and I'll be happy to give a shout-out.
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/04/2022 21:54:53
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/04/2022 21:54:53
 Just some proof of concept! Using Pillow to generate a line that can be updated in realtime as a response to the slider input. Im hoping to expand this to some more complex interactive graphics within pysimplegui using pillow as the 'renderer'.
 
 <img width="442" alt="image" src="https://user-images.githubusercontent.com/7659338/172026522-d30041e9-1f8a-4438-80fa-79a086b91aa8.png">
@@ -4558,10 +3953,8 @@ window.close()
 ```
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 22:17:00
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/04/2022 22:17:00
 @EdwardChamberlain I love it! ![image](https://user-images.githubusercontent.com/46163555/172027106-e06b5449-cb03-4782-ad1d-5f65e6e70318.png)
 
 
@@ -4576,10 +3969,8 @@ There's a nice slider posted quite some time back that uses a Graph element as w
 [EDIT - can you post the example.png image or make it into a BASE64 that can be included in your source?]
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 22:27:46
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/04/2022 22:27:46
 @EdwardChamberlain take a look at the posts by @neovich .  He did a VU meter and custom sliders that are really beautiful and 100% done with pure PySimpleGUI.  No PIL required.
 
 ![PySimpleGUI Meter Example](https://user-images.githubusercontent.com/46163555/172027346-093f9720-dcad-4898-83be-90aa665392cc.gif)
@@ -4587,10 +3978,8 @@ There's a nice slider posted quite some time back that uses a Graph element as w
 
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/04/2022 22:57:41
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/04/2022 22:57:41
 Every day is a learning day:
 <img width="442" alt="image" src="https://user-images.githubusercontent.com/7659338/172027840-a905fc39-90d0-4d2e-971b-8275e92b3889.png">
 
@@ -4630,10 +4019,8 @@ window.close()
 [I added an init to the above PIL example to generate the initial blank image]
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 23:17:34
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/04/2022 23:17:34
 One of the points of emphasis in the Udemy course's lesson on the Graph element is that it's a "Gateway Element".  From it you can make all kinds of custom elements.   There's an enhancement that I have about 2/3 done called PySimpleGUI+ that is a more formal way of creating these custom elements.
 
 I use one that Jason made call the "Gauge" frequently.  
@@ -4656,10 +4043,8 @@ The Graph Element demo program Demo_Graph_Drawing_And_Dragging_Figures_2_Windows
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 23:34:38
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/04/2022 23:34:38
 > Every day is a learning day
 
 Most certainly!
@@ -4676,10 +4061,8 @@ Check out the Demo Programs and see if they stir your very active imagination an
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 06/05/2022 00:10:14
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 06/05/2022 00:10:14
 Sneak peek of my upcoming update, which includes Windows Explorer integration by associating the .apk file extension with my program!
 
 ![image](https://user-images.githubusercontent.com/44692189/172029397-c16ddad3-05fe-4567-a501-b4c29eaa00c8.png)
@@ -4693,19 +4076,15 @@ https://user-images.githubusercontent.com/44692189/172029588-76de9de9-af35-4d65-
 Apart from that, the update is pretty much ready and version 1.3 will be released in the next few days!
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 06/05/2022 00:26:52
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 06/05/2022 00:26:52
 Forgot to mention, the application now has both light and dark themes and the theme that is applied depends on your Windows settings!
 
 https://user-images.githubusercontent.com/44692189/172029887-95c41703-d396-457f-9c11-7dd3e304de81.mp4
 
 ------------------------------
+[@macdeport](https://github.com/macdeport) 06/05/2022 08:35:05
 
-
-[@macdeport](https://github.com/macdeport)
-### 06/05/2022 08:35:05
 https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1146702983
  
 ![floating-screenshot-102617](https://user-images.githubusercontent.com/26068595/172042251-f8d06a2c-c8c5-4f20-894c-3ce062d29f83.jpg)
@@ -4716,10 +4095,8 @@ https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1146702983
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/05/2022 12:11:44
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/05/2022 12:11:44
 Ah, right you are @macdeport 
 
 Fixed things up and made some improvements so that it's more flexible when changes are made.  It's been a while since it was updated.  This one goes back to the early days.
@@ -4729,10 +4106,8 @@ Fixed things up and made some improvements so that it's more flexible when chang
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/05/2022 12:13:02
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/05/2022 12:13:02
 @infinitepower18 
 ![image](https://user-images.githubusercontent.com/46163555/172049829-4979a663-3940-4d98-b286-222f2ff202f6.png)
 
@@ -4740,10 +4115,8 @@ WOW!  You've really pushed the envelope.  I liked reading about the compilation 
 
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 19:33:58
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/05/2022 19:33:58
 <img width="642" alt="image" src="https://user-images.githubusercontent.com/7659338/172067277-d6f77eb5-ed4c-4f7a-9883-1efe6998b1e4.png">
 
 This was a fun little project to learn about the Graph element!
@@ -4903,10 +4276,8 @@ default_cube_edges = [
 ```
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/05/2022 19:42:55
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/05/2022 19:42:55
 I wasn't able to install planar_projection so I'll take your word on it working as well as you having fun
 ![image](https://user-images.githubusercontent.com/46163555/172067615-b0548540-0b97-4ab5-bb20-6b7227ce0dac.png)
 
@@ -4925,19 +4296,15 @@ Being able to define your own coordinate system really makes things so much easi
 
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 19:45:47
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/05/2022 19:45:47
 > I wasn't able to install planar_projection
 
 You shouldn't need to install it, its just a python script that needs to be imported. I included both scripts in the post above but the division between the two scripts isnt very clear!
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 06/05/2022 20:27:42
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 06/05/2022 20:27:42
 > @infinitepower18 ![image](https://user-images.githubusercontent.com/46163555/172049829-4979a663-3940-4d98-b286-222f2ff202f6.png)
 > 
 > WOW! You've really pushed the envelope. I liked reading about the compilation you're doing. Much to learn from your project. Very nicely done!
@@ -4947,10 +4314,8 @@ I have written instructions on how to compile it in the project's readme. These 
 Once compiled, you can use Inno Setup to bundle the compiled files into an installer for distribution.
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 21:01:07
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/05/2022 21:01:07
 Can you Render the [Utah teapot](https://en.wikipedia.org/wiki/Utah_teapot) with PySimplyGUI? The answer is yes: 
 
 https://user-images.githubusercontent.com/7659338/172070354-ad7288d5-eefb-4216-9076-f8baa4a35aae.mov
@@ -4959,19 +4324,15 @@ https://user-images.githubusercontent.com/7659338/172070354-ad7288d5-eefb-4216-9
 
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 06/06/2022 02:12:11
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 06/06/2022 02:12:11
 if one day PySimpleGUI have interactive display this is make me happy alien
 ![2022-06-06-051005_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/172083125-16c95d55-fdfa-4f0e-a89c-641fab7cc29e.png)
 ı use python because python have this beautiful library 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/06/2022 17:20:18
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/06/2022 17:20:18
 WOW @EdwardChamberlain  !!
 
 I sent your video to my friend Tim.... who's a veteran in the computer graphics field...
@@ -4983,17 +4344,13 @@ He replied....
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2022 07:07:21
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/07/2022 07:07:21
 @EdwardChamberlain Do you have a repo containing any of these new creations?  I would love to run the teapot program for example.
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/07/2022 12:23:18
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/07/2022 12:23:18
 @PySimpleGUI I have just created a repo for the 3D viewer. I have also added polygon rendering. This is all driven using just maths and the Graph element.
 
 <img width="481" alt="image" src="https://user-images.githubusercontent.com/7659338/172377640-1bf60b36-d49d-49e5-a96a-baf87934b1af.png">
@@ -5004,10 +4361,8 @@ https://github.com/EdwardChamberlain/PySimpleGUI-3D-Viewer
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2022 12:31:48
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/07/2022 12:31:48
 Thank you!
 
 ![image](https://user-images.githubusercontent.com/46163555/172379207-84a42384-2936-4d2f-8e03-848710972eba.png)
@@ -5023,10 +4378,8 @@ Worked great after that.
 VERY nice readme file!  Looking sharp!!
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2022 12:48:16
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/07/2022 12:48:16
 I haven't made this available publicly, but I put a hacked up version of your code up on Trinket so a few friends can play with it without having to install Python, PySimpleGUI, etc..  Sorry that I de-3.10'd the code by removing the match.. .but I needed to run the code in a lower version of Python.
 ![image](https://user-images.githubusercontent.com/46163555/172382544-e6393442-a436-496a-b3d9-c2dcd15823c9.png)
 
@@ -5034,19 +4387,15 @@ I haven't made this available publicly, but I put a hacked up version of your co
 https://trinket.io/pygame/5cb3229fe8
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/07/2022 20:23:54
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/07/2022 20:23:54
 Thats awesome @PySimpleGUI ! I hadn't heard of Trinket before. 
 
 `match` was new to me for this project - quite a nice addition to the language but being new its a bit of a pain when it comes to backwards compatibility. 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/08/2022 11:33:09
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/08/2022 11:33:09
 > its a bit of a pain when it comes to backwards compatibility.
 
 This is the exact problem with using language features that are specific to a version of Python.  It causes one to ponder "what % of the Python community am I willing to leave behind".
@@ -5066,15 +4415,13 @@ It changes day to day.  Opinions vary, but I've always felt like users are more 
 I've mentioned this a few times over the years.  I chose to support 3.4+ to get the most users possible.  For Demo Programs, I'm a bit more open to 3.6+ for the Demo Programs and other repos, but don't go any higher than that for the same reason of wanting a big tent.
 
 ------------------------------
+[@lonewanderer27](https://github.com/lonewanderer27) 06/09/2022 09:12:22
 
-
-[@lonewanderer27](https://github.com/lonewanderer27)
-### 06/09/2022 09:12:22
 Hi everyone!
 I'm currently writing a tool of some sort for a Visual Novel game. It mainly targets those who want to make a python chat bot that speaks exactly like the characters from the Visual Novel.
 
+[@lonewanderer27](https://github.com/lonewanderer27) Extracting Assets Tab
 
-### Extracting Assets Tab
 ![Screenshot_2022-06-09_16-45-48](https://user-images.githubusercontent.com/28822916/172808192-31553218-949d-432a-a740-68266242f98a.png)
 
 The GUI doesn't become unresponsive thanks to perform_long_operation. And the write_event_value made it easy to pass the current file that is being extracted, as well as the current progress of the extraction from a separate python program:
@@ -5082,16 +4429,16 @@ The GUI doesn't become unresponsive thanks to perform_long_operation. And the wr
 Though I kinda wish this also works in the QT port as I prefer the look of that instead of Tkinter. But this will do for now!
 
 
+[@lonewanderer27](https://github.com/lonewanderer27) Extracting Scripts Tab
 
-### Extracting Scripts Tab
 ![Screenshot_2022-06-09_16-51-42](https://user-images.githubusercontent.com/28822916/172809439-a7e5f150-2c9f-48d0-9f10-b469c6057079.png)
 
 The layout tools worked very well in keeping the check boxes organized:
 ![Peek 2022-06-09 16-52](https://user-images.githubusercontent.com/28822916/172815459-afddc0de-7ac3-4be4-9d96-76cfe86529dc.gif)
 
 
+[@lonewanderer27](https://github.com/lonewanderer27) About Window
 
-### About Window
 I really like the About window of GNOME / GTK apps so I made mine look similar to it:
 ![Peek 2022-06-09 17-08](https://user-images.githubusercontent.com/28822916/172815544-67924be4-00f8-4016-a34e-a96c6b82a200.gif)
 
@@ -5101,10 +4448,8 @@ https://github.com/lonewanderer27/Camp-Buddy-Toolbox
 And I am legally required to disclose the code anyway since I used and modified (a bit) the code of the extractor program (which is GPL-3 licensed)
 
 ------------------------------
+[@VatsalP](https://github.com/VatsalP) 06/11/2022 00:30:56
 
-
-[@VatsalP](https://github.com/VatsalP)
-### 06/11/2022 00:30:56
 Made a small gui utility to merge pdf(didn't like idea of using some website to do it)
 
 ![PDF Merge](https://raw.githubusercontent.com/VatsalP/pdf_utility/master/pdf_utility_belt/res/images/screenshots/Capture.PNG)
@@ -5112,10 +4457,8 @@ Made a small gui utility to merge pdf(didn't like idea of using some website to 
 link to repo in case anyone to download or view source: https://github.com/VatsalP/pdf_utility
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/11/2022 21:43:40
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/11/2022 21:43:40
 Hi @lonewanderer27 !  
 
 WOW you have a LOT of windows in your application 
@@ -5136,10 +4479,8 @@ By the way, I finally wisened up that since there are developers using threading
 Thank you for taking the time to come share your creation!  These stories, screenshots, and hearing what you're all making, is **_incredibly motivating_**.  It's what keeps me working hard on PySimpleGUI.  It results in me wanting to make PySimpleGUI better
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/11/2022 21:59:48
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/11/2022 21:59:48
 @VatsalP I totally get wanting to write your own PDF utilities.
 
 One of the first group of utilities I made using PySimpleGUI were for extracting images from PDF files.
@@ -5166,10 +4507,8 @@ print(event, values)
 
 
 ------------------------------
+[@lonewanderer27](https://github.com/lonewanderer27) 06/12/2022 17:56:41
 
-
-[@lonewanderer27](https://github.com/lonewanderer27)
-### 06/12/2022 17:56:41
  Wow I did not expected a core dev to reply to my post! Thank you so much @PySimpleGUI! You made my day after I just worked through a whole day in implementing all the functionalities in Extracting Scripts Tab
 
 The app is sort of complete now but I haven't tested it on Windows as I daily drive Linux so I need to make sure it works there as most of Camp Buddy players are Windows users 😭
@@ -5187,55 +4526,43 @@ Especially the cookbook, that's where I learned how to combine window.long_opera
 Many thanks again!! 😁
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 06/13/2022 11:49:29
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 06/13/2022 11:49:29
 ![2022-06-13-144526_70x268_scrot](https://user-images.githubusercontent.com/80429360/173346970-545de9ca-3049-4072-9fb5-a3e959ac860c.png)
 ı lose my hope ı don't know how ı write like this and ı try autocomplete but ı feel ı'm idiot please someone help my code
 [gnuchan-textEditor.txt](https://github.com/PySimpleGUI/PySimpleGUI/files/8890737/gnuchan-textEditor.txt)
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 06/15/2022 10:41:07
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 06/15/2022 10:41:07
 ![2022-06-15-134050_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/173808409-20812eb8-c343-4af6-96b6-8469924e7acd.png)
 is this bug icon not change ?
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 06/18/2022 12:50:10
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 06/18/2022 12:50:10
 ![2022-06-18-154942_231x272_scrot](https://user-images.githubusercontent.com/80429360/174438406-20826100-f0fa-48df-b364-613012b7f9a8.png)
 is this pysimplegui mascot right?
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/20/2022 11:28:20
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/20/2022 11:28:20
 ![image](https://user-images.githubusercontent.com/46163555/174591871-98e15211-357a-46a1-9561-d9df94dfedee.png)
 
 Hi @ArchKubi .... I suppose you could call this little fella our "mascot".  I had a set of emoji's created a while back with the PySimpleGUI logo on the chest so I can use them within PySimpleGUI for testing, error messages, etc.  They've added some personality to the project.
 
 
 ------------------------------
+[@ArchKubi](https://github.com/ArchKubi) 06/20/2022 16:22:36
 
-
-[@ArchKubi](https://github.com/ArchKubi)
-### 06/20/2022 16:22:36
 ![2022-06-20-192110_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644113-3047c3e0-19e8-4e9e-8db5-30691034f002.png)
 i did something like this
 ![2022-06-20-192226_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644255-dc4ccebc-6c0c-4d82-a9a7-7fd82b14669b.png)
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/20/2022 16:42:25
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/20/2022 16:42:25
 ```
 M""MMM""MMM""M MMP"""""YMM M""MMM""MMM""M dP dP dP 
 M  MMM  MMM  M M' .mmm. `M M  MMM  MMM  M 88 88 88 
@@ -5257,10 +4584,8 @@ I'll be smiling bigger than the Emoji the rest of the day!
 
 
 ------------------------------
+[@jerrylususu](https://github.com/jerrylususu) 06/23/2022 13:05:19
 
-
-[@jerrylususu](https://github.com/jerrylususu)
-### 06/23/2022 13:05:19
 Simple i18n technique for PySimpleGUI programs: Show a language selection window when program starts, then load the translated strings in the selected language.
 
 Code: https://github.com/jerrylususu/PySimpleGUI-Demo-LangSelect
@@ -5270,10 +4595,8 @@ Screenshot
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 06/23/2022 13:13:46
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 06/23/2022 13:13:46
 Thank you SO much for posting the screenshots @jerrylususu !
 
 Your code inspired the new section that I just created in the eCookbook!
@@ -5285,10 +4608,8 @@ https://pysimplegui.trinket.io/demo-programs#/user-submitted-examples/language-s
 Thanks for the inspiration!
 
 ------------------------------
+[@jerrylususu](https://github.com/jerrylususu) 06/23/2022 13:21:50
 
-
-[@jerrylususu](https://github.com/jerrylususu)
-### 06/23/2022 13:21:50
 > Thank you SO much for posting the screenshots @jerrylususu !
 > 
 > Your code inspired the new section that I just created in the eCookbook!
@@ -5302,10 +4623,8 @@ Thanks for the inspiration!
 Good to know! The problem of not display Chinese characters is probably caused by missing fonts. To workaround this and show the usefulness of my snippet, I added a French selection which seems to work in the online environment. Hope that helps!
 
 ------------------------------
+[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/24/2022 23:21:02
 
-
-[@EdwardChamberlain](https://github.com/EdwardChamberlain)
-### 06/24/2022 23:21:02
 A quick demo differentiating 'release', 'down' and 'drag' events from the graph. Perhaps there is a simpler way to do this? 
 <img width="642" alt="Screenshot 2022-06-25 at 12 17 12 am" src="https://user-images.githubusercontent.com/7659338/175724689-0ff3533f-7e9e-4ba8-880f-e1a6666d09e6.png">
 
@@ -5405,10 +4724,8 @@ while True:
 ```
 
 ------------------------------
+[@schlopp96](https://github.com/schlopp96) 06/27/2022 04:35:24
 
-
-[@schlopp96](https://github.com/schlopp96)
-### 06/27/2022 04:35:24
 Yo! Here's some quick screenshots of several applications I've created lately:
 
 From [PyFiTransfer](https://github.com/schlopp96/PyFiTransfer):
@@ -5421,10 +4738,8 @@ As you can see, I've developed a rather simplistic style prioritizing functional
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 07/06/2022 14:42:25
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 07/06/2022 14:42:25
 Working on packaging my app into MSIX for Microsoft Store distribution and the results are looking really promising! Just need to fix some working directory related issues.
 
 The benefit of packaging into MSIX is seamless installation, updating and uninstallation.
@@ -5434,10 +4749,8 @@ https://user-images.githubusercontent.com/44692189/177577315-e297e19c-661b-4531-
 I will probably publish a tutorial soon on how to package your Python project into MSIX as there's hardly any information about it.
 
 ------------------------------
+[@schlopp96](https://github.com/schlopp96) 07/10/2022 02:17:23
 
-
-[@schlopp96](https://github.com/schlopp96)
-### 07/10/2022 02:17:23
 > Working on packaging my app into MSIX for Microsoft Store distribution and the results are looking really promising! Just need to fix some working directory related issues.
 > 
 > The benefit of packaging into MSIX is seamless installation, updating and uninstallation.
@@ -5452,10 +4765,8 @@ I've personally had a lot of issues trying to use **pyinstaller** with several o
 I really like the easy-looking install/uninstall process and smooth setup that MSIX appears to have.
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 07/10/2022 05:21:41
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 07/10/2022 05:21:41
 > > Working on packaging my app into MSIX for Microsoft Store distribution and the results are looking really promising! Just need to fix some working directory related issues.
 > > The benefit of packaging into MSIX is seamless installation, updating and uninstallation.
 > > 2022-07-06.20-39-16.mp4
@@ -5488,10 +4799,8 @@ The generated certificate is mainly for testing purposes. Once it's uploaded to 
 If I recall I didn't have to make any changes to my code for Nuitka to compile properly but for MSIX I did face issues related to working directory due to the way they're run. So it depends on how your app works and you may need to refer to Microsoft docs. In the end I could get my app to run properly but it took some time to figure things out.
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 07/10/2022 06:13:54
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 07/10/2022 06:13:54
 @schlopp96 
 > As you can see, I've developed a rather simplistic style prioritizing functionality and simplicity... Maybe not the prettiest of GUIs, but very functional and to-the-point!
 
@@ -5507,19 +4816,15 @@ I had SO much to learn and still have more to learn.  These were on day 2 of PyS
 
 
 ------------------------------
+[@infinitepower18](https://github.com/infinitepower18) 07/17/2022 10:53:53
 
-
-[@infinitepower18](https://github.com/infinitepower18)
-### 07/17/2022 10:53:53
 The new MSIX version of my application is now in the Microsoft Store! Feel free to check out the first PySimpleGUI program packaged into MSIX 🙂 https://www.microsoft.com/store/apps/9NMFSJB25QJR
 
 (You need Windows 11 or else it won't let you install.)
 
 ------------------------------
+[@pithoner](https://github.com/pithoner) 07/30/2022 01:07:47
 
-
-[@pithoner](https://github.com/pithoner)
-### 07/30/2022 01:07:47
 Hi there, here are some screenshots of a fairly simple inventory manager that I'm working on. It uses an sql database to store the information. 
 ![image](https://user-images.githubusercontent.com/109999434/181864216-3c27c3d4-ab66-4e70-bc22-cee0d89cbd3d.png)
 ![image](https://user-images.githubusercontent.com/109999434/181864251-73a19926-9e20-439f-8305-f38fa7f4db93.png)
@@ -5527,10 +4832,8 @@ Hi there, here are some screenshots of a fairly simple inventory manager that I'
 
 
 ------------------------------
+[@kcl1s](https://github.com/kcl1s) 08/11/2022 18:55:00
 
-
-[@kcl1s](https://github.com/kcl1s)
-### 08/11/2022 18:55:00
 Been a while since I have posted a project using my favorite GUI.
 This is Python on a RPi. I created a stand alone lab project to help students measure the speed of sound using an ultrasonic sensor. I have an explainer video on YT https://youtu.be/uA4RKeCI7r4
 Thanks for the great library!
@@ -5538,10 +4841,8 @@ Thanks for the great library!
 
 
 ------------------------------
+[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2022 17:48:51
 
-
-[@PySimpleGUI](https://github.com/PySimpleGUI)
-### 08/12/2022 17:48:51
 Very nice @kcl1s !! Love it!  ![image](https://user-images.githubusercontent.com/46163555/184414923-d4af6859-be66-40c1-9220-c37532115a7d.png)
 
 It's not common to see screenshots from a Pi.  The bonus of it being used to teach students AND having an accompanying YouTube video gets you extra credit!
@@ -5552,10 +4853,8 @@ And of course, thank you for the kind words... they help a lot!
 
 
 ------------------------------
+[@dennisbyington](https://github.com/dennisbyington) 08/24/2022 17:45:32
 
-
-[@dennisbyington](https://github.com/dennisbyington)
-### 08/24/2022 17:45:32
 Hi all,
 
 Here's a screenshot from a Wordle clone I made to learn GUIs.  I used PSG after a few failed attempts with other GUI libraries - luckily PSG was far easier to understand and implement.  Thank you for building a great product!  
@@ -5564,4 +4863,3 @@ Here's a screenshot from a Wordle clone I made to learn GUIs.  I used PSG after 
 
 
 ------------------------------
-
