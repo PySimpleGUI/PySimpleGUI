@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.84 Unreleased"
+version = __version__ = "4.60.3.85 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -222,6 +222,8 @@ _change_log = """
             needing to specify each thing.  If want more control, then use the Multline directly
     4.60.3.84
         Output element - updated docstring
+    4.60.3.85
+        Combo Element - new parameter enable_per_char_events.  When True will get an event when individual characters are entered.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2303,7 +2305,7 @@ class Combo(Element):
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
     """
 
-    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, button_background_color=None, button_arrow_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False, tooltip=None, readonly=False, font=None, visible=True, metadata=None):
+    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, button_background_color=None, button_arrow_color=None, bind_return_key=False, change_submits=False, enable_events=False, enable_per_char_events=None, disabled=False, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False, tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values:                  values to choose. While displayed as text, the items returned are what the caller supplied, not text
         :type values:                   List[Any] or Tuple[Any]
@@ -2329,6 +2331,8 @@ class Combo(Element):
         :type change_submits:           (bool)
         :param enable_events:           Turns on the element specific events. Combo event is when a choice is made
         :type enable_events:            (bool)
+        :param enable_per_char_events:  Enables generation of events for every character that's input. This is like the Input element's events
+        :type enable_per_char_events:   (bool)
         :param disabled:                set disable state for element
         :type disabled:                 (bool)
         :param key:                     Used with window.find_element and with return values to uniquely identify this element
@@ -2378,7 +2382,7 @@ class Combo(Element):
             self.button_arrow_color = theme_button_color()[0]
         else:
             self.button_arrow_color = button_arrow_color
-
+        self.enable_per_char_events = enable_per_char_events
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -16076,6 +16080,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo.bind('<<ComboboxSelected>>', element._ComboboxSelectHandler)
                 if element.BindReturnKey:
                     element.TKCombo.bind('<Return>', element._ComboboxSelectHandler)
+                if element.enable_per_char_events:
+                    element.TKCombo.bind('<Key>', element._KeyboardHandler)
                 if element.Readonly:
                     element.TKCombo['state'] = 'readonly'
                 if element.Disabled is True:  # note overrides readonly if disabled
