@@ -3,9 +3,6 @@
 ![Screen Shot 2022-08-24 at 12 40 41 PM](https://user-images.githubusercontent.com/106843224/186487235-97a336db-264e-4f5f-aeb5-7fc43192a93d.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2022 17:48:51
-
------------
 [@kcl1s](https://github.com/kcl1s) 08/11/2022 18:55:00
 
 ![image](https://user-images.githubusercontent.com/13920899/184217488-3a84fd68-cca5-4b5d-92fa-4af9a2e5a67d.png)
@@ -18,9 +15,6 @@
 ![image](https://user-images.githubusercontent.com/109999434/181864251-73a19926-9e20-439f-8305-f38fa7f4db93.png)
 
 -----------
-[@infinitepower18](https://github.com/infinitepower18) 07/17/2022 10:53:53
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 07/10/2022 06:13:54
 
 ![image](https://user-images.githubusercontent.com/46163555/178133600-e5632037-dd45-4d4e-9a0d-89f09cea3156.png)
@@ -28,29 +22,11 @@
 ![image](https://user-images.githubusercontent.com/46163555/178133586-fa0d500e-cf28-4c22-a640-c5cbc881b336.png)
 
 -----------
-[@infinitepower18](https://github.com/infinitepower18) 07/10/2022 05:21:41
-
------------
-[@schlopp96](https://github.com/schlopp96) 07/10/2022 02:17:23
-
------------
-[@infinitepower18](https://github.com/infinitepower18) 07/06/2022 14:42:25
-
------------
 [@schlopp96](https://github.com/schlopp96) 06/27/2022 04:35:24
 
 ![PyFiTransfer-GUI](https://user-images.githubusercontent.com/71921821/175860724-ff7509f6-5dd6-4ca4-8b0b-0c996abdaf4e.png)
 
 ![v2mp3_gui](https://user-images.githubusercontent.com/71921821/175860751-10d818cf-2141-49b7-87ad-b031fa3d8063.png)
-
------------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/24/2022 23:21:02
-
------------
-[@jerrylususu](https://github.com/jerrylususu) 06/23/2022 13:21:50
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/23/2022 13:13:46
 
 -----------
 [@jerrylususu](https://github.com/jerrylususu) 06/23/2022 13:05:19
@@ -90,9 +66,6 @@
 ![2022-06-13-144526_70x268_scrot](https://user-images.githubusercontent.com/80429360/173346970-545de9ca-3049-4072-9fb5-a3e959ac860c.png)
 
 -----------
-[@lonewanderer27](https://github.com/lonewanderer27) 06/12/2022 17:56:41
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/11/2022 21:59:48
 
 ![image](https://user-images.githubusercontent.com/46163555/173206110-c1bc92a2-2c0b-4aa8-82b7-444a92fb02ec.png)
@@ -124,9 +97,6 @@
 ![image](https://user-images.githubusercontent.com/46163555/172605737-67b8fb96-b1dc-4028-bba0-c11054fc4751.png)
 
 -----------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/07/2022 20:23:54
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2022 12:48:16
 
 ![image](https://user-images.githubusercontent.com/46163555/172382544-e6393442-a436-496a-b3d9-c2dcd15823c9.png)
@@ -137,27 +107,9 @@
 ![image](https://user-images.githubusercontent.com/46163555/172379207-84a42384-2936-4d2f-8e03-848710972eba.png)
 
 -----------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/07/2022 12:23:18
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2022 07:07:21
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/06/2022 17:20:18
-
------------
 [@ArchKubi](https://github.com/ArchKubi) 06/06/2022 02:12:11
 
 ![2022-06-06-051005_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/172083125-16c95d55-fdfa-4f0e-a89c-641fab7cc29e.png)
-
------------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 21:01:07
-
------------
-[@infinitepower18](https://github.com/infinitepower18) 06/05/2022 20:27:42
-
------------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 19:45:47
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/05/2022 19:42:55
@@ -167,9 +119,6 @@
 ![image](https://user-images.githubusercontent.com/46163555/172067655-c510c744-269e-49f3-8d08-a8b9a673891e.png)
 
 ![image](https://user-images.githubusercontent.com/46163555/172067682-55f2a687-012b-4c31-b028-7e3e6367249f.png)
-
------------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/05/2022 19:33:58
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/05/2022 12:13:02
@@ -185,9 +134,6 @@
 [@macdeport](https://github.com/macdeport) 06/05/2022 08:35:05
 
 ![floating-screenshot-102617](https://user-images.githubusercontent.com/26068595/172042251-f8d06a2c-c8c5-4f20-894c-3ce062d29f83.jpg)
-
------------
-[@infinitepower18](https://github.com/infinitepower18) 06/05/2022 00:26:52
 
 -----------
 [@infinitepower18](https://github.com/infinitepower18) 06/05/2022 00:10:14
@@ -211,9 +157,6 @@
 ![image](https://user-images.githubusercontent.com/46163555/172028469-1dc259cd-1a89-4589-8987-5db0347d7f80.png)
 
 -----------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/04/2022 22:57:41
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 22:27:46
 
 ![PySimpleGUI Meter Example](https://user-images.githubusercontent.com/46163555/172027346-093f9720-dcad-4898-83be-90aa665392cc.gif)
@@ -222,33 +165,6 @@
 [@PySimpleGUI](https://github.com/PySimpleGUI) 06/04/2022 22:17:00
 
 ![pythonw_Zg0AaJiwFm](https://user-images.githubusercontent.com/46163555/172027081-43e35a85-afc3-4fdd-b3d8-0cac893f8b02.gif)
-
------------
-[@EdwardChamberlain](https://github.com/EdwardChamberlain) 06/04/2022 21:54:53
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/02/2022 19:20:36
-
------------
-[@wrwetzel](https://github.com/wrwetzel) 06/02/2022 19:09:14
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/02/2022 10:59:03
-
------------
-[@wrwetzel](https://github.com/wrwetzel) 06/01/2022 20:37:29
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 05/31/2022 19:21:13
-
------------
-[@ArchKubi](https://github.com/ArchKubi) 05/31/2022 19:16:45
-
------------
-[@ArchKubi](https://github.com/ArchKubi) 05/31/2022 18:48:51
-
------------
-[@eagleEggs](https://github.com/eagleEggs) 05/31/2022 18:14:11
 
 -----------
 [@ArchKubi](https://github.com/ArchKubi) 05/31/2022 06:58:52
@@ -268,9 +184,6 @@
 ![2022-05-31-095321_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/171110745-7d8aa980-bcc0-447b-943b-b8b0308df62d.png)
 
 -----------
-[@eagleEggs](https://github.com/eagleEggs) 05/14/2022 00:51:44
-
------------
 [@infinitepower18](https://github.com/infinitepower18) 05/02/2022 15:50:00
 
 ![image](https://user-images.githubusercontent.com/44692189/166264588-9a02a01b-0317-4460-a800-0816f6d4686a.png)
@@ -286,12 +199,6 @@
 [@hseera](https://github.com/hseera) 05/01/2022 11:03:33
 
 ![cloudfront-manager](https://user-images.githubusercontent.com/59352356/166143098-ed907d23-2366-4b70-803b-b97cc530efee.png)
-
------------
-[@schlopp96](https://github.com/schlopp96) 04/17/2022 01:08:06
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/16/2022 19:23:26
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 04/16/2022 19:21:39
@@ -319,12 +226,6 @@
 ![Screenshot 2022-04-06 170717](https://user-images.githubusercontent.com/5095323/162006830-7abc3992-78e7-4c48-b65b-686e82d13605.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 03/25/2022 17:24:08
-
------------
-[@eliffile](https://github.com/eliffile) 03/24/2022 21:46:02
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 03/24/2022 16:02:11
 
 ![image](https://user-images.githubusercontent.com/46163555/159957868-1049d930-a6d8-40f9-9e9b-38977ba8a45e.png)
@@ -340,12 +241,6 @@
 [@eliffile](https://github.com/eliffile) 03/22/2022 07:14:12
 
 ![GreetingCardMaker1](https://user-images.githubusercontent.com/98583882/159427328-cc9de232-bb0f-486e-8228-3bb08a82a88a.png)
-
------------
-[@NFadhlurrahman](https://github.com/NFadhlurrahman) 03/20/2022 14:01:09
-
------------
-[@infinitepower18](https://github.com/infinitepower18) 03/20/2022 13:49:41
 
 -----------
 [@NFadhlurrahman](https://github.com/NFadhlurrahman) 03/20/2022 13:47:20
@@ -380,9 +275,6 @@
 ![Snap_Friday, 25 February 2022_19h23m21s_003_Enter an SQL 'SELECT' command', 'Enter '](https://user-images.githubusercontent.com/98189612/155906363-09133513-808d-4b16-8bdc-ae4b6b2ad2bf.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/26/2022 20:47:06
-
------------
 [@eliffile](https://github.com/eliffile) 02/26/2022 05:17:23
 
 ![PCM2](https://user-images.githubusercontent.com/98583882/155830128-288a9e5b-6f5d-4d71-abbb-cdb17839fa35.jpg)
@@ -392,27 +284,9 @@
 ![PCM5](https://user-images.githubusercontent.com/98583882/155830809-1826fecc-54d1-463e-8f94-237e42be9b40.jpg)
 
 -----------
-[@eliffile](https://github.com/eliffile) 02/21/2022 07:05:07
-
------------
-[@eliffile](https://github.com/eliffile) 02/21/2022 07:05:07
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/21/2022 01:28:50
-
------------
 [@eliffile](https://github.com/eliffile) 02/20/2022 06:53:03
 
 ![Postcard Maker](https://user-images.githubusercontent.com/98583882/154831842-33be850f-c71f-43c1-83e1-fb675ebd72cc.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/16/2022 17:06:49
-
------------
-[@WAUthethird](https://github.com/WAUthethird) 02/16/2022 04:39:00
-
------------
-[@DeusAres](https://github.com/DeusAres) 02/08/2022 16:07:11
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 02/08/2022 14:07:12
@@ -437,15 +311,9 @@
 ![Istantanea_2022-02-06_23-40-36](https://user-images.githubusercontent.com/63617159/152704574-dbaee0fe-0fd8-4c30-94e2-c0200b8817cf.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/06/2022 21:04:27
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 02/06/2022 14:32:34
 
 ![image](https://user-images.githubusercontent.com/46163555/152685875-8aba2adc-9594-4b96-88a9-b6a814c5b81a.png)
-
------------
-[@DeusAres](https://github.com/DeusAres) 02/06/2022 14:15:24
 
 -----------
 [@eliffile](https://github.com/eliffile) 02/06/2022 09:04:59
@@ -457,30 +325,9 @@
 ![GreetingCardMaker1](https://user-images.githubusercontent.com/98583882/159427328-cc9de232-bb0f-486e-8228-3bb08a82a88a.png)
 
 -----------
-[@eliffile](https://github.com/eliffile) 02/06/2022 09:04:59
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) Minecraft!
 
 ![image](https://user-images.githubusercontent.com/46163555/152643404-59069b36-efd8-4186-90d5-555453bce487.png)
-
------------
-[@eliffile](https://github.com/eliffile) 02/05/2022 10:34:17
-
------------
-[@eliffile](https://github.com/eliffile) 02/05/2022 10:34:17
-
------------
-[@eliffile](https://github.com/eliffile) 02/05/2022 10:16:38
-
------------
-[@eliffile](https://github.com/eliffile) 02/05/2022 10:16:38
-
------------
-[@DeusAres](https://github.com/DeusAres) 02/04/2022 12:41:58
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/04/2022 10:50:50
 
 -----------
 [@eliffile](https://github.com/eliffile) 02/04/2022 09:56:34
@@ -509,9 +356,6 @@
 ![venta_cancha](https://user-images.githubusercontent.com/6611118/152080557-8d4e6a1c-16b5-4190-bd69-a8f98d14eef9.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/02/2022 01:13:44
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 02/02/2022 01:01:39
 
 ![image](https://user-images.githubusercontent.com/46163555/152076781-5435a95b-5789-45dd-945a-b813d27428f3.png)
@@ -534,9 +378,6 @@
 ![Core Usage](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/CPU%20Cores%20Dashboard%202.gif)
 
 -----------
-[@WaterReNu](https://github.com/WaterReNu) 01/27/2022 23:00:52
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 01/27/2022 21:31:02
 
 ![image](https://user-images.githubusercontent.com/46163555/151446695-6ed8a2d1-8694-4b52-84bd-55687199404d.png)
@@ -552,9 +393,6 @@
 ![image](https://user-images.githubusercontent.com/46163555/150811700-5622650c-8bf8-4c88-a2cb-1be60b1f4953.png)
 
 ![image](https://user-images.githubusercontent.com/46163555/150812447-92956887-dab0-460b-90f7-646ddb5a08cf.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/24/2022 15:23:32
 
 -----------
 [@DeusAres](https://github.com/DeusAres) 01/24/2022 12:06:52
@@ -583,29 +421,14 @@
 ![filter 3 clean](https://user-images.githubusercontent.com/54043211/149679420-74784316-966d-422d-8dd7-0097902487a1.PNG)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/16/2022 15:10:43
-
------------
 [@DeusAres](https://github.com/DeusAres) 01/16/2022 15:01:47
 
 ![unknown_2022 01 16-14 37_1](https://user-images.githubusercontent.com/60852205/149665438-b7f6bc47-0fc9-49b2-adf4-bd90f3c7e9d4.gif)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/14/2022 10:41:47
-
------------
 [@tostos5963](https://github.com/tostos5963) 01/13/2022 22:13:15
 
 ![PySimpleGUI-MahjongSolitaire](https://user-images.githubusercontent.com/15520094/149417117-f2acfa8e-a197-4180-a391-cf6cde28cdef.gif)
-
------------
-[@shullaw](https://github.com/shullaw) 01/13/2022 21:27:25
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/13/2022 20:20:56
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/13/2022 20:19:36
 
 -----------
 [@tostos5963](https://github.com/tostos5963) 01/13/2022 15:26:56
@@ -616,18 +439,6 @@
 [@shullaw](https://github.com/shullaw) 01/13/2022 02:19:24
 
 ![image](https://user-images.githubusercontent.com/48638106/149253678-77e128ca-63ac-4ad6-84d5-75a8778c16c0.png)
-
------------
-[@autostatic](https://github.com/autostatic) 01/08/2022 10:07:56
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/07/2022 21:29:49
-
------------
-[@Cornbrother](https://github.com/Cornbrother) 01/07/2022 20:09:09
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/07/2022 18:56:17
 
 -----------
 [@Cornbrother](https://github.com/Cornbrother) 01/07/2022 18:47:55
@@ -642,12 +453,6 @@
 ![rtcqs_about](https://user-images.githubusercontent.com/477316/147486857-6057aa0f-abbc-49ad-9769-f1db23a20e87.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 12/21/2021 22:25:55
-
------------
-[@johanjohan](https://github.com/johanjohan) 12/20/2021 19:25:31
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 12/20/2021 15:41:30
 
 ![image](https://user-images.githubusercontent.com/46163555/146793694-9d1d7bba-5654-4394-ab7f-60460b7d2b6f.png)
@@ -656,18 +461,6 @@
 [@johanjohan](https://github.com/johanjohan) 12/20/2021 15:25:43
 
 ![image](https://user-images.githubusercontent.com/6679464/146790842-f0f02d09-2e96-46f1-ab31-57b77dc7890d.png)
-
------------
-[@pamoroso](https://github.com/pamoroso) 12/20/2021 14:47:24
-
------------
-[@johanjohan](https://github.com/johanjohan) 12/20/2021 14:44:04
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 12/20/2021 13:15:26
-
------------
-[@andrewmk](https://github.com/andrewmk) 12/19/2021 17:24:12
 
 -----------
 [@johanjohan](https://github.com/johanjohan) 12/19/2021 17:07:16
@@ -680,23 +473,14 @@
 ![Screenshot 2021-12-19 132059](https://user-images.githubusercontent.com/1872642/146676348-d8c6ee7f-cc81-44b9-8a17-010a880b0afb.png)
 
 -----------
-[@dmitrijbes](https://github.com/dmitrijbes) 12/13/2021 12:43:43
-
------------
 [@WaterReNu](https://github.com/WaterReNu) 12/08/2021 17:34:51
 
 ![auto-op](https://user-images.githubusercontent.com/54043211/145255870-32219224-f533-4e29-8483-ef87cb473501.jpg)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 12/07/2021 13:57:09
-
------------
 [@andrewmk](https://github.com/andrewmk) 12/05/2021 00:39:31
 
 ![Screenshot 2021-12-05 000125](https://user-images.githubusercontent.com/1872642/144728906-839f52dd-e1e3-4e57-bd82-e10dd129a465.png)
-
------------
-[@andrewmk](https://github.com/andrewmk) 12/02/2021 17:08:31
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 12/02/2021 16:14:05
@@ -718,15 +502,6 @@
 ![AUE-P](https://user-images.githubusercontent.com/40863375/143146218-e6d0b3a9-4369-4808-aaa8-c0d91da0a1db.png)
 
 -----------
-[@frici11](https://github.com/frici11) 11/23/2021 18:32:26
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 11/23/2021 17:41:29
-
------------
-[@frici11](https://github.com/frici11) 11/23/2021 16:26:01
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 11/23/2021 15:28:51
 
 ![image](https://user-images.githubusercontent.com/46163555/143053295-0e71ef2f-acf5-44ca-a488-23a5875a9495.png)
@@ -746,21 +521,9 @@
 ![Screenshot (112)](https://user-images.githubusercontent.com/78821165/143034170-73fa684a-f817-41be-a293-3f52f6025ba1.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 11/22/2021 15:50:58
-
------------
-[@luflopes](https://github.com/luflopes) 11/21/2021 20:02:49
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 11/20/2021 12:17:53
 
 ![image](https://user-images.githubusercontent.com/46163555/142726016-f551093c-51ce-4215-aad5-36ae6368289a.png)
-
------------
-[@luflopes](https://github.com/luflopes) 11/19/2021 21:40:50
-
------------
-[@pamoroso](https://github.com/pamoroso) 11/19/2021 21:33:35
 
 -----------
 [@luflopes](https://github.com/luflopes) 11/19/2021 21:30:33
@@ -776,9 +539,6 @@
 ![adm_dashboard](https://user-images.githubusercontent.com/92451100/142693745-5bd6a199-1e37-4cb3-bab8-49daff8b26c3.PNG)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 11/04/2021 18:35:41
-
------------
 [@Scania-Creations-16](https://github.com/Scania-Creations-16) 11/04/2021 02:55:59
 
 ![yt1](https://user-images.githubusercontent.com/91425738/140249931-76fdda21-fbdf-42a0-81a7-add95ab122b6.png)
@@ -788,12 +548,6 @@
 ![yt3](https://user-images.githubusercontent.com/91425738/140249945-0b7d045d-4941-4aa7-a399-969cb8b6c87f.png)
 
 ![yt4](https://user-images.githubusercontent.com/91425738/140249959-8965f606-70c6-4b70-b703-0b82a381587f.png)
-
------------
-[@Scania-Creations-16](https://github.com/Scania-Creations-16) 11/01/2021 04:11:56
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 10/31/2021 19:16:54
 
 -----------
 [@Scania-Creations-16](https://github.com/Scania-Creations-16) 10/31/2021 04:14:25
@@ -813,12 +567,6 @@
 [@mechanicalnull](https://github.com/mechanicalnull) 10/22/2021 12:04:54
 
 ![fuzzwatch_ui](https://user-images.githubusercontent.com/43920110/138450454-4132f4ab-f402-4d34-ba6a-4c91fe45dce3.gif)
-
------------
-[@hseera](https://github.com/hseera) 09/25/2021 22:55:50
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 09/25/2021 18:13:19
 
 -----------
 [@hseera](https://github.com/hseera) 09/25/2021 11:30:05
@@ -843,9 +591,6 @@
 ![image](https://user-images.githubusercontent.com/46163555/131508042-05505690-e1f6-4c01-9840-f40bf05f5163.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/31/2021 00:40:51
-
------------
 [@readicculus](https://github.com/readicculus) 08/30/2021 22:16:48
 
 ![image](https://user-images.githubusercontent.com/3818801/131410876-c3ba93ac-1c0d-4147-9c04-54b2eebe8e04.png)
@@ -859,26 +604,14 @@
 ![image](https://user-images.githubusercontent.com/3818801/131412028-3f0db248-60b2-4f26-bd6b-6a6dc491d2b7.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2021 01:42:20
-
------------
-[@AyhamSaffar](https://github.com/AyhamSaffar) 08/12/2021 01:37:41
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 08/11/2021 20:28:32
 
 ![image](https://user-images.githubusercontent.com/46163555/129097530-aa6eabc8-d730-4a0b-a6f7-15a4906b7c6c.png)
 
 -----------
-[@AyhamSaffar](https://github.com/AyhamSaffar) 08/11/2021 20:12:34
-
------------
 [@AyhamSaffar](https://github.com/AyhamSaffar) 08/11/2021 00:21:44
 
 ![Perfect Result](https://user-images.githubusercontent.com/76114207/128950253-adabcde5-2013-4e9d-be3b-40bbbc947922.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/07/2021 16:34:34
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 08/07/2021 16:30:26
@@ -904,9 +637,6 @@
 ![ppp3](https://user-images.githubusercontent.com/710699/128593326-b9516e7a-9cdc-45f3-a0bd-ab254de1f7e0.jpg)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/25/2021 23:17:59
-
------------
 [@ghost](https://github.com/ghost) A Simple Random-Password Generator
 
 ![Alt Text](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fi9x88c3iy1tipvxra59.PNG)
@@ -922,18 +652,6 @@
 ![a demo of the program](https://raw.githubusercontent.com/Fethbita/eMRTD_face_access/main/docs/images/demo.gif)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 04:31:22
-
------------
-[@elibroftw](https://github.com/elibroftw) 05/02/2021 03:29:23
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 03:02:42
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 05/02/2021 03:01:47
-
------------
 [@elibroftw](https://github.com/elibroftw) 05/02/2021 00:27:51
 
 ![image](https://user-images.githubusercontent.com/21298211/116798206-46e5be80-aabb-11eb-819d-dd8b6a229368.png)
@@ -941,32 +659,14 @@
 ![image](https://user-images.githubusercontent.com/21298211/116798212-5533da80-aabb-11eb-88e8-279a8efd3c70.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/28/2021 20:43:34
-
------------
 [@daemon2021](https://github.com/daemon2021) 04/28/2021 08:26:39
 
 ![immagine](https://user-images.githubusercontent.com/80693149/116367433-a5831200-a807-11eb-9e3a-0238d93ba5cd.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/21/2021 15:07:41
-
------------
 [@pamoroso](https://github.com/pamoroso) 04/21/2021 14:05:25
 
 ![spacestills](https://user-images.githubusercontent.com/10342479/115567113-2fd4ee80-a2bb-11eb-89bd-03ca3864be85.jpg)
-
------------
-[@neovich](https://github.com/neovich) 04/05/2021 23:32:07
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 14:29:46
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 14:09:21
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/05/2021 13:47:19
 
 -----------
 [@neovich](https://github.com/neovich) 04/05/2021 13:31:15
@@ -983,21 +683,9 @@
 ![msg play - pic 3](https://user-images.githubusercontent.com/49742791/113540468-91425f80-9623-11eb-812e-affc5528e400.png)
 
 -----------
-[@neovich](https://github.com/neovich) 04/04/2021 22:59:10
-
------------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 22:05:55
 
 ![image](https://user-images.githubusercontent.com/46163555/113522583-c1c8c180-956f-11eb-812d-237a4da58f57.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 21:46:26
-
------------
-[@ThomasFreedman](https://github.com/ThomasFreedman) 04/04/2021 15:25:45
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 04/04/2021 12:37:46
 
 -----------
 [@neovich](https://github.com/neovich) 04/04/2021 08:23:29
@@ -1022,21 +710,9 @@
 ![Ml8rxsYCoW](https://user-images.githubusercontent.com/46163555/110664775-b44d3100-8195-11eb-81c7-4c3baab01bf7.gif)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 03/09/2021 20:55:32
-
------------
-[@EntPyle](https://github.com/EntPyle) 03/09/2021 20:46:19
-
------------
 [@ill13](https://github.com/ill13) 03/08/2021 22:03:07
 
 ![demo](https://user-images.githubusercontent.com/10509740/110387619-dfb60b80-802f-11eb-92ab-f4eb8b03c6cb.gif)
-
------------
-[@vinniec](https://github.com/vinniec) 03/05/2021 08:50:42
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 03/05/2021 00:31:16
 
 -----------
 [@vinniec](https://github.com/vinniec) 03/04/2021 20:44:34
@@ -1046,21 +722,9 @@
 ![estimation](https://user-images.githubusercontent.com/710699/110027861-cca2f300-7d32-11eb-90a3-a3894924c594.jpg)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 03/02/2021 15:23:56
-
------------
 [@pgbowers](https://github.com/pgbowers) 03/02/2021 14:55:14
 
 ![Guess_screenshot1](https://user-images.githubusercontent.com/2387580/109666338-7a50af00-7b45-11eb-8ba6-e37bcdc17fe9.png)
-
------------
-[@frici11](https://github.com/frici11) 02/09/2021 22:59:20
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 02/09/2021 22:39:11
-
------------
-[@frici11](https://github.com/frici11) 02/09/2021 19:52:20
 
 -----------
 [@techtanic](https://github.com/techtanic) 02/03/2021 16:11:53
@@ -1119,15 +783,6 @@
 ![desktop](https://user-images.githubusercontent.com/16600839/98252428-d6c60800-1f71-11eb-8068-bce7d97460bf.gif)
 
 -----------
-[@PyICoder](https://github.com/PyICoder) 11/06/2020 04:35:52
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 11/06/2020 03:58:25
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 11/06/2020 03:58:25
-
------------
 [@PyICoder](https://github.com/PyICoder) 11/02/2020 07:27:14
 
 ![image](https://user-images.githubusercontent.com/54691311/97840869-a3e1f280-1c99-11eb-9337-8055e3680987.png)
@@ -1151,12 +806,6 @@
 ![Screenshot from 2020-10-27 11-42-05](https://user-images.githubusercontent.com/46383650/97326769-b5b33800-184a-11eb-94ef-6891c7754e74.png)
 
 ![Screenshot from 2020-10-27 11-42-56](https://user-images.githubusercontent.com/46383650/97326771-b5b33800-184a-11eb-86e9-ff29ac55ef61.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 10/16/2020 14:23:36
-
------------
-[@alexBoldea](https://github.com/alexBoldea) 10/16/2020 09:19:12
 
 -----------
 [@PySimpleGUI](https://github.com/PySimpleGUI) 10/16/2020 03:26:07
@@ -1194,24 +843,6 @@
 ![20201011PSGegMultilineColorV05](https://user-images.githubusercontent.com/7591528/95759999-672a6900-0ca2-11eb-8990-4d65ac57eba8.png)
 
 -----------
-[@holypython](https://github.com/holypython) 10/06/2020 15:21:20
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 10/06/2020 12:40:09
-
------------
-[@holypython](https://github.com/holypython) 10/05/2020 20:03:05
-
------------
-[@aajshaw](https://github.com/aajshaw) 09/28/2020 16:33:39
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 09/27/2020 10:36:55
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 09/27/2020 10:26:20
-
------------
 [@aajshaw](https://github.com/aajshaw) 09/26/2020 13:25:57
 
 ![image](https://user-images.githubusercontent.com/11177450/94341489-a057ad80-0001-11eb-9cbe-3c40dd5a7bf5.png)
@@ -1224,15 +855,9 @@
 ![image](https://user-images.githubusercontent.com/70232210/91223157-39876180-e6ee-11ea-936d-d7fb9a4894cc.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/12/2020 11:03:50
-
------------
 [@moabdali](https://github.com/moabdali) 08/12/2020 05:31:19
 
 ![image](https://user-images.githubusercontent.com/64987634/89836775-15902180-db2d-11ea-80cd-c39d432bcc4d.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/09/2020 18:44:38
 
 -----------
 [@vohe](https://github.com/vohe) 08/08/2020 11:11:29
@@ -1266,21 +891,9 @@
 ![lowgerman](https://user-images.githubusercontent.com/7021635/86537494-b9aff880-beef-11ea-9a07-d1503e462d5f.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 07/04/2020 23:41:41
-
------------
-[@vohe](https://github.com/vohe) 07/04/2020 21:28:44
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 07/04/2020 19:46:19
-
------------
 [@vohe](https://github.com/vohe) 07/04/2020 15:43:31
 
 ![Audiorecorder (spotify)](https://user-images.githubusercontent.com/7021635/86515989-6a00fc80-be1d-11ea-89c9-08411c829eb7.png)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/26/2020 14:23:44
 
 -----------
 [@kovadarra](https://github.com/kovadarra) 06/17/2020 10:28:51
@@ -1288,15 +901,6 @@
 ![grafik](https://user-images.githubusercontent.com/58000806/84886138-ad790e00-b09c-11ea-933c-404a5476d8ca.png)
 
 ![grafik](https://user-images.githubusercontent.com/58000806/84886430-1791b300-b09d-11ea-8534-c1658df63a8a.png)
-
------------
-[@mbilalakmal](https://github.com/mbilalakmal) 06/16/2020 06:47:32
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/15/2020 11:05:45
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/15/2020 10:45:26
 
 -----------
 [@martinmeteor](https://github.com/martinmeteor) 06/14/2020 15:36:26
@@ -1325,9 +929,6 @@
 ![image](https://user-images.githubusercontent.com/11161087/83990270-ac423580-a966-11ea-8265-b44497eb8180.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 06/07/2020 10:48:55
-
------------
 [@mbilalakmal](https://github.com/mbilalakmal) 06/07/2020 02:07:48
 
 ![Screenshot (118)](https://user-images.githubusercontent.com/37498621/83958612-43d35580-a88d-11ea-8edd-91d22f77c4ea.png)
@@ -1350,9 +951,6 @@
 ![study_databasepng](https://user-images.githubusercontent.com/66523816/83948518-f10e8500-a81d-11ea-8e37-6ecbaaea950b.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 05/31/2020 17:38:58
-
------------
 [@Zain-Bin-Arshad](https://github.com/Zain-Bin-Arshad) 05/31/2020 07:43:59
 
 ![pdf](https://user-images.githubusercontent.com/49767636/83328539-26a2f380-a29d-11ea-993c-887ef9cfe77b.gif)
@@ -1367,17 +965,11 @@
 ![Screenshot from 2020-04-30 04-11-25](https://user-images.githubusercontent.com/64561775/80693567-d1ef3b80-8a98-11ea-8820-daa85b06c271.png)
 
 -----------
-[@PySimpleGUI](https://github.com/PySimpleGUI) Thank you so much for sharing!
-
------------
 [@sharathraj-tech](https://github.com/sharathraj-tech) 03/27/2020 17:06:56
 
 ![Capture](https://user-images.githubusercontent.com/11161087/77781242-40487480-707b-11ea-8cd6-5c5e2c9f9ebb.JPG)
 
 ![Admin Dashboard](https://user-images.githubusercontent.com/11161087/77781024-df20a100-707a-11ea-9546-cc3b6d86c801.JPG)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 01/03/2020 00:53:45
 
 -----------
 [@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 01/02/2020 21:30:42
@@ -1404,27 +996,6 @@
 [@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 10/31/2019 02:23:51
 
 ![ezgif com-video-to-gif](https://user-images.githubusercontent.com/31192003/67912084-5b579c80-fb4e-11e9-9acb-208e373a1ae6.gif)
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 10/02/2019 23:31:59
-
------------
-[@viniciushenr](https://github.com/viniciushenr) 10/02/2019 23:13:24
-
------------
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/27/2019 09:54:13
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/26/2019 19:06:38
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/26/2019 13:33:07
-
------------
-[@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/25/2019 23:56:16
-
------------
-[@PySimpleGUI](https://github.com/PySimpleGUI) 08/25/2019 22:32:31
 
 -----------
 [@SuperMechaDeathChrist](https://github.com/SuperMechaDeathChrist) 08/25/2019 22:30:11
@@ -1465,33 +1036,9 @@
 ![Captura](https://user-images.githubusercontent.com/31192003/57186693-78febe80-6ea9-11e9-837e-09d72dfa3b6d.PNG)
 
 -----------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 06/27/2019 02:43:56
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 06/26/2019 19:38:03
-
------------
 [@killyone](https://github.com/killyone) 06/20/2019 04:15:02
 
 ![image](https://user-images.githubusercontent.com/5907420/59818085-08402400-92e8-11e9-897f-5041fdcb62b2.png)
-
------------
-[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 14:44:22
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/26/2019 14:34:35
-
------------
-[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 14:19:29
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/26/2019 13:49:46
-
------------
-[@eagleEggs](https://github.com/eagleEggs) 03/26/2019 13:30:45
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 03/25/2019 19:53:34
 
 -----------
 [@eagleEggs](https://github.com/eagleEggs) 03/25/2019 15:44:50
@@ -1505,24 +1052,9 @@
 ![image](https://user-images.githubusercontent.com/29800532/54933586-4ac5b080-4ef3-11e9-82bb-43a177b12df0.png)
 
 -----------
-[@btnpushnmunky](https://github.com/btnpushnmunky) 12/15/2018 00:26:31
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 12/14/2018 23:09:55
-
------------
 [@btnpushnmunky](https://github.com/btnpushnmunky) 12/14/2018 16:50:36
 
 ![boxcalculator](https://github.com/btnpushnmunky/boxcalculator/raw/master/screen.png)
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:56:18
-
------------
-[@kennard42](https://github.com/kennard42) 11/28/2018 15:54:53
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:48:19
 
 -----------
 [@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/28/2018 15:43:40
@@ -1543,9 +1075,6 @@
 ![image](https://user-images.githubusercontent.com/29800532/48964932-c41eb800-ef80-11e8-8cfe-c6bb727ffabb.png)
 
 ![image](https://user-images.githubusercontent.com/29800532/48964972-c7667380-ef81-11e8-9746-98714b8b062e.png)
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/20/2018 22:08:30
 
 -----------
 [@john144](https://github.com/john144) 11/20/2018 20:12:20
@@ -1574,20 +1103,11 @@
 ![image](https://user-images.githubusercontent.com/29800532/48596375-c81a5c80-e926-11e8-9968-a632b43069e5.png)
 
 -----------
-[@eagleEggs](https://github.com/eagleEggs) 11/12/2018 18:52:03
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/12/2018 18:05:10
-
------------
 [@eagleEggs](https://github.com/eagleEggs) 11/12/2018 17:58:27
 
 ![image](https://user-images.githubusercontent.com/29800532/48366002-8cf40100-e67a-11e8-8f68-d95e539e254c.png)
 
 ![image](https://user-images.githubusercontent.com/29800532/48366144-f116c500-e67a-11e8-8669-8c0abdd02298.png)
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 11/04/2018 03:06:11
 
 -----------
 [@john144](https://github.com/john144) 11/04/2018 03:03:06
@@ -1610,9 +1130,6 @@
 ![image](https://user-images.githubusercontent.com/12161426/47411983-5460b600-d7a5-11e8-98b6-961113b0b050.png)
 
 -----------
-[@eagleEggs](https://github.com/eagleEggs) 10/04/2018 01:55:57
-
------------
 [@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 10/03/2018 21:54:34
 
 ![floating menu-toolbar](https://user-images.githubusercontent.com/13696193/46441704-59e25780-c735-11e8-8d94-9884a4e7c987.jpg)
@@ -1621,12 +1138,6 @@
 [@eagleEggs](https://github.com/eagleEggs) 10/02/2018 20:18:39
 
 ![image](https://user-images.githubusercontent.com/29800532/46385695-7924aa80-c68b-11e8-9ecc-c8a5afdad61d.png)
-
------------
-[@eagleEggs](https://github.com/eagleEggs) 09/30/2018 22:01:09
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/30/2018 21:51:14
 
 -----------
 [@eagleEggs](https://github.com/eagleEggs) 09/30/2018 21:37:08
@@ -1649,8 +1160,5 @@
 [@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/16/2018 21:26:51
 
 ![calculator](https://user-images.githubusercontent.com/13696193/45601112-b0316580-b9d5-11e8-9f42-38acdfd5db93.jpg)
-
------------
-[@MikeTheWatchGuy](https://github.com/MikeTheWatchGuy) 09/02/2018 17:23:57
 
 -----------
