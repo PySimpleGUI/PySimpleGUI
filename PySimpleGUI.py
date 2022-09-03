@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.85 Unreleased"
+version = __version__ = "4.60.3.86 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -224,6 +224,8 @@ _change_log = """
         Output element - updated docstring
     4.60.3.85
         Combo Element - new parameter enable_per_char_events.  When True will get an event when individual characters are entered.
+    4.60.3.86
+        Added path to the interpreter to the get_versions information for better debugging
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12157,6 +12159,7 @@ class Window:
 
         :param key: The key to find
         :type key:  str | int | tuple | object
+        :return:    The element found
         :rtype:     Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
         """
 
@@ -12168,7 +12171,7 @@ class Window:
         window() == window.read()
         window(timeout=50) == window.read(timeout=50)
 
-        :return: The famous event, values that Read returns.
+        :return: The famous event, values that read returns.
         :rtype:  Tuple[Any, Dict[Any, Any]]
         """
         return self.read(*args, **kwargs)
@@ -23738,7 +23741,7 @@ def get_versions():
     else:
         platform_name, platform_ver = 'Unknown platorm', 'Unknown platform version'
 
-    versions = "Python version: {}.{}.{}\nPlatform: {}\nPlatform version: {}\nPort: {}\ntkinter version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major,
+    versions = "Python Interpeter: {}\nPython version: {}.{}.{}\nPlatform: {}\nPlatform version: {}\nPort: {}\ntkinter version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.executable, sys.version_info.major,
                                                                                                                                    sys.version_info.minor,
                                                                                                                                    sys.version_info.micro,
                                                                                                                                     platform_name, platform_ver,
@@ -25636,4 +25639,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4137380fb91599297f120658a5ff702002e15a5d5dacec6a7cd7e697eb7e31336f7000251eec25ac7d31fb40ca32df7eb5346295dfa17ae97dbb0985ab68737a73ba71d875a37c3b100da05effddd6acdd3a80ac0b0084549432099c2b5772350b0abc7edda8443269190e8dfda5ce49447d696bc730a5aaba618ac9dc0d08fb07f771d413913b6e332127270b43d462890319188aea4f1236c07ababa7d11239e12eb12112f17cef3332f1dede4140e13583b3612da1440d9c042541d3a45e95e66bc47d958e731f95a7fe9c2401abe303108135a20e01c92af8363ae3e252314014d1e5647af77561c193908fd04cc8dda38389b4fad8a1443b5fa0c6dbda1930001749e47d078865dd1b7c44cf25c8b51c56078027e447e15a8ff284709eafa7b6bf45e911da32a52ab7e4be986dced86a8dd99cafc29b8797ce0a316d2f96f72b52468a723371a515337a28b9c047330ddc0bb9f1e3c52d25d1be1147f0a1c487ac384d784ec3eb12fec3d5751efb5f4139c75cac4f4628cab41cdf3c955cd10598a4de4aa99452bc7f4072c87c39cde9e5d8ef44bc7e0723d106db0d314bc903b60f9794f7ef37f31546038933bd2a762fc9c5913f7bcf7eb84f6c6acdee52651963281bf9bb9c6ebe3059c3ba10429e262816f2776b0a62990ff62281363356aaa6efccec90e17e5cf576d4dbda92722a2f3157ecf95487f122e5f8107
+#70de3f24db36035c0e18258aee3a5d0d057a308876f3c4cf280d81c7997dbf9057343e285febda547cb56a489cdf9d151da1fc791a49e483e385b248217635925db91b38dfa17697ee8a97935acae4299cd2e8ce7f73601138dcaad13f047eb8309bf47c9914e951c633777cdfac676b4568218ff37cf0d0f9448a2845447bb2c63660e04ea99507b874e8775affd1e31bcaadd6da4f0f3e08be93138c12f21cddd19aed6bd574c174ea48ffb119935ca14494161a2e39c5ee113ed08d933a063895c43bae960b686d079b8f03a478dd73e6a69270e1fc670252528066dd262f668d55d44d2ed38433101b7696167d6399796e6787571022aee79e7f29d08c0c6be080cde2f690dfd375c2383aae3a0d32ff6b7384c3cda4248df9d55cc941c4c6d4b7aba43dc8ecbc6ab95b9e41004c93c0f5decc7241afe16740242833bfd8dee69172e525c78736e80edb1824d816d02209d7ea3ff07c82bcbf913e90d945c2cac5db98943b76a025d64f63a1045ea8fbd48a07f666dbd8962d79588913e3b97e198b66938ede35f9dc331d357fed8855e211b9266077590dde8f9f2da7ca7117311a27c8c0c2bbd4b0639820dadf9fe5666478588298e7cd75199d640ac96065009daafb2f5a9c5146c7fc0b5621e792b3bba642fbe56138dbedd27e12b80c5aaf6ffcdea9783be810f8d20540d55d12bf40cb41ffe1a98cc07e926bb1f4
