@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.87 Unreleased"
+version = __version__ = "4.60.3.89 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -228,6 +228,10 @@ _change_log = """
         Added path to the interpreter to the get_versions information for better debugging
     4.60.3.87
         Dark Gray 16 theme added
+    4.60.3.88
+        New batch of Emojis!
+    4.60.3.89
+        Addition of TITLEBAR_TEXT_KEY to provide access to custom titlebar titles
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -813,6 +817,7 @@ TITLEBAR_MINIMIZE_KEY = '__TITLEBAR MINIMIZE__'
 TITLEBAR_MAXIMIZE_KEY = '__TITLEBAR MAXIMIZE__'
 TITLEBAR_CLOSE_KEY = '__TITLEBAR CLOSE__'
 TITLEBAR_IMAGE_KEY = '__TITLEBAR IMAGE__'
+TITLEBAR_TEXT_KEY = '__TITLEBAR TEXT__'
 TITLEBAR_DO_NOT_USE_AN_ICON = '__TITLEBAR_NO_ICON__'
 
 # Key indicating should not create any return values for element
@@ -12881,7 +12886,7 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
     else:
         icon_and_text_portion = [Image(data=DEFAULT_BASE64_ICON_16_BY_16, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
 
-    icon_and_text_portion += [T(title, text_color=tc, background_color=bc, font=font, grab=True)]
+    icon_and_text_portion += [T(title, text_color=tc, background_color=bc, font=font, grab=True, key=TITLEBAR_TEXT_KEY)]
 
     return Column([[Column([icon_and_text_portion], pad=(0, 0), background_color=bc),
                     Column([[T(SYMBOL_TITLEBAR_MINIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font, key=TITLEBAR_MINIMIZE_KEY),
@@ -25666,4 +25671,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6beba4f87d4d64e93152420ca317a20355214bdedd905fb651c350b8781579871dc32af39d4d2a026118f3e3d49d0748fb910b6872f199955cabf30797a3cc87faf77296158bef17e04d0b098761887aad25d2c4f8ba2fed1af9323d2f02c1071648193e3664bd89c377fd411ade51792a4b35f5bd188b29b0490dd8c7f30de3364a51df62dfaf19f1bb8fa2b5b02734cb005d500b6216b85260cfeab7c77966642c4aba6689daf09bb2ffc382cf0694d2e7606028161fff78d85df79858cf749638271bac26023db87abc4c67c9d2b311ac1ee42531402d17df703237811bdb2d944eb3243c6ed4802e46ec3f9ccc10851d3d03dde6b95e0b1d3af0d024cc5ad28d6ccb3f1873a2156181012f47dfd7b4721972acfa498390947b1600725ecff284199cc8e43bc8502dd256db43ed1d5a4b8fa3188d3de5288f4e7ef9bc1e3d36432e11fe6b6dbd2977a37d0a9a9beccf8d60798f6528d3d62e441f37b56059b56296e3b081195a6c54eeb0730e931ea332e36365f2393993dd4638c93f6afa7384a06e130bfcf29b6ee861b32d251d1210788697d087950cd23efcd2ae7e9b9487dedf6f506cb52839d00a061ff4910dab6e5f49748c900f488ed8b732d4b6a13e1f7de0aef4a678f3f7d0fc97645d17ad803cd55ad95de06e205875883d0a44514ae721f3a4bdc206d1157ef3a6ef75aadf87fcd7ef36e204229ed7451a2e
+#0f42804d99c51eb7d7524b9e8abbfd74c25e9be41cdc00794b05acb2a53fb3e30bada64ef3c8fa931f8ea9dc5a2a4ad79ee4d768bde105ef15258a01dd98b873991b7f2548b08fc8269a179a29be000dbfd0583d28cafbd364f46ad85a37c101a65206eefe77e4be445119bcfb53656f17671a55d65ebacf3411e81e8424c1e602e93a1704b41749527079038a6be47c5767ccb6898d0be8a0de942d1e3a18ee57a4215fcfb89dc21ed7747c4a2a681ab8e7d5dbac505afeb02b54ae1a807aa51c68e5832eecaf4c5eb086e39afc9aa0023b8e9ef9cdd8a901e33823ddd8752bdd4d4f7945a6255b8019d025ff3bab735c1a3499962c9d3aadd26611e80f7d8a24b8d7a04e5e92248253e906e596fd42b654fa2d8c30635120f97252c230c9a1e654a87e93ba7d947956ee2bd81d34d967f52e21d299dd3ed8819c440684b089ecd8349b4562df2fc87c5fe9b45180a71eaa099a4446ffdc22cbbdc0ec18b8061754834e4524b8b371b5b7263801dd417e69c64adfc824294c8f31395eece505802a332462909d101389350f8a2fa4c2cc9cdc7792c5b7cda5da31177e61bfb46763095b0acc86a2e630cb0849e114d5f518153cdc7d58d5fd42be0f49ba6e36752d7206ff85e66f0ec2301d63f483dd62cc0b3e29f0aa008c8c2dcee454a746279925acf3633fdec6dd6f0f5fae56d7c7c1bc20b89e899b211d2c0a0930d7b5
