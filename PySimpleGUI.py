@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.89 Unreleased"
+version = __version__ = "4.60.3.90 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -216,10 +216,10 @@ _change_log = """
             If an Output Element is used or a Multline element to reroute stdout and/or stderr, then this hasn't worked quite right in the past
             Hopefuly now, it does.  A LIFO list (stack) is used to keep track of the current output device and is scrubbed for closed windows and restored if one is closed
     4.60.3.82
-        Addition of Style Names for horizaontal and vertical ttk scrollbars - hsb_style_name and vsb_style_name so that scrollbar colors can be changed in user code
+        Addition of Style Names for horizontaland vertical ttk scrollbars - hsb_style_name and vsb_style_name so that scrollbar colors can be changed in user code
     4.60.3.83
-        Output element - now automatically rereoutes cprint to here as well. Assumption is that you want stuff to go here without
-            needing to specify each thing.  If want more control, then use the Multline directly
+        Output element - now automatically reroutes cprint to here as well. Assumption is that you want stuff to go here without
+            needing to specify each thing.  If want more control, then use the Multiline directly
     4.60.3.84
         Output element - updated docstring
     4.60.3.85
@@ -232,6 +232,8 @@ _change_log = """
         New batch of Emojis!
     4.60.3.89
         Addition of TITLEBAR_TEXT_KEY to provide access to custom titlebar titles
+    4.60.3.90
+        Implemented the visible parameter for TabGroup.  Was not being honored when creating element. Added TabGroup.update so it can be made visible.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7597,6 +7599,32 @@ class TabGroup(Element):
         if tab_element.Tooltip is not None:
             tab_element.TooltipObject = ToolTip(tab_element.TKFrame, text=tab_element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
         _add_right_click_menu(tab_element, form)
+
+
+    def update(self, visible=None):
+        """
+        Enables changing the visibility
+
+        :param visible:  control visibility of element
+        :type visible:   (bool)
+        """
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in TabGroup.update - The window was closed')
+            return
+
+        if visible is False:
+            self._pack_forget_save_settings()
+        elif visible is True:
+            self._pack_restore_settings()
+
+        if visible is not None:
+            self._visible = visible
+
+
+
 
     AddRow = add_row
     FindKeyFromTabName = find_key_from_tab_name
@@ -16780,7 +16808,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Size != (None, None):
                     element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
                 _add_right_click_menu_and_grab(element)
-
+                if element.visible is False:
+                    element._pack_forget_save_settings()
                 # row_should_expand = True
                 # -------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
@@ -25671,4 +25700,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0f42804d99c51eb7d7524b9e8abbfd74c25e9be41cdc00794b05acb2a53fb3e30bada64ef3c8fa931f8ea9dc5a2a4ad79ee4d768bde105ef15258a01dd98b873991b7f2548b08fc8269a179a29be000dbfd0583d28cafbd364f46ad85a37c101a65206eefe77e4be445119bcfb53656f17671a55d65ebacf3411e81e8424c1e602e93a1704b41749527079038a6be47c5767ccb6898d0be8a0de942d1e3a18ee57a4215fcfb89dc21ed7747c4a2a681ab8e7d5dbac505afeb02b54ae1a807aa51c68e5832eecaf4c5eb086e39afc9aa0023b8e9ef9cdd8a901e33823ddd8752bdd4d4f7945a6255b8019d025ff3bab735c1a3499962c9d3aadd26611e80f7d8a24b8d7a04e5e92248253e906e596fd42b654fa2d8c30635120f97252c230c9a1e654a87e93ba7d947956ee2bd81d34d967f52e21d299dd3ed8819c440684b089ecd8349b4562df2fc87c5fe9b45180a71eaa099a4446ffdc22cbbdc0ec18b8061754834e4524b8b371b5b7263801dd417e69c64adfc824294c8f31395eece505802a332462909d101389350f8a2fa4c2cc9cdc7792c5b7cda5da31177e61bfb46763095b0acc86a2e630cb0849e114d5f518153cdc7d58d5fd42be0f49ba6e36752d7206ff85e66f0ec2301d63f483dd62cc0b3e29f0aa008c8c2dcee454a746279925acf3633fdec6dd6f0f5fae56d7c7c1bc20b89e899b211d2c0a0930d7b5
+#6b34ead1092a91d104a7e3ba964f0f3e553c6725ffd89fd71fedba385676b9e47789795ff7e8c6c62b69b364c1606dd101564b5ae654327c72eb9dcc5785bfbb1da1c82132b9500199fba939c31365b6445be6fcd5d0d2071511e961e4131bd3554a65ce6a1892b24e8c2768aa5e869b2d3d4237cbf09f1e31af84ffd43a5aeb12de4038c57ad8a6c0d2fd59c088b83346e6abbcae5262d021520b4299d126fc3308fa56eba3e836f297dc5e0b52745da7161ce480961440580cd3deed3a072d4862cbcbcaf6d68241f94f20888161f94ea8f3653ee04d8ba68f71e42599890399659e15b845a8d9acf6d24f5cd91dbabe104d00dd6c015aefecfce4600ce834322e84172591ca119687e6cf5b5becd8a341e12a46f3ec0cf68801af266c9b52f4817e28abfbdd25ff989fc810a6db9a2afd3757cb304dfd9c3a33fec2475908e20071e445e72e7ea2e4261afa4d9e15efb6585e89b8a344009b2b36e4019a71cd450eec3910f9a6ea53b4440d51ad4ff1c13b7c8183230288d3e92c875d0166f37af221766803ef4ef0d41b46d9b4bbb03013d7ff397fa6478be08ca2f10afa76eb51aff37759b6078b7088871e37e6b253d1248ce8272af0fbbafc13b3d5007dc47c8575606354dc2dc81004b93973992f7f752fefc520bb51f17d7308b9a895f90b35c761b504e876e4b96a125cb4d960b1a602a3983a6a7b4776245d663b
