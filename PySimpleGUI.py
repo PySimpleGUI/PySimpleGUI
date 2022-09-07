@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.90 Unreleased"
+version = __version__ = "4.60.3.91 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -234,6 +234,8 @@ _change_log = """
         Addition of TITLEBAR_TEXT_KEY to provide access to custom titlebar titles
     4.60.3.90
         Implemented the visible parameter for TabGroup.  Was not being honored when creating element. Added TabGroup.update so it can be made visible.
+    4.60.3.91
+        Added support for Custom Titlebar to the Window.set_title method
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11762,6 +11764,12 @@ class Window:
         """
         if not self._is_window_created('tried Window.set_title'):
             return
+        if self._has_custom_titlebar:
+            try:    # just in case something goes badly, don't crash
+                self.find_element(TITLEBAR_TEXT_KEY).update(title)
+            except:
+                pass
+        # even with custom titlebar, set the main window's title too so it'll match when minimized
         self.TKroot.wm_title(str(title))
 
     def make_modal(self):
@@ -25700,4 +25708,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6b34ead1092a91d104a7e3ba964f0f3e553c6725ffd89fd71fedba385676b9e47789795ff7e8c6c62b69b364c1606dd101564b5ae654327c72eb9dcc5785bfbb1da1c82132b9500199fba939c31365b6445be6fcd5d0d2071511e961e4131bd3554a65ce6a1892b24e8c2768aa5e869b2d3d4237cbf09f1e31af84ffd43a5aeb12de4038c57ad8a6c0d2fd59c088b83346e6abbcae5262d021520b4299d126fc3308fa56eba3e836f297dc5e0b52745da7161ce480961440580cd3deed3a072d4862cbcbcaf6d68241f94f20888161f94ea8f3653ee04d8ba68f71e42599890399659e15b845a8d9acf6d24f5cd91dbabe104d00dd6c015aefecfce4600ce834322e84172591ca119687e6cf5b5becd8a341e12a46f3ec0cf68801af266c9b52f4817e28abfbdd25ff989fc810a6db9a2afd3757cb304dfd9c3a33fec2475908e20071e445e72e7ea2e4261afa4d9e15efb6585e89b8a344009b2b36e4019a71cd450eec3910f9a6ea53b4440d51ad4ff1c13b7c8183230288d3e92c875d0166f37af221766803ef4ef0d41b46d9b4bbb03013d7ff397fa6478be08ca2f10afa76eb51aff37759b6078b7088871e37e6b253d1248ce8272af0fbbafc13b3d5007dc47c8575606354dc2dc81004b93973992f7f752fefc520bb51f17d7308b9a895f90b35c761b504e876e4b96a125cb4d960b1a602a3983a6a7b4776245d663b
+#0ba04e0198bf4d5b429b4717a9f42a9274fffa1d7df13bffceb9f8d957148083b866e6a7718a6cb2c89031d751c24ce3fa82047c34e2a65270678f379403ee472f161e3c723c3d084ea1c8b637987625c93faa65a15f638f19605c5c9aeacfb19f8d8ab089cb994400571f698d682dd5ccd46d416bfaa6ba813ae6787349f8bd62da0e133ffca129376e9c11c03a127e2f90291d7817e98e7073e449fe9cc4e2f6327d6364aca8e9cdce57d64cb81ba52bedef87708d8331d8537682eede8a70ae07dde40adde6fd168693c4a07b210ae1843f9333e5f00ecca2ce323af9f6ae324e99f166dc42b6d392b8c9de40a679010fbf7047c95827307c34a576020f5b470bf202d5efa3cc27e5b8bd527a96d90ed913e0231b72f0eec49bb5c3deb98bb46745ec1a47c449f38e6454fd94c00a35b7e3265c6272bb9a3ffe25811d2aa5c6733b36978e81a1c738f2b2b71a59501e951fd4501eb105b0ac911c5801b3d06d8eeac8bebb72267b0d805a114fc67332ac1f03fca58034901f0dbfc4b9b665d411ec457e5cd0386b4c7bf388f2cc2d801a638a451015c4fa6b1a196e15b0d4e39f3d520bf8e9d3abea1f880dc9d40db777ce471867bc4c433c066d4114c7b12bb2de0aff3eed73312456a0539166d27d328db657268066cbba2065f1b94869a887e366bd9551b02a92147dcc191ed025f3ee6dba724f3722d0effa914d40d2
