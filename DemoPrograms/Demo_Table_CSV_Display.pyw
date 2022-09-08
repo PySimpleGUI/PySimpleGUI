@@ -94,20 +94,12 @@ def main():
                  sg.B('Reset Table', tooltip='Resets entire table to your original data'),
                  sg.Checkbox('Sort Descending', k='-DESCENDING-'), sg.Push()],
                 [sg.Table(values=data, headings=header_list, max_col_width=25,
-                        auto_size_columns=True,
-                        display_row_numbers=True,
-                        vertical_scroll_only=True,
-                        justification='right',
-                        num_rows=50,
-                        # alternating_row_color='lightyellow',
-                        key='-TABLE-',
-                        selected_row_colors='red on yellow',
-                        enable_events=True,
-                        expand_x=True,
-                        expand_y=True,
-                        enable_click_events=True,  # Comment out to not enable header and other clicks
-                          ),],
-              [sg.Sizegrip()]]
+                        auto_size_columns=True, display_row_numbers=True, vertical_scroll_only=True,
+                        justification='right', num_rows=50,
+                        key='-TABLE-', selected_row_colors='red on yellow', enable_events=True,
+                        expand_x=True, expand_y=True,
+                        enable_click_events=True)],
+                [sg.Sizegrip()]]
 
     # ------ Create Window ------
     window = sg.Window('CSV Table Display', layout, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT,  resizable=True)
