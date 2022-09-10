@@ -5,7 +5,7 @@ import warnings
 
 import PySimpleGUI as sg
 
-__version__ = '1.8.0'
+__version__ = '1.12.0'
 
 """
     PySimpleGUI Demo Program Browser
@@ -35,7 +35,8 @@ __version__ = '1.8.0'
                 
     Versions:
         1.8.0 - Addition of option to show ALL file types, not just Python files
-                        
+        1.12.0 - Fix for problem with spaces in filename and using an editor specified in the demo program settings  
+                                
     Copyright 2021, 2022 PySimpleGUI.org
 """
 
@@ -503,9 +504,8 @@ def make_window():
     window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
     window.set_min_size(window.size)
 
-    # window['-DEMO LIST-'].expand(True, True, True)
-    # window[ML_KEY].expand(True, True, True)
-    # window['-PANE-'].expand(True, True, True)
+
+    # window.bind("<Alt_L><x>", 'Exit')       # matches the underscore shown on the Exit button (For now disabled this feature until buttons with underscore released to PyPI)
 
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
@@ -532,7 +532,7 @@ def main():
         version = sg.version
         version_parts = version.split('.')
         major_version, minor_version = int(version_parts[0]), int(version_parts[1])
-        if major_version < 4 or minor_version < 32:
+        if major_version < 4 or (major_version== 4 and minor_version < 32):
             sg.popup('Warning - Your PySimpleGUI version is less then 4.35.0',
                      'As a result, you will not be able to use the EDIT features of this program',
                      'Please upgrade to at least 4.35.0',
@@ -579,12 +579,12 @@ def main():
                     sg.cprint(f'{full_filename}', c='white on purple')
                     # if line != 1:
                     if using_local_editor():
-                        sg.execute_command_subprocess(editor_program, full_filename)
+                        sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
                     else:
                         try:
                             sg.execute_editor(full_filename, line_number=int(line))
                         except:
-                            sg.execute_command_subprocess(editor_program, full_filename)
+                            sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
                     # else:
                     #     sg.execute_editor(full_filename)
                 else:
