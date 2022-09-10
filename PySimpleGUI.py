@@ -8729,7 +8729,7 @@ class Table(Element):
         :param display_row_numbers:     if True, the first column of the table will be the row #
         :type display_row_numbers:      (bool)
         :param starting_row_number:     The row number to use for the first row. All following rows will be based on this starting value. Default is 0.
-        :type starting_row_number:      (bool)
+        :type starting_row_number:      (int)
         :param num_rows:                The number of rows of the table to display at a time
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
