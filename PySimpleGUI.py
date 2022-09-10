@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.91 Unreleased"
+version = __version__ = "4.60.3.92 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -236,6 +236,8 @@ _change_log = """
         Implemented the visible parameter for TabGroup.  Was not being honored when creating element. Added TabGroup.update so it can be made visible.
     4.60.3.91
         Added support for Custom Titlebar to the Window.set_title method
+    4.60.3.92
+        Addition of starting_row_number parameter to the Table element.  Sets the value for the first row in the table.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8698,7 +8700,7 @@ Menubar = Menu  # another name for Menu to make it clear it's the Menu Bar
 class Table(Element):
 
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, cols_justification=None, def_col_width=10,
-                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
+                 auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, starting_row_number=0, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False, border_width=None,
@@ -8726,6 +8728,8 @@ class Table(Element):
         :type select_mode:              (enum)
         :param display_row_numbers:     if True, the first column of the table will be the row #
         :type display_row_numbers:      (bool)
+        :param starting_row_number:     The row number to use for the first row. All following rows will be based on this starting value. Default is 0.
+        :type starting_row_number:      (bool)
         :param num_rows:                The number of rows of the table to display at a time
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
@@ -8835,7 +8839,7 @@ class Table(Element):
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.BindReturnKey = bind_return_key
-        self.StartingRowNumber = 0  # When displaying row numbers, where to start
+        self.StartingRowNumber = starting_row_number  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
         self.enable_click_events = enable_click_events
         self.right_click_selects = right_click_selects
