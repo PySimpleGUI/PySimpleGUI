@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.93 Unreleased"
+version = __version__ = "4.60.3.94 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -241,6 +241,8 @@ _change_log = """
     4.60.3.93
         Added 2 parameters to popup - drop_whitespace is passed to the wraptext.fill method. right_justify_buttons will "push" buttons to
             the right side if set to True
+    4.60.3.94
+        Added Element.save_element_screenshot_to_disk - uses the same PIL integration that the save window screenshot to disk uses but applied to a single element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2034,6 +2036,57 @@ class Element():
                 self.Widget.bind('<ButtonRelease-2>', self._RightClickMenuCallback)
             else:
                 self.Widget.bind('<ButtonRelease-3>', self._RightClickMenuCallback)
+
+
+    def save_element_screenshot_to_disk(self, filename=None):
+        """
+        Saves an image of the PySimpleGUI window provided into the filename provided
+
+        :param filename:        Optional filename to save screenshot to. If not included, the User Settinds are used to get the filename
+        :return:                A PIL ImageGrab object that can be saved or manipulated
+        :rtype:                 (PIL.ImageGrab | None)
+        """
+        global pil_import_attempted, pil_imported, PIL, ImageGrab, Image
+
+        if not pil_import_attempted:
+            try:
+                import PIL as PIL
+                from PIL import ImageGrab
+                from PIL import Image
+                pil_imported = True
+                pil_import_attempted = True
+            except:
+                pil_imported = False
+                pil_import_attempted = True
+                print('FAILED TO IMPORT PIL!')
+                return None
+        try:
+            # Add a little to the X direction if window has a titlebar
+            rect = (self.widget.winfo_rootx(), self.widget.winfo_rooty(), self.widget.winfo_rootx() + self.widget.winfo_width(), self.widget.winfo_rooty() + self.widget.winfo_height())
+
+            grab = ImageGrab.grab(bbox=rect)
+            # Save the grabbed image to disk
+        except Exception as e:
+            # print(e)
+            popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture of an element', e)
+            return None
+
+        # return grab
+        if filename is None:
+            folder = pysimplegui_user_settings.get('-screenshots folder-', '')
+            filename = pysimplegui_user_settings.get('-screenshots filename-', '')
+            full_filename = os.path.join(folder, filename)
+        else:
+            full_filename = filename
+        if full_filename:
+            try:
+                grab.save(full_filename)
+            except Exception as e:
+                popup_error_with_traceback('Screen capture failure', 'Error happened while trying to save screencapture', e)
+        else:
+            popup_error_with_traceback('Screen capture failure', 'You have attempted a screen capture but have not set up a good filename to save to')
+        return grab
+
 
 
 
@@ -25723,4 +25776,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0b9ade70fc3fea852582befe3a918c5f01c37f2d381680993eadf3901d88d3f81742e9a412b9f0861252dc9d0fc2a092526ff2af28a97ef3573a735b1cc852a66189b738fd281701cbd8272c6c774138958db1b0cef313a70ef003cd4682cc08faa86995280163700a372caba9ac4f58aa6e643fd942d88bae6cc82c217c4027cf778b85b424d31d35af632193086c7dcb8484c39184b2b35c49706f19c32b6f6a1b5228c1b923ca86baa2a8236d4016c99161486d0d9895a102852dd8b9017fd40eeac09327c59b0d15114ea9136c9315f8350f4394bea1dc20db1bef293ed8cf5c635645bb2e92fa02c163ae85847de171d5051cff8012dda762aa3807bd0730e242e4d791353821f68945441af7389698904de82cb1be0edea7f28a9b46abc21f0ca7a92059b82e71af664805cf20fc0c6990179061b40fbb8fcea80bd506124e5488936163cf385021fa78dfd0d1b8572eff8cc639991e713e68e58745fd3be8c349dfd59b0cd88eab6eb686432d89b0cd457c2237a1b9ca8e7963640a416cf024148e248dbbfd4b05c1f2c92264be98096776c05251d81f0c45b292ee9ce3fd310a3ea3a219bf757fc0f58244cf13020b520b9055c8a20f813bb1a48165ef8126a3fa1e4b342cc8bf58db02bfe30d85d55c554fa1c958394dd42d24e33fba88e097e6045d231ce9bc07fc5611db5f69eb2d32464febdb0897c36c4a6e14
+#5fcc20b8c4def28759a9b98f632691e05c5809a589633d7c9e79e429680b8071b8d4e3ee96ca02f0836e7fd3c60b1a413789aa16c1eba8975b5d879a36084cc4865123d7f72d414213531b4ca592bd4783cdef947c15b81c1e0668ffcfab0bf8074b676e642a3e4e834a26b5f6961ce2a81ccffd0b859d0a3054cc67ebca9555207bc5d210377b63b88b8942e8510daaa97f39ebf3436c53582e17361fce733843890841ac7ada1e252762cdbbf51c6eb38cbcf6068129b6911d153b77a085d1b098b28337d984a2f5d1ba31f0d42a1bd4950bffac9b978e9fe8b71abccaeed145cdad89426536e535ea94451e847850db3b60f1fcbcc11803c01a3743e27e9b99fff0b85f5a86c02e74cf869728a99672971f65608e88c58196a08c409d4a847a1213c7be592917e34f963e160cc47b729814424ec2b5b26f686063fcc0bf697936df3ccf668ec0f07ad8b90bf6728653d365a0191c12703e0c3ea34e96ee3a6d68cdc313fb21401fa31d21cfa80ad6608395ef60a7346e6c0287eb06e830c25bbd2e824c7dadda0e4442d3b9f752d3b442500d043d94edf3b631537d5c05bb2a6eb878fb2b6980150e10ff14c95c654181805eeb2ce981df1195e97a29ff9d7c3a8daae797f2dc49251c5e9dd2e86417e02865ce9b2a35e0ddca8a488c43ebdf82441d038952d0f724d2c09ca7b3d42fa396fd61fc27efa769d22e7838b573
