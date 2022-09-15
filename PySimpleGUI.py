@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.92 Unreleased"
+version = __version__ = "4.60.3.93 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -238,6 +238,9 @@ _change_log = """
         Added support for Custom Titlebar to the Window.set_title method
     4.60.3.92
         Addition of starting_row_number parameter to the Table element.  Sets the value for the first row in the table.
+    4.60.3.93
+        Added 2 parameters to popup - drop_whitespace is passed to the wraptext.fill method. right_justify_buttons will "push" buttons to
+            the right side if set to True
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19986,7 +19989,7 @@ def clipboard_get():
 
 def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
           auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True):
+          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True, right_justify_buttons=False, drop_whitespace=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -19995,51 +19998,57 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     choice, _ = sg.Window('Continue?', [[sg.T('Do you want to continue?')], [sg.Yes(s=10), sg.No(s=10)]], disable_close=True).read(close=True)
 
 
-    :param *args:               Variable number of your arguments.  Load up the call with stuff to see!
-    :type *args:                (Any)
-    :param title:               Optional title for the window. If none provided, the first arg will be used instead.
-    :type title:                (str)
-    :param button_color:        Color of the buttons shown (text color, button color)
-    :type button_color:         (str, str) | None
-    :param background_color:    Window's background color
-    :type background_color:     (str)
-    :param text_color:          text color
-    :type text_color:           (str)
-    :param button_type:         NOT USER SET!  Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
-    :type button_type:          (int)
-    :param auto_close:          If True the window will automatically close
-    :type auto_close:           (bool)
-    :param auto_close_duration: time in seconds to keep window open before closing it automatically
-    :type auto_close_duration:  (int)
-    :param custom_text:         A string or pair of strings that contain the text to display on the buttons
-    :type custom_text:          (str, str) | str
-    :param non_blocking:        If True then will immediately return from the function without waiting for the user's input.
-    :type non_blocking:         (bool)
-    :param icon:                icon to display on the window. Same format as a Window call
-    :type icon:                 str | bytes
-    :param line_width:          Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
-    :type line_width:           (int)
-    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[font_name, size, modifiers]
-    :param no_titlebar:         If True will not show the frame around the window and the titlebar across the top
-    :type no_titlebar:          (bool)
-    :param grab_anywhere:       If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
-    :type grab_anywhere:        (bool)
-    :param location:            Location on screen to display the top left corner of window. Defaults to window centered on screen
-    :type location:             (int, int)
-    :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
-    :param keep_on_top:         If True the window will remain above all current windows
-    :type keep_on_top:          (bool)
-    :param any_key_closes:      If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
-    :type any_key_closes:       (bool)
-    :param image:               Image to include at the top of the popup window
-    :type image:                (str) or (bytes)
-    :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
-    :type modal:                bool
-    :return:                    Returns text of the button that was pressed.  None will be returned if user closed window with X
-    :rtype:                     str | None
+    :param *args:                 Variable number of your arguments.  Load up the call with stuff to see!
+    :type *args:                  (Any)
+    :param title:                 Optional title for the window. If none provided, the first arg will be used instead.
+    :type title:                  (str)
+    :param button_color:          Color of the buttons shown (text color, button color)
+    :type button_color:           (str, str) | None
+    :param background_color:      Window's background color
+    :type background_color:       (str)
+    :param text_color:            text color
+    :type text_color:             (str)
+    :param button_type:           NOT USER SET!  Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
+    :type button_type:            (int)
+    :param auto_close:            If True the window will automatically close
+    :type auto_close:             (bool)
+    :param auto_close_duration:   time in seconds to keep window open before closing it automatically
+    :type auto_close_duration:    (int)
+    :param custom_text:           A string or pair of strings that contain the text to display on the buttons
+    :type custom_text:            (str, str) | str
+    :param non_blocking:          If True then will immediately return from the function without waiting for the user's input.
+    :type non_blocking:           (bool)
+    :param icon:                  icon to display on the window. Same format as a Window call
+    :type icon:                   str | bytes
+    :param line_width:            Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
+    :type line_width:             (int)
+    :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+    :type font:                   str | Tuple[font_name, size, modifiers]
+    :param no_titlebar:           If True will not show the frame around the window and the titlebar across the top
+    :type no_titlebar:            (bool)
+    :param grab_anywhere:         If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
+    :type grab_anywhere:          (bool)
+    :param location:              Location on screen to display the top left corner of window. Defaults to window centered on screen
+    :type location:               (int, int)
+    :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:      (int, int)
+    :param keep_on_top:           If True the window will remain above all current windows
+    :type keep_on_top:            (bool)
+    :param any_key_closes:        If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
+    :type any_key_closes:         (bool)
+    :param image:                 Image to include at the top of the popup window
+    :type image:                  (str) or (bytes)
+    :param modal:                 If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
+    :type modal:                  bool
+    :param right_justify_buttons: If True then the buttons will be "pushed" to the right side of the Window
+    :type right_justify_buttons:  bool
+    :param drop_whitespace:       Passed to the wraptext.fill method.  If True (default) whitespace is stripped
+    :type drop_whitespace:        bool
+    :return:                      Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype:                       str | None
     """
+
+
 
     if not args:
         args_to_print = ['']
@@ -20069,7 +20078,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
             msg_list = message.split('\n')  # break into segments that will each be wrapped
             message_wrapped = '\n'.join([textwrap.fill(msg, local_line_width) for msg in msg_list])
         else:
-            message_wrapped = textwrap.fill(message, local_line_width)
+            message_wrapped = textwrap.fill(message, local_line_width, drop_whitespace=drop_whitespace)
         message_wrapped_lines = message_wrapped.count('\n') + 1
         longest_line_len = max([len(l) for l in message.split('\n')])
         width_used = min(longest_line_len, local_line_width)
@@ -20097,23 +20106,25 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
             layout += [[PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True,
                                     size=(len(custom_text[0]), 1)),
                         PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[1]), 1))]]
-    elif button_type is POPUP_BUTTONS_YES_NO:
+    elif button_type == POPUP_BUTTONS_YES_NO:
         layout += [[PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
                                 size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1))]]
-    elif button_type is POPUP_BUTTONS_CANCELLED:
+    elif button_type == POPUP_BUTTONS_CANCELLED:
         layout += [[
             PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3))]]
-    elif button_type is POPUP_BUTTONS_ERROR:
+    elif button_type == POPUP_BUTTONS_ERROR:
         layout += [[PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True,
                                 pad=((20, 0), 3))]]
-    elif button_type is POPUP_BUTTONS_OK_CANCEL:
+    elif button_type == POPUP_BUTTONS_OK_CANCEL:
         layout += [[PopupButton('OK', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True),
                     PopupButton('Cancel', size=(6, 1), button_color=button_color)]]
-    elif button_type is POPUP_BUTTONS_NO_BUTTONS:
+    elif button_type == POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
         layout += [[PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True,
                                 pad=((20, 0), 3))]]
+    if right_justify_buttons is True and button_type != POPUP_BUTTONS_NO_BUTTONS:
+        layout[-1] = [Push()] + layout[-1]
 
     window = Window(_title, layout, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
@@ -25712,4 +25723,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0ba04e0198bf4d5b429b4717a9f42a9274fffa1d7df13bffceb9f8d957148083b866e6a7718a6cb2c89031d751c24ce3fa82047c34e2a65270678f379403ee472f161e3c723c3d084ea1c8b637987625c93faa65a15f638f19605c5c9aeacfb19f8d8ab089cb994400571f698d682dd5ccd46d416bfaa6ba813ae6787349f8bd62da0e133ffca129376e9c11c03a127e2f90291d7817e98e7073e449fe9cc4e2f6327d6364aca8e9cdce57d64cb81ba52bedef87708d8331d8537682eede8a70ae07dde40adde6fd168693c4a07b210ae1843f9333e5f00ecca2ce323af9f6ae324e99f166dc42b6d392b8c9de40a679010fbf7047c95827307c34a576020f5b470bf202d5efa3cc27e5b8bd527a96d90ed913e0231b72f0eec49bb5c3deb98bb46745ec1a47c449f38e6454fd94c00a35b7e3265c6272bb9a3ffe25811d2aa5c6733b36978e81a1c738f2b2b71a59501e951fd4501eb105b0ac911c5801b3d06d8eeac8bebb72267b0d805a114fc67332ac1f03fca58034901f0dbfc4b9b665d411ec457e5cd0386b4c7bf388f2cc2d801a638a451015c4fa6b1a196e15b0d4e39f3d520bf8e9d3abea1f880dc9d40db777ce471867bc4c433c066d4114c7b12bb2de0aff3eed73312456a0539166d27d328db657268066cbba2065f1b94869a887e366bd9551b02a92147dcc191ed025f3ee6dba724f3722d0effa914d40d2
+#0b9ade70fc3fea852582befe3a918c5f01c37f2d381680993eadf3901d88d3f81742e9a412b9f0861252dc9d0fc2a092526ff2af28a97ef3573a735b1cc852a66189b738fd281701cbd8272c6c774138958db1b0cef313a70ef003cd4682cc08faa86995280163700a372caba9ac4f58aa6e643fd942d88bae6cc82c217c4027cf778b85b424d31d35af632193086c7dcb8484c39184b2b35c49706f19c32b6f6a1b5228c1b923ca86baa2a8236d4016c99161486d0d9895a102852dd8b9017fd40eeac09327c59b0d15114ea9136c9315f8350f4394bea1dc20db1bef293ed8cf5c635645bb2e92fa02c163ae85847de171d5051cff8012dda762aa3807bd0730e242e4d791353821f68945441af7389698904de82cb1be0edea7f28a9b46abc21f0ca7a92059b82e71af664805cf20fc0c6990179061b40fbb8fcea80bd506124e5488936163cf385021fa78dfd0d1b8572eff8cc639991e713e68e58745fd3be8c349dfd59b0cd88eab6eb686432d89b0cd457c2237a1b9ca8e7963640a416cf024148e248dbbfd4b05c1f2c92264be98096776c05251d81f0c45b292ee9ce3fd310a3ea3a219bf757fc0f58244cf13020b520b9055c8a20f813bb1a48165ef8126a3fa1e4b342cc8bf58db02bfe30d85d55c554fa1c958394dd42d24e33fba88e097e6045d231ce9bc07fc5611db5f69eb2d32464febdb0897c36c4a6e14
