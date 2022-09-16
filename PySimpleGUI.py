@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.94 Unreleased"
+version = __version__ = "4.60.3.95 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -243,6 +243,9 @@ _change_log = """
             the right side if set to True
     4.60.3.94
         Added Element.save_element_screenshot_to_disk - uses the same PIL integration that the save window screenshot to disk uses but applied to a single element
+    4.60.3.95
+        Changed popup again - replaced right_justify_buttons with button_justification.  Also removed the extra padding that was being added to the buttons.  This
+            matches a changed made to popup_scrolled earlier
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20042,7 +20045,7 @@ def clipboard_get():
 
 def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
           auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True, right_justify_buttons=False, drop_whitespace=True):
+          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True, button_justification=None, drop_whitespace=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -20095,8 +20098,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type modal:                  bool
     :param right_justify_buttons: If True then the buttons will be "pushed" to the right side of the Window
     :type right_justify_buttons:  bool
-    :param drop_whitespace:       Passed to the wraptext.fill method.  If True (default) whitespace is stripped
-    :type drop_whitespace:        bool
+    :param button_justification:  Speficies if buttons should be left, right or centered. Default is left justified
+    :type button_justification:   str
     :return:                      Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype:                       str | None
     """
@@ -20160,24 +20163,27 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
                                     size=(len(custom_text[0]), 1)),
                         PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[1]), 1))]]
     elif button_type == POPUP_BUTTONS_YES_NO:
-        layout += [[PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
+        layout += [[PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True,
                                 size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1))]]
     elif button_type == POPUP_BUTTONS_CANCELLED:
         layout += [[
-            PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 0), 3))]]
+            PopupButton('Cancelled', button_color=button_color, focus=True, bind_return_key=True )]]
     elif button_type == POPUP_BUTTONS_ERROR:
-        layout += [[PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True,
-                                pad=((20, 0), 3))]]
+        layout += [[PopupButton('Error', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True)]]
     elif button_type == POPUP_BUTTONS_OK_CANCEL:
         layout += [[PopupButton('OK', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True),
                     PopupButton('Cancel', size=(6, 1), button_color=button_color)]]
     elif button_type == POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
-        layout += [[PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True,
-                                pad=((20, 0), 3))]]
-    if right_justify_buttons is True and button_type != POPUP_BUTTONS_NO_BUTTONS:
-        layout[-1] = [Push()] + layout[-1]
+        layout += [[PopupButton('OK', size=(5, 1), button_color=button_color, focus=True, bind_return_key=True,)]]
+    if button_justification is not None:
+        justification = button_justification.lower()[0]
+        if justification == 'r':
+            layout[-1] = [Push()] + layout[-1]
+        elif justification == 'c':
+            layout[-1] = [Push()] + layout[-1] + [Push()]
+
 
     window = Window(_title, layout, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
@@ -20212,9 +20218,7 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, button_justification='l', auto_close=False, auto_close_duration=None,
-                   size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
-                   image=None, icon=None, modal=True, no_sizegrip=False):
+def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, button_justification='l', auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None, image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
