@@ -280,12 +280,13 @@ def main(refresh_rate, win_location):
 
     window = create_window(win_location, settings)
 
-    try:
-        while True:  # Event Loop
-            event, values = window.read(timeout=refresh_in_milliseconds)
-            if event in (None, '-QUIT-', 'Exit', sg.WIN_CLOSE_ATTEMPTED_EVENT):
-                sg.user_settings_set_entry('-win location-', window.current_location())  # The line of code to save the position before exiting
-                break
+
+    while True:  # Event Loop
+        event, values = window.read(timeout=refresh_in_milliseconds)
+        if event in (None, '-QUIT-', 'Exit', sg.WIN_CLOSE_ATTEMPTED_EVENT):
+            sg.user_settings_set_entry('-win location-', window.current_location())  # The line of code to save the position before exiting
+            break
+        try:
             if event == '-CHANGE-':
                 x, y = window.current_location()
                 settings = change_settings(settings, (x + 200, y+50))
@@ -303,10 +304,10 @@ def main(refresh_rate, win_location):
 
             update_weather()
             update_metrics(window)
-    except Exception as e:
-        sg.Print('*** GOT Exception in event loop ***', c='white on red', location=window.current_location(), keep_on_top=True)
-        sg.Print('File = ', __file__, f'Window title: {window.Title}')
-        sg.Print('Exception = ', e, wait=True)      # IMPORTANT to add a wait/blocking so that the print pauses execution. Otherwise program continue and exits
+        except Exception as e:
+            sg.Print('*** GOT Exception in event loop ***', c='white on red', location=window.current_location(), keep_on_top=True)
+            sg.Print('File = ', __file__, f'Window title: {window.Title}')
+            sg.Print('Exception = ', e, wait=True)      # IMPORTANT to add a wait/blocking so that the print pauses execution. Otherwise program continue and exits
     window.close()
 
 
