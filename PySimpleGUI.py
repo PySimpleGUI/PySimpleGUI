@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.96 Unreleased"
+version = __version__ = "4.60.3.97 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -248,6 +248,8 @@ _change_log = """
             matches a changed made to popup_scrolled earlier
     4.60.3.96
         More emojis?  Yes... more emojis...
+    4.60.3.97
+        The main test harness now shows the python interpreter used to lauch the test harness to make clearer what's running
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4046,8 +4048,8 @@ class Text(Element):
         :type click_submits:     (bool)
         :param enable_events:    Turns on the element specific events. Text events happen when the text is clicked
         :type enable_events:     (bool)
-        :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
-        :type relief:            (str/enum)
+        :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with RELIEF - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
+        :type relief:            (str)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              (str or (str, int[, str]) or None)
         :param text_color:       color of the text
@@ -25508,12 +25510,13 @@ def _create_main_window():
     layout_top = Column([
         [Image(EMOJI_BASE64_HAPPY_BIG_SMILE, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-IMAGE-'),
-         Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file vs importing', font='ANY 14',
+         Text('PySimpleGUI Test Harness', font='ANY 14',
               tooltip='My tooltip', key='-TEXT1-')],
         VerLine(ver, 'PySimpleGUI Version') + [Image(HEART_3D_BASE64, subsample=4)],
-        VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
+        # VerLine('{}/{}'.format(tkversion, tclversion), 'TK/TCL Versions'),
         VerLine(tclversion_detailed, 'detailed tkinter version'),
-        VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, 2)),
+        VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, None)),
+        VerLine(sys.executable, 'Python Executable'),
         VerLine(sys.version, 'Python Version', size=(40,2)) +[Image(PYTHON_COLORED_HEARTS_BASE64, subsample=3, k='-PYTHON HEARTS-', enable_events=True)]], pad=0)
 
     layout_bottom = [
