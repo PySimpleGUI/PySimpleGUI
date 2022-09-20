@@ -12672,14 +12672,14 @@ class SystemTray:
         """
 
         if isinstance(time, tuple):
-            fade_duraction, display_duration = time
+            fade_duration, display_duration = time
         else:
             fade_duration = SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION
             display_duration = time
 
         user_icon = data_base64 or filename or data or messageicon
 
-        event = self.notify(title, message, icon=user_icon, fade_in_duration=fade_duraction, display_duration_in_ms=display_duration)
+        event = self.notify(title, message, icon=user_icon, fade_in_duration=fade_duration, display_duration_in_ms=display_duration)
         self.last_message_event = event
         return event
 
