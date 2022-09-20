@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.97 Unreleased"
+version = __version__ = "4.60.3.98 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -249,7 +249,10 @@ _change_log = """
     4.60.3.96
         More emojis?  Yes... more emojis...
     4.60.3.97
-        The main test harness now shows the python interpreter used to lauch the test harness to make clearer what's running
+        The main test harness now shows the python interpreter used to launch the test harness to make clearer what's running
+    4.60.3.98
+        Better alignment of text in test harness
+        Fixed mispelling in SystemTray.show_message - crashed if an int was passed in as the time value
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12674,14 +12677,14 @@ class SystemTray:
         """
 
         if isinstance(time, tuple):
-            fade_duraction, display_duration = time
+            fade_duration, display_duration = time
         else:
             fade_duration = SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION
             display_duration = time
 
         user_icon = data_base64 or filename or data or messageicon
 
-        event = self.notify(title, message, icon=user_icon, fade_in_duration=fade_duraction, display_duration_in_ms=display_duration)
+        event = self.notify(title, message, icon=user_icon, fade_in_duration=fade_duration, display_duration_in_ms=display_duration)
         self.last_message_event = event
         return event
 
@@ -25505,7 +25508,7 @@ def _create_main_window():
     tab9 = Tab('Global\nSettings', global_settings_tab_layout, k='-TAB GlOBAL SETTINGS-')
 
     def VerLine(version, description, justification='r', size=(40, 1)):
-        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size, pad=(0,0)), vtop(T(description, font='Any 12', pad=(0,0)))]
+        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size, pad=(0,0)), T(description, font='Any 12', pad=(0,0))]
 
     layout_top = Column([
         [Image(EMOJI_BASE64_HAPPY_BIG_SMILE, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
