@@ -18,8 +18,8 @@ import PySimpleGUI as sg
 
 def main():
     layout = [[sg.Text('Fancy Checkboxes... Simply')],
-              [sg.Image(checked, key='-IMAGE1-', metadata=True, enable_events=True), sg.Text(True, k='-VAL1-')],
-              [sg.Image(unchecked, key='-IMAGE2-', metadata=False, enable_events=True), sg.Text(False, k='-VAL2-')],
+              [sg.Image(checked, key=('-IMAGE-', 1), metadata=True, enable_events=True), sg.Text(True, enable_events=True, k=('-TEXT-', 1))],
+              [sg.Image(unchecked, key=('-IMAGE-', 2), metadata=False, enable_events=True), sg.Text(False, enable_events=True, k=('-TEXT-', 2))],
               [sg.Button('Go'), sg.Button('Exit')]]
 
     window = sg.Window('Custom Checkboxes', layout, font="_ 14")
@@ -28,12 +28,13 @@ def main():
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         # if a checkbox is clicked, flip the vale and the image
-        if '-IMAGE' in event:
-            window[event].metadata = not window[event].metadata
-            window[event].update(checked if window[event].metadata else unchecked)
-        # For fun, update the string next to the checkbox
-        window['-VAL1-'].update(window['-IMAGE1-'].metadata)
-        window['-VAL2-'].update(window['-IMAGE2-'].metadata)
+        if event[0].startswith(('-IMAGE', '-TEXT')):
+            cbox_key = ('-IMAGE-', event[1])
+            window[cbox_key].metadata = not window[cbox_key].metadata
+            window[cbox_key].update(checked if window[cbox_key].metadata else unchecked)
+            # Update the string next to the checkbox
+            window[('-TEXT-', 1)].update(window[('-IMAGE-', 1)].metadata)
+            window[('-TEXT-', 2)].update(window[('-IMAGE-', 2)].metadata)
 
     window.close()
 
