@@ -15,7 +15,6 @@ import PySimpleGUI as sg
     Copyright 2022 PySimpleGUI
 """
 
-
 def main():
     layout = [[sg.Text('Fancy Checkboxes... Simply')],
               [sg.Image(checked, key=('-IMAGE-', 1), metadata=True, enable_events=True), sg.Text(True, enable_events=True, k=('-TEXT-', 1))],
@@ -25,16 +24,17 @@ def main():
     window = sg.Window('Custom Checkboxes', layout, font="_ 14")
     while True:
         event, values = window.read()
+        print(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         # if a checkbox is clicked, flip the vale and the image
-        if event[0].startswith(('-IMAGE', '-TEXT')):
+        if event[0] in ('-IMAGE-', '-TEXT-'):
             cbox_key = ('-IMAGE-', event[1])
+            text_key = ('-TEXT-', event[1])
             window[cbox_key].metadata = not window[cbox_key].metadata
             window[cbox_key].update(checked if window[cbox_key].metadata else unchecked)
             # Update the string next to the checkbox
-            window[('-TEXT-', 1)].update(window[('-IMAGE-', 1)].metadata)
-            window[('-TEXT-', 2)].update(window[('-IMAGE-', 2)].metadata)
+            window[text_key].update(window[cbox_key].metadata)
 
     window.close()
 
