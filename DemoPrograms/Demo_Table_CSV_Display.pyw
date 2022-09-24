@@ -90,9 +90,10 @@ def main():
     layout = [  [sg.Text('Click a heading to sort on that column or enter a filter and click a heading to search for matches in that column')],
                 [sg.Text(f'{len(data)} Records in table', font='_ 18')],
                 [sg.Text(k='-RECORDS SHOWN-', font='_ 18')],
+                [sg.Text(k='-SELECTED-')],
                 [sg.T('Filter:'), sg.Input(k='-FILTER-', focus=True, tooltip='Not case sensative\nEnter value and click on a col header'),
                  sg.B('Reset Table', tooltip='Resets entire table to your original data'),
-                 sg.Checkbox('Sort Descending', k='-DESCENDING-'), sg.Push()],
+                 sg.Checkbox('Sort Descending', k='-DESCENDING-'), sg.Checkbox('Filter Out (exclude)', k='-FILTER OUT-', tooltip='Check to remove matching entries when filtering a column'), sg.Push()],
                 [sg.Table(values=data, headings=header_list, max_col_width=25,
                         auto_size_columns=True, display_row_numbers=True, vertical_scroll_only=True,
                         justification='right', num_rows=50,
@@ -102,8 +103,11 @@ def main():
                 [sg.Sizegrip()]]
 
     # ------ Create Window ------
-    window = sg.Window('CSV Table Display', layout, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT,  resizable=True)
-
+    window = sg.Window('CSV Table Display', layout, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT,  resizable=True, finalize=True)
+    window.bind("<Control_L><End>", '-CONTROL END-')
+    window.bind("<End>", '-CONTROL END-')
+    window.bind("<Control_L><Home>", '-CONTROL HOME-')
+    window.bind("<Home>", '-CONTROL HOME-')
     original_data = data        # save a copy of the data
     # ------ Event Loop ------
     while True:
@@ -111,6 +115,10 @@ def main():
         # print(event, values)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
+        if values['-TABLE-']:           # Show how many rows are slected
+            window['-SELECTED-'].update(f'{len(values["-TABLE-"])} rows selected')
+        else:
+            window['-SELECTED-'].update('')
         if event[0] == '-TABLE-':
         # if isinstance(event, tuple):
             filter_value = values['-FILTER-']
@@ -120,9 +128,12 @@ def main():
                     col_num_clicked = event[2][1]
                     # if there's a filter, first filter based on the column clicked
                     if filter_value not in (None, ''):
+                        filter_out = values['-FILTER OUT-']     # get bool filter out setting
                         new_data = []
                         for line in data:
-                            if filter_value.lower() in line[col_num_clicked].lower():
+                            if not filter_out and (filter_value.lower() in line[col_num_clicked].lower()):
+                                new_data.append(line)
+                            elif filter_out and (filter_value.lower() not in line[col_num_clicked].lower()):
                                 new_data.append(line)
                         data = new_data
                     new_table = sort_table(data, (col_num_clicked, 0), values['-DESCENDING-'])
@@ -130,10 +141,15 @@ def main():
                     data = new_table
                     window['-RECORDS SHOWN-'].update(f'{len(new_table)} Records shown')
                     window['-FILTER-'].update('')           # once used, clear the filter
+                    window['-FILTER OUT-'].update(False)  # Also clear the filter out flag
         elif event == 'Reset Table':
             data = original_data
             window['-TABLE-'].update(data)
             window['-RECORDS SHOWN-'].update(f'{len(data)} Records shown')
+        elif event == '-CONTROL END-':
+            window['-TABLE-'].set_vscroll_position(100)
+        elif event == '-CONTROL HOME-':
+            window['-TABLE-'].set_vscroll_position(0)
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Version':
