@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.98 Unreleased"
+version = __version__ = "4.60.3.99 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -253,6 +253,8 @@ _change_log = """
     4.60.3.98
         Better alignment of text in test harness
         Fixed mispelling in SystemTray.show_message - crashed if an int was passed in as the time value
+    4.60.3.99
+        popup_get_text - Addition of history feature to bring up to same level as other popup_get_ functions.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21327,47 +21329,67 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
 def popup_get_text(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                   grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, history=False, history_setting_filename=None, modal=True):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
-    :param message:          message displayed to user
-    :type message:           (str)
-    :param title:            Window title
-    :type title:             (str)
-    :param default_text:     default value to put into input area
-    :type default_text:      (str)
-    :param password_char:    character to be shown instead of actually typed characters
-    :type password_char:     (str)
-    :param size:             (width, height) of the InputText Element
-    :type size:              (int, int)
-    :param button_color:     Color of the button (text, background)
-    :type button_color:      (str, str) or str
-    :param background_color: background color of the entire window
-    :type background_color:  (str)
-    :param text_color:       color of the message text
-    :type text_color:        (str)
-    :param icon:             filename or base64 string to be used for the window's icon
-    :type icon:              bytes | str
-    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              (str or (str, int[, str]) or None)
-    :param no_titlebar:      If True no titlebar will be shown
-    :type no_titlebar:       (bool)
-    :param grab_anywhere:    If True can click and drag anywhere in the window to move the window
-    :type grab_anywhere:     (bool)
-    :param keep_on_top:      If True the window will remain above all current windows
-    :type keep_on_top:       (bool)
-    :param location:         (x,y) Location on screen to display the upper left corner of window
-    :type location:          (int, int)
-    :param relative_location: (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location: (int, int)
-    :param image:            Image to include at the top of the popup window
-    :type image:             (str) or (bytes)
-    :param modal:            If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
-    :type modal:             bool
-    :return:                 Text entered or None if window was closed or cancel button clicked
-    :rtype:                  str | None
+    :param message:                  message displayed to user
+    :type message:                   (str)
+    :param title:                    Window title
+    :type title:                     (str)
+    :param default_text:             default value to put into input area
+    :type default_text:              (str)
+    :param password_char:            character to be shown instead of actually typed characters. WARNING - if history=True then can't hide passwords
+    :type password_char:             (str)
+    :param size:                     (width, height) of the InputText Element
+    :type size:                      (int, int)
+    :param button_color:             Color of the button (text, background)
+    :type button_color:              (str, str) or str
+    :param background_color:         background color of the entire window
+    :type background_color:          (str)
+    :param text_color:               color of the message text
+    :type text_color:                (str)
+    :param icon:                     filename or base64 string to be used for the window's icon
+    :type icon:                      bytes | str
+    :param font:                     specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+    :type font:                      (str or (str, int[, str]) or None)
+    :param no_titlebar:              If True no titlebar will be shown
+    :type no_titlebar:               (bool)
+    :param grab_anywhere:            If True can click and drag anywhere in the window to move the window
+    :type grab_anywhere:             (bool)
+    :param keep_on_top:              If True the window will remain above all current windows
+    :type keep_on_top:               (bool)
+    :param location:                 (x,y) Location on screen to display the upper left corner of window
+    :type location:                  (int, int)
+    :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+    :type relative_location:         (int, int)
+    :param image:                    Image to include at the top of the popup window
+    :type image:                     (str) or (bytes)
+    :param history:                  If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided
+    :type history:                   bool
+    :param history_setting_filename: Filename to use for the User Settings. Will store list of previous entries in this settings file
+    :type history_setting_filename:  (str)
+    :param modal:                    If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
+    :type modal:                     bool
+    :return:                         Text entered or None if window was closed or cancel button clicked
+    :rtype:                          str | None
     """
+
+
+    # First setup the history settings file if history feature is enabled
+    if history and history_setting_filename is not None:
+        try:
+            history_settings = UserSettings(history_setting_filename)
+        except Exception as e:
+            _error_popup_with_traceback('popup_get_file - Something is wrong with your supplied history settings filename',
+                                        'Exception: {}'.format(e))
+            return None
+    elif history:
+        history_settings_filename = os.path.basename(inspect.stack()[1].filename)
+        history_settings_filename = os.path.splitext(history_settings_filename)[0] + '.json'
+        history_settings = UserSettings(history_settings_filename)
+    else:
+        history_settings = None
 
     if image is not None:
         if isinstance(image, str):
@@ -21377,21 +21399,46 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     else:
         layout = [[]]
 
-    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-               [InputText(default_text=default_text, size=size, key='-INPUT-', password_char=password_char)],
-               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)]]
+    if not history:
+        layout += [[InputText(default_text=default_text, size=size, key='-INPUT-', password_char=password_char)]]
+    else:
+        text_list = history_settings.get("-PSG text list-", [])
+        last_entry = text_list[0] if text_list else default_text
+        layout += [[Combo(text_list, default_value=last_entry, key='-INPUT-', size=size if size != (None, None) else (80, 1), bind_return_key=True),
+                    Button('Clear History', tooltip='Clears the list of files shown in the combobox')]]
+
+    layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
                     background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, finalize=True, modal=modal, font=font)
 
-    button, values = window.read()
+
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', WIN_CLOSED):
+            break
+        elif event == 'Clear History':
+            history_settings.set('-PSG text list-', [])
+            window['-INPUT-'].update('', [])
+            popup_quick_message('History of Previous Choices Cleared', background_color='red', text_color='white', font='_ 20', keep_on_top=True)
+        elif event in ('Ok', '-INPUT-'):
+            if values['-INPUT-'] != '':
+                if history_settings is not None:
+                    list_of_entries = history_settings.get('-PSG text list-', [])
+                    if values['-INPUT-'] in list_of_entries:
+                        list_of_entries.remove(values['-INPUT-'])
+                    list_of_entries.insert(0, values['-INPUT-'])
+                    history_settings.set('-PSG text list-', list_of_entries)
+            break
+
     window.close()
     del window
-    if button != 'Ok':
+    if event in ('Cancel', WIN_CLOSED):
         return None
     else:
-        path = values['-INPUT-']
-        return path
+        text = values['-INPUT-']
+        return text
 
 
 def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True,
