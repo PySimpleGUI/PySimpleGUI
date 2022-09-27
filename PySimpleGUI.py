@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.99 Unreleased"
+version = __version__ = "4.60.3.100 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -255,6 +255,9 @@ _change_log = """
         Fixed mispelling in SystemTray.show_message - crashed if an int was passed in as the time value
     4.60.3.99
         popup_get_text - Addition of history feature to bring up to same level as other popup_get_ functions.
+    4.60.3.100
+        Set the "Active" foreground and background colors for Menu and ButtonMenu items.  Automatically uses the swapped foreground and background colors.
+            This impacts both inside the menus themseleves as well as the ButtonMenus so that when they are used in a MenubarCustom they mouseover nicely now.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5268,65 +5271,67 @@ class ButtonMenu(Element):
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False, image_source=None,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None,
-                 font=None, item_font=None, pad=None, p=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True, metadata=None):
+                 font=None, item_font=None, pad=None, p=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True,
+                 metadata=None):
         """
-        :param button_text:         Text to be displayed on the button
-        :type button_text:          (str)
-        :param menu_def:            A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
-        :type menu_def:             List[List[str]]
-        :param tooltip:             text, that will appear when mouse hovers over the element
-        :type tooltip:              (str)
-        :param disabled:            If True button will be created disabled
-        :type disabled:             (bool)
-        :param image_source:        Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
-        :type image_source:         (str | bytes)
-        :param image_filename:      image filename if there is a button image. GIFs and PNGs only.
-        :type image_filename:       (str)
-        :param image_data:          Raw or Base64 representation of the image to put on button. Choose either filename or data
-        :type image_data:           bytes | str
-        :param image_size:          Size of the image in pixels (width, height)
-        :type image_size:           (int, int)
-        :param image_subsample:     amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :type image_subsample:      (int)
-        :param border_width:        width of border around button in pixels
-        :type border_width:         (int)
-        :param size:                (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:                 (int, int)  | (None, None) | int
-        :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                    (int, int)  | (None, None) | int
-        :param auto_size_button:    if True the button size is sized to fit the text
-        :type auto_size_button:     (bool)
-        :param button_color:        of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color:         (str, str) or str
-        :param background_color:    color of the background
-        :type background_color:     (str)
-        :param text_color:          element's text color. Can be in #RRGGBB format or a color name "black"
-        :type text_color:           (str)
-        :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
-        :type disabled_text_color:  (str)
-        :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                 (str or (str, int[, str]) or None)
-        :param item_font:           specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items
-        :type item_font:            (str or (str, int[, str]) or None)
-        :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param expand_x:            If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:             (bool)
-        :param expand_y:            If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:             (bool)
-        :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
-        :type key:                  str | int | tuple | object
-        :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                    str | int | tuple | object
-        :param tearoff:             Determines if menus should allow them to be torn off
-        :type tearoff:              (bool)
-        :param visible:             set visibility state of the element
-        :type visible:              (bool)
-        :param metadata:            User metadata that can be set to ANYTHING
-        :type metadata:             (Any)
+        :param button_text:               Text to be displayed on the button
+        :type button_text:                (str)
+        :param menu_def:                  A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
+        :type menu_def:                   List[List[str]]
+        :param tooltip:                   text, that will appear when mouse hovers over the element
+        :type tooltip:                    (str)
+        :param disabled:                  If True button will be created disabled
+        :type disabled:                   (bool)
+        :param image_source:              Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
+        :type image_source:               (str | bytes)
+        :param image_filename:            image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename:             (str)
+        :param image_data:                Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:                 bytes | str
+        :param image_size:                Size of the image in pixels (width, height)
+        :type image_size:                 (int, int)
+        :param image_subsample:           amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:            (int)
+        :param border_width:              width of border around button in pixels
+        :type border_width:               (int)
+        :param size:                      (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
+        :type size:                       (int, int)  | (None, None) | int
+        :param s:                         Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                          (int, int)  | (None, None) | int
+        :param auto_size_button:          if True the button size is sized to fit the text
+        :type auto_size_button:           (bool)
+        :param button_color:              of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :type button_color:               (str, str) or str
+        :param background_color:          color of the background
+        :type background_color:           (str)
+        :param text_color:                element's text color. Can be in #RRGGBB format or a color name "black"
+        :type text_color:                 (str)
+        :param disabled_text_color:       color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+        :type disabled_text_color:        (str)
+        :param font:                      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                       (str or (str, int[, str]) or None)
+        :param item_font:                 specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items
+        :type item_font:                  (str or (str, int[, str]) or None)
+        :param pad:                       Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                         Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param expand_x:                  If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                   (bool)
+        :param expand_y:                  If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                   (bool)
+        :param key:                       Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
+        :type key:                        str | int | tuple | object
+        :param k:                         Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                          str | int | tuple | object
+        :param tearoff:                   Determines if menus should allow them to be torn off
+        :type tearoff:                    (bool)
+        :param visible:                   set visibility state of the element
+        :type visible:                    (bool)
+        :param metadata:                  User metadata that can be set to ANYTHING
+        :type metadata:                   (Any)
         """
+
 
         self.MenuDefinition = copy.deepcopy(menu_def)
 
@@ -8630,35 +8635,36 @@ class Menu(Element):
     def __init__(self, menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), s=(None, None), tearoff=False,
                  font=None, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
         """
-        :param menu_definition:     The Menu definition specified using lists (docs explain the format)
-        :type menu_definition:      List[List[Tuple[str, List[str]]]
-        :param background_color:    color of the background of menus, NOT the Menubar
-        :type background_color:     (str)
-        :param text_color:          text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black".
-        :type text_color:           (str)
-        :param disabled_text_color: color to use for text when item in submenu, not the menubar itself, is disabled. Can be in #RRGGBB format or a color name "black"
-        :type disabled_text_color:  (str)
-        :param size:                Not used in the tkinter port
-        :type size:                 (int, int)
-        :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                    (int, int)  | (None, None)
-        :param tearoff:             if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
-        :type tearoff:              (bool)
-        :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param font:                specifies the  font family, size, etc. of submenus. Does NOT apply to the Menubar itself. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                 (str or (str, int[, str]) or None)
-        :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key:                  str | int | tuple | object
-        :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                    str | int | tuple | object
-        :param visible:             set visibility state of the element
-        :type visible:              (bool)
-        :param metadata:            User metadata that can be set to ANYTHING
-        :type metadata:             (Any)
+        :param menu_definition:           The Menu definition specified using lists (docs explain the format)
+        :type menu_definition:            List[List[Tuple[str, List[str]]]
+        :param background_color:          color of the background of menus, NOT the Menubar
+        :type background_color:           (str)
+        :param text_color:                text color for menus, NOT the Menubar. Can be in #RRGGBB format or a color name "black".
+        :type text_color:                 (str)
+        :param disabled_text_color:       color to use for text when item in submenu, not the menubar itself, is disabled. Can be in #RRGGBB format or a color name "black"
+        :type disabled_text_color:        (str)
+        :param size:                      Not used in the tkinter port
+        :type size:                       (int, int)
+        :param s:                         Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                          (int, int)  | (None, None)
+        :param tearoff:                   if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+        :type tearoff:                    (bool)
+        :param pad:                       Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                         Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param font:                      specifies the  font family, size, etc. of submenus. Does NOT apply to the Menubar itself. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                       (str or (str, int[, str]) or None)
+        :param key:                       Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:                        str | int | tuple | object
+        :param k:                         Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                          str | int | tuple | object
+        :param visible:                   set visibility state of the element
+        :type visible:                    (bool)
+        :param metadata:                  User metadata that can be set to ANYTHING
+        :type metadata:                   (Any)
         """
+
         self.BackgroundColor = background_color if background_color is not None else theme_input_background_color()
         self.TextColor = text_color if text_color is not None else theme_input_text_color()
 
@@ -9681,8 +9687,7 @@ class Window:
                  alpha_channel=None, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, grab_anywhere_using_control=True, keep_on_top=None, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
-                 right_click_menu_selected_colors=(None, None),
+                 right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None, right_click_menu_selected_colors=(None, None),
                  right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False, enable_window_config_events=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
@@ -14939,8 +14944,10 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
                         window = element.ParentForm
                         if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(bg=window.right_click_menu_background_color)
+                            new_menu.config(activeforeground=window.right_click_menu_background_color)
                         if window.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(fg=window.right_click_menu_text_color)
+                            new_menu.config(activebackground=window.right_click_menu_text_color)
                         if window.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
                         if window.right_click_menu_font is not None:
@@ -14950,8 +14957,10 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
                             new_menu.config(font=element.Font)
                         if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(bg=element.BackgroundColor)
+                            new_menu.config(activeforeground=element.BackgroundColor)
                         if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(fg=element.TextColor)
+                            new_menu.config(activebackground=element.TextColor)
                         if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                             new_menu.config(disabledforeground=element.DisabledTextColor)
                         if element.ItemFont is not None:
@@ -15988,8 +15997,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1])
+                    tkbutton.config(activebackground=bc[0])
+                    tkbutton.config(activeforeground=bc[1])
                 elif bc[0] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
+                    tkbutton.config(activebackground=bc[0])
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=RELIEF_FLAT)
                 elif bd != 0:
@@ -16028,8 +16040,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                     top_menu.config(bg=element.BackgroundColor)
+                    top_menu.config(activeforeground=element.BackgroundColor)
                 if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
                     top_menu.config(fg=element.TextColor)
+                    top_menu.config(activebackground=element.TextColor)
                 if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                     top_menu.config(disabledforeground=element.DisabledTextColor)
                 if element.ItemFont is not None:
@@ -16710,8 +16724,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff, tearoffcommand=element._tearoff_menu_callback)
                     if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(bg=element.BackgroundColor)
+                        baritem.config(activeforeground=element.BackgroundColor)
                     if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(fg=element.TextColor)
+                        baritem.config(activebackground=element.TextColor)
                     if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(disabledforeground=element.DisabledTextColor)
                     if font is not None:
@@ -25581,7 +25597,7 @@ def _create_main_window():
         # [B(image_data=ICON_BUY_ME_A_COFFEE,pad=(1, 0), key='-COFFEE-'),
         [B(image_data=UDEMY_ICON,pad=(1, 0), key='-UDEMY-'),
          B('SDK Reference', pad=(1, 0)), B('Open GitHub Issue',pad=(1, 0)), B('Versions for GitHub',pad=(1, 0)),
-         ButtonMenu('ButtonMenu', button_menu_def, pad=(1, 0),key='-BMENU-', tearoff=True)
+         ButtonMenu('ButtonMenu', button_menu_def, pad=(1, 0),key='-BMENU-', tearoff=True,  disabled_text_color='yellow')
          ]]
 
     layout = [[]]
@@ -25856,4 +25872,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5fcc20b8c4def28759a9b98f632691e05c5809a589633d7c9e79e429680b8071b8d4e3ee96ca02f0836e7fd3c60b1a413789aa16c1eba8975b5d879a36084cc4865123d7f72d414213531b4ca592bd4783cdef947c15b81c1e0668ffcfab0bf8074b676e642a3e4e834a26b5f6961ce2a81ccffd0b859d0a3054cc67ebca9555207bc5d210377b63b88b8942e8510daaa97f39ebf3436c53582e17361fce733843890841ac7ada1e252762cdbbf51c6eb38cbcf6068129b6911d153b77a085d1b098b28337d984a2f5d1ba31f0d42a1bd4950bffac9b978e9fe8b71abccaeed145cdad89426536e535ea94451e847850db3b60f1fcbcc11803c01a3743e27e9b99fff0b85f5a86c02e74cf869728a99672971f65608e88c58196a08c409d4a847a1213c7be592917e34f963e160cc47b729814424ec2b5b26f686063fcc0bf697936df3ccf668ec0f07ad8b90bf6728653d365a0191c12703e0c3ea34e96ee3a6d68cdc313fb21401fa31d21cfa80ad6608395ef60a7346e6c0287eb06e830c25bbd2e824c7dadda0e4442d3b9f752d3b442500d043d94edf3b631537d5c05bb2a6eb878fb2b6980150e10ff14c95c654181805eeb2ce981df1195e97a29ff9d7c3a8daae797f2dc49251c5e9dd2e86417e02865ce9b2a35e0ddca8a488c43ebdf82441d038952d0f724d2c09ca7b3d42fa396fd61fc27efa769d22e7838b573
+#0a3858c74ed8ec258d72767542c47a36beefdd7d1772f6c6b0d0ffb197ff0bb71593bc74fd668a3170d3c3fee69abe93a787357ee6355541b47e803fa29b63d4d293d8114ffd0a7ecc45888cbc55c1785e45bceb6694e9ace56fe428647ee952b68bdffc5b59381909e9f78db781792d1879526044ce3011316e424b7fba4a2fb75257c01bae2d4f38491e708fdb0d26746d7af9e69c0843c71170f84f0ade7317e18fdc8bc790ac0e7a9119306c23000de848f82f9ca903b8effa64fa84d1fa78fd175404a8d09dfea3edd9b60b3acb02cec43e791f79a58becb3b40093cc7fdbe92dac33ed6873b93c3327dd48685b7c04eb2c3846101adcb0f78d636e3bf6ba168b845e9af746f522f9248e38d47a9eade9ed3e226f916c64ceafeb6562115dbed4b9a927a3a0c90821ee37c44d824fe54830637b18d8380ee17d0ab8ab54c8b22a744f080b7c05b54b6903b8dd55bbf8278e2d5bc27db9bc074a408e578dca361609c8ec473d79affbf1ece40d9dc614e8965e4f79de97902e9b99fd18708a9d376fb2ad79205e2419e7da167cdb840a1b24b35d93258ad8196547bb7b371fc9071e920df0c76384ecb515b76ae5327d968552787cce4938c2200b8409b09334b79cef126ab85499b34dad9b009c3996a3fc4e6cd673c54a2ac5f0ec62ace9821c50ae2d2d04a082b28f6b3628db905a749aa9b50e7ad0fb533ea9ca6069
