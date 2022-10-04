@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    346BC463A0F8759BEF1B
+                    D5570C66DBD8E42C7963
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=346BC463A0F8759BEF1B','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=D5570C66DBD8E42C7963','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -1595,34 +1595,38 @@ popup(args=*<1 or N object>,
     relative_location = (None, None),
     any_key_closes = False,
     image = None,
-    modal = True)
+    modal = True,
+    button_justification = None,
+    drop_whitespace = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                   Any                   |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
-|                   str                   |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
-|           (str, str) or None            |    button_color     | Color of the buttons shown (text color, button color) |
-|                   str                   |  background_color   | Window's background color |
-|                   str                   |     text_color      | text color |
-|                   int                   |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
-|                  bool                   |     auto_close      | If True the window will automatically close |
-|                   int                   | auto_close_duration | time in seconds to keep window open before closing it automatically |
-|            (str, str) or str            |     custom_text     | A string or pair of strings that contain the text to display on the buttons |
-|                  bool                   |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. |
-|              str or bytes               |        icon         | icon to display on the window. Same format as a Window call |
-|                   int                   |     line_width      | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
-| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
-|                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
-|               (int, int)                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
-|               (int, int)                |  relative_location  | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
-|                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
-|              str or bytes               |        image        | Image to include at the top of the popup window |
-|                  bool                   |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                   Any                   |         *args         | Variable number of your arguments. Load up the call with stuff to see! |
+|                   str                   |         title         | Optional title for the window. If none provided, the first arg will be used instead. |
+|           (str, str) or None            |     button_color      | Color of the buttons shown (text color, button color) |
+|                   str                   |   background_color    | Window's background color |
+|                   str                   |      text_color       | text color |
+|                   int                   |      button_type      | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
+|                  bool                   |      auto_close       | If True the window will automatically close |
+|                   int                   |  auto_close_duration  | time in seconds to keep window open before closing it automatically |
+|            (str, str) or str            |      custom_text      | A string or pair of strings that contain the text to display on the buttons |
+|                  bool                   |     non_blocking      | If True then will immediately return from the function without waiting for the user's input. |
+|              str or bytes               |         icon          | icon to display on the window. Same format as a Window call |
+|                   int                   |      line_width       | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
+| str or Tuple[font_name, size, modifiers] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                  bool                   |      no_titlebar      | If True will not show the frame around the window and the titlebar across the top |
+|                  bool                   |     grab_anywhere     | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
+|               (int, int)                |       location        | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|               (int, int)                |   relative_location   | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|                  bool                   |      keep_on_top      | If True the window will remain above all current windows |
+|                  bool                   |    any_key_closes     | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|              str or bytes               |         image         | Image to include at the top of the popup window |
+|                  bool                   |         modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                  bool                   | right_justify_buttons | If True then the buttons will be "pushed" to the right side of the Window |
+|                   str                   | button_justification  | Speficies if buttons should be left, right or centered. Default is left justified |
 | str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -1807,6 +1811,8 @@ popup_get_text(message,
     location = (None, None),
     relative_location = (None, None),
     image = None,
+    history = False,
+    history_setting_filename = None,
     modal = True)
 ```
 
@@ -1814,23 +1820,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |      message      | message displayed to user |
-|                str                 |       title       | Window title |
-|                str                 |   default_text    | default value to put into input area |
-|                str                 |   password_char   | character to be shown instead of actually typed characters |
-|             (int, int)             |       size        | (width, height) of the InputText Element |
-|         (str, str) or str          |   button_color    | Color of the button (text, background) |
-|                str                 | background_color  | background color of the entire window |
-|                str                 |    text_color     | color of the message text |
-|            bytes or str            |       icon        | filename or base64 string to be used for the window's icon |
-| (str or (str, int[, str]) or None) |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |    no_titlebar    | If True no titlebar will be shown |
-|                bool                |   grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|                bool                |    keep_on_top    | If True the window will remain above all current windows |
-|             (int, int)             |     location      | (x,y) Location on screen to display the upper left corner of window |
-|             (int, int)             | relative_location | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
-|            str or bytes            |       image       | Image to include at the top of the popup window |
-|                bool                |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |         message          | message displayed to user |
+|                str                 |          title           | Window title |
+|                str                 |       default_text       | default value to put into input area |
+|                str                 |      password_char       | character to be shown instead of actually typed characters. WARNING - if history=True then can't hide passwords |
+|             (int, int)             |           size           | (width, height) of the InputText Element |
+|         (str, str) or str          |       button_color       | Color of the button (text, background) |
+|                str                 |     background_color     | background color of the entire window |
+|                str                 |        text_color        | color of the message text |
+|            bytes or str            |           icon           | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |       no_titlebar        | If True no titlebar will be shown |
+|                bool                |      grab_anywhere       | If True can click and drag anywhere in the window to move the window |
+|                bool                |       keep_on_top        | If True the window will remain above all current windows |
+|             (int, int)             |         location         | (x,y) Location on screen to display the upper left corner of window |
+|             (int, int)             |    relative_location     | (x,y) location relative to the default location of the window, in pixels. Normally the window centers. This location is relative to the location the window would be created. Note they can be negative. |
+|            str or bytes            |          image           | Image to include at the top of the popup window |
+|                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
+|                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 ```python
