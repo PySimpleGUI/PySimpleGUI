@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.100 Unreleased"
+version = __version__ = "4.60.3.101 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -258,6 +258,8 @@ _change_log = """
     4.60.3.100
         Set the "Active" foreground and background colors for Menu and ButtonMenu items.  Automatically uses the swapped foreground and background colors.
             This impacts both inside the menus themseleves as well as the ButtonMenus so that when they are used in a MenubarCustom they mouseover nicely now.
+    4.60.3.101
+        Added Window.is_hidden method.  Returns True if the window is currently hidden
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11416,6 +11418,14 @@ class Window:
         if self._Hidden:
             self.TKroot.deiconify()
             self._Hidden = False
+
+    def is_hidden(self):
+        """
+            Returns True if the window is currently hidden
+        :return:    Returns True if the window is currently hidden
+        :rtype:     bool
+        """
+        return self._Hidden
 
     def disappear(self):
         """
@@ -25893,4 +25903,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0a3858c74ed8ec258d72767542c47a36beefdd7d1772f6c6b0d0ffb197ff0bb71593bc74fd668a3170d3c3fee69abe93a787357ee6355541b47e803fa29b63d4d293d8114ffd0a7ecc45888cbc55c1785e45bceb6694e9ace56fe428647ee952b68bdffc5b59381909e9f78db781792d1879526044ce3011316e424b7fba4a2fb75257c01bae2d4f38491e708fdb0d26746d7af9e69c0843c71170f84f0ade7317e18fdc8bc790ac0e7a9119306c23000de848f82f9ca903b8effa64fa84d1fa78fd175404a8d09dfea3edd9b60b3acb02cec43e791f79a58becb3b40093cc7fdbe92dac33ed6873b93c3327dd48685b7c04eb2c3846101adcb0f78d636e3bf6ba168b845e9af746f522f9248e38d47a9eade9ed3e226f916c64ceafeb6562115dbed4b9a927a3a0c90821ee37c44d824fe54830637b18d8380ee17d0ab8ab54c8b22a744f080b7c05b54b6903b8dd55bbf8278e2d5bc27db9bc074a408e578dca361609c8ec473d79affbf1ece40d9dc614e8965e4f79de97902e9b99fd18708a9d376fb2ad79205e2419e7da167cdb840a1b24b35d93258ad8196547bb7b371fc9071e920df0c76384ecb515b76ae5327d968552787cce4938c2200b8409b09334b79cef126ab85499b34dad9b009c3996a3fc4e6cd673c54a2ac5f0ec62ace9821c50ae2d2d04a082b28f6b3628db905a749aa9b50e7ad0fb533ea9ca6069
+#5b7a93b7b3a056c91456c2bc50df8d34e9d6f8e1bb1aa46a2ac449541d206d29904242c45c76d3eef051f483bd52a0f913a51bd7bf3bc91f023f99472a11dd26dec4478189ea12f5b73166d7541ed9c28a8aa12cc9a9ea29e81d7dfc305654cf5784b0cbe6eabf4bea9a239d40bcfa80947e4b429d9e02a2ecba0dcd39fa18bc8a3ba659b29fd7f90f246544eeff62e11313a398fd276a3d3b8eee44b8478c38ae55b9102add3b71ba121f6453683738a1d7784f8899b134cf46f6b352c43ec81279bfa80b3e340e715b7c594006b36b9c1bf871104de35b251348ae51a4c9d2fa7829e93ef7255ceb7cdd0b90253fabebb91d832af50f4919c1d180570105678298229ef25689ca5d5e3445d4b350fa4ebc9fba0703eb6a82e1cb31b8881c9846a172b5c766ae82e024ebac4fe4ccc1ec0f54960dddb7cb1535f0e3eb3eb6020bc7a43de591d8f7ea00ca2e7b0d455d9db35694e997e3902bdefaad6f19dde12b0524b93f7d235911dcfb5c12b9938fe9bfcbbdbc58b4f0a0b484cb3662539bb3e13dc08671f40b9fa8b9ae4e85653d8f5f55f0321ff07bc7a495c240ecf20839df370d810fb6beba9cbd0dcc33c7b10478754929c5b603093c83f727e33a4ee263e8763f030de314219bde29ce6828ae9aa72aacc44265dca7a2d61fd5f9e7ddebeaf0dc4d07a76ef91ebf75ec500a66bcf5f6be5dd10ff706344efec2bf9b
