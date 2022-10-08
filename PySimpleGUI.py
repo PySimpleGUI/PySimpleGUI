@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.101 Unreleased"
+version = __version__ = "4.60.3.102 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -260,6 +260,8 @@ _change_log = """
             This impacts both inside the menus themseleves as well as the ButtonMenus so that when they are used in a MenubarCustom they mouseover nicely now.
     4.60.3.101
         Added Window.is_hidden method.  Returns True if the window is currently hidden
+    4.60.3.102
+        Fixed error in the main test harness "not modal" popup test.  Was setting the "Force Modal" setting to true after the popup test. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25779,7 +25781,7 @@ def main():
                 set_options(force_modal_windows=False)
                 popup('Normal Popup - Not Modal', 'You can interact with main window menubar ',
                       'but will have no effect immediately', 'button clicks will happen after you close this popup', modal=False, keep_on_top=True)
-                set_options(force_modal_windows=True)
+                set_options(force_modal_windows=forced_modal)
             elif event == 'P NoBlock':
                 popup_non_blocking('Non-blocking', 'The background window should still be running', keep_on_top=True)
             elif event == 'P AutoClose':
@@ -25903,4 +25905,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5b7a93b7b3a056c91456c2bc50df8d34e9d6f8e1bb1aa46a2ac449541d206d29904242c45c76d3eef051f483bd52a0f913a51bd7bf3bc91f023f99472a11dd26dec4478189ea12f5b73166d7541ed9c28a8aa12cc9a9ea29e81d7dfc305654cf5784b0cbe6eabf4bea9a239d40bcfa80947e4b429d9e02a2ecba0dcd39fa18bc8a3ba659b29fd7f90f246544eeff62e11313a398fd276a3d3b8eee44b8478c38ae55b9102add3b71ba121f6453683738a1d7784f8899b134cf46f6b352c43ec81279bfa80b3e340e715b7c594006b36b9c1bf871104de35b251348ae51a4c9d2fa7829e93ef7255ceb7cdd0b90253fabebb91d832af50f4919c1d180570105678298229ef25689ca5d5e3445d4b350fa4ebc9fba0703eb6a82e1cb31b8881c9846a172b5c766ae82e024ebac4fe4ccc1ec0f54960dddb7cb1535f0e3eb3eb6020bc7a43de591d8f7ea00ca2e7b0d455d9db35694e997e3902bdefaad6f19dde12b0524b93f7d235911dcfb5c12b9938fe9bfcbbdbc58b4f0a0b484cb3662539bb3e13dc08671f40b9fa8b9ae4e85653d8f5f55f0321ff07bc7a495c240ecf20839df370d810fb6beba9cbd0dcc33c7b10478754929c5b603093c83f727e33a4ee263e8763f030de314219bde29ce6828ae9aa72aacc44265dca7a2d61fd5f9e7ddebeaf0dc4d07a76ef91ebf75ec500a66bcf5f6be5dd10ff706344efec2bf9b
+#5d6bfedd94458b8942d68670e72eae15f57bc2d3719a72636f455656af4814c785b2ba4d678f923a460b9c4e981e100facf24044e2ce307446d5068d09bcfb779c7f01eb2a1d56ad2df906d18d4b8f0797e4e45cd7344a1706611d90cf2a702f173f6adf9cdef65ee34f78c6638256accbcce9f634403ec572235283c33e37d3ba5750c5c37f30bfca3f70663a9af87c05ab70279bc6895219caf13d387ba0f8bc95192890405cb555d2b066b41bf05825dd8f9e7d8e79ca51f87f91cbd6386d1ca39d197943d92e67cd27f30289d3b0a90aec390b1ec15f70be9225949f58c56ff0dda9ed79f8e6a7241dc6f7abad2169b07f1c39f6495cd10bd5cf67a04d9dc5b62f5369b93fc86ed729ca18e5724b10abd8068a067cca5325e0912ffe988077ce4de47aa1b925ad02d6ad360b36eb5768d388111a6b2ae499f81395d9f8d67f3f1bd165af6c4e749965208d77bfd0ef24fbcf792b295a5dfa6a32dfa4f7ec1254fd700861edb166c096864556dea68c4cfcb2a730036635320b158879bc81d4e525d62fabcc29a26dfb0e7f7992827bfa5d345ca24b4e90f34e079259944fd73da103833f80b3a3efa37c2ccc8c3399db75f454e830e1e64ab32fcf78fd59b5aab88a66d859a1948d566423a26afaddeaab0ecdc39fce34f635ade9888aeadac4ef77733b504bcdeeff0ae289092388adde502edb6fe8a867c413a8a292c5
