@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.3.102 Unreleased"
+version = __version__ = "4.60.3.103 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -262,6 +262,8 @@ _change_log = """
         Added Window.is_hidden method.  Returns True if the window is currently hidden
     4.60.3.102
         Fixed error in the main test harness "not modal" popup test.  Was setting the "Force Modal" setting to true after the popup test. 
+    4.60.3.103
+        Trinket is detected using a new mechansim now.  The previous one was waayyy too simnple and as a result has broken in the past week.  
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -412,6 +414,7 @@ import calendar
 import datetime
 import textwrap
 
+import socket
 from hashlib import sha256 as hh
 import inspect
 import traceback
@@ -597,7 +600,7 @@ def running_trinket():
     :return: True if sys.platform indicates Linux and the number of environment variables is 1
     :rtype:  (bool)
     """
-    if len(os.environ) == 1 and sys.platform.startswith('linux'):
+    if sys.platform.startswith('linux') and socket.gethostname().startswith('pygame-'):
         return True
     return False
 
