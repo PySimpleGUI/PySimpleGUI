@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.105 Unreleased"
+version = __version__ = "4.60.4.106 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -268,6 +268,8 @@ _change_log = """
         Version bump to keep up with the PyPI emergency 4.60.4 release 
     4.60.4.105
         Added SYMBOL_BULLET character
+    4.60.4.106
+        Neon Green, Blue, Yellow themes... was writing some tests using them and thought why not start a new theme color category... "neon"
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19413,7 +19415,13 @@ LOOK_AND_FEEL_TABLE = {
     "Python": {"BACKGROUND": "#3d7aab", "TEXT": "#ffde56", "INPUT": "#295273", "TEXT_INPUT": "#ffde56", "SCROLL": "#295273",
                "BUTTON": ("#ffde56", "#295273"), "PROGRESS": ("#ffde56", "#295273"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
     "PythonPlus": {"BACKGROUND": "#001d3c", "TEXT": "#ffffff", "INPUT": "#015bbb", "TEXT_INPUT": "#fed500", "SCROLL": "#015bbb",
-               "BUTTON": ("#fed500", "#015bbb"), "PROGRESS": ("#015bbb", "#fed500"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
+                   "BUTTON": ("#fed500", "#015bbb"), "PROGRESS": ("#015bbb", "#fed500"), "BORDER": 1, "SLIDER_DEPTH": 1, "PROGRESS_DEPTH": 0, },
+    "NeonBlue1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#33ccff", "SCROLL": "#33ccff",
+                  "BUTTON": ("#33ccff", "#000000"), "PROGRESS": ("#33ccff", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
+    "NeonGreen1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#96ff7b", "SCROLL": "#96ff7b",
+                   "BUTTON": ("#96ff7b", "#000000"), "PROGRESS": ("#96ff7b", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
+    "NeonYellow1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#ffcf40", "SCROLL": "##ffcf40",
+                    "BUTTON": ("#ffcf40", "#000000"), "PROGRESS": ("#ffcf40", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
 }
 
 
@@ -23966,7 +23974,7 @@ def get_versions():
 def scheck_hh():
     with open(__file__, "r",encoding="utf8") as file:
         lines_in_file = file.readlines()
-    combined_lines = '\n'.join(lines_in_file[:-1])
+    combined_lines = ''.join(lines_in_file[:-1])
     entire_file_bytes = bytearray(combined_lines, encoding='utf8')
     cfileh = hh(entire_file_bytes)
     return cfileh.hexdigest()
@@ -25913,4 +25921,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#11860a22213827c27738eb24f4bf29be38a6eff08391ba133f22daed9be88e8b52a0d46f6f2a436a9b12d0a6946169e8019f9c8471d8c2c2bd16d2c27dd795be57db2793262d44211de8216153a0fc87291afcf58b14f5cdab43e7901f1964813da483bd0a210eec6eb6cd6decac12f0118638e04d76f9f46d0e80a0d1896dcb61c9c69f454cb2602db487e0db7f17b474eba76dc20d6661540e9a5587f8817b808815ae724a4b8d38c8a298f63b5566ba2968e496684a0c465e44940e7aeaef228a49232e228e90017b5200e74f8b4238586074fe966e115c1bb038396632059678dc270ae6a2d64debbe9b4052661fb12a9564678ddcd6c9c40fd8049658e87bacb69ae3d246722507fc5bcc1761aa94623ec7648a6d9ec9e1a3b6b22b7c192f71394ca5ccb5f08671cd06b0de50da5eece4ddf30d422cc636a652604b60aeeb22eb32ea476bbd948a3055dd9e255479732ff159ad486bac53c50a4942af876eb5b17b851afe2b05fe3d9fcc837fec9d3a4f67c2237712e21eb42307ea2549e54b0545e247939e601e4bef52aeec16b9680a4c1f13ed87dcba48c5c01152b57e5b8539c5944e9b3f1580d8327c18c2314d3705ce2660c7d1a1a0b1430af19b3861dcd5204607e943172051acbaf43332477850088c05c6acaa958d4af56bf75c88f650010b10b9e8326d6d31dd9a1cfedbc8bdfba154713a311964a0dca21c
+#50b84ef640c3af92141e615d197dbd4f91677aafd93dfa1ae4519a6a10062bedcd5cf4763fe7784559c8af8ce182b58e9c2f3363cb18f74db5a7338426665f01aca464a963d3accb9a7ee8ff68b8cf5f7cbb47c9d9b77220f908c777e5f1a259fcc39000fe85766c4619112144d61326f3005717d04bfadfd7081807321d8aba9bda8836843e02b5214a7c91013f48fbdbf811131353e344edf4dcdb6ba7ff9c986ec67746a9bbd54b1d88e0b6d2f5a34b45f80109ccbd56684fb64f61b3272d6e070c70d69c885a3c36d9a278176ff7000c7ec705625ced7e6fd38de6cf345dd71994cef8f6df890aa86b643901c551b2023fad25f8ee52667655b05aa33cd3143773462cdb380b5879d436f57b586c5ece0d69e47d45c1f4f9a0678058f582ee5f65ca14f6691d96cee48a981d07449c90c2d6dccdc5fbc4b32c74a58fc9028ace1cfe63af4bb5eb34ce83f433d4ded94c9ebe3c6686a418655f0ec314c90fc9a95ffbb9e57acf929479bcaabe3872396dfa5baae08253b86c1e941a5c5fe05a5088438852b18ef76ab184ddc82451fc071b3cf71a0beb824f0ecd2d5dda65f9a4404a12a98c32135b0f6e64042d4deb3ee8f6add2e067ede0d008f182d4590c43f4346b6ac2765f0a03b11f803bd7f238c9b2ff8543ba4d462a188dab6d843ccf46e2218fd0a8dfadaed7b48e1b8c07272d158cae3bfdf4670775a97c9638
