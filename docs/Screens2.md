@@ -1,3 +1,46 @@
+[dwelden](https://github.com/dwelden) 2022-10-21T19:16:53Z
+[SnowQuery](https://github.com/dwelden/SnowQuery)
+Simple Snowflake query application created with:
+
+   🐍 PySimpleGUI https://pysimplegui.org/
+   ❄ Snowflake Connector for Python https://www.snowflake.com/
+    ❖  PrettyTable https://github.com/jazzband/prettytable
+
+![image](https://user-images.githubusercontent.com/11447810/197272468-1bc9e261-3698-4c7f-a21c-dba800f5cf86.png)
+
+![image](https://user-images.githubusercontent.com/11447810/197272521-7ed8134d-78fb-47a8-91ca-be9a100f7b8e.png)
+
+Without PySimpleGUI I never would have attempted such an application. Thanks Mike!
+
+-----------
+
+[PySimpleGUI](https://github.com/PySimpleGUI) 2022-10-20T17:00:32Z
+> It's using the main thread and an additional thread to consume the piped process leveraging PySimpleGUI's way to send data back to the main thread.
+
+Reading this triggered me to do a search to see if this design pattern is published as one and I do not believe it has been.  I'm _**thrilled**_ to hear you're doing this!
+
+The PySimpleGUI utility `psgtest` uses this kind of design pattern.  It was use twice before in 2 utilities that @Chr0nicT worked on, `psgcompiler` and the "Jump Cutter" project.  Jump Cutter was for sure the first time we used it in a psg released program.  It's a really powerful kind of pattern!   It's certainly worthy of being in the Cookbook and a Demo Program in the future.  
+
+Very nice when you can do something that's very time consuming and have the main GUI remain responsive.  Great window design too BTW.  That's a 5 star program!!
+![image](https://user-images.githubusercontent.com/46163555/197012289-163a8e0c-c8ac-42c1-9d8a-5d9588f5129e.png) ![image](https://user-images.githubusercontent.com/46163555/197012291-fd1fb1e1-8fc4-445a-b77f-ce0657c193db.png) ![image](https://user-images.githubusercontent.com/46163555/197012292-a846f9c4-e30c-481f-b59d-6524bea203df.png) ![image](https://user-images.githubusercontent.com/46163555/197012293-6c65bca3-5624-4e0d-910a-cc946b0f61c3.png) ![image](https://user-images.githubusercontent.com/46163555/197012296-7d5c24de-c8a1-4115-b406-39906b9e68af.png)
+
+
+-----------
+
+[deckarep](https://github.com/deckarep) 2022-10-19T18:47:10Z
+Created a simple app for my wife to sync her local drives to the cloud. The app takes advantage of PySimpleGUI (of course) along with `rclone` under the hood by opening it as a subprocess and piping it's data into the app.
+
+The app is designed to be a safe way that she can sync the drives while managing Mac's power management during such a process. She's able to prematurely stop the process, restart it, capture log files and check tail the logs.
+
+It's using the main thread and an additional thread to consume the piped process leveraging PySimpleGUI's way to send data back to the main thread. 
+
+Works great so far! (in the prototype state)...will be opening sourcing this at some point.
+
+<img width="1002" alt="Screen Shot 2022-10-19 at 11 43 25 AM" src="https://user-images.githubusercontent.com/200686/196777381-ec192ea5-e403-4e54-9afd-06af2793bde8.png">
+
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2022-10-06T20:52:05Z
 @kcl1s ... Never doubted for a moment you appreciate what we're doing.  I didn't do a good job of communicating that I could use a hand in flagging when there are problems, via GitHub issues, and also in finding out the root cause.  That's what we're after ultimately... a fix to the problem.
 
