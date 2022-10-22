@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.106 Unreleased"
+version = __version__ = "4.60.4.107 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -270,6 +270,8 @@ _change_log = """
         Added SYMBOL_BULLET character
     4.60.4.106
         Neon Green, Blue, Yellow themes... was writing some tests using them and thought why not start a new theme color category... "neon"
+    4.60.4.107
+        Fixed an unreported problem perhaps...  Added saving new menu into the Menu.Widget memeber variable in the Menu.update method.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8740,6 +8742,7 @@ class Menu(Element):
 
             self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)  # create the menubar
             menubar = self.TKMenu
+            self.Widget = self.TKMenu   # same the new menu so user can access to extend PySimpleGUI
             for menu_entry in self.MenuDefinition:
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)
 
@@ -25191,7 +25194,7 @@ def main_global_pysimplegui_settings():
     ttk_theme_list = ttk.Style().theme_names()
 
     window['-TTK THEME-'].update(value=DEFAULT_TTK_THEME, values=ttk_theme_list)
-    
+
     while True:
         event, values = window.read()
         if event in ('Cancel', WIN_CLOSED):
@@ -25557,7 +25560,7 @@ def _create_main_window():
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='-COMBO1-', )],
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 14', default_value='Combo item 2', key='-COMBO2-', )],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='-COMBO2-')],
-        
+
     ]
 
     frame3 = [
@@ -25921,4 +25924,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#50b84ef640c3af92141e615d197dbd4f91677aafd93dfa1ae4519a6a10062bedcd5cf4763fe7784559c8af8ce182b58e9c2f3363cb18f74db5a7338426665f01aca464a963d3accb9a7ee8ff68b8cf5f7cbb47c9d9b77220f908c777e5f1a259fcc39000fe85766c4619112144d61326f3005717d04bfadfd7081807321d8aba9bda8836843e02b5214a7c91013f48fbdbf811131353e344edf4dcdb6ba7ff9c986ec67746a9bbd54b1d88e0b6d2f5a34b45f80109ccbd56684fb64f61b3272d6e070c70d69c885a3c36d9a278176ff7000c7ec705625ced7e6fd38de6cf345dd71994cef8f6df890aa86b643901c551b2023fad25f8ee52667655b05aa33cd3143773462cdb380b5879d436f57b586c5ece0d69e47d45c1f4f9a0678058f582ee5f65ca14f6691d96cee48a981d07449c90c2d6dccdc5fbc4b32c74a58fc9028ace1cfe63af4bb5eb34ce83f433d4ded94c9ebe3c6686a418655f0ec314c90fc9a95ffbb9e57acf929479bcaabe3872396dfa5baae08253b86c1e941a5c5fe05a5088438852b18ef76ab184ddc82451fc071b3cf71a0beb824f0ecd2d5dda65f9a4404a12a98c32135b0f6e64042d4deb3ee8f6add2e067ede0d008f182d4590c43f4346b6ac2765f0a03b11f803bd7f238c9b2ff8543ba4d462a188dab6d843ccf46e2218fd0a8dfadaed7b48e1b8c07272d158cae3bfdf4670775a97c9638
+#4b69e0fd34da758fb15c791f3d610a00c0c5ab9ff31cfca9226747bf8a4f7bdfd6db4757d7c7074fe48fa5a26642f74ba41afcc0a37e67f6294ae76eaf275f50b34d24cd425c610b6212095ceda78ec1af74e136e6327371afaa3f691a219d0b0c533efd185e2c10f8ecd36c9ad354e4449ed59186dcb9b30e0f0dc2092a33f1a32b33ca250aa70bd862b6f3f90079faaaa0d19c5e40a1e4cfccd5347d62fe23749394eae17d004c9e61cc11829916f513a9804ac137dba7f44cd284c621e8cb5d96c9f5e171c158d93a49eb8cd831311cb901cc1b2665520dad3a45388c57141e7b4e32325d63c3bce243a369bd64b01956032b3927504ed7a01a6163ce516283dc79195c8ed2d4f986351f8b784b097a543069ee1c45f4b9eafa3e72e0bcef4acf1db4fbc291521a0744a44439ef601ece09f9eaa107b00c25d5c36786169a9c303d775884b56461bd380f519b240290900727f34761ed32d5db2b7b4e504be9f58eb63362bf91387d770fe133299bb6efd2b65173fa302e6e8bf44dd11770758c121bb5f47ae16e8bb0f1efef9c90f9f27b61fcaae65137917dedb3784f3a37bd2139bab5483c8615ab3e42bca4e8e104f8ed17fa0eea5efd901301a273383fc50bdb4af54ccf409026b075b5e1c4a7ff8543e5725dda7d917dd26842f263ed901ff3d2f1dc969843eb54e6dc6b7401507af02d466f10a6e46d2bf97bfb8c
