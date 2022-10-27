@@ -21,7 +21,8 @@ def main():
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event == 'Run':
-            sp = sg.execute_command_subprocess(values['-IN-'], pipe_output=True, wait=False)
+            cmd_list = values['-IN-'].split(' ')
+            sp = sg.execute_command_subprocess(cmd_list[0], *cmd_list[1:], pipe_output=True, wait=False)
             results = sg.execute_get_results(sp, timeout=1)
             print(results[0])
 
