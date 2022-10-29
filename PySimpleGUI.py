@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.107 Unreleased"
+version = __version__ = "4.60.4.108 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -272,6 +272,8 @@ _change_log = """
         Neon Green, Blue, Yellow themes... was writing some tests using them and thought why not start a new theme color category... "neon"
     4.60.4.107
         Fixed an unreported problem perhaps...  Added saving new menu into the Menu.Widget memeber variable in the Menu.update method.
+    4.60.4.108
+        Added drop_whitespace to the docstring for popup.  Parm has been in the code for quite some time but forgot the docstring so it's not in the SDK reference.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20156,6 +20158,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type right_justify_buttons:  bool
     :param button_justification:  Speficies if buttons should be left, right or centered. Default is left justified
     :type button_justification:   str
+    :param drop_whitespace:       Controls is whitespace should be removed when wrapping text.  Parameter is passed to textwrap.fill. Default is to drop whitespace (so popup remains backward compatible)
+    :type drop_whitespace:        bool
     :return:                      Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype:                       str | None
     """
@@ -25924,4 +25928,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4b69e0fd34da758fb15c791f3d610a00c0c5ab9ff31cfca9226747bf8a4f7bdfd6db4757d7c7074fe48fa5a26642f74ba41afcc0a37e67f6294ae76eaf275f50b34d24cd425c610b6212095ceda78ec1af74e136e6327371afaa3f691a219d0b0c533efd185e2c10f8ecd36c9ad354e4449ed59186dcb9b30e0f0dc2092a33f1a32b33ca250aa70bd862b6f3f90079faaaa0d19c5e40a1e4cfccd5347d62fe23749394eae17d004c9e61cc11829916f513a9804ac137dba7f44cd284c621e8cb5d96c9f5e171c158d93a49eb8cd831311cb901cc1b2665520dad3a45388c57141e7b4e32325d63c3bce243a369bd64b01956032b3927504ed7a01a6163ce516283dc79195c8ed2d4f986351f8b784b097a543069ee1c45f4b9eafa3e72e0bcef4acf1db4fbc291521a0744a44439ef601ece09f9eaa107b00c25d5c36786169a9c303d775884b56461bd380f519b240290900727f34761ed32d5db2b7b4e504be9f58eb63362bf91387d770fe133299bb6efd2b65173fa302e6e8bf44dd11770758c121bb5f47ae16e8bb0f1efef9c90f9f27b61fcaae65137917dedb3784f3a37bd2139bab5483c8615ab3e42bca4e8e104f8ed17fa0eea5efd901301a273383fc50bdb4af54ccf409026b075b5e1c4a7ff8543e5725dda7d917dd26842f263ed901ff3d2f1dc969843eb54e6dc6b7401507af02d466f10a6e46d2bf97bfb8c
+#71dfa866fe2196dc973ed4961bed5813565907ff1fcf5c3212fcc818685e7dfa0cf0bd15b8a838ceda8a2f01f8674787bccb7d552850778616ba450a12b073e205f36c1fe0e4eb485bfc96c5aeaec780278594eef41a28334b2eebcaeac0b6f8bd53f8b96bbe897605e42d416fe13388970b2a08da8698d7c3e104fe617b8d2ac6d96edc7f7cedabc73c665fae292ce6a222a3c081140522a3abdc18ac55b7c2d72744de59f6549407ac1bc836ab21461ad3e90064705517e96bc3c57ff01d62a40e06a551486dfb7724fca08012fd7e515776235a7a625c27bd72d46a25a2c3f3c041d88c79bfbc6d164f9a2921d3860bad63fbeda369254c7413588ae8bfb7f19d795a0a15f8900e4f1dd9c09a742855ceb392e4505a07315fc7a62e26f10cd782c0f6d79dd85e8bb03f38c55854bda706457beb50f3e4fa7b8583e261d0078c27701a345f185038e09b00b8d9a38639b72e44b3536aac70032d7bf078caa953edf61d9a0f72859f484aa140794db78aa16b7522dc7e715fafd5725bbdd0b1d799c3d45750068bf74acd53613d5dc9e47abb4a133ef7edeb97b0825d310acc57c379435b77f462f583623052d9c174736dfd498f748b8c37ddc95ba9cf7e6ed18e92f15605eee1a351673b68702409ea4a27839e20650bd4c13216c170a2cb76951f3cfe9ef57d4530b77d0223cd44fd3db88fe0252e9ba1beb79eefbeaa88
