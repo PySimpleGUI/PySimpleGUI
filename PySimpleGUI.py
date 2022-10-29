@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.108 Unreleased"
+version = __version__ = "4.60.4.109 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -274,6 +274,8 @@ _change_log = """
         Fixed an unreported problem perhaps...  Added saving new menu into the Menu.Widget memeber variable in the Menu.update method.
     4.60.4.108
         Added drop_whitespace to the docstring for popup.  Parm has been in the code for quite some time but forgot the docstring so it's not in the SDK reference.
+    4.60.4.109
+        Changed error message in error window when an element reuse has been detected in a layout.  Previous message wasn't clear why there was an error.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10089,10 +10091,10 @@ class Window:
                 warnings.warn(
                     '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
-                _error_popup_with_traceback('Error creating Window layout',
-                                            'You have broken the layout reuse rule! Thou shall not reuse layouts.',
-                                            'The layout specified has already been used',
-                                            'You MUST start witha "clean", unused layout every time you create a window',
+                _error_popup_with_traceback('Error detected in layout - Contains an element that has already been used.',
+                                            'You have attempted to resuse an element in your layout.',
+                                            "The layout specified has an element that's already been used.",
+                                            'You MUST start with a "clean", unused layout every time you create a window',
                                             'The offensive Element = ',
                                             element,
                                             'and has a key = ', element.Key,
@@ -25928,4 +25930,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#71dfa866fe2196dc973ed4961bed5813565907ff1fcf5c3212fcc818685e7dfa0cf0bd15b8a838ceda8a2f01f8674787bccb7d552850778616ba450a12b073e205f36c1fe0e4eb485bfc96c5aeaec780278594eef41a28334b2eebcaeac0b6f8bd53f8b96bbe897605e42d416fe13388970b2a08da8698d7c3e104fe617b8d2ac6d96edc7f7cedabc73c665fae292ce6a222a3c081140522a3abdc18ac55b7c2d72744de59f6549407ac1bc836ab21461ad3e90064705517e96bc3c57ff01d62a40e06a551486dfb7724fca08012fd7e515776235a7a625c27bd72d46a25a2c3f3c041d88c79bfbc6d164f9a2921d3860bad63fbeda369254c7413588ae8bfb7f19d795a0a15f8900e4f1dd9c09a742855ceb392e4505a07315fc7a62e26f10cd782c0f6d79dd85e8bb03f38c55854bda706457beb50f3e4fa7b8583e261d0078c27701a345f185038e09b00b8d9a38639b72e44b3536aac70032d7bf078caa953edf61d9a0f72859f484aa140794db78aa16b7522dc7e715fafd5725bbdd0b1d799c3d45750068bf74acd53613d5dc9e47abb4a133ef7edeb97b0825d310acc57c379435b77f462f583623052d9c174736dfd498f748b8c37ddc95ba9cf7e6ed18e92f15605eee1a351673b68702409ea4a27839e20650bd4c13216c170a2cb76951f3cfe9ef57d4530b77d0223cd44fd3db88fe0252e9ba1beb79eefbeaa88
+#0ce30adb0f2c06c91b7c5b9f2df45b9c770e5e7387c8e1f24a3b4f5288ca98b8418dce6fa54e23d34fcc2cd3256bbebae2ccf0fda28fc3695a553cb3c16aa398b5d5fca3cbf20fefe17605e0e577be5cb91db17af8f444007515f71608a45f1841cd6b7bb55c64288e4d374e81516fb4e3c06b246d1268a7cf7c34239524255cfe444123f1d5f7911444163ab07ee684914c40dec610e60b398a49ae0d4fa8fa823f97e196ed1d5030296e327451ef93421ddad4aa29daea6cc8bab5c1beb23ef73f5bd72d1c7217d429ecbbbddb705d120b986acbaec615184eac57668f72fdfd0cca620c6fca405eafaec2ecee6d1a4c4ea09be93020d741e1f773493960140f46407dec218ebecab608cc910cb262dd612988a02a56732ee4a9930d2a2206b684ef1725245ea9f6fce14f2e9633a8a28303f15e6d67a674297e6e09719decd6e5c9e367d222aa32aa64a1ce7edf39704b8a880fcac4861b0d828266d044df577579192b73b6d63cc6c20fdee2c28bb553ee42702fe51a696369cac4a5c32eab5a2fd30bbb2e32b6704ecb3d3eec1fee5a19cb2cec5e585e81e4f0f5fafcde62af66f7c124450eaaea11ffc1dd5af81c7bdd08662505b7d9ba98154ee51d19434d4fc2c8806576892057787b2b5511af4a84760ff5c08f59237f82d3ba46a09a43636d0a5f9c78f42a0b244dd915263682f1927468a37e64f5f25ee72944a9
