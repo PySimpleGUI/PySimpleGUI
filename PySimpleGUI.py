@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.107 Unreleased"
+version = __version__ = "4.60.4.109 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -272,6 +272,10 @@ _change_log = """
         Neon Green, Blue, Yellow themes... was writing some tests using them and thought why not start a new theme color category... "neon"
     4.60.4.107
         Fixed an unreported problem perhaps...  Added saving new menu into the Menu.Widget memeber variable in the Menu.update method.
+    4.60.4.108
+        Added drop_whitespace to the docstring for popup.  Parm has been in the code for quite some time but forgot the docstring so it's not in the SDK reference.
+    4.60.4.109
+        Changed error message in error window when an element reuse has been detected in a layout.  Previous message wasn't clear why there was an error.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10087,10 +10091,10 @@ class Window:
                 warnings.warn(
                     '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
-                _error_popup_with_traceback('Error creating Window layout',
-                                            'You have broken the layout reuse rule! Thou shall not reuse layouts.',
-                                            'The layout specified has already been used',
-                                            'You MUST start witha "clean", unused layout every time you create a window',
+                _error_popup_with_traceback('Error detected in layout - Contains an element that has already been used.',
+                                            'You have attempted to resuse an element in your layout.',
+                                            "The layout specified has an element that's already been used.",
+                                            'You MUST start with a "clean", unused layout every time you create a window',
                                             'The offensive Element = ',
                                             element,
                                             'and has a key = ', element.Key,
@@ -20156,6 +20160,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type right_justify_buttons:  bool
     :param button_justification:  Speficies if buttons should be left, right or centered. Default is left justified
     :type button_justification:   str
+    :param drop_whitespace:       Controls is whitespace should be removed when wrapping text.  Parameter is passed to textwrap.fill. Default is to drop whitespace (so popup remains backward compatible)
+    :type drop_whitespace:        bool
     :return:                      Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype:                       str | None
     """
@@ -25924,4 +25930,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4b69e0fd34da758fb15c791f3d610a00c0c5ab9ff31cfca9226747bf8a4f7bdfd6db4757d7c7074fe48fa5a26642f74ba41afcc0a37e67f6294ae76eaf275f50b34d24cd425c610b6212095ceda78ec1af74e136e6327371afaa3f691a219d0b0c533efd185e2c10f8ecd36c9ad354e4449ed59186dcb9b30e0f0dc2092a33f1a32b33ca250aa70bd862b6f3f90079faaaa0d19c5e40a1e4cfccd5347d62fe23749394eae17d004c9e61cc11829916f513a9804ac137dba7f44cd284c621e8cb5d96c9f5e171c158d93a49eb8cd831311cb901cc1b2665520dad3a45388c57141e7b4e32325d63c3bce243a369bd64b01956032b3927504ed7a01a6163ce516283dc79195c8ed2d4f986351f8b784b097a543069ee1c45f4b9eafa3e72e0bcef4acf1db4fbc291521a0744a44439ef601ece09f9eaa107b00c25d5c36786169a9c303d775884b56461bd380f519b240290900727f34761ed32d5db2b7b4e504be9f58eb63362bf91387d770fe133299bb6efd2b65173fa302e6e8bf44dd11770758c121bb5f47ae16e8bb0f1efef9c90f9f27b61fcaae65137917dedb3784f3a37bd2139bab5483c8615ab3e42bca4e8e104f8ed17fa0eea5efd901301a273383fc50bdb4af54ccf409026b075b5e1c4a7ff8543e5725dda7d917dd26842f263ed901ff3d2f1dc969843eb54e6dc6b7401507af02d466f10a6e46d2bf97bfb8c
+#0ce30adb0f2c06c91b7c5b9f2df45b9c770e5e7387c8e1f24a3b4f5288ca98b8418dce6fa54e23d34fcc2cd3256bbebae2ccf0fda28fc3695a553cb3c16aa398b5d5fca3cbf20fefe17605e0e577be5cb91db17af8f444007515f71608a45f1841cd6b7bb55c64288e4d374e81516fb4e3c06b246d1268a7cf7c34239524255cfe444123f1d5f7911444163ab07ee684914c40dec610e60b398a49ae0d4fa8fa823f97e196ed1d5030296e327451ef93421ddad4aa29daea6cc8bab5c1beb23ef73f5bd72d1c7217d429ecbbbddb705d120b986acbaec615184eac57668f72fdfd0cca620c6fca405eafaec2ecee6d1a4c4ea09be93020d741e1f773493960140f46407dec218ebecab608cc910cb262dd612988a02a56732ee4a9930d2a2206b684ef1725245ea9f6fce14f2e9633a8a28303f15e6d67a674297e6e09719decd6e5c9e367d222aa32aa64a1ce7edf39704b8a880fcac4861b0d828266d044df577579192b73b6d63cc6c20fdee2c28bb553ee42702fe51a696369cac4a5c32eab5a2fd30bbb2e32b6704ecb3d3eec1fee5a19cb2cec5e585e81e4f0f5fafcde62af66f7c124450eaaea11ffc1dd5af81c7bdd08662505b7d9ba98154ee51d19434d4fc2c8806576892057787b2b5511af4a84760ff5c08f59237f82d3ba46a09a43636d0a5f9c78f42a0b244dd915263682f1927468a37e64f5f25ee72944a9
