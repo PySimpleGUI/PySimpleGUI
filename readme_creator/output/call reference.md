@@ -16869,9 +16869,9 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|  str  |  title   | The title that will be shown in the popup's titlebar and in the first line of the window |
-| bytes |  emoji   | An optional BASE64 Encoded image to shows in the error window |
-| *Any  | messages | A variable number of lines of messages you wish to show your user |
+|  str  |   title   | The title that will be shown in the popup's titlebar and in the first line of the window |
+|  Any  | *messages | A variable number of lines of messages you wish to show your user |
+| bytes |   emoji   | An optional BASE64 Encoded image to shows in the error window |
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
