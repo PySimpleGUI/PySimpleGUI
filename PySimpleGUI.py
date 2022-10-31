@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.109 Unreleased"
+version = __version__ = "4.60.4.110 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -276,6 +276,8 @@ _change_log = """
         Added drop_whitespace to the docstring for popup.  Parm has been in the code for quite some time but forgot the docstring so it's not in the SDK reference.
     4.60.4.109
         Changed error message in error window when an element reuse has been detected in a layout.  Previous message wasn't clear why there was an error.
+    4.60.4.110
+        Added very detailed information to popup_error_with_traceback if the Exception information is passed in as one of the arguments
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21861,7 +21863,7 @@ def _error_popup_with_traceback(title, *args, emoji=None):
             error_message = line
             break
     if file_info_pysimplegui is None:
-        _error_popup_with_code(title, None, None,  'Did not find your traceback info', *args,emoji=emoji,)
+        _error_popup_with_code(title, None, None,  'Did not find your traceback info', *args,emoji=emoji)
         return
 
     error_parts = None
@@ -21879,16 +21881,36 @@ def _error_popup_with_traceback(title, *args, emoji=None):
 
 
 def _error_popup_with_code(title, filename, line_num, *args,  emoji=None):
+    """
+    Makes the error popup window
+
+    :param title:     The title that will be shown in the popup's titlebar and in the first line of the window
+    :type title:      str
+    :param filename:  The filename to show.. may not be the filename that actually encountered the exception!
+    :type filename:   str
+    :param line_num:  Line number within file with the error
+    :type line_num:   int | str
+    :param args:      A variable number of lines of messages
+    :type args:       *Any
+    :param emoji:     An optional BASE64 Encoded image to shows in the error window
+    :type emoji:      bytes
+    """
     emoji_data = emoji if emoji is not None else _random_error_emoji()
     layout = [[Text('ERROR'), Text(title)],
               [Image(data=emoji_data)]]
-    # make max length of line be 90 chars and allow the height to vary based on number of needed lines
-    lines = [str(msg).split('\n') for msg in args]
+    lines = []
+    for msg in args:
+        if isinstance(msg, Exception):
+            lines += [[f'Additional Exception info pased in by PySimpleGUI or user: Error type is: {type(msg).__name__}']]
+            lines += [[f'In file {__file__} Line number {msg.__traceback__.tb_lineno}']]
+            lines += [[f'{msg}']]
+        else:
+            lines += [str(msg).split('\n')]
     max_line_len = 0
     for line in lines:
         max_line_len = max(max_line_len, max([len(s) for s in line]))
 
-    layout += [[Text(str(msg), size=(min(max_line_len, 90), None))] for msg in args]
+    layout += [[Text(''.join(line), size=(min(max_line_len, 90), None))] for line in lines]
 
     layout += [[Button('Close'), Button('Take me to error'), Button('Kill Application', button_color='white on red')]]
 
@@ -25930,4 +25952,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0ce30adb0f2c06c91b7c5b9f2df45b9c770e5e7387c8e1f24a3b4f5288ca98b8418dce6fa54e23d34fcc2cd3256bbebae2ccf0fda28fc3695a553cb3c16aa398b5d5fca3cbf20fefe17605e0e577be5cb91db17af8f444007515f71608a45f1841cd6b7bb55c64288e4d374e81516fb4e3c06b246d1268a7cf7c34239524255cfe444123f1d5f7911444163ab07ee684914c40dec610e60b398a49ae0d4fa8fa823f97e196ed1d5030296e327451ef93421ddad4aa29daea6cc8bab5c1beb23ef73f5bd72d1c7217d429ecbbbddb705d120b986acbaec615184eac57668f72fdfd0cca620c6fca405eafaec2ecee6d1a4c4ea09be93020d741e1f773493960140f46407dec218ebecab608cc910cb262dd612988a02a56732ee4a9930d2a2206b684ef1725245ea9f6fce14f2e9633a8a28303f15e6d67a674297e6e09719decd6e5c9e367d222aa32aa64a1ce7edf39704b8a880fcac4861b0d828266d044df577579192b73b6d63cc6c20fdee2c28bb553ee42702fe51a696369cac4a5c32eab5a2fd30bbb2e32b6704ecb3d3eec1fee5a19cb2cec5e585e81e4f0f5fafcde62af66f7c124450eaaea11ffc1dd5af81c7bdd08662505b7d9ba98154ee51d19434d4fc2c8806576892057787b2b5511af4a84760ff5c08f59237f82d3ba46a09a43636d0a5f9c78f42a0b244dd915263682f1927468a37e64f5f25ee72944a9
+#06bbd5f382d63bc7bef4cff6ee9746ef0332e91e70cbfa3c0a5d5b9201ed8c29502ee87697f19c6450504e9bd3af957d310b4e9e15c450807d35c2ddc12a7ce2165e10dbf8d93dfebdf41a4a6d94c7030f88b08c2507598b2e490344d23cc02d459bec2013f22120b1d21e0b3e9d236e085fa300b73cc93e50c52228208cb680dc9240ecc3f75fd841cd31520d12f417e16763c6a1747a473b10c4dba51bab4f5f49ba8d5299d62357e68b5846770e0a80947a1cafa04e3300d320581c7a260560aeb28ce31539a376ec61e4f0d2c1266f9276ea1d1854bf3c1cea92f00efdabfef126ec25a395b89c38f3b5f611b0a4dede5c732ca3484bea65e8168a80c2c1dbf2f2ead10ffe0fe864d26d94b637085ae412e5db946c32a18c57bf6edc9257f2d47fbe7c977131d0e17f87995c9abf01513a0a7cd09bcd3f2b9cc2a186b703e5fe4bfdfc6607e3b2a3f8e3c9683b4fb51dd2335e32084f777379cd82f23f04db7eae7e762377c60cdc1a750654df2719d16f2b6f75aba2104fcb90e53b71da60e8926bab9887839580d9a482dd785c0e69eb7366db424da470246e04bdb75f8f66515c45621cf6070bd68cdf189affcd627b2965376e18bf3a51f889f6171ec1f50d14529fda36fdb780fb145fa8f913dc45a05a971bdeef81a35fe55dd29dedd7f5dc7de0a29f86c8e2188ad7cb2c1f25a9911054fd959e65dc1eacc6ed9d
