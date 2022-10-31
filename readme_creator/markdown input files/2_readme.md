@@ -2058,20 +2058,6 @@ Your Window's layout is composed of lists of Elements.  In addition to elements,
 
 
 
-
-
-- Text
-- Single Line Input
-- Buttons including these types:
-	- File Browse
-	- Folder Browse
-	- Calendar picker
-	- Date Chooser
-	- Read window
-	- Close window ("Button" & all shortcut buttons)
-	- Realtime
-
-
 ## Keys
 
 ***Keys are a super important concept to understand in PySimpleGUI.***

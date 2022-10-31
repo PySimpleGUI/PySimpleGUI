@@ -16663,6 +16663,7 @@ Parameter Descriptions:
 |                  bool                   |         modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 |                  bool                   | right_justify_buttons | If True then the buttons will be "pushed" to the right side of the Window |
 |                   str                   | button_justification  | Speficies if buttons should be left, right or centered. Default is left justified |
+|                  bool                   |    drop_whitespace    | Controls is whitespace should be removed when wrapping text. Parameter is passed to textwrap.fill. Default is to drop whitespace (so popup remains backward compatible) |
 | str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -16851,6 +16852,26 @@ Parameter Descriptions:
 |            str or bytes            |        image        | Image to include at the top of the popup window |
 |                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show an error message and as many additoinal lines of messages as you want.
+Will show the same error window as PySimpleGUI uses internally.  Has a button to
+take the user to the line of code you called this popup from.
+If you include the Exception information in your messages, then it will be parsed and additional information
+will be in the window about such as the specific line the error itself occurred on.
+
+```
+popup_error_with_traceback(title,
+    messages,
+    emoji = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|  str  |  title   | The title that will be shown in the popup's titlebar and in the first line of the window |
+| bytes |  emoji   | An optional BASE64 Encoded image to shows in the error window |
+| *Any  | messages | A variable number of lines of messages you wish to show your user |
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -17720,6 +17741,7 @@ Parameter Descriptions:
 |                  bool                   |         modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 |                  bool                   | right_justify_buttons | If True then the buttons will be "pushed" to the right side of the Window |
 |                   str                   | button_justification  | Speficies if buttons should be left, right or centered. Default is left justified |
+|                  bool                   |    drop_whitespace    | Controls is whitespace should be removed when wrapping text. Parameter is passed to textwrap.fill. Default is to drop whitespace (so popup remains backward compatible) |
 | str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
