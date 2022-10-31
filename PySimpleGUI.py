@@ -21837,14 +21837,16 @@ def popup_error_with_traceback(title, *messages, emoji=None):
     """
     Show an error message and as many additoinal lines of messages as you want.
     Will show the same error window as PySimpleGUI uses internally.  Has a button to
-    take the user to the line of code you called this popup from
+    take the user to the line of code you called this popup from.
+    If you include the Exception information in your messages, then it will be parsed and additional information
+    will be in the window about such as the specific line the error itself occurred on.
 
-    :param title:    The title that will be shown in the popup's titlebar and in the first line of the window
-    :type title:     str
-    :param emoji:    An optional BASE64 Encoded image to shows in the error window
-    :type emoji:     bytes
-    :param messages: A variable number of lines of messages you wish to show your user
-    :type messages:  *Any
+    :param title:     The title that will be shown in the popup's titlebar and in the first line of the window
+    :type title:      str
+    :param *messages: A variable number of lines of messages you wish to show your user
+    :type *messages:  Any
+    :param emoji:     An optional BASE64 Encoded image to shows in the error window
+    :type emoji:      bytes
     """
 
     # For now, call the function that PySimpleGUI uses internally
@@ -25952,4 +25954,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#06bbd5f382d63bc7bef4cff6ee9746ef0332e91e70cbfa3c0a5d5b9201ed8c29502ee87697f19c6450504e9bd3af957d310b4e9e15c450807d35c2ddc12a7ce2165e10dbf8d93dfebdf41a4a6d94c7030f88b08c2507598b2e490344d23cc02d459bec2013f22120b1d21e0b3e9d236e085fa300b73cc93e50c52228208cb680dc9240ecc3f75fd841cd31520d12f417e16763c6a1747a473b10c4dba51bab4f5f49ba8d5299d62357e68b5846770e0a80947a1cafa04e3300d320581c7a260560aeb28ce31539a376ec61e4f0d2c1266f9276ea1d1854bf3c1cea92f00efdabfef126ec25a395b89c38f3b5f611b0a4dede5c732ca3484bea65e8168a80c2c1dbf2f2ead10ffe0fe864d26d94b637085ae412e5db946c32a18c57bf6edc9257f2d47fbe7c977131d0e17f87995c9abf01513a0a7cd09bcd3f2b9cc2a186b703e5fe4bfdfc6607e3b2a3f8e3c9683b4fb51dd2335e32084f777379cd82f23f04db7eae7e762377c60cdc1a750654df2719d16f2b6f75aba2104fcb90e53b71da60e8926bab9887839580d9a482dd785c0e69eb7366db424da470246e04bdb75f8f66515c45621cf6070bd68cdf189affcd627b2965376e18bf3a51f889f6171ec1f50d14529fda36fdb780fb145fa8f913dc45a05a971bdeef81a35fe55dd29dedd7f5dc7de0a29f86c8e2188ad7cb2c1f25a9911054fd959e65dc1eacc6ed9d
+#0000740e634104ec22bc0c5b7ce1ce65f4e236f0f93265aff2e1a06e9f0eb6bf2df85945827909c50d259283acbf4410ef6ad063b0d337d254cd3477f996a8ca3bdc4391cb40469121c6212e96fc3e689f30b1d8e77c92e2fc02bcc3c934032844bc5ea18621d6fe99085ca915fc5e30623c9c536c9de75b62c4c1cc8ff97dbe3764ef0a9c630d573221dd7e2f9b6cfa72abdf45645b1010b540e94e0eacd5e684456e53711b55f34a1d53985e10a68ad1619714f31e853cfa262d4f7eb326031055f6b08490228a63a2d61df8cab879ce7a9fb45b5aab918f32144817507461cb091a6480fe2f839e11e35ec831514c66a72f02eac90ace6e942d83134ecdc77002f8c7b6aefe4661ae25e37bb334a7d69daab7229fcf61d625aead484ef7dd3c2102a3460bde207d0eac133b0f8e5f7ba2d9cf3208e1173ee40907d66277728c7446f25dda0e934119afae6390cd6b03f9be9a9064ca1ae6627ff9978ee98f15236be0baabb97537dea0eb7e60045b31fc219279b779d219359a769e150f02c4dc46ad144584a58ec482cf6692f297460ae859babd7ccec0adf8f09f6355e9ab2b7332fab980e751770bf0bfdb8a7c93d70ff90b2c2aa4aadf0422b50f1ab1b75ec2020223aa5c368cfe3121688d82218f85357a3f251431aa3db6fb83de4f0384400213c3879d7400c78fc6f761e81ef96a5ee3901e08a43e9c41e82f31db
