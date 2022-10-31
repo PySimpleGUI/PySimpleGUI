@@ -3341,6 +3341,7 @@ Don't use these.  They are here in case you're searching for them.  Instead use 
 <!-- <+func.popup_auto_close+> -->
 <!-- <+func.popup_cancel+> -->
 <!-- <+func.popup_error+> -->
+<!-- <+func.popup_error_with_traceback+> -->
 <!-- <+func.popup_get_date+> -->
 <!-- <+func.popup_get_file+> -->
 <!-- <+func.popup_get_folder+> -->

@@ -1627,6 +1627,7 @@ Parameter Descriptions:
 |                  bool                   |         modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 |                  bool                   | right_justify_buttons | If True then the buttons will be "pushed" to the right side of the Window |
 |                   str                   | button_justification  | Speficies if buttons should be left, right or centered. Default is left justified |
+|                  bool                   |    drop_whitespace    | Controls is whitespace should be removed when wrapping text. Parameter is passed to textwrap.fill. Default is to drop whitespace (so popup remains backward compatible) |
 | str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -3798,17 +3799,6 @@ Your Window's layout is composed of lists of Elements.  In addition to elements,
 | vtop          | Vertically align element or row of elements to the top of the row                                                                         |
 | vbottom       | Vertically align element or row of elements to the bottom of the row                                                                      |
 | vcenter       | Vertically align element or row of elements to the center of the row                                                                      |
-
-- Text
-- Single Line Input
-- Buttons including these types:
-	- File Browse
-	- Folder Browse
-	- Calendar picker
-	- Date Chooser
-	- Read window
-	- Close window ("Button" & all shortcut buttons)
-	- Realtime
 
 ## Keys
 
