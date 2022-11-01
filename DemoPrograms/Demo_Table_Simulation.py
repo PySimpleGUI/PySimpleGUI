@@ -28,9 +28,9 @@ def TableSimulation():
                sg.Input(key='inputrow', justification='right', size=(8, 1), pad=(1, 1)),
                sg.Input(key='inputcol', size=(8, 1), pad=(1, 1), justification='right'),
                sg.Input(key='value', size=(8, 1), pad=(1, 1), justification='right')],
-              [sg.Col(columm_layout, size=(800, 600), scrollable=True,)]]
+              [sg.Col(columm_layout, size=(800, 600), scrollable=True)]]
 
-    window = sg.Window('Table', layout,  return_keyboard_events=True)
+    window = sg.Window('Table', layout,  return_keyboard_events=True, resizable=True)
 
     while True:
         event, values = window.read()
