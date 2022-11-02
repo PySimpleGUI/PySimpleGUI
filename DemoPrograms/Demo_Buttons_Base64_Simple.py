@@ -1,5 +1,12 @@
-#!/usr/bin/env python
 import PySimpleGUI as sg
+"""
+    Demo - Base64 Buttons with Images
+
+    This is perhaps the easiest, quickest, and safest way to use buttons with images in PySimpleGUI.
+    By putting the button into your code, then you only have to distribute a single file.
+    
+    Copyright 2022 PySimpleGUI
+"""
 
 # First the button images
 
@@ -7,24 +14,19 @@ play = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAA
 stop = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAAaklEQVRoge3ZQQqAMAxFwSre/8p6AZFUiXzKzLqLPNJVOwYAvLcVzpztU9Q8zrr/NUW3Y+JsZXsdSjdimY0ISSMkjZA0QtIISSMkjZA0QtIISSMkjZA0QtIISSMkzcxrfMo/ya1lNgIAX1zq+ANHUjXZuAAAAABJRU5ErkJggg=='
 eject = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAByklEQVRoge3YO2gUURSA4S+JRnyACIGADyxERAsb0UKrWIidWIidlSA2YpFWSauNVtrYiIU2YpFCLGwEEWwsBAsLEbFQFARFfKBZizkyK5pkZvZmZ7PeH05z595z/sPszpxdMplMJpMZbDZFLGsm8CxiomWXxqzBQ3QiHmNdq0YNGMc9RQOvIjqxNt6iVy1GcF0h/h47sR1vY+0mRluzq8ElhfBn7O9a34tPce1KC161OK8Q/Y7D/7h+EF9jz7k+etXilELwJ44vsO8ofsTeM33wqsURpdzZCvtPK5s+toRetZjCF4XYTI1zM3HmGw4lt6rJbnxQCF1tcP5ynP2IPQm9arENb0LkDsYa5BjFrcjxDjuS2VVkI16EwH2s6iHXStxVvjy39GxXkfV4Iu3Y0T3OPMWGBDkXZDUeRMHnmEyY+/eA2cEjrE2Y+w/GcDsKvcbWJaixGS+jxixWpC4wgmvK+WlX6gJddM9lN6J2Mi4q56cDKRPPwz7lXHYhVdJp5W+KtmK61yZOYG4AGpnDyV6byWT+ZxZ7Rnf6YlGdeX2XxZ8AVag6AiR9uzZg0U/G0NyR3MigUfU7MmhPr78YmjuSyWQymUxmmPgFokSdfYSQKDwAAAAASUVORK5CYII='
 
-sg.theme('Light Green 3')                                # Set a color theme
-
-bg = sg.LOOK_AND_FEEL_TABLE[sg.CURRENT_LOOK_AND_FEEL]['BACKGROUND']     # Get the background for the current theme
+sg.theme('Light Green 3')
 
 # Define the window's layout
-layout = [  [sg.Text('Your Application', font='Any 15')],
-            [sg.Text('Event = '), sg.Text(size=(12,1), key='-OUT-')],
-            [sg.Button(image_data=play, key='Play', border_width=0, button_color=(bg, bg)),
-             sg.Button(image_data=stop, key='Stop',  button_color=(bg, bg), border_width=0),
-             sg.Button(image_data=eject, key='Exit',  button_color=(bg, bg), border_width=0)]  ]
+layout = [[sg.Button(image_data=play, key='-PLAY-',  button_color=sg.theme_background_color(), border_width=0),
+           sg.Button(image_data=stop, key='-STOP-',  button_color=sg.theme_background_color(), border_width=0),
+           sg.Button(image_data=eject, key='-EXIT-',  button_color=sg.theme_background_color(), border_width=0)]  ]
 
 # Create the window
-window = sg.Window('Window Title', layout)
+window = sg.Window('Simple Base64 Buttons', layout)
 
 while True:                             # Event Loop
     event, values = window.read()       # type: str, dict
     print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):         # If the user exits
+    if event in (sg.WIN_CLOSED, '-EXIT-'):         # If the user exits
         break
-    window['-OUT-'].Update(event)       # Output the event to the window
-window.close(); del window              # Exiting so clean up
+window.close()          # Exiting so clean up
