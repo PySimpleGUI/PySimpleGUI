@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.110 Unreleased"
+version = __version__ = "4.60.4.111 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -278,6 +278,8 @@ _change_log = """
         Changed error message in error window when an element reuse has been detected in a layout.  Previous message wasn't clear why there was an error.
     4.60.4.110
         Added very detailed information to popup_error_with_traceback if the Exception information is passed in as one of the arguments
+    4.60.4.111
+        Menu Element - delete all items in existing Menu widget rather than making a new one when the Menu definition changes
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8745,9 +8747,11 @@ class Menu(Element):
 
         if menu_definition is not None:
             self.MenuDefinition = copy.deepcopy(menu_definition)
-
-            self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)  # create the menubar
+            if self.TKMenu is None:     # if no menu exists, make one
+                self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)  # create the menubar
             menubar = self.TKMenu
+            # Delete all the menu items (assuming 10000 should be a high enough number to cover them all)
+            menubar.delete(0, 10000)
             self.Widget = self.TKMenu   # same the new menu so user can access to extend PySimpleGUI
             for menu_entry in self.MenuDefinition:
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)
@@ -25954,4 +25958,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0000740e634104ec22bc0c5b7ce1ce65f4e236f0f93265aff2e1a06e9f0eb6bf2df85945827909c50d259283acbf4410ef6ad063b0d337d254cd3477f996a8ca3bdc4391cb40469121c6212e96fc3e689f30b1d8e77c92e2fc02bcc3c934032844bc5ea18621d6fe99085ca915fc5e30623c9c536c9de75b62c4c1cc8ff97dbe3764ef0a9c630d573221dd7e2f9b6cfa72abdf45645b1010b540e94e0eacd5e684456e53711b55f34a1d53985e10a68ad1619714f31e853cfa262d4f7eb326031055f6b08490228a63a2d61df8cab879ce7a9fb45b5aab918f32144817507461cb091a6480fe2f839e11e35ec831514c66a72f02eac90ace6e942d83134ecdc77002f8c7b6aefe4661ae25e37bb334a7d69daab7229fcf61d625aead484ef7dd3c2102a3460bde207d0eac133b0f8e5f7ba2d9cf3208e1173ee40907d66277728c7446f25dda0e934119afae6390cd6b03f9be9a9064ca1ae6627ff9978ee98f15236be0baabb97537dea0eb7e60045b31fc219279b779d219359a769e150f02c4dc46ad144584a58ec482cf6692f297460ae859babd7ccec0adf8f09f6355e9ab2b7332fab980e751770bf0bfdb8a7c93d70ff90b2c2aa4aadf0422b50f1ab1b75ec2020223aa5c368cfe3121688d82218f85357a3f251431aa3db6fb83de4f0384400213c3879d7400c78fc6f761e81ef96a5ee3901e08a43e9c41e82f31db
+#117f16e56ec7782bc5df964006a14ea35e0585137ad32e89098151521145128e2d96cc68d1b7e1476d44c7fbe6efacc197e593e5b16cd14b945c964e6c887294c028961c53b63d4f0f7d08e0a6e02d1ccc5512693799ab8858e7045a430f571eece6c530e3bf09a89a716d52ee923211bea7888b49f8dbf2993de313039d81d1946a765fc01e2d310ff0349743257f56323cb6205ad320da33cbecde7cc6ba1cd2e1e2b207b397993ed4e433b46baea36a297e155f786c2cabb989ba677f452abfca133c948693893abbd0c4882cc8da9f0227f1fcec732dfcf74f0f3a39d59872510ff6244631053139029f66a018ca30631a08a8531b61958ff0b9c1571a6afbcb3e2dad90c9355705eef67293a271bcb0c0bd83596da0283499e3baeba0b6f6e5111197e5e27d1e0f3502345bb2f7697b201e6b0708a5228ceabbd469a80dcf8025b32655659db2ccea1b7dbeb7f3507fa37f5f552dd7a7906a96ed33f71752bc3fb76812b7aa9c43479ae880fd4d3981f286b118da009f6673a3a94e6a713ef0faef15a0a8e591ec052929c26934ae07c9ad54c3b119e0178a25f2593f4a1d48be4f27e4969fda980372316d28ebb6d10c1b2644c7d85cc5ff9243ce76106bf1e6da3207e6e23852223910bf2739837f81a35748230de2a6c9394c814e6f18775552c344c0ceb4fe327f5301ebc7fe630054e30c8877752d2da1408f1aac
