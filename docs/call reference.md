@@ -5152,6 +5152,7 @@ update(value = None,
     visible = None,
     text_color = None,
     background_color = None,
+    font = None,
     move_cursor_to = "end",
     password_char = None,
     paste = None,
@@ -5162,16 +5163,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|    str    |      value       | new text to display as default text in Input field |
-|   bool    |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
-|   bool    |      select      | if True, then the text will be selected |
-|   bool    |     visible      | change visibility of element |
-|    str    |    text_color    | change color of text being typed |
-|    str    | background_color | change color of the background |
-| int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
-|    str    |  password_char   | Password character if this is a password field |
-|   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
-|   bool    |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+|                str                 |      value       | new text to display as default text in Input field |
+|                bool                |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
+|                bool                |      select      | if True, then the text will be selected |
+|                bool                |     visible      | change visibility of element |
+|                str                 |    text_color    | change color of text being typed |
+|                str                 | background_color | change color of the background |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|             int or str             |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
+|                str                 |  password_char   | Password character if this is a password field |
+|                bool                |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
+|                bool                |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 
 ### visible
 
@@ -5254,6 +5256,7 @@ Update(value = None,
     visible = None,
     text_color = None,
     background_color = None,
+    font = None,
     move_cursor_to = "end",
     password_char = None,
     paste = None,
@@ -5264,16 +5267,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|    str    |      value       | new text to display as default text in Input field |
-|   bool    |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
-|   bool    |      select      | if True, then the text will be selected |
-|   bool    |     visible      | change visibility of element |
-|    str    |    text_color    | change color of text being typed |
-|    str    | background_color | change color of the background |
-| int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
-|    str    |  password_char   | Password character if this is a password field |
-|   bool    |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
-|   bool    |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+|                str                 |      value       | new text to display as default text in Input field |
+|                bool                |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
+|                bool                |      select      | if True, then the text will be selected |
+|                bool                |     visible      | change visibility of element |
+|                str                 |    text_color    | change color of text being typed |
+|                str                 | background_color | change color of the background |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|             int or str             |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
+|                str                 |  password_char   | Password character if this is a password field |
+|                bool                |      paste       | If True "Pastes" the value into the element rather than replacing the entire element. If anything is selected it is replaced. The text is inserted at the current cursor location. |
+|                bool                |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 
 ---------
 
