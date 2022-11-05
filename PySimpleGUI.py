@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.111 Unreleased"
+version = __version__ = "4.60.4.112 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -280,6 +280,8 @@ _change_log = """
         Added very detailed information to popup_error_with_traceback if the Exception information is passed in as one of the arguments
     4.60.4.111
         Menu Element - delete all items in existing Menu widget rather than making a new one when the Menu definition changes
+    4.60.4.112
+        Input.update - added font parameter
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2298,7 +2300,7 @@ class Input(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None, paste=None, readonly=None):
+    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, font=None, move_cursor_to='end', password_char=None, paste=None, readonly=None):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
         Changes will not be visible in your window until you call window.read or window.refresh.
@@ -2319,6 +2321,8 @@ class Input(Element):
         :type text_color:        (str)
         :param background_color: change color of the background
         :type background_color:  (str)
+        :param font:             specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:              (str or (str, int[, str]) or None)
         :param move_cursor_to:   Moves the cursor to a particular offset. Defaults to 'end'
         :type move_cursor_to:    int | str
         :param password_char:    Password character if this is a password field
@@ -2383,6 +2387,10 @@ class Input(Element):
         if password_char is not None:
             self.TKEntry.configure(show=password_char)
             self.PasswordCharacter = password_char
+        if font is not None:
+            self.TKEntry.configure(font=font)
+
+
 
     def get(self):
         """
@@ -25958,4 +25966,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#117f16e56ec7782bc5df964006a14ea35e0585137ad32e89098151521145128e2d96cc68d1b7e1476d44c7fbe6efacc197e593e5b16cd14b945c964e6c887294c028961c53b63d4f0f7d08e0a6e02d1ccc5512693799ab8858e7045a430f571eece6c530e3bf09a89a716d52ee923211bea7888b49f8dbf2993de313039d81d1946a765fc01e2d310ff0349743257f56323cb6205ad320da33cbecde7cc6ba1cd2e1e2b207b397993ed4e433b46baea36a297e155f786c2cabb989ba677f452abfca133c948693893abbd0c4882cc8da9f0227f1fcec732dfcf74f0f3a39d59872510ff6244631053139029f66a018ca30631a08a8531b61958ff0b9c1571a6afbcb3e2dad90c9355705eef67293a271bcb0c0bd83596da0283499e3baeba0b6f6e5111197e5e27d1e0f3502345bb2f7697b201e6b0708a5228ceabbd469a80dcf8025b32655659db2ccea1b7dbeb7f3507fa37f5f552dd7a7906a96ed33f71752bc3fb76812b7aa9c43479ae880fd4d3981f286b118da009f6673a3a94e6a713ef0faef15a0a8e591ec052929c26934ae07c9ad54c3b119e0178a25f2593f4a1d48be4f27e4969fda980372316d28ebb6d10c1b2644c7d85cc5ff9243ce76106bf1e6da3207e6e23852223910bf2739837f81a35748230de2a6c9394c814e6f18775552c344c0ceb4fe327f5301ebc7fe630054e30c8877752d2da1408f1aac
+#26bf65aad191f22e32991df7bc1f867022a819b4120af0845cd07ff1d99ff2bd674ac83068368acb3486e819555e3d107bbf5338aaacbd774b4c648be4e432ae6d6e47963e7239414b81ef1b5da68aec12e12cf882a0387531983f1370ddbebdc84602e09ffc560afaeff805d521c9723bf2c32e10c3bed6b581136f0a6ec4f88fab685d5a9569a8bb4912354d7e65ff5978cdcb2aaa398075e72385ad521efff5a626db865d38d2080cc0e559ee4aba28f2934d828c07a9362e60bbe463cb1e154feb0922f509b4c12f88302f101c97f8a3556d3fa9c5a51c253e560d46dcdfd8792f03e12bc68be0d8863b63134bb31ced6fe86ca6db3b35b51de014cc54621c1de5bfbd672e57d6df9efa0a91c6632636700c00f0c2167e38b1b8a4af993fab855f776be9d0d5dcb4663b66888888154ae25f19def77f5cdfc8d67729d04de5323040d9ee3e5b632f35026ecd7d555ae713978c06c09e3d8b96d4900f0076805b80737c959037dbf0bf3c0427d0d15c1c504828f1bc053ebe34dec8eb510433f7321821ccea8cb653cacd74c85a6a1c15941f257b539df98de4674aebf718740d9a9b8a8a28b9cef4039ac2c08ac1ab39ae2d1aea2ab76f40b1d23252dcd5462e7e5fa36336fa928386312ca377e6084cae5a893b072367b4853cfc965392a175f191e9bff5fa2b8dd7e75dedc857f78c9d6d166538bcf4e720a2d1cc1936
