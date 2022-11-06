@@ -1,3 +1,13 @@
+[kevinsmia1939](https://github.com/kevinsmia1939) 2022-11-06T02:26:54Z
+I use PySimpleGUI to create PySimpleCV. PySimpleCV is use for calculation cyclic voltammetry chemical reaction reversibility and battery cycling performance.
+https://github.com/kevinsmia1939/PySimpleCV
+Very awesome project, thank you.
+![image](https://raw.githubusercontent.com/kevinsmia1939/PySimpleCV/main/battery_screenshot.png)
+
+
+
+-----------
+
 [dwelden](https://github.com/dwelden) 2022-10-21T19:16:53Z
 [SnowQuery](https://github.com/dwelden/SnowQuery)
 Simple Snowflake query application created with:
@@ -482,7 +492,7 @@ I'll be smiling bigger than the Emoji the rest of the day!
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-20T16:22:36Z
+[ghost](https://github.com/ghost) 2022-06-20T16:22:36Z
 ![2022-06-20-192110_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644113-3047c3e0-19e8-4e9e-8db5-30691034f002.png)
 i did something like this
 ![2022-06-20-192226_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644255-dc4ccebc-6c0c-4d82-a9a7-7fd82b14669b.png)
@@ -498,19 +508,19 @@ Hi @ArchKubi .... I suppose you could call this little fella our "mascot".  I ha
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-18T12:50:10Z
+[ghost](https://github.com/ghost) 2022-06-18T12:50:10Z
 ![2022-06-18-154942_231x272_scrot](https://user-images.githubusercontent.com/80429360/174438406-20826100-f0fa-48df-b364-613012b7f9a8.png)
 is this pysimplegui mascot right?
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-15T10:41:07Z
+[ghost](https://github.com/ghost) 2022-06-15T10:41:07Z
 ![2022-06-15-134050_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/173808409-20812eb8-c343-4af6-96b6-8469924e7acd.png)
 is this bug icon not change ?
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-13T11:49:29Z
+[ghost](https://github.com/ghost) 2022-06-13T11:49:29Z
 ![2022-06-13-144526_70x268_scrot](https://user-images.githubusercontent.com/80429360/173346970-545de9ca-3049-4072-9fb5-a3e959ac860c.png)
 ı lose my hope ı don't know how ı write like this and ı try autocomplete but ı feel ı'm idiot please someone help my code
 [gnuchan-textEditor.txt](https://github.com/PySimpleGUI/PySimpleGUI/files/8890737/gnuchan-textEditor.txt)
@@ -709,7 +719,7 @@ He replied....
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-06T02:12:11Z
+[ghost](https://github.com/ghost) 2022-06-06T02:12:11Z
 if one day PySimpleGUI have interactive display this is make me happy alien
 ![2022-06-06-051005_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/172083125-16c95d55-fdfa-4f0e-a89c-641fab7cc29e.png)
 ı use python because python have this beautiful library 
@@ -1194,12 +1204,12 @@ It's not how I want the project to be structured.  The discussion feature isn't 
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-05-31T19:16:45Z
+[ghost](https://github.com/ghost) 2022-05-31T19:16:45Z
 why there is no PySimpleGUI community discord server
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-05-31T18:48:51Z
+[ghost](https://github.com/ghost) 2022-05-31T18:48:51Z
 too much missing in my project ı'm noob python user
 1: ı don't know how ı write multiline number column ı search google and github no one use pysimplegui
 ı found solution but this is tkinter not pysimplegui
@@ -1219,7 +1229,7 @@ I'd also like to have a numbered line within a multiline. Looked for solutions i
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-05-31T06:58:52Z
+[ghost](https://github.com/ghost) 2022-05-31T06:58:52Z
 ı create my own text editor
 but not just text editor
 1- text editor 2-code editor 3-python runner 4- terminal

@@ -1,3 +1,9 @@
+[kevinsmia1939](https://github.com/kevinsmia1939) 2022-11-06T02:26:54Z
+
+![image](https://raw.githubusercontent.com/kevinsmia1939/PySimpleCV/main/battery_screenshot.png)
+
+-----------
+
 [dwelden](https://github.com/dwelden) 2022-10-21T19:16:53Z
 
 ![image](https://user-images.githubusercontent.com/11447810/197272468-1bc9e261-3698-4c7f-a21c-dba800f5cf86.png)
@@ -126,7 +132,7 @@
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-20T16:22:36Z
+[ghost](https://github.com/ghost) 2022-06-20T16:22:36Z
 
 ![2022-06-20-192110_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644113-3047c3e0-19e8-4e9e-8db5-30691034f002.png)
 ![2022-06-20-192226_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/174644255-dc4ccebc-6c0c-4d82-a9a7-7fd82b14669b.png)
@@ -139,19 +145,19 @@
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-18T12:50:10Z
+[ghost](https://github.com/ghost) 2022-06-18T12:50:10Z
 
 ![2022-06-18-154942_231x272_scrot](https://user-images.githubusercontent.com/80429360/174438406-20826100-f0fa-48df-b364-613012b7f9a8.png)
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-15T10:41:07Z
+[ghost](https://github.com/ghost) 2022-06-15T10:41:07Z
 
 ![2022-06-15-134050_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/173808409-20812eb8-c343-4af6-96b6-8469924e7acd.png)
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-13T11:49:29Z
+[ghost](https://github.com/ghost) 2022-06-13T11:49:29Z
 
 ![2022-06-13-144526_70x268_scrot](https://user-images.githubusercontent.com/80429360/173346970-545de9ca-3049-4072-9fb5-a3e959ac860c.png)
 
@@ -208,7 +214,7 @@
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-06-06T02:12:11Z
+[ghost](https://github.com/ghost) 2022-06-06T02:12:11Z
 
 ![2022-06-06-051005_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/172083125-16c95d55-fdfa-4f0e-a89c-641fab7cc29e.png)
 
@@ -280,7 +286,7 @@
 
 -----------
 
-[ArchKubi](https://github.com/ArchKubi) 2022-05-31T06:58:52Z
+[ghost](https://github.com/ghost) 2022-05-31T06:58:52Z
 
 ![2022-05-31-094727_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/171109760-c3d8a769-3b13-40a1-9316-6367d24152de.png)
 ![2022-05-31-094729_1280x1012_scrot](https://user-images.githubusercontent.com/80429360/171109766-f908a168-b8de-47f3-9ead-3387a08bac8d.png)
