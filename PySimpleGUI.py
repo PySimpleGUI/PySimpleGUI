@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.112 Unreleased"
+version = __version__ = "4.60.4.113 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -282,6 +282,8 @@ _change_log = """
         Menu Element - delete all items in existing Menu widget rather than making a new one when the Menu definition changes
     4.60.4.112
         Input.update - added font parameter
+    4.60.4.113
+        Dark Blue 18 theme, a materially kinda theme, added - tip - experiment like PySimpleGUI does when "computing" colors. Grab a color of a part of a theme and use it as a background or a secondary button color.  In other words, mix and match since the colors should all work together by design.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19394,6 +19396,9 @@ LOOK_AND_FEEL_TABLE = {
     "DarkBlue17": {"BACKGROUND": "#21294c", "TEXT": "#f9f2d7", "INPUT": "#f2dea8", "TEXT_INPUT": "#000000", "SCROLL": "#f2dea8",
                    "BUTTON": ("#f9f2d7", "#141829"), "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0,
                    "COLOR_LIST": ["#141829", "#21294c", "#f2dea8", "#f9f2d7"], "DESCRIPTION": ["#000000", "Blue", "Yellow"], },
+    "DarkBlue18": {"BACKGROUND": "#0c1825", "TEXT": "#d1d7dd", "INPUT": "#001c35", "TEXT_INPUT": "#d1d7dd", "SCROLL": "#00438e",
+                   "BUTTON": ("#75b7ff", "#001c35"), "PROGRESS": ('#0074ff', '#75b7ff'), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0,
+                   "COLOR_LIST": ["#141829", "#21294c", "#f2dea8", "#f9f2d7"], "DESCRIPTION": ["#000000", "Blue", "Yellow"], },
     "DarkBrown6": {"BACKGROUND": "#785e4d", "TEXT": "#f2eee3", "INPUT": "#baaf92", "TEXT_INPUT": "#000000", "SCROLL": "#baaf92",
                    "BUTTON": ("#FFFFFF", "#785e4d"), "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0,
                    "COLOR_LIST": ["#785e4d", "#ff8426", "#baaf92", "#f2eee3"], "DESCRIPTION": ["Grey", "Brown", "Orange", "Autumn"], },
@@ -25966,4 +25971,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#26bf65aad191f22e32991df7bc1f867022a819b4120af0845cd07ff1d99ff2bd674ac83068368acb3486e819555e3d107bbf5338aaacbd774b4c648be4e432ae6d6e47963e7239414b81ef1b5da68aec12e12cf882a0387531983f1370ddbebdc84602e09ffc560afaeff805d521c9723bf2c32e10c3bed6b581136f0a6ec4f88fab685d5a9569a8bb4912354d7e65ff5978cdcb2aaa398075e72385ad521efff5a626db865d38d2080cc0e559ee4aba28f2934d828c07a9362e60bbe463cb1e154feb0922f509b4c12f88302f101c97f8a3556d3fa9c5a51c253e560d46dcdfd8792f03e12bc68be0d8863b63134bb31ced6fe86ca6db3b35b51de014cc54621c1de5bfbd672e57d6df9efa0a91c6632636700c00f0c2167e38b1b8a4af993fab855f776be9d0d5dcb4663b66888888154ae25f19def77f5cdfc8d67729d04de5323040d9ee3e5b632f35026ecd7d555ae713978c06c09e3d8b96d4900f0076805b80737c959037dbf0bf3c0427d0d15c1c504828f1bc053ebe34dec8eb510433f7321821ccea8cb653cacd74c85a6a1c15941f257b539df98de4674aebf718740d9a9b8a8a28b9cef4039ac2c08ac1ab39ae2d1aea2ab76f40b1d23252dcd5462e7e5fa36336fa928386312ca377e6084cae5a893b072367b4853cfc965392a175f191e9bff5fa2b8dd7e75dedc857f78c9d6d166538bcf4e720a2d1cc1936
+#5b834d6e45f261981ab6872639798d27356818c30fe6c4810941ad908940e54af45a2925a837c2f5773e3fa84367b632a867d7e6c1725039ca5352cd49462369a218e232ba9235a86c99f0d6c626d3c5facb92385ba38375c1395e1b0e961843842c04e2eb095ef96e9f83c5bcd9639ccfa0ef35d08989db0a645dd4ac348bde4251e68af98f175ad591606c29d28b68fd37aacb9921b347c22b62a04364c8dd884ad13217eca74822725680851bde42dea745403e5f867ee843defc1d03b61f8ed919a072de81b2f96bb7efe936cae13d6a2cd48ad7b4abafea1ce9fdeb29a53a3d6ee7fd4662128a750f666984b355352441b7a8b2b5a974d42d409899487678ca45a57d29424e2482dafcb8e5bf7a1ee0c4b8645519b017ca5157e874e8646b48d6776629751d820f5223f020590fc4e92645d6ff2df6d262872e3f8c26718cd8c8509009160b6e4baae2576c2aed28af5b4de56ad2ccf6d24adae7508f0d57e653c9adbaf206da0a33436dcf39a547d9bf894103701d5c2fcbb9a33b4cd7af7a37bb3bac863acee8e4a70fe1d08663ab9b84abaeb79bef3c42055ab529940dfb20ad5e4ed4d0cd4e450832783c3b4c925db3e2c6564624b8a081c286c9c6412e4ec57479193b3b57d1cbe2a8b754cc6db5f8d6a1278160935a676e2c49ba50f7da0151faf07dc5054a88573b793995bc4181dc22b72ef05fb2bf58049cef
