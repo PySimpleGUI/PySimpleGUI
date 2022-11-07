@@ -1,3 +1,10 @@
+[PySimpleGUI](https://github.com/PySimpleGUI) 2022-11-07T00:31:32Z
+@kevinsmia1939 it appears your screenshot has disappeared.
+
+A quick reminder to everyone to feel free to copy and paste your images directly into the issue comment.  This will make a copy that's permanent to this issue.  You can drag and drop an image or copy and paste it from your clipboard.  GitHub automatically uploads the image and stores it as part of this repo.
+
+-----------
+
 [kevinsmia1939](https://github.com/kevinsmia1939) 2022-11-06T02:26:54Z
 I use PySimpleGUI to create PySimpleCV. PySimpleCV is use for calculation cyclic voltammetry chemical reaction reversibility and battery cycling performance.
 https://github.com/kevinsmia1939/PySimpleCV
