@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.113 Unreleased"
+version = __version__ = "4.60.4.114 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -284,6 +284,8 @@ _change_log = """
         Input.update - added font parameter
     4.60.4.113
         Dark Blue 18 theme, a materially kinda theme, added - tip - experiment like PySimpleGUI does when "computing" colors. Grab a color of a part of a theme and use it as a background or a secondary button color.  In other words, mix and match since the colors should all work together by design.
+    4.60.4.114
+        Added execute_py_get_running_interpreter to differentiate between the one in the settings file versus currently running interpreter
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10636,7 +10638,7 @@ class Window:
 
     def _ReadNonBlocking(self):
         """
-        Should be NEVER called directly by the user.  The user can call Window.Read(timeout=0) to get same effect
+        Should be NEVER called directly by the user.  The user can call Window.read(timeout=0) to get same effect
 
         :return: (event, values). (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
         :rtype:  Tuple[(Any), Dict[Any, Any] | List[Any] | None]
@@ -23037,6 +23039,7 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
         python_program = interpreter_command
     else:
         # use the version CURRENTLY RUNNING if nothing is specified. Previously used the one from the settings file
+        # ^ hmmm... that's not the code is doing now... it's getting the one from the settings file first
         pysimplegui_user_settings.load()        # Refresh the settings just in case they've changed via another program
         python_program = pysimplegui_user_settings.get('-python command-', '')
         if python_program == '':        # if no interpreter set in the settings, then use the current one
@@ -23054,10 +23057,10 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
 
 def execute_py_get_interpreter():
     """
-    Returns the command that is currently running. Previously returned the one from the system settings, but
-    have determined that the one currently running is the better choice.
+    Returns Python Interpreter from the system settings. If none found in the settings file
+    then the currently running interpreter is returned.
 
-    :return: Full path to python interpreter (uses sys.executable)
+    :return: Full path to python interpreter (uses settings file or sys.executable)
     :rtype:  (str)
     """
     pysimplegui_user_settings.load()  # Refresh the settings just in case they've changed via another program
@@ -23065,6 +23068,16 @@ def execute_py_get_interpreter():
     if interpreter == '':
         interpreter = sys.executable
     return interpreter
+
+
+def execute_py_get_running_interpreter():
+    """
+    Returns the command that is currently running.
+
+    :return: Full path to python interpreter (uses sys.executable)
+    :rtype:  (str)
+    """
+    return sys.executable
 
 
 def execute_editor(file_to_edit, line_number=None):
@@ -23170,10 +23183,10 @@ def execute_file_explorer(folder_to_open=''):
 
 def execute_find_callers_filename():
     """
-    Returns the first filename found in a traceback that is not the nsame of this file (__file__)
+    Returns the first filename found in a traceback that is not the name of this file (__file__)
     Used internally with the debugger for example.
 
-    :return: filename of the caller, asseumed to be the first non PySimpleGUI file
+    :return: filename of the caller, assumed to be the first non PySimpleGUI file
     :rtype:  str
     """
     try:  # lots can go wrong so wrapping the entire thing
@@ -25971,4 +25984,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5b834d6e45f261981ab6872639798d27356818c30fe6c4810941ad908940e54af45a2925a837c2f5773e3fa84367b632a867d7e6c1725039ca5352cd49462369a218e232ba9235a86c99f0d6c626d3c5facb92385ba38375c1395e1b0e961843842c04e2eb095ef96e9f83c5bcd9639ccfa0ef35d08989db0a645dd4ac348bde4251e68af98f175ad591606c29d28b68fd37aacb9921b347c22b62a04364c8dd884ad13217eca74822725680851bde42dea745403e5f867ee843defc1d03b61f8ed919a072de81b2f96bb7efe936cae13d6a2cd48ad7b4abafea1ce9fdeb29a53a3d6ee7fd4662128a750f666984b355352441b7a8b2b5a974d42d409899487678ca45a57d29424e2482dafcb8e5bf7a1ee0c4b8645519b017ca5157e874e8646b48d6776629751d820f5223f020590fc4e92645d6ff2df6d262872e3f8c26718cd8c8509009160b6e4baae2576c2aed28af5b4de56ad2ccf6d24adae7508f0d57e653c9adbaf206da0a33436dcf39a547d9bf894103701d5c2fcbb9a33b4cd7af7a37bb3bac863acee8e4a70fe1d08663ab9b84abaeb79bef3c42055ab529940dfb20ad5e4ed4d0cd4e450832783c3b4c925db3e2c6564624b8a081c286c9c6412e4ec57479193b3b57d1cbe2a8b754cc6db5f8d6a1278160935a676e2c49ba50f7da0151faf07dc5054a88573b793995bc4181dc22b72ef05fb2bf58049cef
+#6ad2b117bb8483808739f263523ebd0e60344d01ffef4c45f511cf1417aa3930a07f561cd0bd8f428e2cc6d70cb10f073cf2e01e82dc14c36904a91be0edb0fa102fd2177760d81224722139e1ef0b6e837a20c30d9ec20f54108206996f5044077caf1b65184287196a262187180b092d4cf4e725e9bc9bb04bf823bf02a23648a871251e5c691dbb6fbeeffbc24a6f620639348a569bdda56c45fae6d93482ff2a2c9deb73bea785d96526c54d94cfab896ff551341a4a992afda54c7d1edb29379ef9d2e7f5efd1226ccac01e9f370b822b5e0bcb130d3d2aa1f4c7758bcbc6a82c827957c9b2e697a894b096f3d5ccacefccaf6554fa31f9714cc8c6e21ef60bdee47b77164ae7d4433be4e372f618b0a826d716672f27b9a71d1f195b30408292af06f3e616368ab14be0c914abf6b8f0ca627f89302cb592ee5d7128abb08b74813a54bff2e4037445a6182c25cd81a4fb28df95412315077ca2cb37480c930653cf970dcbfb11b575252e7e56eb64640682712ad6dfe74e429105683029d078973df349829d6269f44b40933f9ba0204a86078cf27a3524660d2aee81d57474ff55d9e84e60e0c670e1eb3088dd1eb8ae1273fb483250c96a085af90fea7ab3eef4d67870627a86986daa4c5ef08ba13734e8f08e480e785bd7a4e143c902a1554aa75b0c27e1694fef99accf35f3db474229ead233689396f4c43460
