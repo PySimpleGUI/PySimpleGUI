@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.114 Unreleased"
+version = __version__ = "4.60.4.115 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -286,6 +286,8 @@ _change_log = """
         Dark Blue 18 theme, a materially kinda theme, added - tip - experiment like PySimpleGUI does when "computing" colors. Grab a color of a part of a theme and use it as a background or a secondary button color.  In other words, mix and match since the colors should all work together by design.
     4.60.4.114
         Added execute_py_get_running_interpreter to differentiate between the one in the settings file versus currently running interpreter
+    4.60.4.115
+        Image Element... added Zooooooooommmmm parameter
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5708,7 +5710,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None, subsample=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
+    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None, subsample=None, zoom=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
         :param source:           A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
         :type source:            str | bytes | None
@@ -5734,6 +5736,8 @@ class Image(Element):
         :type tooltip:           (str)
         :param subsample:        amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type subsample:         (int)
+        :param zoom:             amount to increase the size of the image.
+        :type zoom:              (int)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
@@ -5776,12 +5780,14 @@ class Image(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+        self.zoom = zoom
+
 
         super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def update(self, source=None, filename=None, data=None, size=(None, None), subsample=None, visible=None):
+    def update(self, source=None, filename=None, data=None, size=(None, None), subsample=None, zoom=None, visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
@@ -5801,8 +5807,10 @@ class Image(Element):
         :type data:      str | tkPhotoImage
         :param size:     (width, height) size of image in pixels
         :type size:      Tuple[int,int]
-        :param subsample:  amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :type subsample:   (int)
+        :param subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type subsample: (int)
+        :param zoom:     amount to increase the size of the image
+        :type zoom:      (int)
         :param visible:  control visibility of element
         :type visible:   (bool)
         """
@@ -5829,6 +5837,8 @@ class Image(Element):
                 image = tk.PhotoImage(file=filename)
                 if subsample is not None:
                     image = image.subsample(subsample)
+                if zoom is not None:
+                    image = image.zoom(zoom)
             except Exception as e:
                 _error_popup_with_traceback('Exception updating Image element', e)
 
@@ -5838,6 +5848,8 @@ class Image(Element):
                 image = tk.PhotoImage(data=data)
                 if subsample is not None:
                     image = image.subsample(subsample)
+                if zoom is not None:
+                    image = image.zoom(zoom)
             except Exception as e:
                 image = data
                 # return  # an error likely means the window has closed so exit
@@ -16667,8 +16679,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         photo = None
 
-                    if element.ImageSubsample and photo is not None:
-                        photo = photo.subsample(element.ImageSubsample)
+                    if photo is not None:
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                        if element.zoom:
+                            photo = photo.zoom(element.zoom)
                         # print('*ERROR laying out form.... Image Element has no image specified*')
                 except Exception as e:
                     photo = None
@@ -25984,4 +25999,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6ad2b117bb8483808739f263523ebd0e60344d01ffef4c45f511cf1417aa3930a07f561cd0bd8f428e2cc6d70cb10f073cf2e01e82dc14c36904a91be0edb0fa102fd2177760d81224722139e1ef0b6e837a20c30d9ec20f54108206996f5044077caf1b65184287196a262187180b092d4cf4e725e9bc9bb04bf823bf02a23648a871251e5c691dbb6fbeeffbc24a6f620639348a569bdda56c45fae6d93482ff2a2c9deb73bea785d96526c54d94cfab896ff551341a4a992afda54c7d1edb29379ef9d2e7f5efd1226ccac01e9f370b822b5e0bcb130d3d2aa1f4c7758bcbc6a82c827957c9b2e697a894b096f3d5ccacefccaf6554fa31f9714cc8c6e21ef60bdee47b77164ae7d4433be4e372f618b0a826d716672f27b9a71d1f195b30408292af06f3e616368ab14be0c914abf6b8f0ca627f89302cb592ee5d7128abb08b74813a54bff2e4037445a6182c25cd81a4fb28df95412315077ca2cb37480c930653cf970dcbfb11b575252e7e56eb64640682712ad6dfe74e429105683029d078973df349829d6269f44b40933f9ba0204a86078cf27a3524660d2aee81d57474ff55d9e84e60e0c670e1eb3088dd1eb8ae1273fb483250c96a085af90fea7ab3eef4d67870627a86986daa4c5ef08ba13734e8f08e480e785bd7a4e143c902a1554aa75b0c27e1694fef99accf35f3db474229ead233689396f4c43460
+#5d695d68c4a7e63cd12db218f4158ea51c8652c570991cd506e91d85746769501ab47285f3824b3e57bd4a52c26445d00bfd4877fd8c63063acd726ec77142816a464cea82dfcb7f4dacd97df4850ec03f99609072c835c71574d9b60b9e761b14fb5b2223e459ac399fad3cd9f9c602884647743a8e141823e9491925d309215f287f12298b2fb5e9288924d2b76fa81b93767ea2a7a0f7ad565b6f505c27a7635ab0fed3bef0294c7fe8e08ff2d33053be0c0223f36f81a8c9c834bddfe6b1460b61d41d0d73be42ad49c4dc1f5dd7292169da9363b226fe9f8abed55162d160190687023b28a567faa1df5d18fee272015291f7bf4aae8339d43d48641d05cb6f2d9b99e67e4cdfa1bad5340a8979583be189191d6aa5f8507ef9efa36aa1218f90ca8ea8db62278192a65c76752d8a010b48c71a3c5936896921dbd8c24a567015ed6e4c39fa43f9d41e88dda4916974cdbb57c3cd56f01808184237730678b908130b89045789597a48a8bb9e9014bf8814925964b6a25644cc642e55ca93d7e1ceab8b08e6ab8b0e5dd965eaf9c3808248ae4b1be77dcc7c12b12bdc110b00388e423a700a1d7a41e9c89e4831db0cf753ddb8c9f090f1afe44c10d75864b98b96ad1605103160b288d08a5a63120464fa967a693631c1f4096cc9e89426c5330c0b656280da1b8fead3c1636033967369d8109f72b43d415364087a6d
