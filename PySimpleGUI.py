@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.116 Unreleased"
+version = __version__ = "4.60.4.117 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -295,6 +295,8 @@ _change_log = """
             The Buttons implemented as functions need this addition as well
         Addition of the image_source parameter to Button and Button.update. This way of specifying images is commonly used in other elements 
         Fixed ButtonMenu bug - subsample was not being applied to initial image in the layout
+    4.60.4.117
+        Fix for set_vscroll_position not working correctly for a scrollable Column
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1980,8 +1982,13 @@ class Element():
         :param percent_from_top: From 0 to 1.0, the percentage from the top to move scrollbar to
         :type percent_from_top:  (float)
         """
+        if self.Type == ELEM_TYPE_COLUMN and self.Scrollable:
+            widget = self.widget.canvas     # scrollable column is a special case
+        else:
+            widget = self.widget
+
         try:
-            self.Widget.yview_moveto(percent_from_top)
+            widget.yview_moveto(percent_from_top)
         except Exception as e:
             print('Warning setting the vertical scroll (yview_moveto failed)')
             print(e)
@@ -26043,4 +26050,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#33bcae077a0dba66b1887318cb8442397d14da18fb71bc16aea1c5c321d780c42bd3bd6e540fc4e09e3bcacf1764964e46395f1479faaff0f26e672efacf5d29c49df93009eabcca45289a52a6137b53640ca6a8b8cacb7ec771bf006b8ed983ceb7e1b9ac95c6ad8cc6cb83fb9141914d703e842ddc6dcb97158f78bdd6f750bce5fdd23ef99a6f55ba0bab1b05866253eb31cdf5e21bdb87810d3737a91dcaf8b301de3f0ee18451a8934fd694f77352f601e2c24dcdede1a84820d3986241f9c75c22b56b9ac400180b2d0747e5e70b4b0a97958f47dd0742a229cc18b2212e8be8f72d4a9dd69afa2ef66a91d99760133141a4d24788d349f36961e1bbefde5f095a098e653efccf196c790c58cbad2a3ee7df40a9c701e079b0174fb76901b15e6ea2b3516042370657491680bc0235882620d3766351ab8422fd9cd76787e413e8c7c7b722418e159ccea0b3010d01c06e276b055120d4ae45caba4623737d72388fa4f9ee4386668b7f1143569d2ec0a04c88aab332abacd44c2d0c0bae470adc8dbab9edc9a88c35b02dbcbd049cb37bd562a789e68d361807f0d66f34fbcf0b00bdcd42efe6af7c79d88d6b310d6f509de073c8fd4d1ad3170695a52b1b065187b889728623bc8029ab167faaa1949be9b90128060c19cdf43bad7831945c22281db10360257f8682a513b5ccfb9b91e4c1473363629dd78fb83867
+#2e878107b2a81dd936a76b2f2da5a7966aafe82012b797ce716148b8b6bcf9e77d166effcbe2755ebf3635366322d552c40e0159c8b4d97f40927ed742fb46c6c2a237ea3f4a095c95ee026e722d88c1b5c2ed2baf47ea68464e6d7ca7b4361a474f93d0489292f6136f51bd945b401b9af280b43ed7ea4051b815dccb9325a03d76667fa1b39d46c3f294ba484c77e2a73336c6178c74063ec0d3a44a0d5da0c215e2f18ee243c08992e109dbe617e58446ca8b7c667879c3de129ff7404e298cf8387e09814ed8635f3e3f88b6fb49a78f1eaace611b3f1bb1a6a06fc8e62ebdd376120dfdfa9a1befcb52b44b98f731e7ffea70a8b2587a6409cf741ae934b1ac821f31d35fb8b552b13aae70f70fa322dfd36178128da3d83e4ac0e3f3640657a9e6c108dc744cf66b64e3d1cbe750aac8f39f528aee558c7a12925c65113ce5ff2caeba9af129f6c64eb6a9512bb35a88a1cf8b17a21f312128cadda2c9e116754026ddea6a8bea5b84171c3e2d82b72fb3e92eb3d61ec36b930e8854f4030676d7acfdbf93f6b421810aa017da5add25f5a707b3fe754d1c619779ee859945b3d2dca0a2301f3b2b632f6f85d6ec3ce38d337dc265611ea61766aa7d6fd2271460da859bfb76765077e9c1aa1ce103a5315de35b0b27e1450da66adc1d33f5cd73457f783bce75eb59a9af996de38dc83f1271b34e650018ba3d824874
