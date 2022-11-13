@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.115 Unreleased"
+version = __version__ = "4.60.4.116 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -288,6 +288,13 @@ _change_log = """
         Added execute_py_get_running_interpreter to differentiate between the one in the settings file versus currently running interpreter
     4.60.4.115
         Image Element... added Zooooooooommmmm parameter
+    4.60.4.116
+        Proliferiation/infection of the zoom parameter to more elements with images - Button, ButtonMenu
+            Note that zoom and subsample can BOTH be used. This enables fractional scaling. Want 2/3 the size of the image? subsample=3, zoom=2
+            Tab is the remaining element this is being added to
+            The Buttons implemented as functions need this addition as well
+        Addition of the image_source parameter to Button and Button.update. This way of specifying images is commonly used in other elements 
+        Fixed ButtonMenu bug - subsample was not being applied to initial image in the layout
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4737,7 +4744,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=FILE_TYPES_ALL_FILES, initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, image_source=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
+                 image_subsample=None, image_zoom=None, image_source=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
                  highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None,
                  k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
@@ -4772,6 +4779,8 @@ class Button(Element):
         :type image_size:             (int, int)
         :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:        (int)
+        :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:             (int)
         :param border_width:          width of border around button in pixels
         :type border_width:           (int)
         :param size:                  (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -4859,6 +4868,7 @@ class Button(Element):
         self.ImageData = image_data
         self.ImageSize = image_size
         self.ImageSubsample = image_subsample
+        self.zoom = int(image_zoom) if image_zoom is not None else None
         self.UserData = None
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.BindReturnKey = bind_return_key
@@ -5142,8 +5152,8 @@ class Button(Element):
 
         return
 
-    def update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
-               visible=None, image_subsample=None, disabled_button_color=(None, None), image_size=None):
+    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None,
+               visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5159,6 +5169,8 @@ class Button(Element):
         :type button_color:           (str, str) | str | (int, int) | None
         :param disabled:              True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors)
         :type disabled:               (bool | str)
+        :param image_source:          Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
+        :type image_source:           (str | bytes)
         :param image_data:            Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data:             bytes | str
         :param image_filename:        image filename if there is a button image. GIFs and PNGs only.
@@ -5169,6 +5181,8 @@ class Button(Element):
         :type visible:                (bool)
         :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:        (int)
+        :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:             (int)
         :param image_size:            Size of the image in pixels (width, height)
         :type image_size:             (int, int)
         """
@@ -5180,6 +5194,11 @@ class Button(Element):
             _error_popup_with_traceback('Error in Button.update - The window was closed')
             return
 
+        if image_source is not None:
+            if isinstance(image_source, bytes):
+                image_data = image_source
+            elif isinstance(image_source, str):
+                image_filename = image_source
 
         if self.UseTtkButtons:
             style_name = self.ttk_style_name        # created when made initial window (in the pack)
@@ -5229,6 +5248,8 @@ class Button(Element):
             image = tk.PhotoImage(data=image_data)
             if image_subsample:
                 image = image.subsample(image_subsample)
+            if image_zoom is not None:
+                image = image.zoom(int(image_zoom))
             if image_size is not None:
                 width, height = image_size
             else:
@@ -5242,6 +5263,8 @@ class Button(Element):
             image = tk.PhotoImage(file=image_filename)
             if image_subsample:
                 image = image.subsample(image_subsample)
+            if image_zoom is not None:
+                image = image.zoom(int(image_zoom))
             if image_size is not None:
                 width, height = image_size
             else:
@@ -5307,7 +5330,7 @@ class ButtonMenu(Element):
     """
 
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False, image_source=None,
-                 image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
+                 image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, image_zoom=None, border_width=None,
                  size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None,
                  font=None, item_font=None, pad=None, p=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True,
                  metadata=None):
@@ -5330,6 +5353,8 @@ class ButtonMenu(Element):
         :type image_size:                 (int, int)
         :param image_subsample:           amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:            (int)
+        :param image_zoom:                amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:                 (int)
         :param border_width:              width of border around button in pixels
         :type border_width:               (int)
         :param size:                      (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -5395,6 +5420,7 @@ class ButtonMenu(Element):
         self.ImageData = image_data
         self.ImageSize = image_size
         self.ImageSubsample = image_subsample
+        self.zoom = int(image_zoom) if image_zoom is not None else None
         self.Disabled = disabled
         self.IsButtonMenu = True
         self.MenuItemChosen = None
@@ -5430,7 +5456,7 @@ class ButtonMenu(Element):
         _exit_mainloop(self.ParentForm)
 
 
-    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, button_text=None):
+    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, image_zoom=None, button_text=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5450,6 +5476,8 @@ class ButtonMenu(Element):
         :type image_size:       (int, int)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:  (int)
+        :param image_zoom:      amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:       (int)
         :param button_text:     Text to be shown on the button
         :type button_text:      (str)
         """
@@ -5490,12 +5518,16 @@ class ButtonMenu(Element):
                 image = tk.PhotoImage(file=filename)
                 if image_subsample is not None:
                     image = image.subsample(image_subsample)
+                if image_zoom is not None:
+                    image = image.zoom(int(image_zoom))
             elif data is not None:
                 # if type(data) is bytes:
                 try:
                     image = tk.PhotoImage(data=data)
                     if image_subsample is not None:
                         image = image.subsample(image_subsample)
+                    if image_zoom is not None:
+                        image = image.zoom(int(image_zoom))
                 except Exception as e:
                     image = data
 
@@ -5773,6 +5805,7 @@ class Image(Element):
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
         self.ImageSubsample = subsample
+        self.zoom = int(zoom) if zoom is not None else None
 
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
@@ -5780,7 +5813,6 @@ class Image(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
-        self.zoom = zoom
 
 
         super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
@@ -5838,7 +5870,7 @@ class Image(Element):
                 if subsample is not None:
                     image = image.subsample(subsample)
                 if zoom is not None:
-                    image = image.zoom(zoom)
+                    image = image.zoom(int(zoom))
             except Exception as e:
                 _error_popup_with_traceback('Exception updating Image element', e)
 
@@ -5849,7 +5881,7 @@ class Image(Element):
                 if subsample is not None:
                     image = image.subsample(subsample)
                 if zoom is not None:
-                    image = image.zoom(zoom)
+                    image = image.zoom(int(zoom))
             except Exception as e:
                 image = data
                 # return  # an error likely means the window has closed so exit
@@ -15830,6 +15862,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         photo = tk.PhotoImage(file=element.ImageFilename)
                         if element.ImageSubsample:
                             photo = photo.subsample(element.ImageSubsample)
+                        if element.zoom:
+                            photo = photo.zoom(element.zoom)
                         if element.ImageSize != (None, None):
                             width, height = element.ImageSize
                         else:
@@ -15847,6 +15881,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         photo = tk.PhotoImage(data=element.ImageData)
                         if element.ImageSubsample:
                             photo = photo.subsample(element.ImageSubsample)
+                        if element.zoom:
+                            photo = photo.zoom(element.zoom)
                         if element.ImageSize != (None, None):
                             width, height = element.ImageSize
                         else:
@@ -15986,6 +16022,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     photo = tk.PhotoImage(file=element.ImageFilename)
                     if element.ImageSubsample:
                         photo = photo.subsample(element.ImageSubsample)
+                    if element.zoom:
+                        photo = photo.zoom(element.zoom)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
                     else:
@@ -15999,6 +16037,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     photo = tk.PhotoImage(data=element.ImageData)
                     if element.ImageSubsample:
                         photo = photo.subsample(element.ImageSubsample)
+                    if element.zoom:
+                        photo = photo.zoom(element.zoom)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
                     else:
@@ -16070,20 +16110,24 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
                     photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
+                    if element.zoom:
+                        photo = photo.zoom(element.zoom)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
                 if element.ImageData:  # if button has an image on it
                     photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
+                    if element.zoom:
+                        photo = photo.zoom(element.zoom)
                     if element.ImageSize != (None, None):
                         width, height = element.ImageSize
-                        if element.ImageSubsample:
-                            photo = photo.subsample(element.ImageSubsample)
                     else:
                         width, height = photo.width(), photo.height()
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
@@ -25999,4 +26043,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5d695d68c4a7e63cd12db218f4158ea51c8652c570991cd506e91d85746769501ab47285f3824b3e57bd4a52c26445d00bfd4877fd8c63063acd726ec77142816a464cea82dfcb7f4dacd97df4850ec03f99609072c835c71574d9b60b9e761b14fb5b2223e459ac399fad3cd9f9c602884647743a8e141823e9491925d309215f287f12298b2fb5e9288924d2b76fa81b93767ea2a7a0f7ad565b6f505c27a7635ab0fed3bef0294c7fe8e08ff2d33053be0c0223f36f81a8c9c834bddfe6b1460b61d41d0d73be42ad49c4dc1f5dd7292169da9363b226fe9f8abed55162d160190687023b28a567faa1df5d18fee272015291f7bf4aae8339d43d48641d05cb6f2d9b99e67e4cdfa1bad5340a8979583be189191d6aa5f8507ef9efa36aa1218f90ca8ea8db62278192a65c76752d8a010b48c71a3c5936896921dbd8c24a567015ed6e4c39fa43f9d41e88dda4916974cdbb57c3cd56f01808184237730678b908130b89045789597a48a8bb9e9014bf8814925964b6a25644cc642e55ca93d7e1ceab8b08e6ab8b0e5dd965eaf9c3808248ae4b1be77dcc7c12b12bdc110b00388e423a700a1d7a41e9c89e4831db0cf753ddb8c9f090f1afe44c10d75864b98b96ad1605103160b288d08a5a63120464fa967a693631c1f4096cc9e89426c5330c0b656280da1b8fead3c1636033967369d8109f72b43d415364087a6d
+#33bcae077a0dba66b1887318cb8442397d14da18fb71bc16aea1c5c321d780c42bd3bd6e540fc4e09e3bcacf1764964e46395f1479faaff0f26e672efacf5d29c49df93009eabcca45289a52a6137b53640ca6a8b8cacb7ec771bf006b8ed983ceb7e1b9ac95c6ad8cc6cb83fb9141914d703e842ddc6dcb97158f78bdd6f750bce5fdd23ef99a6f55ba0bab1b05866253eb31cdf5e21bdb87810d3737a91dcaf8b301de3f0ee18451a8934fd694f77352f601e2c24dcdede1a84820d3986241f9c75c22b56b9ac400180b2d0747e5e70b4b0a97958f47dd0742a229cc18b2212e8be8f72d4a9dd69afa2ef66a91d99760133141a4d24788d349f36961e1bbefde5f095a098e653efccf196c790c58cbad2a3ee7df40a9c701e079b0174fb76901b15e6ea2b3516042370657491680bc0235882620d3766351ab8422fd9cd76787e413e8c7c7b722418e159ccea0b3010d01c06e276b055120d4ae45caba4623737d72388fa4f9ee4386668b7f1143569d2ec0a04c88aab332abacd44c2d0c0bae470adc8dbab9edc9a88c35b02dbcbd049cb37bd562a789e68d361807f0d66f34fbcf0b00bdcd42efe6af7c79d88d6b310d6f509de073c8fd4d1ad3170695a52b1b065187b889728623bc8029ab167faaa1949be9b90128060c19cdf43bad7831945c22281db10360257f8682a513b5ccfb9b91e4c1473363629dd78fb83867
