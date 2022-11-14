@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.117 Unreleased"
+version = __version__ = "4.60.4.118 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -297,6 +297,8 @@ _change_log = """
         Fixed ButtonMenu bug - subsample was not being applied to initial image in the layout
     4.60.4.117
         Fix for set_vscroll_position not working correctly for a scrollable Column
+    4.60.4.118
+        Completed addition of zoom options for images by adding image_zoom parameter to Tab element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7229,7 +7231,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, p=None, disabled=False,
-                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', image_source=None, image_subsample=None, metadata=None):
+                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', image_source=None, image_subsample=None, image_zoom=None, metadata=None):
         """
         :param title:                 text to show on the tab
         :type title:                  (str)
@@ -7269,6 +7271,8 @@ class Tab(Element):
         :type image_source:            str | bytes | None
         :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:        (int)
+        :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:             (int)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
@@ -7285,6 +7289,7 @@ class Tab(Element):
         self.Filename = filename
         self.Data = data
         self.ImageSubsample = image_subsample
+        self.zoom = int(image_zoom) if image_zoom is not None else None
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -16922,6 +16927,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                     if element.ImageSubsample and photo is not None:
                         photo = photo.subsample(element.ImageSubsample)
+                    if element.zoom and photo is not None:
+                        photo = photo.zoom(element.zoom)
                         # print('*ERROR laying out form.... Image Element has no image specified*')
                 except Exception as e:
                     photo = None
@@ -26050,4 +26057,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2e878107b2a81dd936a76b2f2da5a7966aafe82012b797ce716148b8b6bcf9e77d166effcbe2755ebf3635366322d552c40e0159c8b4d97f40927ed742fb46c6c2a237ea3f4a095c95ee026e722d88c1b5c2ed2baf47ea68464e6d7ca7b4361a474f93d0489292f6136f51bd945b401b9af280b43ed7ea4051b815dccb9325a03d76667fa1b39d46c3f294ba484c77e2a73336c6178c74063ec0d3a44a0d5da0c215e2f18ee243c08992e109dbe617e58446ca8b7c667879c3de129ff7404e298cf8387e09814ed8635f3e3f88b6fb49a78f1eaace611b3f1bb1a6a06fc8e62ebdd376120dfdfa9a1befcb52b44b98f731e7ffea70a8b2587a6409cf741ae934b1ac821f31d35fb8b552b13aae70f70fa322dfd36178128da3d83e4ac0e3f3640657a9e6c108dc744cf66b64e3d1cbe750aac8f39f528aee558c7a12925c65113ce5ff2caeba9af129f6c64eb6a9512bb35a88a1cf8b17a21f312128cadda2c9e116754026ddea6a8bea5b84171c3e2d82b72fb3e92eb3d61ec36b930e8854f4030676d7acfdbf93f6b421810aa017da5add25f5a707b3fe754d1c619779ee859945b3d2dca0a2301f3b2b632f6f85d6ec3ce38d337dc265611ea61766aa7d6fd2271460da859bfb76765077e9c1aa1ce103a5315de35b0b27e1450da66adc1d33f5cd73457f783bce75eb59a9af996de38dc83f1271b34e650018ba3d824874
+#747f2e34d83028cebcf79686e7c6fbdb76774d9cfbfa5b664e4e22ec8f4838e1c730a2b1dc6b7ca85308cbc0483606006c0ffcebafa127eee6bdb4856784903fdf27b4c6a2d701e6ab3ae5811d7651bc77ab434987d4d3118c7b71a5ca65619708c49232b503d0792e916e119c5bab64d801a620e5ec516f86b81e9fb0a30db5e5af8a013201d8fe6e68d4561cfb25f3dcbf3df7b8539f9bae3f2e287881bd388bd79d7da76dbd81191de82dd48046f1f0e45b162e3981403057a17a94586bfda885588f4c5cb8fb44123a0659def1876160218b126d61092ae6f249b60e3ef63073335a1b0496e23c5879af35dc05a105e91f21c6f796aded8edf5d4894b7607fd7b0acf033bb553a9559bed5bb66c8fab05d93624631e966d6a4020f3027ea553929d3d93410ad20dc8c3b6a086e0d2e1766e7670182b804d1021718ee2517b32961c97ac83a3d1e1c3607bb6527c8fd7041a5a8fdd8403046f201ef6618cde1afb3c1093285bcfd567e9f8c7279219c094a048a3d560d148e2c9691977ba11db7d895753a3bf9e866d8595337e537093b330b950540c20d592e37f7b29c41e7f94c61733dfdee0a8da277246e7a28f33616c8870869ff6a26dadbba098849225e332f67b669d0f51d6c9ac0de717e8dbcd59e6355c2e34a104bac5568be5dfa50d42f23808167f9c8b80efe64ddafb8be3bfafabe9ee7fc507e866a80e5e3
