@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.118 Unreleased"
+version = __version__ = "4.60.4.119 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -299,6 +299,8 @@ _change_log = """
         Fix for set_vscroll_position not working correctly for a scrollable Column
     4.60.4.118
         Completed addition of zoom options for images by adding image_zoom parameter to Tab element
+    4.60.4.119
+        Fixed Neon Yellow theme.  Had an extra "#" in a color.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19521,7 +19523,7 @@ LOOK_AND_FEEL_TABLE = {
                   "BUTTON": ("#33ccff", "#000000"), "PROGRESS": ("#33ccff", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
     "NeonGreen1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#96ff7b", "SCROLL": "#96ff7b",
                    "BUTTON": ("#96ff7b", "#000000"), "PROGRESS": ("#96ff7b", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
-    "NeonYellow1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#ffcf40", "SCROLL": "##ffcf40",
+    "NeonYellow1": {"BACKGROUND": "#000000", "TEXT": "#ffffff", "INPUT": "#000000", "TEXT_INPUT": "#ffcf40", "SCROLL": "#ffcf40",
                     "BUTTON": ("#ffcf40", "#000000"), "PROGRESS": ("#ffcf40", "#ffffff"), "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
 }
 
@@ -26057,4 +26059,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#747f2e34d83028cebcf79686e7c6fbdb76774d9cfbfa5b664e4e22ec8f4838e1c730a2b1dc6b7ca85308cbc0483606006c0ffcebafa127eee6bdb4856784903fdf27b4c6a2d701e6ab3ae5811d7651bc77ab434987d4d3118c7b71a5ca65619708c49232b503d0792e916e119c5bab64d801a620e5ec516f86b81e9fb0a30db5e5af8a013201d8fe6e68d4561cfb25f3dcbf3df7b8539f9bae3f2e287881bd388bd79d7da76dbd81191de82dd48046f1f0e45b162e3981403057a17a94586bfda885588f4c5cb8fb44123a0659def1876160218b126d61092ae6f249b60e3ef63073335a1b0496e23c5879af35dc05a105e91f21c6f796aded8edf5d4894b7607fd7b0acf033bb553a9559bed5bb66c8fab05d93624631e966d6a4020f3027ea553929d3d93410ad20dc8c3b6a086e0d2e1766e7670182b804d1021718ee2517b32961c97ac83a3d1e1c3607bb6527c8fd7041a5a8fdd8403046f201ef6618cde1afb3c1093285bcfd567e9f8c7279219c094a048a3d560d148e2c9691977ba11db7d895753a3bf9e866d8595337e537093b330b950540c20d592e37f7b29c41e7f94c61733dfdee0a8da277246e7a28f33616c8870869ff6a26dadbba098849225e332f67b669d0f51d6c9ac0de717e8dbcd59e6355c2e34a104bac5568be5dfa50d42f23808167f9c8b80efe64ddafb8be3bfafabe9ee7fc507e866a80e5e3
+#6df7f179e86248e52878ca698d9b7b299699286d6d593170fd043d2805707c05b30c9887c3a39f402421b9ddd840da68f706ea4cb9aa7a913a1616b42f43317305e0b459cf6fae38bd26df4f428616185ae09f580b50200590496907d3d14447d36a16d64112db7b6b21e1d95b8ece671f2d348e8a689083c0aafc5921e91d1bec3ad5e1eeea08fa0bb5c6621a072b28277168b65a5fe60273c20da60e78001b4a4417fe4243d1c0704ca3f5123737d246eced822d6c74b01755981c5ed2000abba2fbd25f9e59a7b51e957869d3d0ce489ed66e72b9c320c53dd7af7f4589c2e714f16e38bb564dfa4b7ad23cd57352064080b07aee4268a3db34a009169e3aa6b1965e579bb777478733eba17d067ffb3722f2b69475a7d16e30749b410e01eac1f441c9b5d4a4a052e033fc3cf808dea1c3648fb898e4250a94afb2e6c4a09ae643b08b2293362b3b4ebf21415c20c6e8cfbbbd9645d9c1d99db0dc8f65c8ae9358006ffbda51323c1874f8d4737243fb57abe0006effd31138c433b7eb41c8dc421841ff35af428980b7bf7d7ef6e58e4e1269534ca3ae2ba5049576d73e5924eccaa83c53f4f9265968bc5a94c21b1b4a934f04705afb620647b523bbe1acc7edc573a2f85f28c98752d7b195f690a0289137c6770aa9dc28a6e2bb668b446b346be7f021eb3d46253653b1716caf30311d2932a32321d3e3568dc26ee6
