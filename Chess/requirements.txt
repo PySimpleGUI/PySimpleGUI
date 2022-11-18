@@ -1,2 +1,0 @@
-PySimpleGUI==3.9.1
-python-chess==0.23.9
