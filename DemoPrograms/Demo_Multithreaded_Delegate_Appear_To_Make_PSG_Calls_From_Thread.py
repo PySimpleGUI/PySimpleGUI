@@ -55,11 +55,16 @@ def the_thread():
     :return:
     """
 
-    # loop 10 times, each time making 2 different popup calls that indicate they should autoclose and not block the main GUI
-    for i in range(10):
+    # Wait for the GUI to start running
+    while window is None:
         time.sleep(.2)
-        make_delegate_call(lambda: sg.popup('This is a popup', i, auto_close=True, auto_close_duration=2, keep_on_top=True, non_blocking=True))
+
+    for i in range(5):
+        time.sleep(.2)
+        make_delegate_call(lambda: sg.popup('This is a popup', i, relative_location=(0, -300), auto_close=True, auto_close_duration=2, keep_on_top=True, non_blocking=True))
         make_delegate_call(lambda: sg.popup_scrolled(__file__, sg.get_versions(), auto_close=True, auto_close_duration=1.5, non_blocking=True))
+
+    make_delegate_call(lambda: sg.popup('One last popup before exiting...', relative_location=(-200, -200)))
 
     # when finished and ready to stop, tell the main GUI to exit
     window.write_event_value('-THREAD EXIT-', None)
@@ -89,7 +94,7 @@ def the_thread():
 
 def make_delegate_call(func):
     """
-    Make a deletegate call to PySimpleGUI.
+    Make a delegate call to PySimpleGUI.
 
     :param func:    A lambda expression most likely.  It's a function that will be called by the mainthread that's executing the GUI
     :return:
@@ -109,10 +114,11 @@ def main():
     global window
 
     # create a window.  A key is needed so that the values dictionary will return the thread's value as a key
-    layout = [[sg.Text('Window will not be visible', k='-T-')]]
+    layout = [[sg.Text('', k='-T-')]]
 
     # set the window to be both invisible and have no taskbar icon
-    window = sg.Window('Invisible window', layout, no_titlebar=True, alpha_channel=0)
+    window = sg.Window('Invisible window', layout, no_titlebar=True, alpha_channel=0, finalize=True, font='_ 1', margins=(0,0), element_padding=(0,0))
+    window.hide()
 
     while True:
         event, values = window.read()
