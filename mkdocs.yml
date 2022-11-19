@@ -4,5 +4,5 @@ theme:
     custom_dir: docs_modification/
 plugins:
   - search:
-        prebuild_index: true
-  
+      prebuild_index: true
+extra_css: [extra.css]
