@@ -9,8 +9,8 @@
       <img src="https://www.dropbox.com/s/6wzf3ebmj97v4zs/PySimpleGUI-GitHub-Udemy-Course.png?raw=1" width=200 alt="PySimpleGUI Udemy Course">
     </td>
     <td>
-      <h5>apply coupon for discount:<br>D5570C66DBD8E42C7963</h6>
-      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=D5570C66DBD8E42C7963">click here to visit course page</a>
+      <h5>apply coupon for discount:<br>09B234B00A7E89CC8C1F</h6>
+      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F">click here to visit course page</a>
     </td>
   </tr>
 </table>
@@ -72,6 +72,8 @@ PySimpleGUI needs your support.  If you find PySimpleGUI useful, please consider
 
 
 <hr>
+
+<!-- Interesting stats but kinda cluttered [Alt](https://repobeats.axiom.co/api/embed/90d8cdfa8cb37d70903aa52f5b3592035330c3d6.svg "Repobeats analytics image") -->
 
 # What Is PySimpleGUI ❓
 

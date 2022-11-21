@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.119 Unreleased"
+version = __version__ = "4.60.4.120 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -301,6 +301,8 @@ _change_log = """
         Completed addition of zoom options for images by adding image_zoom parameter to Tab element
     4.60.4.119
         Fixed Neon Yellow theme.  Had an extra "#" in a color.
+    4.60.4.120
+        New coupon code
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25890,7 +25892,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=346BC463A0F8759BEF1B')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -25898,7 +25900,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '346BC463A0F8759BEF1B',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '09B234B00A7E89CC8C1F',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -26043,10 +26045,9 @@ if _mac_should_set_alpha_to_99():
 #     print('Your Mac patches are:')
 #     print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
 #     print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
-#     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
+#     print ('No grab anywhere allowed  with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
 #     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
-
-
+ 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
@@ -26059,4 +26060,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#6df7f179e86248e52878ca698d9b7b299699286d6d593170fd043d2805707c05b30c9887c3a39f402421b9ddd840da68f706ea4cb9aa7a913a1616b42f43317305e0b459cf6fae38bd26df4f428616185ae09f580b50200590496907d3d14447d36a16d64112db7b6b21e1d95b8ece671f2d348e8a689083c0aafc5921e91d1bec3ad5e1eeea08fa0bb5c6621a072b28277168b65a5fe60273c20da60e78001b4a4417fe4243d1c0704ca3f5123737d246eced822d6c74b01755981c5ed2000abba2fbd25f9e59a7b51e957869d3d0ce489ed66e72b9c320c53dd7af7f4589c2e714f16e38bb564dfa4b7ad23cd57352064080b07aee4268a3db34a009169e3aa6b1965e579bb777478733eba17d067ffb3722f2b69475a7d16e30749b410e01eac1f441c9b5d4a4a052e033fc3cf808dea1c3648fb898e4250a94afb2e6c4a09ae643b08b2293362b3b4ebf21415c20c6e8cfbbbd9645d9c1d99db0dc8f65c8ae9358006ffbda51323c1874f8d4737243fb57abe0006effd31138c433b7eb41c8dc421841ff35af428980b7bf7d7ef6e58e4e1269534ca3ae2ba5049576d73e5924eccaa83c53f4f9265968bc5a94c21b1b4a934f04705afb620647b523bbe1acc7edc573a2f85f28c98752d7b195f690a0289137c6770aa9dc28a6e2bb668b446b346be7f021eb3d46253653b1716caf30311d2932a32321d3e3568dc26ee6
+#49882f8bd30e575c789d482a12b72e3a335d1abdee926d149c5fbe76aa226f2abb45a677f8d7a7013f31153a988c284ab9930f9abbbc9ac07b921fb03b11fe7c5cffc1a7ea5fcfadba44aad271eb74690a3a41fb741b36cbd6eff8cdf20f6e933e41ef7c3137f9b027d749ad85bd76a85f03b971ce71a7d446284c32fb4989ed04c13ebffa25960ae20581eedf7aae954f005ac7ebe660071e9d9bf938b6743cb148630e8943fdc2cc33e19b132d267f6e5df55d6967c82c4cb57dce54dce9fbfb1c678ced3c7a97447ef487102141684c3a99bcddd504ba2b3062abef7ccf43831e82b0ab456deac0ff7a423dd26b9ac273a47467447de4a2e6bcbfcecbf89a701585b1f71110897b25a7369c3afeb37955ad11933b2ad361877401d5eae3fa6ef31eb78f4b16ed02d1fcc015f4cd2ef7895714e561b1e31fe5b33e49285fb9d592e1acb0dc2513de5e817b1e83a0fcb89a4fb4830441b0b356ab0f4e754664761e8737eb03dded3f9aca91eccc4c66f33a33a3e25340c6ff41d0ecd1d0b410a83d8560c1164ea5ac6eff196fdf178fd38193b4bd4a061cc5edc6f233393d0675eda3e14634d535a42f5237331bfac399eaa98d16357e14019652132a22d7772fd0ede783386a22bddc21040c1ea5e8e59e2048af95e019f3d0363aab5581543d65e98b48b9a72402936ad893e2a1e614aaf5ac8553e536c77ee032f519c7a9
