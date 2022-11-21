@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    D5570C66DBD8E42C7963
+                    09B234B00A7E89CC8C1F
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=D5570C66DBD8E42C7963','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -71,6 +71,7 @@ Button(button_text = "",
     image_data = None,
     image_size = (None, None),
     image_subsample = None,
+    image_zoom = None,
     image_source = None,
     border_width = None,
     size = (None, None),
@@ -114,6 +115,7 @@ Parameter Descriptions:
 |                                  bytes or str                                  |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                                   (int, int)                                   |      image_size       | Size of the image in pixels (width, height) |
 |                                      int                                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |                                      int                                       |     border_width      | width of border around button in pixels |
 |               (int or None, int or None)  or (None, None) or int               |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |               (int or None, int or None)  or (None, None) or int               |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
@@ -400,10 +402,12 @@ when made visible.
 update(text = None,
     button_color = (None, None),
     disabled = None,
+    image_source = None,
     image_data = None,
     image_filename = None,
     visible = None,
     image_subsample = None,
+    image_zoom = None,
     disabled_button_color = (None, None),
     image_size = None)
 ```
@@ -415,11 +419,13 @@ Parameter Descriptions:
 |                 str                  |         text          | sets button text |
 | (str, str) or str or (int, int) or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 |            (bool or str)             |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|            (str or bytes)            |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
 |             bytes or str             |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                 str                  |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
 |              (str, str)              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
 |                 bool                 |        visible        | control visibility of element |
 |                 int                  |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                 int                  |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |              (int, int)              |      image_size       | Size of the image in pixels (width, height) |
 
 ### visible
@@ -510,10 +516,12 @@ when made visible.
 Update(text = None,
     button_color = (None, None),
     disabled = None,
+    image_source = None,
     image_data = None,
     image_filename = None,
     visible = None,
     image_subsample = None,
+    image_zoom = None,
     disabled_button_color = (None, None),
     image_size = None)
 ```
@@ -525,11 +533,13 @@ Parameter Descriptions:
 |                 str                  |         text          | sets button text |
 | (str, str) or str or (int, int) or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 |            (bool or str)             |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|            (str or bytes)            |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
 |             bytes or str             |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                 str                  |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
 |              (str, str)              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
 |                 bool                 |        visible        | control visibility of element |
 |                 int                  |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                 int                  |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |              (int, int)              |      image_size       | Size of the image in pixels (width, height) |
 
 ---------
@@ -548,6 +558,7 @@ ButtonMenu(button_text,
     image_data = None,
     image_size = (None, None),
     image_subsample = None,
+    image_zoom = None,
     border_width = None,
     size = (None, None),
     s = (None, None),
@@ -582,6 +593,7 @@ Parameter Descriptions:
 |                                  bytes or str                                  |     image_data      | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                                   (int, int)                                   |     image_size      | Size of the image in pixels (width, height) |
 |                                      int                                       |   image_subsample   | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |     image_zoom      | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |                                      int                                       |    border_width     | width of border around button in pixels |
 |                       (int, int)  or (None, None) or int                       |        size         | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
@@ -838,6 +850,7 @@ update(menu_definition = None,
     image_source = None,
     image_size = (None, None),
     image_subsample = None,
+    image_zoom = None,
     button_text = None)
 ```
 
@@ -850,6 +863,7 @@ Parameter Descriptions:
 | (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
 |  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
 |      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|      int      |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |      str      |   button_text   | Text to be shown on the button |
 
 ### visible
@@ -932,6 +946,7 @@ Update(menu_definition = None,
     image_source = None,
     image_size = (None, None),
     image_subsample = None,
+    image_zoom = None,
     button_text = None)
 ```
 
@@ -944,6 +959,7 @@ Parameter Descriptions:
 | (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
 |  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
 |      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|      int      |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |      str      |   button_text   | Text to be shown on the button |
 
 ---------
@@ -4410,6 +4426,7 @@ Image(source = None,
     k = None,
     tooltip = None,
     subsample = None,
+    zoom = None,
     right_click_menu = None,
     expand_x = False,
     expand_y = False,
@@ -4434,6 +4451,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                      int                                       |    subsample     | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |       zoom       | amount to increase the size of the image. |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
@@ -4676,6 +4694,7 @@ update(source = None,
     data = None,
     size = (None, None),
     subsample = None,
+    zoom = None,
     visible = None)
 ```
 
@@ -4688,6 +4707,7 @@ Parameter Descriptions:
 | str or tkPhotoImage |   data    | Base64 encoded string OR a tk.PhotoImage object |
 |   Tuple[int,int]   |   size    | (width, height) size of image in pixels |
 |        int         | subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|        int         |   zoom    | amount to increase the size of the image |
 |        bool        |  visible  | control visibility of element |
 
 ### update_animation
@@ -4795,6 +4815,7 @@ Update(source = None,
     data = None,
     size = (None, None),
     subsample = None,
+    zoom = None,
     visible = None)
 ```
 
@@ -4807,6 +4828,7 @@ Parameter Descriptions:
 | str or tkPhotoImage |   data    | Base64 encoded string OR a tk.PhotoImage object |
 |   Tuple[int,int]   |   size    | (width, height) size of image in pixels |
 |        int         | subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|        int         |   zoom    | amount to increase the size of the image |
 |        bool        |  visible  | control visibility of element |
 
 ### UpdateAnimation
@@ -10375,6 +10397,7 @@ Tab(title,
     element_justification = "left",
     image_source = None,
     image_subsample = None,
+    image_zoom = None,
     metadata = None)
 ```
 
@@ -10401,6 +10424,7 @@ Parameter Descriptions:
 |                                      str                                       | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
 |                              str or bytes or None                              |     image_source      | A filename or a base64 bytes of an image to place on the Tab |
 |                                      int                                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
 |                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -19695,7 +19719,7 @@ Parameter Descriptions:
 | str | folder_to_open | The path to open in the explorer program |
 | (subprocess.Popen) or None | **RETURN** | Popen object
 
-Returns the first filename found in a traceback that is not the nsame of this file (__file__)
+Returns the first filename found in a traceback that is not the name of this file (__file__)
 Used internally with the debugger for example.
 
 ```
@@ -19706,7 +19730,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | **RETURN** | filename of the caller, asseumed to be the first non PySimpleGUI file
+| str | **RETURN** | filename of the caller, assumed to be the first non PySimpleGUI file
 
 Get the text results of a previously executed execute call
 Returns a tuple of the strings (stdout, stderr)
