@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.121 Unreleased"
+version = __version__ = "4.60.4.122 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -305,6 +305,9 @@ _change_log = """
         New coupon code
     4.60.4.121
         New Jedi emoji
+    4.60.4.122
+        Swapped Push and Stretch, VPush and VStretch.  Made Push and VPush the function and Stratch and VStresth the aliases. Did this because
+            Push is used almost universally, not Stretch.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9720,7 +9723,7 @@ class ErrorElement(Element):
 #                           Stretch Element                              #
 # ---------------------------------------------------------------------- #
 # This is for source code compatibility with tkinter version. No tkinter equivalent but you can fake it using a Text element that expands in the X direction
-def Stretch(background_color=None):
+def Push(background_color=None):
     """
     Acts like a Stretch element found in the Qt port.
     Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
@@ -9731,10 +9734,10 @@ def Stretch(background_color=None):
     """
     return Text(font='_ 1', background_color=background_color, pad=(0,0), expand_x=True)
 
-Push = Stretch
-P = Stretch
+P = Push
+Stretch = Push
 
-def VStretch(background_color=None):
+def VPush(background_color=None):
     """
     Acts like a Stretch element found in the Qt port.
     Used in a Vertical fashion.
@@ -9745,8 +9748,8 @@ def VStretch(background_color=None):
     return Text(font='_ 1', background_color=background_color, pad=(0,0), expand_y=True)
 
 
-VPush = VStretch
-VP = VStretch
+VStretch = VPush
+VP = VPush
 
 
 # ------------------------------------------------------------------------- #
@@ -26066,4 +26069,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#7ba11cf382b1e9c4221a170168350263fdc720b4df84e9bbff79be7cc7df39a5659175dcfdd2795d0558679113b9e9eac99400176140dc57cb4626bceec561ba2154ee455ad3fa3e1c2444b38f9dd11c3200afddb875583709e98f5d9fda2fd8c5323f3159ea93f3e45e5b9c5c694382e71462ad348d2655ee3dc953227d19469d5c3f2feb0e024227927e49a71685533e0d02ad5334198eb02a6cab093ecbce9fadf4f9df44653805699ed4d8c08f97170ad75ca8a3052a80e949106144d2278bdc85f54f3d760a024caa70c5317192a27cf2aaf808d16cae78038d7b132cb9747f1df98cbd7b2e01f31d1c0d597376bd90dc2ab79c17b732c217ee22f55ad96078e2a67abcc0ac8dcb2ab3aaaa5d7cdc632ce850ac9f2e870873309c69ddc4b535dfec0edb9083a12d7794212179d32a79457370fef38f3676d9e1f39460f308cfacfed9fe68720eb432b5ce2a32eb3fa6cfcf9d2c45de5c87d66e40db7a3f19e73048329e298a2c10b8610629d492841542c0d43d3cf01534d52be4e7657e847320299302101c2414967b21302f8a8ad3ce071c0bba6d47f9b5afb162ddb8b1a2108f4407b1987fa067c5b5fbc2789b1b7c2686d609d5fe2b3444da2169808ba3ea0279de8de9a3cafd175bced601179e5859a7687788d20b674e6bd919c8e830ca0f4095a392dc730b632fa1068b338fd6556e3a2221927bc132f9a6befd
+#5d0ef65bb69d1be31982327b209e01bde205fea10f008d977f89a43211cc1eab811681e31811d6d3ec6dda2e444a5e42b11e2db9819a1fbf4b62c4dd4fa7c4a25883c074a9aa15706c157a4c9c271df26ee0d0646d8074780541356f13486a40206ef6592026a311fc2e60fc49b87027ae05c1a0fb4b0a2c613a278adf7b1f9cb39ed33ba5954fa829098f6e1c85444a31cad45e3a6f8ea36790f367c6c3f08edec50e5bb21e152e895fa10f1349a65a6f0376964bc1f8e7ff271215a43ae35c13aabcdbb7c397d19fb0febd475a0a077ef6d5f68e0193ae8db1edec15a14f3a23bb1fad7714c9b6c39d258e9c4d6dee24f50cbf3e61b5634e4275356869f8798f64c25636ae1abbafc256254e35954ff42c7360a345f9e327d2260950c382ff0da597a4a7044319a596c9cf9bc73c9e81fb0f5ab3fe72d207ed521526bc8fb5b039c353f26edbac03d5786f57017831578dcd653fa126468d967bf4a4a145f06ec81990e36f7ae52dc8b2d111dfdfde51df480d73d557ebc6b6be2d1799fe69de1fc5f612e5b9f723845b52dc906c547a31a175bb178cba2b2554fb2173660296bd0200bd3c568f179cea38c18e6a93f96325a1b6cb810c5f0938a75c6c06bf0b1176595099c32e77f0b043dff492f69abb95f990e587576eac4dcea46005efe7333f879b86fb3abe9b8b19d373a919272c8be538403e707613b4fc27400761
