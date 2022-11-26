@@ -29,7 +29,7 @@ layout = [  [sg.Graph((100,100), (0,100), (100,0), key='-GRAPH-')],
             [sg.T(k='-OUT LOC-')],
             [sg.T('F1 copy F2 Exit')]]
 
-window = sg.Window('Color Picker', layout, no_titlebar=True, keep_on_top=True, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, finalize=True)
+window = sg.Window('Color Picker', layout, no_titlebar=False, keep_on_top=True, grab_anywhere=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, finalize=True)
 
 window.bind('<F1>', '-COPY-')
 window.bind('<F2>', 'Exit')
@@ -45,7 +45,7 @@ while True:
     if event == 'Edit Me':
         sp = sg.execute_editor(__file__)
     elif event == 'Version':
-        sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location())
+        sg.popup_scrolled(__file__, sg.get_versions(), keep_on_top=True, location=window.current_location(), non_blocking=True)
 
     window['-GRAPH-'].erase()
     x, y = window.mouse_location()
