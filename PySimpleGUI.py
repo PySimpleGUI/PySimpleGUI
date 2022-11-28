@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.122 Unreleased"
+version = __version__ = "4.60.4.123 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -308,6 +308,10 @@ _change_log = """
     4.60.4.122
         Swapped Push and Stretch, VPush and VStretch.  Made Push and VPush the function and Stratch and VStresth the aliases. Did this because
             Push is used almost universally, not Stretch.
+    4.60.4.123
+        Fix for incorrect values for Element.ttk_style and Element.ttk_style_name. Some elements had values overwritten if a scrollbar, etc, was used
+        Changed a number of the ttk elements (Button for example) to use the base name as the parm to creating the custom style to achieve
+            a more predictable naming style (relies on the formula used in the create style function rather than ad hoc adding "custom" onto name)
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1334,8 +1338,8 @@ class Element():
         self.TKText = None
         self.TKEntry = None
         self.TKImage = None
-        self.ttk_style_name = ''        # set in the packer function
-
+        self.ttk_style_name = ''        # The ttk style name (if this is a ttk widget)
+        self.ttk_style = None           # The ttk Style object (if this is a ttk widget)
         self._metadata = None  # type: Any
 
         self.ParentForm = None  # type: Window
@@ -4909,7 +4913,6 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.UseTtkButtons = use_ttk_buttons
-        self.ttk_style_name = ''        # set in the packer function
         self._files_delimiter = BROWSE_FILES_DELIMITER  # used by the file browse button. used when multiple files are selected by user
         if use_ttk_buttons is None and running_mac():
             self.UseTtkButtons = True
@@ -5642,7 +5645,6 @@ class ProgressBar(Element):
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
         self.RightClickMenu = right_click_menu
-        self.ttk_style_name = None      # set in the pack function so can use in the update
         # Progress Bar colors can be a tuple (text, background) or a string with format "bar on background" - examples "red on white" or ("red", "white")
         if bar_color is None:
             bar_color = DEFAULT_PROGRESS_BAR_COLOR
@@ -9026,7 +9028,6 @@ class Table(Element):
         self.BorderWidth = border_width
         self.HeaderRelief = header_relief
         self.table_ttk_style_name = None        # the ttk style name for the Table itself
-        self.ttk_style = None                   # the ttk style for the Table
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
             selected_row_colors = theme_button_color()
@@ -15237,10 +15238,11 @@ def _change_ttk_theme(style, theme_name):
 #         style.configure(ttkstyle, **kwargs)
 #         return ttkstyle
 
-def _make_ttk_style_name(base_style, element):
+def _make_ttk_style_name(base_style, element, primary_style=False):
     Window._counter_for_ttk_widgets += 1
     style_name = str(Window._counter_for_ttk_widgets) + '___' + str(element.Key) + base_style
-    element.ttk_style_name = style_name
+    if primary_style:
+        element.ttk_style_name = style_name
     return style_name
 
 
@@ -16001,8 +16003,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                style_name = _make_ttk_style_name('.custombutton.TButton', element)
+                style_name = _make_ttk_style_name('.TButton', element, primary_style=True)
                 button_style = ttk.Style()
+                element.ttk_style = button_style
                 _change_ttk_theme(button_style, toplevel_form.TtkTheme)
                 button_style.configure(style_name, font=font)
 
@@ -16250,14 +16253,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     width = max_line_len + 1
                 element.TKStringVar = tk.StringVar()
-                style_name = _make_ttk_style_name('.TCombobox', element)
-
+                style_name = _make_ttk_style_name('.TCombobox', element, primary_style=True)
                 combostyle = ttk.Style()
                 element.ttk_style = combostyle
                 _change_ttk_theme(combostyle, toplevel_form.TtkTheme)
 
                 # Creates a unique name for each field element(Sure there is a better way to do this)
-                unique_field = _make_ttk_style_name('.TCombobox.field', element)
+                # unique_field = _make_ttk_style_name('.TCombobox.field', element)
 
 
                 # Set individual widget options
@@ -16300,11 +16302,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT) and \
                         element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
                         element.Widget.tk.eval(
-                    '[ttk::combobox::PopdownWindow {}].f.l configure -foreground {} -background {} -selectforeground {} -selectbackground {}'.format(element.Widget,
-                                                                                                                                                    element.TextColor,
-                                                                                                                                                    element.BackgroundColor,
-                                                                                                                                                    element.BackgroundColor,
-                                                                                                                                                    element.TextColor))
+                    '[ttk::combobox::PopdownWindow {}].f.l configure -foreground {} -background {} -selectforeground {} -selectbackground {}'.format(element.Widget, element.TextColor, element.BackgroundColor, element.BackgroundColor, element.TextColor))
                 except Exception as e:
                     pass    # going to let this one slide
 
@@ -16634,7 +16632,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     base_style_name = ".Horizontal.TProgressbar"
                 else:
                     base_style_name = ".Vertical.TProgressbar"
-                style_name = _make_ttk_style_name(base_style_name, element)
+                style_name = _make_ttk_style_name(base_style_name, element, primary_style=True)
                 element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width,
                                                       orientation=direction, BarColor=bar_color,
                                                       border_width=element.BorderWidth, relief=element.Relief,
@@ -16983,7 +16981,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element  # type: TabGroup
                 # custom_style = str(element.Key) + 'customtab.TNotebook'
-                custom_style = _make_ttk_style_name('.customtab.TNotebook', element)
+                custom_style = _make_ttk_style_name('.TNotebook', element, primary_style=True)
                 style = ttk.Style()
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
 
@@ -17177,7 +17175,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
                 # ------ Do Styling of Colors -----
                 # style_name = str(element.Key) + 'customtable.Treeview'
-                style_name = _make_ttk_style_name( '.customtable.Treeview', element)
+                style_name = _make_ttk_style_name( '.Treeview', element, primary_style=True)
                 element.table_ttk_style_name = style_name
                 table_style = ttk.Style()
                 element.ttk_style = table_style
@@ -17368,7 +17366,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # ----- configure colors -----
                 # style_name = str(element.Key) + '.Treeview'
-                style_name = _make_ttk_style_name('.Treeview', element)
+                style_name = _make_ttk_style_name('.Treeview', element, primary_style=True)
                 tree_style = ttk.Style()
                 _change_ttk_theme(tree_style, toplevel_form.TtkTheme)
 
@@ -17467,7 +17465,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
                 # style_name = str(element.Key) + "Line.TSeparator"
-                style_name = _make_ttk_style_name(".Line.TSeparator", element)
+                style_name = _make_ttk_style_name(".Line.TSeparator", element, primary_style=True)
                 style = ttk.Style()
 
                 _change_ttk_theme(style, toplevel_form.TtkTheme)
@@ -26069,4 +26067,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5d0ef65bb69d1be31982327b209e01bde205fea10f008d977f89a43211cc1eab811681e31811d6d3ec6dda2e444a5e42b11e2db9819a1fbf4b62c4dd4fa7c4a25883c074a9aa15706c157a4c9c271df26ee0d0646d8074780541356f13486a40206ef6592026a311fc2e60fc49b87027ae05c1a0fb4b0a2c613a278adf7b1f9cb39ed33ba5954fa829098f6e1c85444a31cad45e3a6f8ea36790f367c6c3f08edec50e5bb21e152e895fa10f1349a65a6f0376964bc1f8e7ff271215a43ae35c13aabcdbb7c397d19fb0febd475a0a077ef6d5f68e0193ae8db1edec15a14f3a23bb1fad7714c9b6c39d258e9c4d6dee24f50cbf3e61b5634e4275356869f8798f64c25636ae1abbafc256254e35954ff42c7360a345f9e327d2260950c382ff0da597a4a7044319a596c9cf9bc73c9e81fb0f5ab3fe72d207ed521526bc8fb5b039c353f26edbac03d5786f57017831578dcd653fa126468d967bf4a4a145f06ec81990e36f7ae52dc8b2d111dfdfde51df480d73d557ebc6b6be2d1799fe69de1fc5f612e5b9f723845b52dc906c547a31a175bb178cba2b2554fb2173660296bd0200bd3c568f179cea38c18e6a93f96325a1b6cb810c5f0938a75c6c06bf0b1176595099c32e77f0b043dff492f69abb95f990e587576eac4dcea46005efe7333f879b86fb3abe9b8b19d373a919272c8be538403e707613b4fc27400761
+#2eedb2b0b3467939c996f6c8fc62c3e1b8d533eed2a235bdde9f0e1b37035bc577f8e062f1dc279281b144ecc779951387eef766090e07e5b66f1fa77144d2a4f9ae99a7c7518f6e6485fceb909f5ca5c5f3e02fc52dbc88834392c3bc764101e3d1593400eabcecb287c6c3b23f64f2ab427b20da45af28acdf3cd35cbc055060a77cbcf439ed34261f35040f0ade1231ef7f4374df306692914b2a43796ddd367cf3faf9cc9b3833b60a2ce4bdfaac4fd1db890d04aa9e70421679ada14e7b02a76a81c9d18c44558d97c375c51476bcebf5a70765029cd2ad18e1e14eda0e29da6e4f4624c8eac559c42e1fa7ef11834efbb4cf8e5fe3540ccaf11a974c0e6299e2472198785cea07e0d665f956b1640e0b66730ed217c63d27b86708197ca4c57b29c6bdc8ec648f3d460928b451a0daf9de71c6b1164fcf9e6a3ad9e52610061800ff276328ae8125aa32e786c19ff0c806749656233764942a043e7078d8a94bee49ad9aac8001d33235106ba3441e1632bba4ffdeb13695b7687290ffcbc10109a49b85cb28d333093eacab4d95dd8322fc8e94f3fe09799715f72f3e5ac02fae3c7398ebcdff2912a6951e2665b5eaa2ebf600430fcc7eeb04f68b0b961ecf1bc15d4f0df7892429aec0595c8ce2d9f86544834e22be5611424bd81c4e310f55515e790a80f5168c448514d10a1075277689c87750baff231bf3e848
