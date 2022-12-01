@@ -10870,8 +10870,8 @@ class Window:
         :type key:              str | int | tuple | object
         :param silent_on_error: If True do not display popup nor print warning of key errors
         :type silent_on_error:  (bool)
-        :return:                Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
-        :rtype:                 Element | Error Element | None
+        :return:                Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
+        :rtype:                 Element | ErrorElement | None
         """
         try:
             element = self.AllKeysDict[key]
@@ -26067,4 +26067,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2eedb2b0b3467939c996f6c8fc62c3e1b8d533eed2a235bdde9f0e1b37035bc577f8e062f1dc279281b144ecc779951387eef766090e07e5b66f1fa77144d2a4f9ae99a7c7518f6e6485fceb909f5ca5c5f3e02fc52dbc88834392c3bc764101e3d1593400eabcecb287c6c3b23f64f2ab427b20da45af28acdf3cd35cbc055060a77cbcf439ed34261f35040f0ade1231ef7f4374df306692914b2a43796ddd367cf3faf9cc9b3833b60a2ce4bdfaac4fd1db890d04aa9e70421679ada14e7b02a76a81c9d18c44558d97c375c51476bcebf5a70765029cd2ad18e1e14eda0e29da6e4f4624c8eac559c42e1fa7ef11834efbb4cf8e5fe3540ccaf11a974c0e6299e2472198785cea07e0d665f956b1640e0b66730ed217c63d27b86708197ca4c57b29c6bdc8ec648f3d460928b451a0daf9de71c6b1164fcf9e6a3ad9e52610061800ff276328ae8125aa32e786c19ff0c806749656233764942a043e7078d8a94bee49ad9aac8001d33235106ba3441e1632bba4ffdeb13695b7687290ffcbc10109a49b85cb28d333093eacab4d95dd8322fc8e94f3fe09799715f72f3e5ac02fae3c7398ebcdff2912a6951e2665b5eaa2ebf600430fcc7eeb04f68b0b961ecf1bc15d4f0df7892429aec0595c8ce2d9f86544834e22be5611424bd81c4e310f55515e790a80f5168c448514d10a1075277689c87750baff231bf3e848
+#57597c0a708e3f6b038befe0242065ff598f35b2b95d908fdbf07856e6adbef441fa52fb029b8a77c2281cdfd62a0a7980005b2d8295a8510e737a1bf1ac10c0fc735e8e1398784cb0a697425bbf5d9d6ec67c513a067e9682f73a90e37d59be3bcba7ad50285a21554f0aefa1bd38bf5257c88dade39bc9b784349e48179510ea1ded7f3df1be8545933ebd61fbbcd277056e1648d4412d86da39b21f6d74fb023cf7f013dec524ba1c95d2fcbd497d7c5df1f10ee1df962b7580ba19db4621011af35f8eeb54e1c9029f2bc43137374a118dcd97a8288d041ca55d63b3db1623c6afd20177d3bce8d49f64ddaae70afcf9f886f569bc7a94aeff3b10c47bd30e4f048ccabf51f9bb1466e72ece6350095e26027c793bd3f4a837273bb1d6d7a381f68383cb749f58d9b4d3440a526479c8aa24c6b7fad1f3d2a0880b552797324e7c2777194c1186c1e7254832bf2f927e2782f6e9caf5a1a842c2c468677ceba7439e45ded24d01055d7b8084116eaff7a3159a157a324fbb910b23b8a7fbab74827ec4e5748d0efd75ea4de4332e6f30b9ad6829853105b1886673ed945371155deb67784be07dec80e76645e640759d79b26aaec9538b673e9526506c4413da3b174d168eabca3a8c403818080ec9b86d9a41b48241290a2294764bd9de2afa3fd517914fb21d074a335f3da73c2e319224e92ba946f2fed0950764d31c

@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 import urllib.request
-import base64
 
 """
     Display an Image Located at a URL
@@ -19,7 +18,7 @@ import base64
 
 image_URL = r'https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png'
 
-layout = [[sg.Image(base64.b64encode(urllib.request.urlopen(image_URL).read()))]]
+layout = [[sg.Image(urllib.request.urlopen(image_URL).read())]]
 
 window = sg.Window('Image From URL', layout)
 
