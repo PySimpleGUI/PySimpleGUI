@@ -31,10 +31,8 @@ Welcome to the Alpha Release of PySimpleGUI for Qt!
   
 You can use the exact same code that you are running on the older, tkinter, version of PySimpleGUI.    
   
-PySimpleGUIQt uses **PySide2** OR **PyQt5** for access to Qt.  **PyQt5 has been having  a number of problems recently however so tread lightly.**
-
-## To minimize potential problems and broken features, if at all possible, use pyside2 instead of PyQt5.
-  
+PySimpleGUIQt uses **PySide2** OR **PySide6** for access to Qt.  **PyQt5 support was removed.**
+ 
 ## Porting your PySimpleGUI code to PySimpleGUIQt  
   
   
@@ -63,16 +61,19 @@ Fonts should be in the format (font family, size).  You can use the older string
         
  pip3 install --upgrade --no-cache-dir PySimpleGUIQt   
  
-### Installing PySide2 for Python 3  
+### Installing PySide6 / PySide2 for Python 3  
   
-It is _highly_ recommended that you use PySide2.  The code will attempt to use PyQt5 is pyside2 isn't found.  PyQt5 is **not** recommended.  
+It is _highly_ recommended that you use PySide2.  The code will attempt to use PySide2 if PySide6 isn't found.  
  
+To install Pyside6:  
+  
+```pip install PySide6```  
+
 To install Pyside2:  
   
 ```pip install PySide2```  
-
       
-**PyQt5 is no longer supported.  Only PySide2 is supported**
+**PyQt5 is no longer supported.  Only PySide6 and PySide2 are supported**
 
 Too many differences were causing a lot of headaches.  Supporting just 1 Qt port is difficult enough.  Parsing out the differences between pyside2 and pyqt5 was simply getting to be too much
     
@@ -97,7 +98,7 @@ Here is the window you should see:
         
         
 ## Prerequisites Python 3        
-PySide2 or PyQt5   (experimental)
+PySide6 or PySide2
         
     
 ## Using  - Python 3        
@@ -829,6 +830,10 @@ Element justification within Window and Containers!  Finally a unified justifica
 	* Header Font (not yet hooked up)
 	
 
+## 0.36.0 PySimpleGUIQt 3-Dec-2022
+
+* Added support for PySide6 (Thanks: Idan Miara)
+
 # Design        
 
 ## Author 
@@ -842,6 +847,6 @@ PySimpleGUI.org
 
 GNU Lesser General Public License (LGPL 3) +        
 
-Copytight 2018, 2019, 2020 PySimpleGUI
+Copyright 2018, 2019, 2020, 2022 PySimpleGUI
 
 # Acknowledgments

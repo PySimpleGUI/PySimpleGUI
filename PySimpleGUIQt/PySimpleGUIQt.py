@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.18.1 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row, added margin to some elements, renamed styles related variables, window margin support but be careful. Added back the truncated portion"
+version = __version__ = "0.36.0\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row, added margin to some elements, renamed styles related variables, window margin support but be careful. Added back the truncated portion"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -29,17 +29,42 @@ except:
 # Copyright 2020 PySimpleGUI.org
 
 
-from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
-from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
-from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
-from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
-from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-from PySide2.QtCore import Qt, QEvent, QSize
-import PySide2.QtGui as QtGui
-import PySide2.QtCore as QtCore
-import PySide2.QtWidgets as QtWidgets
+py_version = '.'.join(str(v) for v in sys.version_info[:3])
+qt_version: int = 0
+qt_backend: str = ''
+try:
+    if True:
+        from PySide6.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide6.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+        from PySide6.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+        from PySide6.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QSystemTrayIcon, QColorDialog
+        from PySide6.QtGui import QAction
+        from PySide6.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon, QAction
+        from PySide6.QtCore import Qt, QEvent, QSize
+        import PySide6.QtGui as QtGui
+        import PySide6.QtCore as QtCore
+        import PySide6.QtWidgets as QtWidgets
+        qt_version = 6
+        qt_backend = 'PySide6'
+except ImportError as e_qt6:
+    try:
+        from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
+        from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
+        from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
+        from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QSystemTrayIcon, QColorDialog
+        from PySide2.QtWidgets import QAction
+        from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
+        from PySide2.QtCore import Qt, QEvent, QSize
+        import PySide2.QtGui as QtGui
+        import PySide2.QtCore as QtCore
+        import PySide2.QtWidgets as QtWidgets
+        qt_version = 5
+        qt_backend = 'PySide2'
+    except ImportError as e_qt5:
+        raise ImportError(f'PySimpleGUIQt requires PySide2 ({e_qt5.msg}) or PySide6 ({e_qt6.msg})')
+        
 
-using_pyqt5 = False
+using_pyqt = False
 
 
 
@@ -945,7 +970,7 @@ class Listbox(Element):
         for index, value in enumerate(self.Values):
             item = self.QT_ListWidget.item(index)
             if value in values:
-                self.QT_ListWidget.setItemSelected(item, True)
+                item.setSelected(True)
 
 
     def GetListValues(self):
@@ -4355,7 +4380,10 @@ class Window:
             # print(f'In main {self.Title}')
             ################################# CALL GUI MAINLOOP ############################
 
-            self.QTApplication.exec_()
+            if qt_version == 5:
+                self.QTApplication.exec_()
+            else:
+                self.QTApplication.exec()
             # self.LastButtonClicked = 'TEST'
             self.CurrentlyRunningMainloop = False
             self.TimerCancelled = True
@@ -6348,7 +6376,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 for index, value in enumerate(element.Values):
                     item = element.QT_ListWidget.item(index)
                     if element.DefaultValues is not None and value in element.DefaultValues:
-                        element.QT_ListWidget.setItemSelected(item, True)
+                        item.setSelected(True)
 
                 if element.Tooltip:
                     element.QT_ListWidget.setToolTip(element.Tooltip)
@@ -7279,7 +7307,7 @@ def StartupTK(window):
     :type window: (Window)
     """
 
-    global using_pyqt5
+    global using_pyqt
 
     ow = Window.NumOpenWindows
 
@@ -7307,7 +7335,7 @@ def StartupTK(window):
     if window.KeepOnTop:
         flags |= Qt.WindowStaysOnTopHint
 
-    if not using_pyqt5 and flags is not None:
+    if not using_pyqt and flags is not None:
         window.QT_QMainWindow.setWindowFlags(flags)
     if window.AlphaChannel:
         window.QT_QMainWindow.setWindowOpacity(window.AlphaChannel)
@@ -7424,7 +7452,10 @@ def StartupTK(window):
             timer = start_window_read_timer(window, window.Timeout)
         window.QT_QMainWindow.show()              ####### The thing that causes the window to be visible ######
         #### ------------------------------ RUN MAIN LOOP HERE ------------------------------ #####
-        window.QTApplication.exec_()
+        if qt_version == 5:
+            window.QTApplication.exec_()
+        else:
+            window.QTApplication.exec()
         if timer:
             stop_timer(timer)
     else:                                   # Non-blocking window
@@ -9805,8 +9836,8 @@ def main():
 
     layout = [
         [Menu(menu_def, key='_REALMENU_', background_color='white')],
-        [Text('You are running the PySimpleGUI.py file itself', font=('ANY', 15, 'Bold'), text_color='yellow')],
-                  [Text('You should be importing it rather than running it', font='ANY 15')],
+        [Text(f'You are running the PySimpleGUI.py file itself ({qt_backend}, QT{qt_version}, Python {py_version})', font=('ANY', 15, 'Bold'), text_color='yellow')],
+        [Text('You should be importing it rather than running it', font='ANY 15')],
         [Text('VERSION {}'.format(ver), size=(85,1), text_color='yellow', font='ANY 18')],
 
         # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
