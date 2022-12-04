@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.123 Unreleased"
+version = __version__ = "4.60.4.124 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -312,6 +312,8 @@ _change_log = """
         Fix for incorrect values for Element.ttk_style and Element.ttk_style_name. Some elements had values overwritten if a scrollbar, etc, was used
         Changed a number of the ttk elements (Button for example) to use the base name as the parm to creating the custom style to achieve
             a more predictable naming style (relies on the formula used in the create style function rather than ad hoc adding "custom" onto name)
+    4.60.4.124
+        Multiline Element docstring fixes
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3693,7 +3695,7 @@ class Multiline(Element):
         """
         :param default_text:                 Initial text to show
         :type default_text:                  (Any)
-        :param enter_submits:                if True, the Window.Read call will return is enter key is pressed in this element
+        :param enter_submits:                if True, the Window.read call will return is enter key is pressed in this element
         :type enter_submits:                 (bool)
         :param disabled:                     set disable state
         :type disabled:                      (bool)
@@ -3715,9 +3717,9 @@ class Multiline(Element):
         :type horizontal_scroll:             (bool)
         :param change_submits:               DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :type change_submits:                (bool)
-        :param enable_events:                Turns on the element specific events. Spin events happen when an item changes
+        :param enable_events:                If True then any key press that happens when the element has focus will generate an event.
         :type enable_events:                 (bool)
-        :param do_not_clear:                 if False the element will be cleared any time the Window.Read call returns
+        :param do_not_clear:                 if False the element will be cleared any time the Window.read call returns
         :type do_not_clear:                  (bool)
         :param key:                          Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                           str | int | tuple | object
@@ -3822,7 +3824,7 @@ class Multiline(Element):
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
                background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None):
         """
-        Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
         Changes will not be visible in your window until you call window.read or window.refresh.
 
@@ -26067,4 +26069,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#57597c0a708e3f6b038befe0242065ff598f35b2b95d908fdbf07856e6adbef441fa52fb029b8a77c2281cdfd62a0a7980005b2d8295a8510e737a1bf1ac10c0fc735e8e1398784cb0a697425bbf5d9d6ec67c513a067e9682f73a90e37d59be3bcba7ad50285a21554f0aefa1bd38bf5257c88dade39bc9b784349e48179510ea1ded7f3df1be8545933ebd61fbbcd277056e1648d4412d86da39b21f6d74fb023cf7f013dec524ba1c95d2fcbd497d7c5df1f10ee1df962b7580ba19db4621011af35f8eeb54e1c9029f2bc43137374a118dcd97a8288d041ca55d63b3db1623c6afd20177d3bce8d49f64ddaae70afcf9f886f569bc7a94aeff3b10c47bd30e4f048ccabf51f9bb1466e72ece6350095e26027c793bd3f4a837273bb1d6d7a381f68383cb749f58d9b4d3440a526479c8aa24c6b7fad1f3d2a0880b552797324e7c2777194c1186c1e7254832bf2f927e2782f6e9caf5a1a842c2c468677ceba7439e45ded24d01055d7b8084116eaff7a3159a157a324fbb910b23b8a7fbab74827ec4e5748d0efd75ea4de4332e6f30b9ad6829853105b1886673ed945371155deb67784be07dec80e76645e640759d79b26aaec9538b673e9526506c4413da3b174d168eabca3a8c403818080ec9b86d9a41b48241290a2294764bd9de2afa3fd517914fb21d074a335f3da73c2e319224e92ba946f2fed0950764d31c
+#2ff7782d86ec98327504e9382cb86c6e8b08e520ac3b4f5a09a2c53851a4d57c5606bd6c3720458f8ace36ab3b4c47a01980fc126a6513701b1ff2531ebfea7237b37fdbe5d3c4af04af2155d4b293d1890c5057d7eb3beb5890bd740b23d0d197dafde920ff3b552ed5340efa29e893ca5477b9e1690255cb8559a2ea1e0921111c7abc3767bd14a48368ba22d163c8f58eb8f2ffe47cb9c141d81ec524500da65762ee94bbd79974aedf1f7d0c571d6b47b1081cb45e1904fc67f487c2740e48e6de430e3b8d9b5517959444839237907a1e1e09aec4c27f9d53ee62ee20808b0dce5c174226098e51d153c69855696cfe6bc3d7d37dfa704fbedc7944f6a236e48cc32c19c8825a064daf773a83b263f88c17c106ca5f318cf2a98cb766dc681f7f64be6e0d2d0d4d011e47e17dd2c349778dab5f45390bb04762c1b1f9c2458f91898754939ec4aeab8d42962933f96f83103ee856ecf5168cc0ad1de6ad3d1126e52af3159fe1f572c42b50661c68b2f6007d501924bbed9803974e3f2ac366a6e52773fde8cc6965f958515f92c3329a8324f54d7c92209bc08e1fd5416357173cd0ccfdbac841ac90fbe358cfcad90bf95d92306a0b57dbc851cf9329416ad641ca7a30d76024fbabe14375e7c8147890cc3173dc4a8535cbe1c60225ef9fead0b2d88808350e71a0fa5c8b353c2fa868ccdd60e4d208a3840626f544
