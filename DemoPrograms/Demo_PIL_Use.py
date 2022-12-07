@@ -13,51 +13,65 @@ import random
     This function is your gateway to using any format of image (not just PNG & GIF) and to 
     resize / convert it so that it can be used with the Button and Image elements.
     
-    Copyright 2020 PySimpleGUI.org
+    Copyright 2020, 2022 PySimpleGUI.org
 """
 
-def make_square(im, min_size=256, fill_color=(0, 0, 0, 0)):
+def make_square(im,  fill_color=(0, 0, 0, 0)):
     x, y = im.size
-    size = max(min_size, x, y)
+    size = max(x, y)
     new_im = Image.new('RGBA', (size, size), fill_color)
     new_im.paste(im, (int((size - x) / 2), int((size - y) / 2)))
     return new_im
 
 
-def convert_to_bytes(file_or_bytes, resize=None, fill=False):
+
+def convert_to_bytes(source, size=(None, None), subsample=None, zoom=None, fill=False):
     """
     Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
     Turns into  PNG format in the process so that can be displayed by tkinter
-    :param file_or_bytes: either a string filename or a bytes base64 image object
-    :type file_or_bytes:  (Union[str, bytes])
-    :param resize:  optional new size
-    :type resize: (Tuple[int, int] or None)
-    :param fill: If True then the image is filled/padded so that the image is not distorted
+    :param source: either a string filename or a bytes base64 image object
+    :type source:  (Union[str, bytes])
+    :param size:  optional new size (width, height)
+    :type size: (Tuple[int, int] or None)
+    :param subsample: change the size by multiplying width and height by 1/subsample
+    :type subsample: (int)
+    :param zoom: change the size by multiplying width and height by zoom
+    :type zoom: (int)
+    :param fill: If True then the image is filled/padded so that the image is square
     :type fill: (bool)
     :return: (bytes) a byte-string object
     :rtype: (bytes)
     """
-    if isinstance(file_or_bytes, str):
-        img = PIL.Image.open(file_or_bytes)
+    if isinstance(source, str):
+        image = Image.open(source)
+    elif isinstance(source, bytes):
+        image = Image.open(io.BytesIO(base64.b64decode(source)))
     else:
-        try:
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
-        except Exception as e:
-            dataBytesIO = io.BytesIO(file_or_bytes)
-            img = PIL.Image.open(dataBytesIO)
+        image = PIL.Image.open(io.BytesIO(source))
 
-    cur_width, cur_height = img.size
-    if resize:
-        new_width, new_height = resize
-        scale = min(new_height / cur_height, new_width / cur_width)
-        img = img.resize((int(cur_width * scale), int(cur_height * scale)), PIL.Image.ANTIALIAS)
-    if fill:
-        if resize is not None:
-            img = make_square(img, resize[0])
+    width, height = image.size
+
+    scale = None
+    if size != (None, None):
+        new_width, new_height = size
+        scale = min(new_height/height, new_width/width)
+    elif subsample is not None:
+        scale = 1/subsample
+    elif zoom is not None:
+        scale = zoom
+
+    resized_image = image.resize((int(width * scale), int(height * scale)), Image.ANTIALIAS) if scale is not None else image
+    if fill and scale is not None:
+        resized_image = make_square(resized_image)
+    # encode a PNG formatted version of image into BASE64
     with io.BytesIO() as bio:
-        img.save(bio, format="PNG")
-        del img
-        return bio.getvalue()
+        resized_image.save(bio, format="PNG")
+        contents = bio.getvalue()
+        encoded = base64.b64encode(contents)
+    return encoded
+
+
+
 
 def random_image():
     return random.choice(sg.EMOJI_BASE64_LIST)
