@@ -1358,13 +1358,13 @@ class Button(Element):
         if image_data:
             self.Widget.empty()
             simage = SuperImage(image_data)
-            if image_size is not (None, None):
+            if image_size != (None, None):
                 simage.set_size(image_size[0], image_size[1])
             self.Widget.append(simage)
         if image_filename:
             self.Widget.empty()
             simage = SuperImage(image_filename)
-            if image_size is not (None, None):
+            if image_size != (None, None):
                 simage.set_size(image_size[0], image_size[1])
             self.Widget.append(simage)
 

@@ -59,7 +59,7 @@ while True:
     print(event, values)
     if event in (sg.WIN_CLOSED, 'Exit'):  # always,  always give a way out!
         break
-    elif event is 'Plot':
+    elif event == 'Plot':
         # ------------------------------- PASTE YOUR MATPLOTLIB CODE HERE
         plt.figure(1)
         fig = plt.gcf()
