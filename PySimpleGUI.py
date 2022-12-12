@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.124 Unreleased"
+version = __version__ = "4.60.4.125 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -314,6 +314,8 @@ _change_log = """
             a more predictable naming style (relies on the formula used in the create style function rather than ad hoc adding "custom" onto name)
     4.60.4.124
         Multiline Element docstring fixes
+    4.60.4.125
+        Addition of 2 overrides to Window.find_element so that more control is available to applications wishing to perform special key lookups 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10842,7 +10844,7 @@ class Window:
 
         return self.find_element(key, silent_on_error=silent_on_error)
 
-    def find_element(self, key, silent_on_error=False):
+    def find_element(self, key, silent_on_error=False, supress_guessing=None, supress_raise=None):
         """
         Find element object associated with the provided key.
         THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10855,7 +10857,7 @@ class Window:
         However, if you wish to perform a lookup without error checking, and don't have error popups turned
         off globally, you'll need to make this call so that you can disable error checks on this call.
 
-        find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+        find_element is typically used in combination with a call to element's update method (or any other element method!):
         window[key].update(new_value)
 
         Versus the "old way"
@@ -10868,34 +10870,40 @@ class Window:
         Rememeber that this call will return None if no match is found which may cause your code to crash if not
         checked for.
 
-        :param key:             Used with window.find_element and with return values to uniquely identify this element
-        :type key:              str | int | tuple | object
-        :param silent_on_error: If True do not display popup nor print warning of key errors
-        :type silent_on_error:  (bool)
-        :return:                Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
-        :rtype:                 Element | ErrorElement | None
+        :param key:              Used with window.find_element and with return values to uniquely identify this element
+        :type key:               str | int | tuple | object
+        :param silent_on_error:  If True do not display popup nor print warning of key errors
+        :type silent_on_error:   (bool)
+        :param supress_guessing: Override for the global key guessing setting.
+        :type supress_guessing:  (bool | None)
+        :param supress_raise:    Override for the global setting that determines if a key error should raise an exception
+        :type supress_raise:     (bool | None)
+        :return:                 Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
+        :rtype:                  Element | ErrorElement | None
         """
+
+        key_error = False
+        closest_key = None
+        supress_guessing = supress_guessing if supress_guessing is not None else SUPPRESS_KEY_GUESSING
+        supress_raise = supress_raise if supress_raise is not None else SUPPRESS_RAISE_KEY_ERRORS
         try:
             element = self.AllKeysDict[key]
-            key_error = False
         except KeyError:
+            key_error = True
             closest_key = self._find_closest_key(key)
             if not silent_on_error:
                 print('** Error looking up your element using the key: ', key, 'The closest matching key: ', closest_key)
                 _error_popup_with_traceback('Key Error', 'Problem finding your key ' + str(key), 'Closest match = ' + str(closest_key), emoji=EMOJI_BASE64_KEY)
-                if not SUPPRESS_RAISE_KEY_ERRORS:
-                    raise KeyError(key)
                 element = ErrorElement(key=key)
-                key_error = True
             else:
-                element = ErrorElement(key=key)
-                return element
-        if key_error:
-            if closest_key is not None and not SUPPRESS_KEY_GUESSING:
-                element = self.AllKeysDict[closest_key]
-                return element
-            if not SUPPRESS_RAISE_KEY_ERRORS:
+                element = None
+            if not supress_raise:
                 raise KeyError(key)
+
+        if key_error:
+            if not supress_guessing and closest_key is not None:
+                element = self.AllKeysDict[closest_key]
+
         return element
 
     Element = find_element  # Shortcut function
@@ -26069,4 +26077,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2ff7782d86ec98327504e9382cb86c6e8b08e520ac3b4f5a09a2c53851a4d57c5606bd6c3720458f8ace36ab3b4c47a01980fc126a6513701b1ff2531ebfea7237b37fdbe5d3c4af04af2155d4b293d1890c5057d7eb3beb5890bd740b23d0d197dafde920ff3b552ed5340efa29e893ca5477b9e1690255cb8559a2ea1e0921111c7abc3767bd14a48368ba22d163c8f58eb8f2ffe47cb9c141d81ec524500da65762ee94bbd79974aedf1f7d0c571d6b47b1081cb45e1904fc67f487c2740e48e6de430e3b8d9b5517959444839237907a1e1e09aec4c27f9d53ee62ee20808b0dce5c174226098e51d153c69855696cfe6bc3d7d37dfa704fbedc7944f6a236e48cc32c19c8825a064daf773a83b263f88c17c106ca5f318cf2a98cb766dc681f7f64be6e0d2d0d4d011e47e17dd2c349778dab5f45390bb04762c1b1f9c2458f91898754939ec4aeab8d42962933f96f83103ee856ecf5168cc0ad1de6ad3d1126e52af3159fe1f572c42b50661c68b2f6007d501924bbed9803974e3f2ac366a6e52773fde8cc6965f958515f92c3329a8324f54d7c92209bc08e1fd5416357173cd0ccfdbac841ac90fbe358cfcad90bf95d92306a0b57dbc851cf9329416ad641ca7a30d76024fbabe14375e7c8147890cc3173dc4a8535cbe1c60225ef9fead0b2d88808350e71a0fa5c8b353c2fa868ccdd60e4d208a3840626f544
+#3781a3da660bce6efd2c4f1d5017a894de4fe778047def7bc99c6b778d146c79275fb910814209dab8bb90235e54c1b6320bb2f3bd918e62091f6ebd50c1dd1f881b9633300eb1ef2e1449ebd68e70869596e5e806cf340410bd76a238e8d3304461dc78f2df044160bdb2e198735421086eb882c6ef528e09a5235b693302053d66ab3387e9cf5832e57b6a2c44683c3271e51aeb69dd4f3995672cdaef5810225ff4a03f1fd7410617c9f07999470cfcdaf3854294dd3451a93d785141595c26cfa8a17270372570d63cfe7d076262d6b9bdb219c80d98f678faff278bf07442b091e2735f74660d720de9c849011af1e83459cbfec0e42c5aa16e9a9fdd5937aed803dc0c01a71657b0542c9a8f49a87c507413f89db111df520ffef13ada926e499a596cb1b35e8ee9bc6057f8b5079c3cde1bd3698ca9f5463544b4306532274c4c85d3f6f5ddacdef0500791737a432b278922e8ce2307357515045120985ef06e466db65731fa61a71d38806066dfd553468ac8116871671711265bafaa564305496613831f2961f054421c4270ce7a19f195ceef3de38bb006a89cc0042bd0985a2e317c73145d74e9347cc458b4bbab6b3c79cdd5e70693d3062384e84a975c46f7435e40b85d48b7cc47613275833a41e0cf1a265e09ca8bf07994468ad84452bf8dfc2b7bc0edb0d594cbcb53c01a986c30fe74dffdf9fa778e0d
