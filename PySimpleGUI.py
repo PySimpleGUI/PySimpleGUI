@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.125 Unreleased"
+version = __version__ = "4.60.4.126 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -316,6 +316,8 @@ _change_log = """
         Multiline Element docstring fixes
     4.60.4.125
         Addition of 2 overrides to Window.find_element so that more control is available to applications wishing to perform special key lookups 
+    4.60.4.126
+        Made button_color parameter's docstring value consistent across all calls.  Now set to - (str, str) | str
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4816,7 +4818,7 @@ class Button(Element):
         :param auto_size_button:      if True the button size is sized to fit the text
         :type auto_size_button:       (bool)
         :param button_color:          Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type button_color:           (str, str) | str | (int, int) | None
+        :type button_color:           (str, str) | str
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color:  (str, str) | str
         :param highlight_colors:      colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button
@@ -5191,7 +5193,7 @@ class Button(Element):
         :param text:                  sets button text
         :type text:                   (str)
         :param button_color:          Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type button_color:           (str, str) | str | (int, int) | None
+        :type button_color:           (str, str) | str
         :param disabled:              True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors)
         :type disabled:               (bool | str)
         :param image_source:          Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm
@@ -5389,7 +5391,7 @@ class ButtonMenu(Element):
         :param auto_size_button:          if True the button size is sized to fit the text
         :type auto_size_button:           (bool)
         :param button_color:              of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color:               (str, str) or str
+        :type button_color:               (str, str) | str
         :param background_color:          color of the background
         :type background_color:           (str)
         :param text_color:                element's text color. Can be in #RRGGBB format or a color name "black"
@@ -9827,7 +9829,7 @@ class Window:
         :param margins:                              (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
         :type margins:                               (int, int)
         :param button_color:                         Default button colors for all buttons in the window
-        :type button_color:                          (str, str) or str
+        :type button_color:                          (str, str) | str
         :param font:                                 specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                                  (str or (str, int[, str]) or None)
         :param progress_bar_color:                   (bar color, background color) Sets the default colors for all progress bars in the window
@@ -13215,7 +13217,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param change_submits:   If True, pressing Enter key submits window (Default = False)
@@ -13274,7 +13276,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param change_submits:   If True, pressing Enter key submits window (Default = False)
     :type change_submits:    (bool)
     :param enable_events:    Turns on the element specific events.(Default = False)
@@ -13335,7 +13337,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param change_submits:   If True, pressing Enter key submits window (Default = False)
     :type change_submits:    (bool)
     :param enable_events:    Turns on the element specific events.(Default = False)
@@ -13399,7 +13401,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button:   (bool)
     :param button_color:      button color (foreground, background)
-    :type button_color:       (str, str) or str
+    :type button_color:       (str, str) | str
     :param change_submits:    If True, pressing Enter key submits window (Default = False)
     :type change_submits:     (bool)
     :param enable_events:     Turns on the element specific events.(Default = False)
@@ -13503,7 +13505,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
@@ -13552,7 +13554,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -13602,7 +13604,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -13651,7 +13653,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -13700,7 +13702,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -13749,7 +13751,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -13798,7 +13800,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -13847,7 +13849,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -13896,7 +13898,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -13945,7 +13947,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -13994,7 +13996,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -14046,7 +14048,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -14114,7 +14116,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -14176,7 +14178,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -14236,7 +14238,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -14303,7 +14305,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
@@ -14371,7 +14373,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
@@ -14444,7 +14446,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param auto_size_button:       True if button size is determined by button text
     :type auto_size_button:        (bool)
     :param button_color:           button color (foreground, background)
-    :type button_color:            (str, str) or str
+    :type button_color:            (str, str) | str
     :param disabled:               set disable state for element (Default = False)
     :type disabled:                (bool)
     :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -14536,7 +14538,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
-    :type button_color:      (str, str) or str
+    :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -18007,7 +18009,7 @@ class QuickMeter(object):
         :param bar_color:     The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background.
         :type bar_color:      (str, str) or str
         :param button_color:  button color (foreground, background)
-        :type button_color:   (str, str) or str
+        :type button_color:   (str, str) | str
         :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
         :type size:           (int, int)
         :param border_width:  width of border around element
@@ -18129,7 +18131,7 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     :param bar_color:     The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background.
     :type bar_color:      (str, str) or str
     :param button_color:  button color (foreground, background)
-    :type button_color:   (str, str) or str
+    :type button_color:   (str, str) | str
     :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
     :type size:           (int, int)
     :param border_width:  width of border around element
@@ -18695,7 +18697,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
     :param button_color:                    Color of the button (text, background)
-    :type button_color:                     (str, str) or str
+    :type button_color:                     (str, str) | str
     :param element_size:                    element size (width, height) in characters
     :type element_size:                     (int, int)
     :param button_element_size:             Size of button
@@ -20230,7 +20232,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param title:                 Optional title for the window. If none provided, the first arg will be used instead.
     :type title:                  (str)
     :param button_color:          Color of the buttons shown (text color, button color)
-    :type button_color:           (str, str) | None
+    :type button_color:           (str, str) | str
     :param background_color:      Window's background color
     :type background_color:       (str)
     :param text_color:            text color
@@ -20401,7 +20403,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :param title:                 Title to display in the window.
     :type title:                  (str)
     :param button_color:          button color (foreground, background)
-    :type button_color:           (str, str) or str
+    :type button_color:           (str, str) | str
     :param yes_no:                If True, displays Yes and No buttons instead of Ok
     :type yes_no:                 (bool)
     :param no_buttons:            If True, no buttons will be shown. User will have to close using the "X"
@@ -20578,7 +20580,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :param button_type:         Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type:          (int)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20632,7 +20634,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :param button_type:         Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type:          (int)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20688,7 +20690,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :param button_type:         Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type:          (int)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param background_color:    color of background
@@ -20743,7 +20745,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :param button_type:         Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type:          (int)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20796,7 +20798,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param button_type:         Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type:          (int)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20850,7 +20852,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :param title:               Title to display in the window.
     :type title:                (str)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20904,7 +20906,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :param title:               Title to display in the window.
     :type title:                (str)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -20957,7 +20959,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :param title:               Title to display in the window.
     :type title:                (str)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -21009,7 +21011,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :param title:               Title to display in the window.
     :type title:                (str)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -21062,7 +21064,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :param title:               Title to display in the window.
     :type title:                (str)
     :param button_color:        button color (foreground, background)
-    :type button_color:         (str, str) or str
+    :type button_color:         (str, str) | str
     :param background_color:    color of background
     :type background_color:     (str)
     :param text_color:          color of the text
@@ -21128,7 +21130,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param size:                     (width, height) of the InputText Element
     :type size:                      (int, int)
     :param button_color:             button color (foreground, background)
-    :type button_color:              (str, str) or str
+    :type button_color:              (str, str) | str
     :param background_color:         color of background
     :type background_color:          (str)
     :param text_color:               color of the text
@@ -21280,7 +21282,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param size:                     (width, height) of the InputText Element or Combo element if using history feature
     :type size:                      (int, int)
     :param button_color:             Color of the button (text, background)
-    :type button_color:              (str, str) or str
+    :type button_color:              (str, str) | str
     :param background_color:         background color of the entire window
     :type background_color:          (str)
     :param text_color:               color of the text
@@ -21508,7 +21510,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param size:                     (width, height) of the InputText Element
     :type size:                      (int, int)
     :param button_color:             Color of the button (text, background)
-    :type button_color:              (str, str) or str
+    :type button_color:              (str, str) | str
     :param background_color:         background color of the entire window
     :type background_color:          (str)
     :param text_color:               color of the message text
@@ -26077,4 +26079,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#3781a3da660bce6efd2c4f1d5017a894de4fe778047def7bc99c6b778d146c79275fb910814209dab8bb90235e54c1b6320bb2f3bd918e62091f6ebd50c1dd1f881b9633300eb1ef2e1449ebd68e70869596e5e806cf340410bd76a238e8d3304461dc78f2df044160bdb2e198735421086eb882c6ef528e09a5235b693302053d66ab3387e9cf5832e57b6a2c44683c3271e51aeb69dd4f3995672cdaef5810225ff4a03f1fd7410617c9f07999470cfcdaf3854294dd3451a93d785141595c26cfa8a17270372570d63cfe7d076262d6b9bdb219c80d98f678faff278bf07442b091e2735f74660d720de9c849011af1e83459cbfec0e42c5aa16e9a9fdd5937aed803dc0c01a71657b0542c9a8f49a87c507413f89db111df520ffef13ada926e499a596cb1b35e8ee9bc6057f8b5079c3cde1bd3698ca9f5463544b4306532274c4c85d3f6f5ddacdef0500791737a432b278922e8ce2307357515045120985ef06e466db65731fa61a71d38806066dfd553468ac8116871671711265bafaa564305496613831f2961f054421c4270ce7a19f195ceef3de38bb006a89cc0042bd0985a2e317c73145d74e9347cc458b4bbab6b3c79cdd5e70693d3062384e84a975c46f7435e40b85d48b7cc47613275833a41e0cf1a265e09ca8bf07994468ad84452bf8dfc2b7bc0edb0d594cbcb53c01a986c30fe74dffdf9fa778e0d
+#2d850f4023f54dd77af13f65292e043ba6e4136e48b958343d11a190c7671d3b0828ae5e3a777ecfbe509a9bd7340d3506cf69ff34e7770966715ec8db2b949e2915c6d41def15ed99d165bc3adee30ee3c153001619e0b075a1ae74f5dc94020603f1e9aef9d6171ee79319ce849adfc79f9c6d3fe5ae8fbefbee097ca484f28fb6e5d8cb4362e91b51ce5a53bd2775af045ce59831198571c8bf497fe7bf9960eff536adc3b815853c61c41bb4b9b0841aa919cd18b94b258804359f765586b6a2054f9dadb3201219aeddf5cbe25e82d5b108ad4f37e5414d41c0cf4e3d7f8fe58b8fa07266656e3f02dd7e6b782dab7f8dccc7de08312279b2d5753cb776b7184b3b1968c75a085255072dcca02e71fb032c2538202c333853accbcad95712c7b5b4dcb5a25019608df054b68e7b694dc39890dcfaf5a4dff75581b6f9d131d59040a2cc429de71a3168667c25bc38665eeac8635e19e2ea2fc1f245eb974e90b151ca0105f4841dd8599232b9f07e57ffbadc8d50aaf6fc850ae1290ec9e87abfab8cb86358edb8f65f5d522f55d58df4c981df707faa4fd049424ad9d1f6a4ff13cc99576e0e0ff233b6023c3a3578c32b67b352a491462923aaa283e9959fe8effacd5feb61a8e24033c79e42f6fdac318fbe25c3a23f6046088102fcc4664803b9332b71904b6cd96b3169962808fdfa16d840482c84db9a4793e5dc
