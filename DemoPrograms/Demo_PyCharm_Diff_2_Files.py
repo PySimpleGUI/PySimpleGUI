@@ -13,16 +13,16 @@ def main():
     layout = [[sg.T('Choose 2 files to compare using PyCharm\'s compare utility', font='_ 18')],
                 [sg.Text('Filename:'), sg.Combo(values=sorted(sg.user_settings_get_entry('-filenames1-', [])),
                         default_value=sg.user_settings_get_entry('-last filename chosen1-', None),
-                        size=(90,1), auto_size_text=False, k='-COMBO1-'), sg.FileBrowse(), sg.B('Clear History', k='-CLEAR1-')],
+                        size=(90,30), auto_size_text=False, k='-COMBO1-'), sg.FileBrowse(), sg.B('Clear History', k='-CLEAR1-')],
                 [sg.Text('Filename:'),sg.Combo(values=sorted(sg.user_settings_get_entry('-filenames2-', [])),
                        default_value=sg.user_settings_get_entry('-last filename chosen2-', None),
-                       size=(90,1),  auto_size_text=False, k='-COMBO2-'), sg.FileBrowse(), sg.B('Clear History', k='-CLEAR2-')],
+                       size=(90,30),  auto_size_text=False, k='-COMBO2-'), sg.FileBrowse(), sg.B('Clear History', k='-CLEAR2-')],
               [sg.Button('Compare'), sg.Button('Exit'), sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed + 'Python ver ' + sys.version, font='Default 8', pad=(0,0))],
               [sg.Text('Note - You must setup the PyCharm information using PySimpleGUI global settings')],
               [sg.Button('Global Settings')]
                 ]
 
-    window = sg.Window('Compare 2 files using PyCharm', layout)
+    window = sg.Window('Compare 2 files using PyCharm', layout, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
     while True:
         event, values = window.read()
         print(event, values)
@@ -45,6 +45,10 @@ def main():
             window['-COMBO2-'].update(values=[], value='')
         elif event == 'Global Settings':
             sg.main_global_pysimplegui_settings()
+        if event == 'Edit Me':
+            sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(__file__, sg.get_versions(), non_blocking=True, keep_on_top=True)
     window.close()
 
 if __name__ == '__main__':
