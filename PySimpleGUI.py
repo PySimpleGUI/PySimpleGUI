@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.126 Unreleased"
+version = __version__ = "4.60.4.127 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -318,6 +318,9 @@ _change_log = """
         Addition of 2 overrides to Window.find_element so that more control is available to applications wishing to perform special key lookups 
     4.60.4.126
         Made button_color parameter's docstring value consistent across all calls.  Now set to - (str, str) | str
+    4.60.4.127
+        User settings delete calls - aded silent_on_error option so deletes of non-existant entries can uappen silently if desired.
+        popup_quick_message - now defaults to keep-on-top to True
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20679,7 +20682,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
 # --------------------------- popup_quick_message - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                         text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=False):
+                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=True, location=(None, None), relative_location=(None, None), image=None, modal=False):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -22665,7 +22668,7 @@ class UserSettings:
             return True
         return False
 
-    def delete_entry(self, key, section=None):
+    def delete_entry(self, key, section=None, silent_on_error=None):
         """
         Deletes an individual entry.  If no filename has been specified up to this point,
         then a default filename will be used.
@@ -22673,6 +22676,8 @@ class UserSettings:
 
         :param key: Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable)
         :type key:  (Any)
+        :param silent_on_error: Determines if error should be shown. This parameter overrides the silent on error setting for the object.
+        :type silent_on_error:  (bool)
         """
         if self.full_filename is None:
             self.set_location()
@@ -22683,7 +22688,7 @@ class UserSettings:
                 if self.autosave:
                     self.save()
             else:
-                if not self.silent_on_error:
+                if silent_on_error is False or (silent_on_error is not True and not self.silent_on_error):
                     _error_popup_with_traceback('User Settings delete_entry Warning - key', key, ' not found in settings')
 
         else:
@@ -22694,6 +22699,7 @@ class UserSettings:
                 del self.get(section)[key]
                 # del section_dict[key]
                 # del section_dict[key]
+
 
     def delete_section(self, section):
         """
@@ -22888,7 +22894,8 @@ def user_settings_set_entry(key, value):
     settings.set(key, value)
 
 
-def user_settings_delete_entry(key):
+
+def user_settings_delete_entry(key, silent_on_error=None):
     """
     Deletes an individual entry.  If no filename has been specified up to this point,
     then a default filename will be used.
@@ -22896,9 +22903,12 @@ def user_settings_delete_entry(key):
 
     :param key: Setting to be saved. Can be any valid dictionary key type (hashable)
     :type key:  (Any)
+    :param silent_on_error: Determines if an error popup should be shown if an error occurs. Overrides the silent onf effort setting from initialization
+    :type silent_on_error:  (bool)
     """
     settings = UserSettings._default_for_function_interface
-    settings.delete_entry(key)
+    settings.delete_entry(key, silent_on_error=silent_on_error)
+
 
 
 def user_settings_get_entry(key, default=None):
@@ -26079,4 +26089,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2d850f4023f54dd77af13f65292e043ba6e4136e48b958343d11a190c7671d3b0828ae5e3a777ecfbe509a9bd7340d3506cf69ff34e7770966715ec8db2b949e2915c6d41def15ed99d165bc3adee30ee3c153001619e0b075a1ae74f5dc94020603f1e9aef9d6171ee79319ce849adfc79f9c6d3fe5ae8fbefbee097ca484f28fb6e5d8cb4362e91b51ce5a53bd2775af045ce59831198571c8bf497fe7bf9960eff536adc3b815853c61c41bb4b9b0841aa919cd18b94b258804359f765586b6a2054f9dadb3201219aeddf5cbe25e82d5b108ad4f37e5414d41c0cf4e3d7f8fe58b8fa07266656e3f02dd7e6b782dab7f8dccc7de08312279b2d5753cb776b7184b3b1968c75a085255072dcca02e71fb032c2538202c333853accbcad95712c7b5b4dcb5a25019608df054b68e7b694dc39890dcfaf5a4dff75581b6f9d131d59040a2cc429de71a3168667c25bc38665eeac8635e19e2ea2fc1f245eb974e90b151ca0105f4841dd8599232b9f07e57ffbadc8d50aaf6fc850ae1290ec9e87abfab8cb86358edb8f65f5d522f55d58df4c981df707faa4fd049424ad9d1f6a4ff13cc99576e0e0ff233b6023c3a3578c32b67b352a491462923aaa283e9959fe8effacd5feb61a8e24033c79e42f6fdac318fbe25c3a23f6046088102fcc4664803b9332b71904b6cd96b3169962808fdfa16d840482c84db9a4793e5dc
+#47a14febbb18fbe235be313f0c464d48fcc08034e84d82e57e122331ed2c7407f7eb11032194340b2d8d4ee6690a7ec53ba1fcd97fa1da68515d12af906570a3179fe709412de05c938a6e12ec5350c57aa506cceda7d1c810897bb87c23c850d32d979f5cccd164c6c90cbfb29ac00d2dbfe035bc17da25ce53015ea6c455dc28e351b346bd6eeca63c96b742dfe34469ccf247224796c4bc5e267c8e26173d90ee80b4bed60ce47fcaf009e1fde43bcf724cd50493a6bb5e012231f7da5f529a37190ee6c12aeee3b7297118cc2ffb3d02d676b7ca07392f8ebafac9c4fba9521b4a41749b38be633a3016a1c890f551b2337a1bbac80113c27a2958b4567e6b6f8c2ff7a3a853a11ac7d36c041405d1b5744d75fd7bc170eb4415a9a954eb6fe53d3cbbd3510c9f2de7f7ed16d81e03dc42d2a1aed67df99edf3102e9d4d869af23da1d11dcd26ab0323121ed9d498526ef6994bd533e8c8b64b4890e3f1f337472e508f0c9394084deb7b0af8b915c8f1bae71012e5b7d92eeff5a7be22d46f8aa0bcbca7ffd9ca724420e37b1dc6092d743b26ae052b02bcd5819c4298ca92a561bfe8f1e4a0cfe6c5ba70c604f99d9039715e4f34e7e30a6b1c3271de611646645468d15d9483efc544bae4d89a2f4203998c8ae43ee8dd1fc43c12c00637d60c9fc021b69452078adae1b1ae4ce86ea2043ccc864671750aec1d154cb
