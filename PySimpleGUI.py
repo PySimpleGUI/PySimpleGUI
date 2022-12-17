@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.127 Unreleased"
+version = __version__ = "4.60.4.128 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -321,6 +321,8 @@ _change_log = """
     4.60.4.127
         User settings delete calls - aded silent_on_error option so deletes of non-existant entries can uappen silently if desired.
         popup_quick_message - now defaults to keep-on-top to True
+    4.60.4.128
+        Cleaned up User Settings API code for porting
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22391,7 +22393,6 @@ class UserSettings:
             # rvalue += '\n-------------------- Settings End----------------------\n'
             rvalue += '\n'
             return rvalue
-        # return str(self.dict)           # previouisly returned just a string version of the dictionary
 
 
     def set_default_value(self, default):
@@ -22488,34 +22489,6 @@ class UserSettings:
             self.read()
         return self.full_filename
 
-    #
-    # def merge_comments_from_file(self, full_filename):
-    #     print('--- merging comments -----')
-    #     merged_lines = []
-    #     with open(full_filename, 'r') as f:
-    #         new_file_contents = f.readlines()
-    #         current_section = ''
-    #         for line in new_file_contents:
-    #             if len(line) == 0:      # skip blank lines
-    #                 merged_lines.append(line)
-    #                 continue
-    #             if line[0] == '[':      # if a new section
-    #                 current_section = line[:line.index(']')]
-    #                 merged_lines.append(line)
-    #                 continue
-    #             if len(line.lstrip()):
-    #                 if line.lstrip()[0] == '#':     # if a comment line, save it
-    #                     merged_lines.append(line)
-    #             # Process a line with an = in it
-    #             try:
-    #                 key = line[:line.index('=')]
-    #                 merged_lines.append(line)
-    #             except:
-    #                 merged_lines.append(line)
-    #     print('--- merging complete ----')
-    #     print(*merged_lines)
-    #
-
 
     def save(self, filename=None, path=None):
         """
@@ -22542,9 +22515,6 @@ class UserSettings:
         except Exception as e:
             if not self.silent_on_error:
                 _error_popup_with_traceback('UserSettings.save error', '*** UserSettings.save()  Error saving settings to file:***\n', self.full_filename, e)
-
-        # if self.use_config_file and self.retain_config_comments:
-        #    self.merge_comments_from_file(self.full_filename)
 
         return self.full_filename
 
@@ -22605,19 +22575,6 @@ class UserSettings:
         self.dict = settings_dict
         self.save()
 
-    # def as_dict(config):
-    #     """
-    #     Converts a ConfigParser object into a dictionary.
-    #
-    #     The resulting dictionary has sections as keys which point to a dict of the
-    #     sections options as key => value pairs.
-    #     """
-    #     the_dict = {}
-    #     for section in config.sections():
-    #         the_dict[section] = {}
-    #         for key, val in config.items(section):
-    #             the_dict[section][key] = val
-    #     return the_dict
 
     def read(self):
         """
@@ -26089,4 +26046,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#47a14febbb18fbe235be313f0c464d48fcc08034e84d82e57e122331ed2c7407f7eb11032194340b2d8d4ee6690a7ec53ba1fcd97fa1da68515d12af906570a3179fe709412de05c938a6e12ec5350c57aa506cceda7d1c810897bb87c23c850d32d979f5cccd164c6c90cbfb29ac00d2dbfe035bc17da25ce53015ea6c455dc28e351b346bd6eeca63c96b742dfe34469ccf247224796c4bc5e267c8e26173d90ee80b4bed60ce47fcaf009e1fde43bcf724cd50493a6bb5e012231f7da5f529a37190ee6c12aeee3b7297118cc2ffb3d02d676b7ca07392f8ebafac9c4fba9521b4a41749b38be633a3016a1c890f551b2337a1bbac80113c27a2958b4567e6b6f8c2ff7a3a853a11ac7d36c041405d1b5744d75fd7bc170eb4415a9a954eb6fe53d3cbbd3510c9f2de7f7ed16d81e03dc42d2a1aed67df99edf3102e9d4d869af23da1d11dcd26ab0323121ed9d498526ef6994bd533e8c8b64b4890e3f1f337472e508f0c9394084deb7b0af8b915c8f1bae71012e5b7d92eeff5a7be22d46f8aa0bcbca7ffd9ca724420e37b1dc6092d743b26ae052b02bcd5819c4298ca92a561bfe8f1e4a0cfe6c5ba70c604f99d9039715e4f34e7e30a6b1c3271de611646645468d15d9483efc544bae4d89a2f4203998c8ae43ee8dd1fc43c12c00637d60c9fc021b69452078adae1b1ae4ce86ea2043ccc864671750aec1d154cb
+#1ed7fc49a7e78251cf5ebc88e74c37124ee53406cec8bab0d0e57dd5304e32d42603ad479649fd4afaa3328e9173cad8fc24b2ba6c11c7552c47d23e408c7467355148c79ba8a3dff55e3983234338b96b6fbdabd2db7e9d3e388a5f9b28a1bbc5ed844e54db9b167f0fa5b3a48d81c6ba7baf514feb22008ee58123145dbbfdd53edf66ea77580b8596590aed7bf365fb335efd5d6653623bd0d7f7309f3b6c621750e081c05ea45f298f35f2d749fd151020a3510f07c1d1c181ef1992c023e212109581888173a4818f8de58dfdf334c6c2fe810b36262704a3da62e82b6944f6d5e15e4d198297a74be0f976435021af72301479ef79e35e8d967ec169da7fc782305e8730cc865f17393390f4a73d6ec2111815586c0525e748013bffa9d6b581c3aaa2738053d5650ec82f045ff46193452737c61bd00a1c9628483501cb38128efa358c5c6fc785d8ac88334e28098829f31bb5cdb5d47c6976a99764b4a4861ff7c5276a5d82001cc870df043fbdb7e7d7709b9376a803f64a34104d6531268c7bf65c132335777d85fcff15fba7f350cb2e775d05340f696e0e7b46821dd53bfe59dc0a770e44abd59e7627cec069e5e8bc8bedf5717258772788141b880490ca3362f92116d8073c1c379ce34cd6b5b1a76420483dc9dff818ec0fe9040c90637f8e1495e7261e1f928cca686d2d9de6ab536b7cfd1c51bbe1536b
