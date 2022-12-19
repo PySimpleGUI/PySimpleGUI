@@ -1,3 +1,16 @@
+[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T21:41:57Z
+
+![2022-12-19-003757_1280x1012_scrot](https://user-images.githubusercontent.com/117280480/208321005-c731df95-a680-4fb7-8682-5c9b86bd6afb.png)
+
+-----------
+
+[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T19:36:12Z
+
+![displayManager](https://user-images.githubusercontent.com/117280480/208315826-fc2172ae-349d-42ba-9cdc-3c828b7e4c26.png)
+![gnuchanOS_Window_Manager](https://user-images.githubusercontent.com/117280480/208315827-1e8eb182-ea3d-4cb7-8c3f-a093ca58d8ec.png)
+
+-----------
+
 [kevinsmia1939](https://github.com/kevinsmia1939) 2022-11-27T20:08:24Z
 
 ![Screenshot_20221127_210630](https://user-images.githubusercontent.com/11407922/204157239-133bad37-cf19-43fa-b971-0f1932803513.png)

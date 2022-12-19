@@ -1,3 +1,32 @@
+[PySimpleGUI](https://github.com/PySimpleGUI) 2022-12-19T00:24:35Z
+@kubilayyalcinyt Let's move the detailed discussion of your questions over to your previously opened issue #6028 rather than this issue which is for users to post screenshots of applications.
+
+-----------
+
+[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T21:41:57Z
+![2022-12-19-003757_1280x1012_scrot](https://user-images.githubusercontent.com/117280480/208321005-c731df95-a680-4fb7-8682-5c9b86bd6afb.png)
+this is what ı say ı can't do like my tiling manager
+
+
+-----------
+
+[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T21:05:02Z
+okay ı try example finish ı ask again
+
+-----------
+
+[PySimpleGUI](https://github.com/PySimpleGUI) 2022-12-18T20:23:37Z
+@kubilayyalcinyt - this looks similar to the window you posted in an issue a month ago.  A bit more information about what you're trying to do would be helpful.  Feel free to re-open the issue you closed and we'll do our best to help.  
+
+-----------
+
+[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T19:36:12Z
+![displayManager](https://user-images.githubusercontent.com/117280480/208315826-fc2172ae-349d-42ba-9cdc-3c828b7e4c26.png)
+![gnuchanOS_Window_Manager](https://user-images.githubusercontent.com/117280480/208315827-1e8eb182-ea3d-4cb7-8c3f-a093ca58d8ec.png)
+how ı create like this window first login screen second normal window ı try but ı can't do 
+
+-----------
+
 [kevinsmia1939](https://github.com/kevinsmia1939) 2022-11-27T20:08:24Z
 I upload my first app, PySimpleCV to Flathub! Thanks to PySimpleGUI.
 ![Screenshot_20221127_210630](https://user-images.githubusercontent.com/11407922/204157239-133bad37-cf19-43fa-b971-0f1932803513.png)
