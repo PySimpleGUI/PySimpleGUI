@@ -1,25 +1,23 @@
 #!/usr/bin/python3
-import threading
 import time
 import PySimpleGUI as sg
 
 
 """
-    DESIGN PATTERN - Multithreaded Long Tasks GUI
+    Demo Program - Multithreaded Long Tasks GUI
+    
     Presents one method for running long-running operations in a PySimpleGUI environment.
+    
     The PySimpleGUI code, and thus the underlying GUI framework, runs as the primary, main thread
     The "long work" is contained in the thread that is being started.
 
-    July 2020 - Note that this program has been updated to use the new Window.write_event_value method.
-    This method has not yet been ported to the other PySimpleGUI ports and is thus limited to the tkinter ports for now.
+    So that you don't have to import and understand the threading module, this program uses window.start_thread to run a thread.
     
-    Internally to PySimpleGUI, a queue.Queue is used by the threads to communicate with main GUI code
-    The PySimpleGUI code is structured just like a typical PySimpleGUI program.  A layout defined,
-        a Window is created, and an event loop is executed.
-
-
-    This design pattern works for all of the flavors of PySimpleGUI including the Web and also repl.it
-    You'll find a repl.it version here: https://repl.it/@PySimpleGUI/Async-With-Queue-Communicationspy
+    The thread is using TUPLES for its keys.  This enables you to easily find the thread events by looking at event[0].
+        The Thread Keys look something like this:  ('-THREAD-', message)
+        If event [0] == '-THREAD-' then you know it's one of these tuple keys.
+         
+    Copyright 2022 PySimpleGUI
 """
 
 
@@ -28,12 +26,12 @@ def long_operation_thread(seconds, window):
     A worker thread that communicates with the GUI through a queue
     This thread can block for as long as it wants and the GUI will not be affected
     :param seconds: (int) How long to sleep, the ultimate blocking call
-    :param gui_queue: (queue.Queue) Queue to communicate back to GUI that task is completed
+    :param window: (sg.Window) the window to communicate with
     :return:
     """
-    print('Starting thread - will sleep for {} seconds'.format(seconds))
+    window.write_event_value(('-THREAD-', 'Starting thread - will sleep for {} seconds'.format(seconds)), None)
     time.sleep(seconds)                  # sleep for a while
-    window.write_event_value('-THREAD-', '** DONE **')  # put a message into queue for GUI
+    window.write_event_value(('-THREAD-', '** DONE **'), 'Done!')  # put a message into queue for GUI
 
 
 def the_gui():
@@ -47,7 +45,7 @@ def the_gui():
     layout = [[sg.Text('Long task to perform example')],
               [sg.Output(size=(70, 12))],
               [sg.Text('Number of seconds your task will take'),
-                  sg.Input(key='-SECONDS-', size=(5, 1)),
+                  sg.Input(default_text=5, key='-SECONDS-', size=(5, 1)),
                   sg.Button('Do Long Task', bind_return_key=True)],
               [sg.Button('Click Me'), sg.Button('Exit')], ]
 
@@ -58,14 +56,14 @@ def the_gui():
         event, values = window.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        elif event.startswith('Do'):
+        elif event == 'Do Long Task':
             seconds = int(values['-SECONDS-'])
             print('Thread ALIVE! Long work....sending value of {} seconds'.format(seconds))
-            threading.Thread(target=long_operation_thread, args=(seconds, window,), daemon=True).start()
+            window.start_thread(lambda: long_operation_thread(seconds, window), ('-THREAD-', '-THEAD ENDED-'))
         elif event == 'Click Me':
             print('Your GUI is alive and well')
-        elif event == '-THREAD-':
-            print('Got a message back from the thread: ', values[event])
+        elif event[0] == '-THREAD-':
+            print('Got a message back from the thread: ', event[1])
 
     # if user exits the window, then close the window and exit the GUI func
     window.close()
