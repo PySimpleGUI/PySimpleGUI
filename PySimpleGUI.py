@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.128 Unreleased"
+version = __version__ = "4.60.4.129 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -323,6 +323,8 @@ _change_log = """
         popup_quick_message - now defaults to keep-on-top to True
     4.60.4.128
         Cleaned up User Settings API code for porting
+    4.60.4.129
+        button_color parm added to ButtonMenu.update
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -5488,7 +5490,7 @@ class ButtonMenu(Element):
         _exit_mainloop(self.ParentForm)
 
 
-    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, image_zoom=None, button_text=None):
+    def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, image_zoom=None, button_text=None, button_color=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5512,6 +5514,8 @@ class ButtonMenu(Element):
         :type image_zoom:       (int)
         :param button_text:     Text to be shown on the button
         :type button_text:      (str)
+        :param button_color:    Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
+        :type button_color:     (str, str) | str
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -5580,6 +5584,13 @@ class ButtonMenu(Element):
             self._pack_restore_settings()
         if visible is not None:
             self._visible = visible
+        if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
+            bc = button_color_to_tuple(button_color, self.ButtonColor)
+            if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
+                self.TKButtonMenu.config(foreground=bc[0], activeforeground=bc[0])
+            if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
+                self.TKButtonMenu.config(background=bc[1], activebackground=bc[1])
+            self.ButtonColor = bc
 
     def click(self):
         """
@@ -12405,7 +12416,7 @@ class Window:
         """
         Returns Element that matches the passed in key.
         This is "called" by writing code as thus:
-        window['element key'].Update
+        window['element key'].update
 
         :param key: The key to find
         :type key:  str | int | tuple | object
@@ -26046,4 +26057,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1ed7fc49a7e78251cf5ebc88e74c37124ee53406cec8bab0d0e57dd5304e32d42603ad479649fd4afaa3328e9173cad8fc24b2ba6c11c7552c47d23e408c7467355148c79ba8a3dff55e3983234338b96b6fbdabd2db7e9d3e388a5f9b28a1bbc5ed844e54db9b167f0fa5b3a48d81c6ba7baf514feb22008ee58123145dbbfdd53edf66ea77580b8596590aed7bf365fb335efd5d6653623bd0d7f7309f3b6c621750e081c05ea45f298f35f2d749fd151020a3510f07c1d1c181ef1992c023e212109581888173a4818f8de58dfdf334c6c2fe810b36262704a3da62e82b6944f6d5e15e4d198297a74be0f976435021af72301479ef79e35e8d967ec169da7fc782305e8730cc865f17393390f4a73d6ec2111815586c0525e748013bffa9d6b581c3aaa2738053d5650ec82f045ff46193452737c61bd00a1c9628483501cb38128efa358c5c6fc785d8ac88334e28098829f31bb5cdb5d47c6976a99764b4a4861ff7c5276a5d82001cc870df043fbdb7e7d7709b9376a803f64a34104d6531268c7bf65c132335777d85fcff15fba7f350cb2e775d05340f696e0e7b46821dd53bfe59dc0a770e44abd59e7627cec069e5e8bc8bedf5717258772788141b880490ca3362f92116d8073c1c379ce34cd6b5b1a76420483dc9dff818ec0fe9040c90637f8e1495e7261e1f928cca686d2d9de6ab536b7cfd1c51bbe1536b
+#4265de03173912fae7b989bcbfe77953391799eda31755853031dca229d69f7abd97e9e733d21e864c5ec65a07a36a7e916b769ffdff252bc8449890b1a8f8ae3ab99f08edcfbc41b1f13edd1e0e7404096e7113d86147e21617293d0a5a93ed11f92f275bcbfaab8c533acf57d9c02eaaf5e7c59d89ac484fbd40800c395019a0797677115c85207bbef5faf7b964c3a6cb895c252645e3469c580f2673e9083920cf1a1028825f5f2823cd57bb59d5f34e19e483b9903678798fb6f9c48ec8e89708bb80dd73bd1b70795ef9e4b0d7487756483ef19af15d093d8edd95bb3f9cd251492844fc570b6c137c68f6e002dc8b2e63f731faff2e0d5dc51e4d9b37a628a4aa45ec4c8252b031cb753898bc93b649d3b74d7f99eae383c781753a210b384433fee50598d288c9ea7ea6fdfd71eff8aea5eb205a1dd10e5f9647c4ebfc1599d4294cfdc82ec2f33248b8983e272d223732c9f6a783113e39e89536f91e11b2d705ff56ef5bc1a92fe9ab854e86f7c74dfa2ad12229b2b13ee1da8d9c436b1aa7f2bf25c8ea139b65f63ad99cb177d8e265b0e8465606fdafaff7fb65f94800b35aeecf2346db592054855352e210b8ac082cc1e8fbaddac4adbcc25f6f083502b2d0cca72f63c39cf9053a52cee3c5c4b10b4e3010c28f0bd194fa6c3e24c2c0a764df105cba380ff95e3850c15707ed0f91a4b9ad4a64f5e96e37ee
