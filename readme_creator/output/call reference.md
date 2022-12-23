@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    09B234B00A7E89CC8C1F
+                    266B9C51C90B3728782E
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=266B9C51C90B3728782E','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -120,7 +120,7 @@ Parameter Descriptions:
 |               (int or None, int or None)  or (None, None) or int               |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |               (int or None, int or None)  or (None, None) or int               |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |   auto_size_button    | if True the button size is sized to fit the text |
-|                    (str, str) or str or (int, int) or None                     |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|                               (str, str) or str                                |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 |                               (str, str) or str                                | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
 |                                   (str, str)                                   |   highlight_colors    | colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button |
 |                               (str, str) or str                                |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
@@ -416,17 +416,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                 str                  |         text          | sets button text |
-| (str, str) or str or (int, int) or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
-|            (bool or str)             |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
-|            (str or bytes)            |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
-|             bytes or str             |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                 str                  |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|              (str, str)              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|                 bool                 |        visible        | control visibility of element |
-|                 int                  |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                 int                  |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
-|              (int, int)              |      image_size       | Size of the image in pixels (width, height) |
+|       str        |         text          | sets button text |
+| (str, str) or str |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|  (bool or str)   |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|  (str or bytes)  |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
+|   bytes or str   |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|       str        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|    (str, str)    | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|       bool       |        visible        | control visibility of element |
+|       int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|       int        |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
+|    (int, int)    |      image_size       | Size of the image in pixels (width, height) |
 
 ### visible
 
@@ -530,17 +530,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                 str                  |         text          | sets button text |
-| (str, str) or str or (int, int) or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
-|            (bool or str)             |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
-|            (str or bytes)            |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
-|             bytes or str             |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                 str                  |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|              (str, str)              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|                 bool                 |        visible        | control visibility of element |
-|                 int                  |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                 int                  |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
-|              (int, int)              |      image_size       | Size of the image in pixels (width, height) |
+|       str        |         text          | sets button text |
+| (str, str) or str |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|  (bool or str)   |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|  (str or bytes)  |     image_source      | Image to place on button. Use INSTEAD of the image_filename and image_data. Unifies these into 1 easier to use parm |
+|   bytes or str   |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|       str        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|    (str, str)    | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|       bool       |        visible        | control visibility of element |
+|       int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|       int        |      image_zoom       | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
+|    (int, int)    |      image_size       | Size of the image in pixels (width, height) |
 
 ---------
 
@@ -851,20 +851,22 @@ update(menu_definition = None,
     image_size = (None, None),
     image_subsample = None,
     image_zoom = None,
-    button_text = None)
+    button_text = None,
+    button_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|  List[List]   | menu_definition | (New menu definition (in menu definition format) |
-|     bool      |     visible     | control visibility of element |
-| (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
-|  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
-|      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|      int      |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
-|      str      |   button_text   | Text to be shown on the button |
+|    List[List]    | menu_definition | (New menu definition (in menu definition format) |
+|       bool       |     visible     | control visibility of element |
+|  (str or bytes)  |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
+|    (int, int)    |   image_size    | Size of the image in pixels (width, height) |
+|       int        | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|       int        |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
+|       str        |   button_text   | Text to be shown on the button |
+| (str, str) or str |  button_color   | Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 
 ### visible
 
@@ -947,20 +949,22 @@ Update(menu_definition = None,
     image_size = (None, None),
     image_subsample = None,
     image_zoom = None,
-    button_text = None)
+    button_text = None,
+    button_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|  List[List]   | menu_definition | (New menu definition (in menu definition format) |
-|     bool      |     visible     | control visibility of element |
-| (str or bytes) |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
-|  (int, int)   |   image_size    | Size of the image in pixels (width, height) |
-|      int      | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|      int      |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
-|      str      |   button_text   | Text to be shown on the button |
+|    List[List]    | menu_definition | (New menu definition (in menu definition format) |
+|       bool       |     visible     | control visibility of element |
+|  (str or bytes)  |  image_source   | new image if image is to be changed. Can be a filename or a base64 encoded byte-string |
+|    (int, int)    |   image_size    | Size of the image in pixels (width, height) |
+|       int        | image_subsample | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|       int        |   image_zoom    | amount to increase the size of the image. 2=twice size, 3=3 times, etc |
+|       str        |   button_text   | Text to be shown on the button |
+| (str, str) or str |  button_color   | Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 
 ---------
 
@@ -6286,7 +6290,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                                      Any                                       |     default_text      | Initial text to show |
-|                                      bool                                      |     enter_submits     | if True, the Window.Read call will return is enter key is pressed in this element |
+|                                      bool                                      |     enter_submits     | if True, the Window.read call will return is enter key is pressed in this element |
 |                                      bool                                      |       disabled        | set disable state |
 |                                      bool                                      |      autoscroll       | If True the contents of the element will automatically scroll as more data added to the end |
 |                                      int                                       |     border_width      | width of border around element in pixels |
@@ -6297,8 +6301,8 @@ Parameter Descriptions:
 |                                      str                                       |      text_color       | color of the text |
 |                                      bool                                      |   horizontal_scroll   | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
 |                                      bool                                      |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |     enable_events     | Turns on the element specific events. Spin events happen when an item changes |
-|                                      bool                                      |     do_not_clear      | if False the element will be cleared any time the Window.Read call returns |
+|                                      bool                                      |     enable_events     | If True then any key press that happens when the element has focus will generate an event. |
+|                                      bool                                      |     do_not_clear      | if False the element will be cleared any time the Window.read call returns |
 |                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |      write_only       | If True then no entry will be added to the values dictionary when the window is read |
@@ -6654,7 +6658,7 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
 Changes will not be visible in your window until you call window.read or window.refresh.
 
@@ -6761,7 +6765,7 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
 Changes will not be visible in your window until you call window.read or window.refresh.
 
@@ -7509,7 +7513,7 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
 Changes will not be visible in your window until you call window.read or window.refresh.
 
@@ -7616,7 +7620,7 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
 Changes will not be visible in your window until you call window.read or window.refresh.
 
@@ -13340,7 +13344,7 @@ You can drop the entire "find_element" function name and use [ ] instead.
 However, if you wish to perform a lookup without error checking, and don't have error popups turned
 off globally, you'll need to make this call so that you can disable error checks on this call.
 
-find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+find_element is typically used in combination with a call to element's update method (or any other element method!):
 window[key].update(new_value)
 
 Versus the "old way"
@@ -13354,16 +13358,21 @@ Rememeber that this call will return None if no match is found which may cause y
 checked for.
 
 ```
-find_element(key, silent_on_error = False)
+find_element(key,
+    silent_on_error = False,
+    supress_guessing = None,
+    supress_raise = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or int or tuple or object |       key       | Used with window.find_element and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+| str or int or tuple or object |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|            bool            | silent_on_error  | If True do not display popup nor print warning of key errors |
+|       (bool or None)       | supress_guessing | Override for the global key guessing setting. |
+|       (bool or None)       |  supress_raise   | Override for the global setting that determines if a key error should raise an exception |
+| Element or ErrorElement or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
 
 ### find_element_with_focus
 
@@ -14025,7 +14034,7 @@ You can drop the entire "find_element" function name and use [ ] instead.
 However, if you wish to perform a lookup without error checking, and don't have error popups turned
 off globally, you'll need to make this call so that you can disable error checks on this call.
 
-find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+find_element is typically used in combination with a call to element's update method (or any other element method!):
 window[key].update(new_value)
 
 Versus the "old way"
@@ -14039,16 +14048,21 @@ Rememeber that this call will return None if no match is found which may cause y
 checked for.
 
 ```
-Elem(key, silent_on_error = False)
+Elem(key,
+    silent_on_error = False,
+    supress_guessing = None,
+    supress_raise = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or int or tuple or object |       key       | Used with window.find_element and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+| str or int or tuple or object |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|            bool            | silent_on_error  | If True do not display popup nor print warning of key errors |
+|       (bool or None)       | supress_guessing | Override for the global key guessing setting. |
+|       (bool or None)       |  supress_raise   | Override for the global setting that determines if a key error should raise an exception |
+| Element or ErrorElement or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
 
 ### Element
 
@@ -14063,7 +14077,7 @@ You can drop the entire "find_element" function name and use [ ] instead.
 However, if you wish to perform a lookup without error checking, and don't have error popups turned
 off globally, you'll need to make this call so that you can disable error checks on this call.
 
-find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+find_element is typically used in combination with a call to element's update method (or any other element method!):
 window[key].update(new_value)
 
 Versus the "old way"
@@ -14077,16 +14091,21 @@ Rememeber that this call will return None if no match is found which may cause y
 checked for.
 
 ```
-Element(key, silent_on_error = False)
+Element(key,
+    silent_on_error = False,
+    supress_guessing = None,
+    supress_raise = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or int or tuple or object |       key       | Used with window.find_element and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+| str or int or tuple or object |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|            bool            | silent_on_error  | If True do not display popup nor print warning of key errors |
+|       (bool or None)       | supress_guessing | Override for the global key guessing setting. |
+|       (bool or None)       |  supress_raise   | Override for the global setting that determines if a key error should raise an exception |
+| Element or ErrorElement or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
 
 ### Enable
 
@@ -14144,7 +14163,7 @@ You can drop the entire "find_element" function name and use [ ] instead.
 However, if you wish to perform a lookup without error checking, and don't have error popups turned
 off globally, you'll need to make this call so that you can disable error checks on this call.
 
-find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+find_element is typically used in combination with a call to element's update method (or any other element method!):
 window[key].update(new_value)
 
 Versus the "old way"
@@ -14158,16 +14177,21 @@ Rememeber that this call will return None if no match is found which may cause y
 checked for.
 
 ```
-Find(key, silent_on_error = False)
+Find(key,
+    silent_on_error = False,
+    supress_guessing = None,
+    supress_raise = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or int or tuple or object |       key       | Used with window.find_element and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+| str or int or tuple or object |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|            bool            | silent_on_error  | If True do not display popup nor print warning of key errors |
+|       (bool or None)       | supress_guessing | Override for the global key guessing setting. |
+|       (bool or None)       |  supress_raise   | Override for the global setting that determines if a key error should raise an exception |
+| Element or ErrorElement or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
 
 ### FindElement
 
@@ -15360,7 +15384,7 @@ Parameter Descriptions:
 |                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
-|                                                                                |   button_color   | button color (foreground, background) |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      bool                                      |  change_submits  | If True, pressing Enter key submits window (Default = False) |
 |                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
@@ -16670,7 +16694,7 @@ Parameter Descriptions:
 |--|--|--|
 |                   Any                   |         *args         | Variable number of your arguments. Load up the call with stuff to see! |
 |                   str                   |         title         | Optional title for the window. If none provided, the first arg will be used instead. |
-|           (str, str) or None            |     button_color      | Color of the buttons shown (text color, button color) |
+|            (str, str) or str            |     button_color      | Color of the buttons shown (text color, button color) |
 |                   str                   |   background_color    | Window's background color |
 |                   str                   |      text_color       | text color |
 |                   int                   |      button_type      | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
@@ -17455,7 +17479,7 @@ popup_quick_message(args=*<1 or N object>,
     font = None,
     no_titlebar = True,
     grab_anywhere = False,
-    keep_on_top = None,
+    keep_on_top = True,
     location = (None, None),
     relative_location = (None, None),
     image = None,
@@ -17748,7 +17772,7 @@ Parameter Descriptions:
 |--|--|--|
 |                   Any                   |         *args         | Variable number of your arguments. Load up the call with stuff to see! |
 |                   str                   |         title         | Optional title for the window. If none provided, the first arg will be used instead. |
-|           (str, str) or None            |     button_color      | Color of the buttons shown (text color, button color) |
+|            (str, str) or str            |     button_color      | Color of the buttons shown (text color, button color) |
 |                   str                   |   background_color    | Window's background color |
 |                   str                   |      text_color       | text color |
 |                   int                   |      button_type      | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
@@ -18562,7 +18586,7 @@ PopupQuickMessage(args=*<1 or N object>,
     font = None,
     no_titlebar = True,
     grab_anywhere = False,
-    keep_on_top = None,
+    keep_on_top = True,
     location = (None, None),
     relative_location = (None, None),
     image = None,
@@ -19248,14 +19272,17 @@ then a default filename will be used.
 After value has been deleted, the settings file is written to disk.
 
 ```
-delete_entry(key, section = None)
+delete_entry(key,
+    section = None,
+    silent_on_error = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any | key | Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable) |
+| Any  |       key       | Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable) |
+| bool | silent_on_error | Determines if error should be shown. This parameter overrides the silent on error setting for the object. |
 
 ### delete_file
 
@@ -19497,14 +19524,15 @@ then a default filename will be used.
 After value has been deleted, the settings file is written to disk.
 
 ```
-user_settings_delete_entry(key)
+user_settings_delete_entry(key, silent_on_error = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any | key | Setting to be saved. Can be any valid dictionary key type (hashable) |
+| Any  |       key       | Setting to be saved. Can be any valid dictionary key type (hashable) |
+| bool | silent_on_error | Determines if an error popup should be shown if an error occurs. Overrides the silent onf effort setting from initialization |
 
 Deltes the filename and path for your settings file.  Either paramter can be optional.
 If you don't choose a path, one is provided for you that is OS specific
