@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    09B234B00A7E89CC8C1F
+                    266B9C51C90B3728782E
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=266B9C51C90B3728782E','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -1606,7 +1606,7 @@ Parameter Descriptions:
 |--|--|--|
 |                   Any                   |         *args         | Variable number of your arguments. Load up the call with stuff to see! |
 |                   str                   |         title         | Optional title for the window. If none provided, the first arg will be used instead. |
-|           (str, str) or None            |     button_color      | Color of the buttons shown (text color, button color) |
+|            (str, str) or str            |     button_color      | Color of the buttons shown (text color, button color) |
 |                   str                   |   background_color    | Window's background color |
 |                   str                   |      text_color       | text color |
 |                   int                   |      button_type      | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |

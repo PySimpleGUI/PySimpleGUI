@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.129 Unreleased"
+version = __version__ = "4.60.4.130 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -325,6 +325,8 @@ _change_log = """
         Cleaned up User Settings API code for porting
     4.60.4.129
         button_color parm added to ButtonMenu.update
+    4.60.4.130
+        New coupon
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25889,7 +25891,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=09B234B00A7E89CC8C1F')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=266B9C51C90B3728782E')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -25897,7 +25899,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '09B234B00A7E89CC8C1F',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '266B9C51C90B3728782E',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -26057,4 +26059,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4265de03173912fae7b989bcbfe77953391799eda31755853031dca229d69f7abd97e9e733d21e864c5ec65a07a36a7e916b769ffdff252bc8449890b1a8f8ae3ab99f08edcfbc41b1f13edd1e0e7404096e7113d86147e21617293d0a5a93ed11f92f275bcbfaab8c533acf57d9c02eaaf5e7c59d89ac484fbd40800c395019a0797677115c85207bbef5faf7b964c3a6cb895c252645e3469c580f2673e9083920cf1a1028825f5f2823cd57bb59d5f34e19e483b9903678798fb6f9c48ec8e89708bb80dd73bd1b70795ef9e4b0d7487756483ef19af15d093d8edd95bb3f9cd251492844fc570b6c137c68f6e002dc8b2e63f731faff2e0d5dc51e4d9b37a628a4aa45ec4c8252b031cb753898bc93b649d3b74d7f99eae383c781753a210b384433fee50598d288c9ea7ea6fdfd71eff8aea5eb205a1dd10e5f9647c4ebfc1599d4294cfdc82ec2f33248b8983e272d223732c9f6a783113e39e89536f91e11b2d705ff56ef5bc1a92fe9ab854e86f7c74dfa2ad12229b2b13ee1da8d9c436b1aa7f2bf25c8ea139b65f63ad99cb177d8e265b0e8465606fdafaff7fb65f94800b35aeecf2346db592054855352e210b8ac082cc1e8fbaddac4adbcc25f6f083502b2d0cca72f63c39cf9053a52cee3c5c4b10b4e3010c28f0bd194fa6c3e24c2c0a764df105cba380ff95e3850c15707ed0f91a4b9ad4a64f5e96e37ee
+#3df9e3c9362e397b5c29836a44814920f2a5d73fc8450ce07fd59d3f7e26e40fd5103b04347218518c85da6621264cdd2039e906fc9a6c5b3f2adf710ec4b7d809f2c7fc69e2580ed9f81bf8ea427eea82e3581ddca3778e0aa9cd82825140166ad5313f06d40c2a4bfe4d77830f2499a8c18ca8877c7a00c363d30caf8307786b5e5a1836c4f75543a0792daa51c78ae50b699858d48e274a15db11fb9294490d147e9a84ee9037707800263e7b27629f7fcd57f4120cf5ee8d91791c8e14905dd9f9f5a2bf411c3111a5fd0015a68119c4c4c15ecc80cece8077aa93ea9b24c2de00b599ce6ba833dc32b3944f430eb6d06b87b710b971fd4cb00cb83def80cf29bb8b1f2926d06c5337336093c78ef3e80fa9b8434990c22883891e29d180f11738a30b46e713ffbe47cca9fb874cf08a3fae9d7b332dc5c4a4df1c892e6c140e0282d71259a723563c8adc1b4931fe94a0ab7e47aa007d7e6ec2b2d6e180c626cae5de82d9621731408a5fb9f742b0d66c64a01a6cc33b2f19cebb12b7027daa590e26bf81d7659bb5f716bec7588b6b136d0070b03351ef201766066dd90023685a75a6eefc0ed60307acbbae4e07e32c56d50b3b88be801cf37da229517c3d1aad042e4f208f9885de55a590ffd77a660852a9114863f7e60d68f72845fe9ce4f0656703a34e0c792fa8cbbb410a194d90e8c9f040e67c39f40d8a59d8
