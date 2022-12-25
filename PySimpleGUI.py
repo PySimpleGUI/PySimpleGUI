@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.130 Unreleased"
+version = __version__ = "4.60.4.131 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -327,6 +327,8 @@ _change_log = """
         button_color parm added to ButtonMenu.update
     4.60.4.130
         New coupon
+    4.60.4.131
+        Window timers feature added.  Get a single or repeating timer events for your Window by calling window.timer_start
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -906,6 +908,7 @@ MESSAGE_BOX_LINE_WIDTH = 60
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
 EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMER = TIMER_KEY = '__TIMER EVENT__'
 WIN_CLOSED = WINDOW_CLOSED = None
 WINDOW_CLOSE_ATTEMPTED_EVENT = WIN_X_EVENT = WIN_CLOSE_ATTEMPTED_EVENT = '-WINDOW CLOSE ATTEMPTED-'
 WINDOW_CONFIG_EVENT = '__WINDOW CONFIG__'
@@ -9777,6 +9780,98 @@ VStretch = VPush
 VP = VPush
 
 
+
+
+# ------------------------------------------------------------------------- #
+#                       _TimerPeriodic CLASS                                #
+# ------------------------------------------------------------------------- #
+
+class _TimerPeriodic:
+    id_counter = 1
+    # Dictionary containing the active timers.  Format is {id : _TimerPeriodic object}
+    active_timers = {}         #type: dict[int:_TimerPeriodic]
+
+    def __init__(self, window, frequency_ms, key=EVENT_TIMER, repeating=True):
+        """
+        :param window:          The window to send events to
+        :type window:           Window
+        :param frequency_ms:    How often to send events in milliseconds
+        :type frequency_ms:     int
+        :param repeating:       If True then the timer will run, repeatedly sending events, until stopped
+        :type repeating:        bool
+        """
+        self.window = window
+        self.frequency_ms = frequency_ms
+        self.repeating = repeating
+        self.key = key
+        self.id = _TimerPeriodic.id_counter
+        _TimerPeriodic.id_counter += 1
+        self.start()
+
+
+    @classmethod
+    def stop_timer_with_id(cls, timer_id):
+        """
+        Not user callable!
+        :return: A simple counter that makes each container element unique
+        :rtype:
+        """
+        timer = cls.active_timers.get(timer_id, None)
+        if timer is not None:
+            timer.stop()
+            del cls.active_timers[timer_id]
+
+
+    @classmethod
+    def stop_all_timers_for_window(cls, window):
+        """
+        Stops all timers for a given window
+        :param window:      The window to stop timers for
+        :type window:       Window
+        """
+        for timer in _TimerPeriodic.active_timers.values():
+            if timer.window == window:
+                timer.running = False
+
+
+    def timer_thread(self):
+        """
+        The thread that sends events to the window.  Runs either once or in a loop until timer is stopped
+        """
+
+        if not self.running:            # if timer has been cancelled, abort
+            return
+        while True:
+            time.sleep(self.frequency_ms/1000)
+            if not self.running:        # if timer has been cancelled, abort
+               return
+            self.window.write_event_value(self.key, self.id)
+
+            if not self.repeating:      # if timer does not repeat, then exit thread
+                return
+
+
+    def start(self):
+        """
+        Starts a timer by starting a timer thread
+        Adds timer to the list of active timers
+        """
+        self.running = True
+        self.thread = threading.Thread(target=self.timer_thread, daemon=True)
+        self.thread.start()
+        _TimerPeriodic.active_timers[self.id] = self
+
+
+    def stop(self):
+        """
+        Stops a timer
+        """
+        self.running = False
+
+
+
+
+
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                        #
 # ------------------------------------------------------------------------- #
@@ -9806,7 +9901,6 @@ class Window:
     _rerouted_stderr_stack = []             # type: List[Tuple[Window, Element]]
     _original_stdout = None
     _original_stderr = None
-
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), relative_location=(None, None), size=(None, None),
@@ -11434,6 +11528,12 @@ class Window:
             self.TKroot.update()  # On Linux must call update if the user closed with X or else won't actually close the window
         except:
             pass
+
+        self._restore_stdout()
+        self._restore_stderr()
+
+        _TimerPeriodic.stop_all_timers_for_window(self)
+
         if self.TKrootDestroyed:
             return
         try:
@@ -11455,8 +11555,6 @@ class Window:
         self.Rows = None
         self.TKroot = None
 
-        self._restore_stdout()
-        self._restore_stderr()
 
 
 
@@ -12374,6 +12472,36 @@ class Window:
                 self.maximize()
         elif key == TITLEBAR_CLOSE_KEY:
             self._OnClosingCallback()
+
+
+    def timer_start(self, frequency_ms, key=EVENT_TIMER, repeating=True):
+        """
+        Starts a timer that gnerates Timer Events.  The default is to repeat the timer events until timer is stopped.
+        You can provide your own key or a default key will be used.
+        The values dictionary will contain the timer ID that is returned from this function.
+        
+        :param frequency_ms:    How often to generate timer events in milliseconds 
+        :type frequency_ms:     int
+        :param key:             Key to be returned as the timer event
+        :type key:              str | int | tuple | object
+        :param repeating:       If True then repeat timer events until timer is explicitly stopped
+        :type repeating:        bool
+        :return:                Timer ID for the timer
+        :rtype:                 int
+        """
+        timer = _TimerPeriodic(self, frequency_ms=frequency_ms, key=key, repeating=repeating)
+        return timer.id
+
+
+    def timer_stop(self, timer_id):
+        """
+        Stops a timer with a given ID
+
+        :param timer_id:        Timer ID of timer to stop
+        :type timer_id:         int
+        :return:
+        """
+        _TimerPeriodic.stop_timer_with_id(timer_id)
 
 
     @classmethod
@@ -26059,4 +26187,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#3df9e3c9362e397b5c29836a44814920f2a5d73fc8450ce07fd59d3f7e26e40fd5103b04347218518c85da6621264cdd2039e906fc9a6c5b3f2adf710ec4b7d809f2c7fc69e2580ed9f81bf8ea427eea82e3581ddca3778e0aa9cd82825140166ad5313f06d40c2a4bfe4d77830f2499a8c18ca8877c7a00c363d30caf8307786b5e5a1836c4f75543a0792daa51c78ae50b699858d48e274a15db11fb9294490d147e9a84ee9037707800263e7b27629f7fcd57f4120cf5ee8d91791c8e14905dd9f9f5a2bf411c3111a5fd0015a68119c4c4c15ecc80cece8077aa93ea9b24c2de00b599ce6ba833dc32b3944f430eb6d06b87b710b971fd4cb00cb83def80cf29bb8b1f2926d06c5337336093c78ef3e80fa9b8434990c22883891e29d180f11738a30b46e713ffbe47cca9fb874cf08a3fae9d7b332dc5c4a4df1c892e6c140e0282d71259a723563c8adc1b4931fe94a0ab7e47aa007d7e6ec2b2d6e180c626cae5de82d9621731408a5fb9f742b0d66c64a01a6cc33b2f19cebb12b7027daa590e26bf81d7659bb5f716bec7588b6b136d0070b03351ef201766066dd90023685a75a6eefc0ed60307acbbae4e07e32c56d50b3b88be801cf37da229517c3d1aad042e4f208f9885de55a590ffd77a660852a9114863f7e60d68f72845fe9ce4f0656703a34e0c792fa8cbbb410a194d90e8c9f040e67c39f40d8a59d8
+#3ff6807c014e6560182bf226ff1b5befbbead626e81404cf76320287f4a2d3d069f7f8dba2a6dfdc6071bc1f7b1706316c9d7a7d4f2076c9635f33c1714911d933b80abb69837ab820de86a1667d4025a84b092b802a18b4241bc1d2621a30824b02f32805553f112a1362d16f0916a71abe7417b018ac051b61ae962ebd6e627247613061aed8fabf40dde0acfe532e82e10ad5d46ceceb5ed1563e2f54748dd1d166b5d696a9a4e50e68cc7ead983f68b1f58aa1bfce832ab2eb2e62668ba224b73022989a8e124bac47c82494a071c2d15ac5b57ca61173c7e1c581579d3cc6462dac8cf9ec7f6a5a95ebba7cc5085fc408440c914f7eb1545c989029a7c5ca0f3d67a4775fb9164eb1a4d28de482cfc215c7d9cc1b6e869fcf11bb0e8e0b629ca4182cf69faa11d22b77b641d6c3b9de153eb33732765bf38a4f012b4bbc5ec154c48f24e74f57ae22ea0b8e74786b7ee3f63551a8e4bee033f2c44aed0c77e7962cf02cb850247f836d9e82313ea90250b41aecd2ab9ffda2c55e19a6e3f915379806fb1c00ad8df27880b6d375c596618b06a0e669f9ef45039c21be7ce5b08cec082efad0acdad507b73e48d3c9f1bc6e1ae889922683041202737f834323da39298039f512f42fa1a70559a80fcdae882ea702c81f0dd5283bc4bae41c787af976de3aa3bb95118fe0f02fdd14f22227e9b5768906a50d475703df83
