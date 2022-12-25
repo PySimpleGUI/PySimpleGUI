@@ -13,7 +13,7 @@ import PySimpleGUI as sg
 def main():
     layout = [  [sg.Text('Demonatrataion of Window Timers', font='_ 15')],
                 [sg.T('Timer duration in ms:'), sg.Input(1000, key='-DURATION-', s=4), sg.Checkbox('Repeats', True, key='-REPEATS-'), sg.Button('Start')],
-                [sg.T('Timer ID to stop:'), sg.Input(key='-STOP-', s=4), sg.Button('Stop')],
+                [sg.T('Timer ID to stop:'), sg.Input(key='-STOP-', s=4), sg.Button('Stop'), sg.B('Stop All')],
                 [sg.Output(size=(90, 10))],
                 [sg.Button('Does nothing'), sg.Button('Exit')]  ]
 
@@ -30,13 +30,14 @@ def main():
             except:
                 continue
             window.timer_start(duration, repeating=values['-REPEATS-'])
-        if event == 'Stop':
+        elif event == 'Stop':
             try:
                 id = int(values['-STOP-'])
             except:
                 continue
             window.timer_stop(id)
-
+        elif event == 'Stop All':
+            window.timer_stop_all()
 
     window.close()
 
