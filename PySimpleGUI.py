@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.132 Unreleased"
+version = __version__ = "4.60.4.133 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -331,6 +331,9 @@ _change_log = """
         Window timers feature added.  Get a single or repeating timer events for your Window by calling window.timer_start
     4.60.4.132
         Added the Window.stop_all method to stop all timers for a window 
+    4.60.4.133
+        Added Window.timer_get_active_timers to get a list of the active timers for the window
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9821,7 +9824,6 @@ class _TimerPeriodic:
         timer = cls.active_timers.get(timer_id, None)
         if timer is not None:
             timer.stop()
-            del cls.active_timers[timer_id]
 
 
     @classmethod
@@ -9835,6 +9837,23 @@ class _TimerPeriodic:
             if timer.window == window:
                 timer.running = False
 
+    @classmethod
+    def get_all_timers_for_window(cls, window):
+        """
+        Returns a list of timer IDs for a given window
+        :param window:      The window to find timers for
+        :type window:       Window
+        :return:            List of timer IDs for the window
+        :rtype:             List[int]
+        """
+        timers = []
+        for timer in _TimerPeriodic.active_timers.values():
+            if timer.window == window:
+                timers.append(timer.id)
+
+        return timers
+
+
 
     def timer_thread(self):
         """
@@ -9842,14 +9861,17 @@ class _TimerPeriodic:
         """
 
         if not self.running:            # if timer has been cancelled, abort
+            del _TimerPeriodic.active_timers[self.id]
             return
         while True:
             time.sleep(self.frequency_ms/1000)
             if not self.running:        # if timer has been cancelled, abort
-               return
+                del _TimerPeriodic.active_timers[self.id]
+                return
             self.window.write_event_value(self.key, self.id)
 
             if not self.repeating:      # if timer does not repeat, then exit thread
+                del _TimerPeriodic.active_timers[self.id]
                 return
 
 
@@ -12506,14 +12528,20 @@ class Window:
         _TimerPeriodic.stop_timer_with_id(timer_id)
 
 
-
-
     def timer_stop_all(self):
         """
         Stops all timers for THIS window
         """
         _TimerPeriodic.stop_all_timers_for_window(self)
 
+
+    def timer_get_active_timers(self):
+        """
+        Returns a list of currently active timers for a window
+        :return:    List of timers for the window
+        :rtype:     List[int]
+        """
+        return _TimerPeriodic.get_all_timers_for_window(self)
 
 
     @classmethod
@@ -26199,4 +26227,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#57ea2c359c043383ee7f73859e53c6734e324734b0c2708eab571a563e0e97a18386d86b7e99fd8c0ab4a9edbe4d69fc486ee7e2e6af1612de83907a00c156d324a09a6503aef0c8e239337b874bcd0be9b1af10742ab0fd7c360c7c9cc3251d04c30849cb12606a4e8132ccd36dc49229180fb3f76f766faaedb5d4c421de4234483d18702ec82660beba58506dc228a61503814368c8e721a6093e83062ad93612a08f726ef089c977b1a02e65742f2841ffc6621b10772a8f714c116525ab70e80d2a12d36e5b50fa48482227fa95554a1bdbe964737185c4d3349ba08c3278ebf1a049127d5a6aa0198d31f8c85dc3895b870908d5e1b46192f6e0f6b6addfaf5b84e46bdc98e9e1cbdb9911d62fc421fee8092fad40d285106679024bbde0a2fd9993c3c7977f223668c48b036416863a6694ce083b8396ede2e637809a5e7897947e97f717a604ae52039be4b76b168d1bfaa83998a1373da26ffdcf1d1ef219701fb5c03a6d937da3287f9b9c8af1c53c694f2e73946415d7883126b9807490c521d4313a0be3e3a24876442adfb08a8751b51a71942f83e74b086c427bcf28c92a4a3fe7648ea7c46c5c9ea5745dd80098229d994639cb59fe5760b031421ac8a0f941b2248a94be3f30557962c998bed3ba9baf0f556d3322ece7aa27ff7cc77527f40ff87687881707b32dca92c28adef613eb71c5c556fa424ece
+#63b2f1549a4a29aaa11d08bd3b1a04f7a1b9ea5e5337199e73e251d6997746ad2815b3f5c49f4a68ff38a6103ec9bc59106006d08cb19a6194f1e1e1d0ff597ea8daddaca3c0f7862c3c4ba6dc5e779f19c434b801b4826bad20937058de1f87c1bb54668cefdbd372dd6f1175ace7c5db045a09c2615069e5014ea734c75e882481434109bcc7d83560566b3306cee11d72f057a733a9233bad50ce6b553df951c92ef7fa828d69ad9bf3b1f81749f6030ed8f66e5ce8e897fb05a862aac988e9395f8dfe34fce0a9032c8a60dfcd5bda551f126ed09c91a106d781546888bf1251642f306971a6146fe337d142e0074daf189c7a19a0af4578c06cd156b6223a90d3c21e2d4721909e5b3b9addb6aece828ebb8c4bdb9f2f63ecbaf01bad6737b7b058ae2c2e11ac67574fb044d9909f02694bf4152ef2899fd25c4d72d0b1baa841fc2cd3cbf863081a154a83753c20c2bcc5a76d77fe28acbd3880917338eca37e11c5499ca72d1946645b2af8a92c908cf1c345385a6964c8ddd5403ff401e68c007cfc7159f26e622a2401b3d8bcbe72c92a51a54c6db1d2153521f288205000974378020d47350796502d3b73d8c1ff7dba9f6cabe6a5b22047162db1d1525ecf28908590bc6b3dc38765bc8134065ecc5ab32bd9597f60ef38cf16ba5c4c4a084c81282a9eb47c08bed9428a4d46e50a23efa17d28b4c6637531b7b1
