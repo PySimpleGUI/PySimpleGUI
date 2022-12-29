@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.133 Unreleased"
+version = __version__ = "4.60.4.134 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -333,6 +333,8 @@ _change_log = """
         Added the Window.stop_all method to stop all timers for a window 
     4.60.4.133
         Added Window.timer_get_active_timers to get a list of the active timers for the window
+    4.60.4.134
+        popup_get_date - exposed the fonts as parameters so that the user code and modify them (specifically to get around a Mac font bug)
         
     """
 
@@ -21794,7 +21796,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
 
 
 def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True,
-                   location=(None, None), relative_location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, modal=True):
+                   location=(None, None), relative_location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, day_font = 'TkFixedFont 9', mon_year_font = 'TkFixedFont 10', arrow_font = 'TkFixedFont 7', modal=True):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -21826,6 +21828,12 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type month_names:           List[str]
     :param day_abbreviations:    optional list of abbreviations to display as the day of week
     :type day_abbreviations:     List[str]
+    :param day_font:             Font and size to use for the calendar
+    :type day_font:              str | tuple
+    :param mon_year_font:        Font and size to use for the month and year at the top
+    :type mon_year_font:         str | tuple
+    :param arrow_font:           Font and size to use for the arrow buttons
+    :type arrow_font:            str | tuple
     :param modal:                If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal:                 bool
     :return:                     Tuple containing (month, day, year) of chosen date or None if was cancelled
@@ -21839,10 +21847,6 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     if day_abbreviations is not None and len(day_abbreviations) != 7:
         if not SUPPRESS_ERROR_POPUPS:
             popup_error('Incorrect day abbreviation list. Must have 7 entries.', 'Your list:', day_abbreviations)
-
-    day_font = 'TkFixedFont 9'
-    mon_year_font = 'TkFixedFont 10'
-    arrow_font = 'TkFixedFont 7'
 
     now = datetime.datetime.now()
     cur_month, cur_day, cur_year = now.month, now.day, now.year
@@ -26227,4 +26231,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#63b2f1549a4a29aaa11d08bd3b1a04f7a1b9ea5e5337199e73e251d6997746ad2815b3f5c49f4a68ff38a6103ec9bc59106006d08cb19a6194f1e1e1d0ff597ea8daddaca3c0f7862c3c4ba6dc5e779f19c434b801b4826bad20937058de1f87c1bb54668cefdbd372dd6f1175ace7c5db045a09c2615069e5014ea734c75e882481434109bcc7d83560566b3306cee11d72f057a733a9233bad50ce6b553df951c92ef7fa828d69ad9bf3b1f81749f6030ed8f66e5ce8e897fb05a862aac988e9395f8dfe34fce0a9032c8a60dfcd5bda551f126ed09c91a106d781546888bf1251642f306971a6146fe337d142e0074daf189c7a19a0af4578c06cd156b6223a90d3c21e2d4721909e5b3b9addb6aece828ebb8c4bdb9f2f63ecbaf01bad6737b7b058ae2c2e11ac67574fb044d9909f02694bf4152ef2899fd25c4d72d0b1baa841fc2cd3cbf863081a154a83753c20c2bcc5a76d77fe28acbd3880917338eca37e11c5499ca72d1946645b2af8a92c908cf1c345385a6964c8ddd5403ff401e68c007cfc7159f26e622a2401b3d8bcbe72c92a51a54c6db1d2153521f288205000974378020d47350796502d3b73d8c1ff7dba9f6cabe6a5b22047162db1d1525ecf28908590bc6b3dc38765bc8134065ecc5ab32bd9597f60ef38cf16ba5c4c4a084c81282a9eb47c08bed9428a4d46e50a23efa17d28b4c6637531b7b1
+#63546cf39258aa5a488d9b37707c927adf2491a21d457b297f41c03f2bb7cd2ff02b34760becfe932cea12dd48d3b7b2505ad5231af7616f3ecd9242b2b51f5d0ee569f5de873b27889bd80981655715651291ede069b1d2ede0e9a684772c210f93eeebf4774d322586b816797011653c580a4d01a8526700de1d187427225deb5b42a7295e592da7fe68e302bcb52c73bdf756f14f7ffa8c31002e8f3cb5e172d491021bcbaad67a1455b5a0e4301acf2b6ddee62d173c09a0b049f0e7e4cebb4b9c99c0d1d515937188558b61ea690277b6e2af30d07f3f287e1fe6444572757109aa4bcfc5cddda19da3cebb9b45059843a44d604ba427ca0fc4aafe463fcd9834b7d3e0c8753ba8ae16db2471649b7ce73e86a7f65a6d0af473b2ad1b40c8acb954072bb49aec07a988b71cb9dfbabe6b7501bda434345c52bb443158c32443828c8fa6109f73ddf95504e65bd6053eaf13dc2aaee3b64c9fb2b49ca2293d37fb2673d01add886769b8ac59d8419ed482a83c4061c3cc32bbc1ef90fcf17e38991b19fa42d6ab7ce17134d23f7a135a7907c6d3ffdab65fa641bbe8799b2218c0e43154ed4fd936817c70825bab23e18d45e7e276ad4cc088b2d1a46dd82a18f65640905f39dd39ffde0b6037b27288f74576fc2ea18b02d53ebd0fb6f220dfdbdfc9194adf0197b6b1dfb97a60b7149156ec14b61494d7325139139ebb
