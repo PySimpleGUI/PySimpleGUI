@@ -32,14 +32,14 @@ def main():
 
     # define layout, show and read the window
     col = [[sg.Text(png_files[0], size=(80, 3), key='-FILENAME-')],
-           [sg.Image(filename=png_files[0], key='-IMAGE-')],
+           [sg.Image(filename=png_files[0], key='-IMAGE-', expand_x=True, expand_y=True)],
            [sg.Button('Next', size=(8, 2)), sg.Button('Prev', size=(8, 2)),
                sg.Text('File 1 of {}'.format(len(png_files)), size=(15, 1), key='-FILENUM-')]]
 
     col_files = [[sg.Listbox(values=filenames_only, size=(60, 30), key='-LISTBOX-', enable_events=True)],
                  [sg.Text('Select a file.  Use scrollwheel or arrow keys on keyboard to scroll through files one by one.')]]
 
-    layout = [[sg.Menu(menu)], [sg.Col(col_files), sg.Col(col)]]
+    layout = [[sg.Menu(menu)], [sg.Col(col_files), sg.Col(col, expand_x=True, expand_y=True)]]
 
     window = sg.Window('Image Browser', layout, return_keyboard_events=True, use_default_focus=False)
 
