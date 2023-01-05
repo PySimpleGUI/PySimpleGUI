@@ -1,3 +1,15 @@
+[hseera](https://github.com/hseera) 2023-01-04T23:30:35Z
+Using PySimpleGUI framework, I built an opernsource tool called "CloudWatch Dashboard Builder" for SRE, Performance Engineers and Operations teams, who work with AWS services. It gives them capability to build CloudWatch Dashboard from different Namespace templates. The tool lets you modify the template too.
+
+![image](https://user-images.githubusercontent.com/59352356/210669262-7f74f961-5294-43b7-885e-d931d995569a.png)
+![image](https://user-images.githubusercontent.com/59352356/210669307-90d724b9-eda4-4e14-b510-cf79785520c7.png)
+
+And here is a link to youtube video showing how I am using this tool built with PySimpleGUI framework to create dashboard through the tool or through the generated JSON.
+
+https://www.youtube.com/watch?v=tPCHCc-GiHM
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2022-12-19T00:24:35Z
 @kubilayyalcinyt Let's move the detailed discussion of your questions over to your previously opened issue #6028 rather than this issue which is for users to post screenshots of applications.
 
