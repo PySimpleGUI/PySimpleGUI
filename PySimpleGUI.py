@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.134 Unreleased"
+version = __version__ = "4.60.4.135 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -335,6 +335,8 @@ _change_log = """
         Added Window.timer_get_active_timers to get a list of the active timers for the window
     4.60.4.134
         popup_get_date - exposed the fonts as parameters so that the user code and modify them (specifically to get around a Mac font bug)
+    4.60.4.135
+        Renamed QuickMeter to _QuickMeter so that it's clear that it's not an object meant to be used by users
         
     """
 
@@ -18174,7 +18176,7 @@ METER_OK = True
 METER_STOPPED = False
 
 
-class QuickMeter(object):
+class _QuickMeter(object):
     active_meters = {}
     exit_reasons = {}
 
@@ -18186,7 +18188,7 @@ class QuickMeter(object):
         :type title:          (str)
         :param current_value: current value
         :type current_value:  (int)
-        :param max_value:     max value of QuickMeter
+        :param max_value:     max value of progress meter
         :type max_value:      (int)
         :param key:           Used with window.find_element and with return values to uniquely identify this element
         :type key:            str | int | tuple | object
@@ -18268,9 +18270,9 @@ class QuickMeter(object):
         if event in ('Cancel', None) or current_value >= max_value:
             exit_reason = METER_REASON_CANCELLED if event in ('Cancel', None) else METER_REASON_REACHED_MAX if current_value >= max_value else METER_STOPPED
             self.window.close()
-            del (QuickMeter.active_meters[self.key])
-            QuickMeter.exit_reasons[self.key] = exit_reason
-            return QuickMeter.exit_reasons[self.key]
+            del (_QuickMeter.active_meters[self.key])
+            _QuickMeter.exit_reasons[self.key] = exit_reason
+            return _QuickMeter.exit_reasons[self.key]
         return METER_OK
 
     def ComputeProgressStats(self):
@@ -18304,15 +18306,15 @@ class QuickMeter(object):
 
 def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=None, no_button=False):
     """
-    :param title:         text to display in eleemnt
+    :param title:         text to display in titlebar of window
     :type title:          (str)
     :param current_value: current value
     :type current_value:  (int)
-    :param max_value:     max value of QuickMeter
+    :param max_value:     max value of progress meter
     :type max_value:      (int)
-    :param *args:         stuff to output
+    :param *args:         stuff to output as text in the window along with the meter
     :type *args:          (Any)
-    :param key:           Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
+    :param key:           Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters
     :type key:            str | int | tuple | object
     :param orientation:   'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
     :type orientation:    (str)
@@ -18335,16 +18337,16 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     :return:              True if updated successfully. False if user closed the meter with the X or Cancel button
     :rtype:               (bool)
     """
-    if key not in QuickMeter.active_meters:
-        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top, no_button=no_button)
-        QuickMeter.active_meters[key] = meter
-        QuickMeter.exit_reasons[key] = None
+    if key not in _QuickMeter.active_meters:
+        meter = _QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top, no_button=no_button)
+        _QuickMeter.active_meters[key] = meter
+        _QuickMeter.exit_reasons[key] = None
 
     else:
-        meter = QuickMeter.active_meters[key]
+        meter = _QuickMeter.active_meters[key]
 
     rc = meter.UpdateMeter(current_value, max_value, *args)  ### pass the *args to to UpdateMeter function
-    OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter, 'exit_reasons', QuickMeter.exit_reasons)
+    OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter, 'exit_reasons', _QuickMeter.exit_reasons)
     exit_reason = OneLineProgressMeter.exit_reasons.get(key)
     return METER_OK if exit_reason in (None, METER_REASON_REACHED_MAX) else METER_STOPPED
 
@@ -18359,10 +18361,10 @@ def one_line_progress_meter_cancel(key='OK for 1 meter'):
     :rtype:     None
     """
     try:
-        meter = QuickMeter.active_meters[key]
+        meter = _QuickMeter.active_meters[key]
         meter.window.Close()
-        del (QuickMeter.active_meters[key])
-        QuickMeter.exit_reasons[key] = METER_REASON_CANCELLED
+        del (_QuickMeter.active_meters[key])
+        _QuickMeter.exit_reasons[key] = METER_REASON_CANCELLED
     except:  # meter is already deleted
         return
 
@@ -26231,4 +26233,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#63546cf39258aa5a488d9b37707c927adf2491a21d457b297f41c03f2bb7cd2ff02b34760becfe932cea12dd48d3b7b2505ad5231af7616f3ecd9242b2b51f5d0ee569f5de873b27889bd80981655715651291ede069b1d2ede0e9a684772c210f93eeebf4774d322586b816797011653c580a4d01a8526700de1d187427225deb5b42a7295e592da7fe68e302bcb52c73bdf756f14f7ffa8c31002e8f3cb5e172d491021bcbaad67a1455b5a0e4301acf2b6ddee62d173c09a0b049f0e7e4cebb4b9c99c0d1d515937188558b61ea690277b6e2af30d07f3f287e1fe6444572757109aa4bcfc5cddda19da3cebb9b45059843a44d604ba427ca0fc4aafe463fcd9834b7d3e0c8753ba8ae16db2471649b7ce73e86a7f65a6d0af473b2ad1b40c8acb954072bb49aec07a988b71cb9dfbabe6b7501bda434345c52bb443158c32443828c8fa6109f73ddf95504e65bd6053eaf13dc2aaee3b64c9fb2b49ca2293d37fb2673d01add886769b8ac59d8419ed482a83c4061c3cc32bbc1ef90fcf17e38991b19fa42d6ab7ce17134d23f7a135a7907c6d3ffdab65fa641bbe8799b2218c0e43154ed4fd936817c70825bab23e18d45e7e276ad4cc088b2d1a46dd82a18f65640905f39dd39ffde0b6037b27288f74576fc2ea18b02d53ebd0fb6f220dfdbdfc9194adf0197b6b1dfb97a60b7149156ec14b61494d7325139139ebb
+#2d2045fc87ee17cd939d4e616b04275ddcce76fd8db3487270058eb7ccb30c1dbab79d6c7956da4eefa99fedf57f849d7106d75dbf09aaa1e372ccc051d85418f14c6b9252fa3870cb5d88023398f9d503145049ec9f9f148650f10040ae8ff41a79915066663d75df7bc63827711503d6e0a2f6b5f1f15ad8d8517f7a5cfa04bb7614ca65fa6ef8a3a0f4d5f8a0b432bb60f20dc1b3cd68dd047e5c00a93930732be95921a4ae79f4dbb1ccb9c34de276e7e704a7f179a72be7e14a4d537463807e0b73ab8a040e33918e596374af841c5e9a6b9cd350280e3d3ab577f247bdafdccf659b26b231322973c78fdb0464d5b93ffac5e0a177dce4291d73ea535c01b579812d7929f0e8b3a3ace84524d2e55ee617171782de6866bb7e219d5f46ee3ecd4821207a224880c0826e70fd2e00292bcb034a8b61cc8782ea035c4e566337b4ba7e5ebf018450042966f99c68a1fd4cfa1649042ef3ccaac8a0c472d0d81da274d4028246660ad6b16334ff3b8d77096dbb7640a92a7127713443e7a1c184542f8069c04f4e6528b19766f26f3eac9743f3d16558789d1579ecfc955e4d7ff7ed78aa1f2e33b25e73c7751bd267947bc4643992e030523cab2d8c025f38bec65c270a036d4fe76f6a19d729f9b544f155d3a775c944615ed0bf87cf04515bfe51fe5d1ec4ffe39c0c04ea0861fe91d385aa42fa97bb7f2d898e186ae0
