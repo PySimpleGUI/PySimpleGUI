@@ -16,7 +16,7 @@ import PySimpleGUI as sg
 
 
 
-def popup_get_time(title='Time Entry', starting_hour=1, starting_minute=0, allow_manual_input=True, font=None):
+def popup_get_time(title='Time Entry', starting_hour=1, starting_minute=0, font=None):
     """
     Shows a window that will gather a time of day.
 
@@ -26,8 +26,6 @@ def popup_get_time(title='Time Entry', starting_hour=1, starting_minute=0, allow
     :type starting_hour:        int
     :param starting_minute:     Value to initially show in the minute field
     :type starting_minute:      int
-    :param allow_manual_input:  If True, then the Spin elements can be manually edited
-    :type allow_manual_input:   bool
     :param font:                Font to use for the window
     :type font:                 str | tuple
     :return:                    Tuple with format: (hour, minute, am-pm string)
@@ -38,9 +36,9 @@ def popup_get_time(title='Time Entry', starting_hour=1, starting_minute=0, allow
     hour_list = [i for i in range(0, 15)]
     minute_list = [i for i in range(-1, 62)]
 
-    layout = [[sg.Spin(hour_list, initial_value=starting_hour, key='-HOUR-', s=3, enable_events=True, readonly=not allow_manual_input),
+    layout = [[sg.Spin(hour_list, initial_value=starting_hour, key='-HOUR-', s=3, enable_events=True, readonly=False),
                sg.Text(':'),
-               sg.Spin(minute_list, initial_value=starting_minute, key='-MIN-', s=3, enable_events=True, readonly=not allow_manual_input),
+               sg.Spin(minute_list, initial_value=starting_minute, key='-MIN-', s=3, enable_events=True, readonly=False),
                sg.Combo(['AM', 'PM'], 'AM', readonly=True, key='-AMPM-')],
               [sg.Button('Ok'), sg.Button('Cancel')]]
 
