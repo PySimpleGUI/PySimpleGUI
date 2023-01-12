@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.135 Unreleased"
+version = __version__ = "4.60.4.136 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -337,7 +337,8 @@ _change_log = """
         popup_get_date - exposed the fonts as parameters so that the user code and modify them (specifically to get around a Mac font bug)
     4.60.4.135
         Renamed QuickMeter to _QuickMeter so that it's clear that it's not an object meant to be used by users
-        
+    4.60.4.136
+        Tree element - if headings is set to None, no headings area is shown
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17504,7 +17505,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
                 element.TKTreeview = element.Widget = ttk.Treeview(element_frame, columns=column_headings,
-                                                                   displaycolumns=displaycolumns, show='tree headings',
+                                                                   displaycolumns=displaycolumns,
+                                                                   show='tree headings' if column_headings is not None else 'tree',
                                                                    height=height,
                                                                    selectmode=element.SelectMode)
                 treeview = element.TKTreeview
@@ -17515,19 +17517,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if len(str(value)) > max_width:
                             max_widths[i] = len(str(value))
 
-
-                for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
-                    treeview.heading(heading, text=heading)
-                    if element.AutoSizeColumns:
-                        max_width = max_widths.get(i, 0)
-                        max_width = max(max_width, len(heading))
-                        width = min(element.MaxColumnWidth, max_width+1)
-                    else:
-                        try:
-                            width = element.ColumnWidths[i]
-                        except:
-                            width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * _char_width_in_pixels(font) + 10, anchor=anchor)
+                if element.ColumnHeadings is not None:
+                    for i, heading in enumerate(element.ColumnHeadings):  # Configure cols + headings
+                        treeview.heading(heading, text=heading)
+                        if element.AutoSizeColumns:
+                            max_width = max_widths.get(i, 0)
+                            max_width = max(max_width, len(heading))
+                            width = min(element.MaxColumnWidth, max_width+1)
+                        else:
+                            try:
+                                width = element.ColumnWidths[i]
+                            except:
+                                width = element.DefaultColumnWidth
+                        treeview.column(heading, width=width * _char_width_in_pixels(font) + 10, anchor=anchor)
 
                 def add_treeview_data(node):
                     """
@@ -26233,4 +26235,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2d2045fc87ee17cd939d4e616b04275ddcce76fd8db3487270058eb7ccb30c1dbab79d6c7956da4eefa99fedf57f849d7106d75dbf09aaa1e372ccc051d85418f14c6b9252fa3870cb5d88023398f9d503145049ec9f9f148650f10040ae8ff41a79915066663d75df7bc63827711503d6e0a2f6b5f1f15ad8d8517f7a5cfa04bb7614ca65fa6ef8a3a0f4d5f8a0b432bb60f20dc1b3cd68dd047e5c00a93930732be95921a4ae79f4dbb1ccb9c34de276e7e704a7f179a72be7e14a4d537463807e0b73ab8a040e33918e596374af841c5e9a6b9cd350280e3d3ab577f247bdafdccf659b26b231322973c78fdb0464d5b93ffac5e0a177dce4291d73ea535c01b579812d7929f0e8b3a3ace84524d2e55ee617171782de6866bb7e219d5f46ee3ecd4821207a224880c0826e70fd2e00292bcb034a8b61cc8782ea035c4e566337b4ba7e5ebf018450042966f99c68a1fd4cfa1649042ef3ccaac8a0c472d0d81da274d4028246660ad6b16334ff3b8d77096dbb7640a92a7127713443e7a1c184542f8069c04f4e6528b19766f26f3eac9743f3d16558789d1579ecfc955e4d7ff7ed78aa1f2e33b25e73c7751bd267947bc4643992e030523cab2d8c025f38bec65c270a036d4fe76f6a19d729f9b544f155d3a775c944615ed0bf87cf04515bfe51fe5d1ec4ffe39c0c04ea0861fe91d385aa42fa97bb7f2d898e186ae0
+#15b898227394d50e7b41524f11f1fe498d2c6c114f5c1bf5278bb9b486181938a3ac012b4a6e144fad3d0b23748d9012d3bb7ce016e5c946332dac672c965e04829e7c484ba4f06bb1a98b86ed382d27f5a5124a1451cafb3e700cfc90cdf212ce393aa01b64dee02bc42b90328f6b05e935d2b1725d8c596392cd37740ca969aab3165a6aa808a6d318f161d7ee826c536e4d5cc5a45ce948c139c3008b9edad36fc981fc6028e42b7aec5cd5d14e9b440fbb48ac29240371e40a28fbb1ed000bd1fc48df381d44efaa48e54bbdd280c07e7889c67bef7281e5e64987a4be969511e6db440ea0811c4b6e17489b138485022217e8f3f923bf4a70bab8263b3298cbd388aa4c0f9355917e114b3b1bc536e7e066f9f0e6d52e06e89dd165d46b9106a1f18313359fc90d7ec4d5ac149eb1d4ca729c634e20f3b2f42a1c20da96addfcc42f55479ebdbf2dfbf98deac050ef93196fa7b6a14b39bb81bafeedf4cb3ea4b38a51ce0df2f4ae3b5400e5c375c3897e3a2498ebe9530bc3502d471da0fbb11762a8d2505b0a2866d0fc0972ed29a9cfa4aaa5012cf618e77bc139d01e13a5239d85a78f8be1f3194166cfac6dafbc4a154f42b4b19a8bd9f923ced14409024fff87f90db4f35b317ce4e6679f08151dedeef6f81c37f26e2532a57cf056b765c2ea0a6970e66c27de68306a97614517ec0f1b1d2ea8e81f631ab9f9c
