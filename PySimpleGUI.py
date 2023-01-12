@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.137 Unreleased"
+version = __version__ = "4.60.4.138 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -341,6 +341,8 @@ _change_log = """
         Tree element - if headings is set to None, no headings area is shown
     4.60.4.137
         "Take me to error" button is disabled in error traceback popup if not editor is configured. Also adds instructions if no editor.
+    4.60.4.138
+        Added begin_at_sunday_plus to the CalendarButton docstring
         
     """
 
@@ -14661,6 +14663,8 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type locale:                  str
     :param format:                 formats result using this strftime format
     :type format:                  str
+    :param begin_at_sunday_plus:   Determines the left-most day in the display. 0=sunday, 1=monday, etc
+    :type begin_at_sunday_plus:    (int)
     :param month_names:            optional list of month names to use (should be 12 items)
     :type month_names:             List[str]
     :param day_abbreviations:      optional list of abbreviations to display as the day of week
@@ -26240,4 +26244,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0fc8e76e80cf311966aea1caad0abf27e052e259fa5cdd101f47301d25ced192cf52177eb64ac7554f7e4546cbb3dcaf5210b2d4c9116958f54fcb1f1f4882a3e553b4c9ef77a1eaee3fcabb8abd047107bcdc891f60ea96cbe345316d48f261a000f8434b9337a4e57ba9caf783f85038d9759872d9ad9613433e07207db1e94bc416b87ddff2c4836da4a98a405c6b28482cca84f60cf1c1924099668b71a33701b35e978924f9abcc904e88f3830acea23b69eacc81bbdbf07eb53438060630badfb914f1ea7d00c3d717da8f6199719476d93dcdf37aebd148e1a4641deb6955140aac1f9bf91244ac1a7b9439b45011aca3d4d02adce54efc6b9c20c0892485de5b343909ce6c89e0921adc7a35d9b9fb03e544d022b1549b0c016b72a70b7ffdb5aa92b3e2a49d52de9196008944b4455c3c8df4e9f9bfc6a8d6369081b19ca0b21b7b2333a0fea526f3935c21d40d3c2b74e10b3c0ec6166e0592fe85086d4ad3fb52d1080e921d37ead81fd2a5b1e4ac91dbd90f611a5373ec04ec735198454f52caad2bb3439790194ee4f546e23bcd84b9b54ac372ac5e5855dd97a02c06e6b3d5a285a3b482ecd90f7b89f819feece3e75154cd423d08c30c1f20872be13b0201c83720e0398e3ab9adcbd7b3718838bdd6073239d326bf7b2f54caee78b0f01eac621f379b25af78d7625f1797c6b87e6cf7f43a089980c07ace
+#72a37da2ed2698572ff1dd1ff7c3117548c6d90f24a80357f9ab68bf2ce2631e77578781d2a862823b929a07256888312fd4d577981e55c841544ea2aa0705867d41371f9b5ebf3e779fa0af4dee1bbacc65e6c4c8f8524a881eebb41121b3664966154f6346594dd364552465cd951eae92dfd878fb092ebc3885e4186537addeca75a45074d7027d7c91c0a9f294770d35757a46164a5d33e16f18eac7ca661fc184cc68d2d9204e34b01ad877ac4aadb020bf86e36decdeb51417866aa9e03a9ee34902c9ed84f604f15267cdfd6d4dc75bb0cd7b989c4552941a91ec3fecfa7abc13c179cfcbc943ca197f42d602c22966e40eb4230381a12da8d5a8c9c1ba31c8a857cbb3376a7d046b5e27567680abc2c10f4fde972371fd8b3005fc536f998834139061bfe8291aa641c767cd6996d7684d36bf388da4ea8ff26685625f4c757520df5772af2d2e1029009562628aad1acdc91d924269eb44d6e1427ffda09c46e44dcfac8bf46d3cd8139c20109e61966695176386ff8fd289ef9d62419824283ba656b9e744ad49eb0345375e1d3cefbc11c2a09f4309d9b33edf38de9dbbf2656198459b5bd051b18b1dc8ccd5edc87fe45b85e6b083b52c1748e16f4952609278705daa1475b83669922dd1168db67b4ea7dbfa1526e9bd89f3c30a4334fd198ce05f3dfcc4358cd1682428890d795541fea9b405447ee485d0ff
