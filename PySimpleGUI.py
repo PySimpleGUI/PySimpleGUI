@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.136 Unreleased"
+version = __version__ = "4.60.4.137 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -339,6 +339,9 @@ _change_log = """
         Renamed QuickMeter to _QuickMeter so that it's clear that it's not an object meant to be used by users
     4.60.4.136
         Tree element - if headings is set to None, no headings area is shown
+    4.60.4.137
+        "Take me to error" button is disabled in error traceback popup if not editor is configured. Also adds instructions if no editor.
+        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -22202,6 +22205,7 @@ def _error_popup_with_code(title, filename, line_num, *args,  emoji=None):
     :param emoji:     An optional BASE64 Encoded image to shows in the error window
     :type emoji:      bytes
     """
+    editor_filename = _get_editor()
     emoji_data = emoji if emoji is not None else _random_error_emoji()
     layout = [[Text('ERROR'), Text(title)],
               [Image(data=emoji_data)]]
@@ -22219,8 +22223,9 @@ def _error_popup_with_code(title, filename, line_num, *args,  emoji=None):
 
     layout += [[Text(''.join(line), size=(min(max_line_len, 90), None))] for line in lines]
 
-    layout += [[Button('Close'), Button('Take me to error'), Button('Kill Application', button_color='white on red')]]
-
+    layout += [[Button('Close'), Button('Take me to error', disabled=True if not editor_filename else False), Button('Kill Application', button_color='white on red')]]
+    if not editor_filename:
+        layout += [[Text('Configure editor in the Global settings to enable "Take me to error" feature')]]
     window = Window(title, layout, keep_on_top=True)
 
     while True:
@@ -26235,4 +26240,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#15b898227394d50e7b41524f11f1fe498d2c6c114f5c1bf5278bb9b486181938a3ac012b4a6e144fad3d0b23748d9012d3bb7ce016e5c946332dac672c965e04829e7c484ba4f06bb1a98b86ed382d27f5a5124a1451cafb3e700cfc90cdf212ce393aa01b64dee02bc42b90328f6b05e935d2b1725d8c596392cd37740ca969aab3165a6aa808a6d318f161d7ee826c536e4d5cc5a45ce948c139c3008b9edad36fc981fc6028e42b7aec5cd5d14e9b440fbb48ac29240371e40a28fbb1ed000bd1fc48df381d44efaa48e54bbdd280c07e7889c67bef7281e5e64987a4be969511e6db440ea0811c4b6e17489b138485022217e8f3f923bf4a70bab8263b3298cbd388aa4c0f9355917e114b3b1bc536e7e066f9f0e6d52e06e89dd165d46b9106a1f18313359fc90d7ec4d5ac149eb1d4ca729c634e20f3b2f42a1c20da96addfcc42f55479ebdbf2dfbf98deac050ef93196fa7b6a14b39bb81bafeedf4cb3ea4b38a51ce0df2f4ae3b5400e5c375c3897e3a2498ebe9530bc3502d471da0fbb11762a8d2505b0a2866d0fc0972ed29a9cfa4aaa5012cf618e77bc139d01e13a5239d85a78f8be1f3194166cfac6dafbc4a154f42b4b19a8bd9f923ced14409024fff87f90db4f35b317ce4e6679f08151dedeef6f81c37f26e2532a57cf056b765c2ea0a6970e66c27de68306a97614517ec0f1b1d2ea8e81f631ab9f9c
+#0fc8e76e80cf311966aea1caad0abf27e052e259fa5cdd101f47301d25ced192cf52177eb64ac7554f7e4546cbb3dcaf5210b2d4c9116958f54fcb1f1f4882a3e553b4c9ef77a1eaee3fcabb8abd047107bcdc891f60ea96cbe345316d48f261a000f8434b9337a4e57ba9caf783f85038d9759872d9ad9613433e07207db1e94bc416b87ddff2c4836da4a98a405c6b28482cca84f60cf1c1924099668b71a33701b35e978924f9abcc904e88f3830acea23b69eacc81bbdbf07eb53438060630badfb914f1ea7d00c3d717da8f6199719476d93dcdf37aebd148e1a4641deb6955140aac1f9bf91244ac1a7b9439b45011aca3d4d02adce54efc6b9c20c0892485de5b343909ce6c89e0921adc7a35d9b9fb03e544d022b1549b0c016b72a70b7ffdb5aa92b3e2a49d52de9196008944b4455c3c8df4e9f9bfc6a8d6369081b19ca0b21b7b2333a0fea526f3935c21d40d3c2b74e10b3c0ec6166e0592fe85086d4ad3fb52d1080e921d37ead81fd2a5b1e4ac91dbd90f611a5373ec04ec735198454f52caad2bb3439790194ee4f546e23bcd84b9b54ac372ac5e5855dd97a02c06e6b3d5a285a3b482ecd90f7b89f819feece3e75154cd423d08c30c1f20872be13b0201c83720e0398e3ab9adcbd7b3718838bdd6073239d326bf7b2f54caee78b0f01eac621f379b25af78d7625f1797c6b87e6cf7f43a089980c07ace
