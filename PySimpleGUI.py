@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.138 Unreleased"
+version = __version__ = "4.60.4.139 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -343,6 +343,8 @@ _change_log = """
         "Take me to error" button is disabled in error traceback popup if not editor is configured. Also adds instructions if no editor.
     4.60.4.138
         Added begin_at_sunday_plus to the CalendarButton docstring
+    4.60.4.139
+        Moved debugger constants to sinde of the debugger class. Simplified the locals and globals popups.
         
     """
 
@@ -23654,26 +23656,28 @@ def main_mac_feature_control():
 
 red_x = b"R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
 
-COLOR_SCHEME = 'dark grey 13'
-DEBUGGER_POPOUT_THEME = 'dark grey 13'
-WIDTH_VARIABLES = 23
-WIDTH_RESULTS = 46
 
-WIDTH_WATCHER_VARIABLES = 20
-WIDTH_WATCHER_RESULTS = 60
-
-WIDTH_LOCALS = 80
-NUM_AUTO_WATCH = 9
-
-MAX_LINES_PER_RESULT_FLOATING = 4
-MAX_LINES_PER_RESULT_MAIN = 3
-
-POPOUT_WINDOW_FONT = 'Sans 8'
-DEBUGGER_VARIABLE_DETAILS_FONT = 'Courier 10'
 
 
 class _Debugger:
     debugger = None
+    DEBUGGER_MAIN_WINDOW_THEME = 'dark grey 13'
+    DEBUGGER_POPOUT_THEME = 'dark grey 13'
+    WIDTH_VARIABLES = 23
+    WIDTH_RESULTS = 46
+
+    WIDTH_WATCHER_VARIABLES = 20
+    WIDTH_WATCHER_RESULTS = 60
+
+    WIDTH_LOCALS = 80
+    NUM_AUTO_WATCH = 9
+
+    MAX_LINES_PER_RESULT_FLOATING = 4
+    MAX_LINES_PER_RESULT_MAIN = 3
+
+    DEBUGGER_POPOUT_WINDOW_FONT = 'Sans 8'
+    DEBUGGER_VARIABLE_DETAILS_FONT = 'Courier 10'
+
     '''
         #     #                    ######
         ##   ##   ##   # #    #    #     # ###### #####  #    #  ####   ####  ###### #####
@@ -23696,12 +23700,12 @@ class _Debugger:
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
         old_theme = theme()
-        theme(COLOR_SCHEME)
+        theme(_Debugger.DEBUGGER_MAIN_WINDOW_THEME)
 
         def InVar(key1):
             row1 = [T('    '),
-                    I(key=key1, size=(WIDTH_VARIABLES, 1)),
-                    T('', key=key1 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), B('Detail', key=key1 + 'DETAIL_'),
+                    I(key=key1, size=(_Debugger.WIDTH_VARIABLES, 1)),
+                    T('', key=key1 + 'CHANGED_', size=(_Debugger.WIDTH_RESULTS, 1)), B('Detail', key=key1 + 'DETAIL_'),
                     B('Obj', key=key1 + 'OBJ_'), ]
             return row1
 
@@ -23722,10 +23726,9 @@ class _Debugger:
                             Button('Popout', key='-POPOUT-')]]
 
         var_layout = []
-        for i in range(NUM_AUTO_WATCH):
-            var_layout.append([T('', size=(WIDTH_WATCHER_VARIABLES, 1), key='_WATCH%s_' % i),
-                               T('', size=(WIDTH_WATCHER_RESULTS, MAX_LINES_PER_RESULT_MAIN), key='_WATCH%s_RESULT_' % i,
-                                 )])
+        for i in range(_Debugger.NUM_AUTO_WATCH):
+            var_layout.append([T('', size=(_Debugger.WIDTH_WATCHER_VARIABLES, 1), key='_WATCH%s_' % i),
+                               T('', size=(_Debugger.WIDTH_WATCHER_RESULTS, _Debugger.MAX_LINES_PER_RESULT_MAIN), key='_WATCH%s_RESULT_' % i,)])
 
         col1 = [
             # [Frame('Auto Watches', autowatch_frame+variable_values, title_color='blue')]
@@ -23742,8 +23745,7 @@ class _Debugger:
                   [TabGroup([[Tab('Variables', col1), Tab('REPL & Watches', col2)]])]]
 
         # ------------------------------- Create main window -------------------------------
-        window = Window("PySimpleGUI Debugger", layout, icon=PSG_DEBUGGER_LOGO, margins=(0, 0), location=location, keep_on_top=True,
-                        right_click_menu=[[''], ['Exit', ]])
+        window = Window("PySimpleGUI Debugger", layout, icon=PSG_DEBUGGER_LOGO, margins=(0, 0), location=location, keep_on_top=True, right_click_menu=[[''], ['Exit', ]])
 
         Window._read_call_from_debugger = True
         window.finalize()
@@ -23801,7 +23803,7 @@ class _Debugger:
                 result = str(eval(str(var), myglobals, mylocals))
             except:
                 result = ''
-            popup_scrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + result, title=var, non_blocking=True, font=DEBUGGER_VARIABLE_DETAILS_FONT)
+            popup_scrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + result, title=var, non_blocking=True, font=_Debugger.DEBUGGER_VARIABLE_DETAILS_FONT)
         # BUTTON - OBJ
         elif event.endswith('_OBJ_'):  # OBJECT BUTTON
             var = values['_VAR{}_'.format(event[4])]
@@ -23813,17 +23815,17 @@ class _Debugger:
                     result = ObjToStringSingleObj(result)
                 except Exception as e:
                     result = '{}\nError showing object {}'.format(e, var)
-            popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=DEBUGGER_VARIABLE_DETAILS_FONT)
+            popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=Debugger.DEBUGGER_VARIABLE_DETAILS_FONT)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
         elif event == '-LOCALS-':  # Show all locals BUTTON
             self._choose_auto_watches(mylocals)
         # BUTTON - Locals (quick popup)
         elif event == '-ALL_LOCALS-':
-            self._display_all_vars(mylocals)
+            self._display_all_vars('All Locals', mylocals)
         # BUTTON - Globals (quick popup)
         elif event == '-GLOBALS-':
-            self._display_all_vars(myglobals)
+            self._display_all_vars('All Globals', myglobals)
         # BUTTON - clear all
         elif event == 'Clear All Auto Watches':
             if popup_yes_no('Do you really want to clear all Auto-Watches?', 'Really Clear??') == 'Yes':
@@ -23866,7 +23868,7 @@ class _Debugger:
                     self.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update('')
                 slot += 1
 
-            if slot + int(not self.custom_watch in (None, '')) >= NUM_AUTO_WATCH:
+            if slot + int(not self.custom_watch in (None, '')) >= _Debugger.NUM_AUTO_WATCH:
                 break
         # If a custom watch was set, display that value in the window
         if self.custom_watch:
@@ -23878,7 +23880,7 @@ class _Debugger:
             self.watcher_window.Element('_WATCH{}_RESULT_'.format(slot)).Update(self.myrc)
             slot += 1
         # blank out all of the slots not used (blank)
-        for i in range(slot, NUM_AUTO_WATCH):
+        for i in range(slot, _Debugger.NUM_AUTO_WATCH):
             self.watcher_window.Element('_WATCH{}_'.format(i)).Update('')
             self.watcher_window.Element('_WATCH{}_RESULT_'.format(i)).Update('')
 
@@ -23927,12 +23929,12 @@ class _Debugger:
     '''
     # displays them into a single text box
 
-    def _display_all_vars(self, dict):
+    def _display_all_vars(self, title, dict):
         num_cols = 3
         output_text = ''
         num_lines = 2
         cur_col = 0
-        out_text = 'All of your Vars'
+        out_text = title + '\n'
         longest_line = max([len(key) for key in dict])
         line = []
         sorted_dict = {}
@@ -23940,15 +23942,19 @@ class _Debugger:
             sorted_dict[key] = dict[key]
         for key in sorted_dict:
             value = dict[key]
-            wrapped_list = textwrap.wrap(str(value), 60)
-            wrapped_text = '\n'.join(wrapped_list)
+            # wrapped_list = textwrap.wrap(str(value), 60)
+            # wrapped_text = '\n'.join(wrapped_list)
+            wrapped_text = str(value)
             out_text += '{} - {}\n'.format(key, wrapped_text)
-            if cur_col + 1 == num_cols:
-                cur_col = 0
-                num_lines += len(wrapped_list)
-            else:
-                cur_col += 1
-        popup_scrolled(out_text, non_blocking=True)
+            # if cur_col + 1 == num_cols:
+            #     cur_col = 0
+            #     num_lines += len(wrapped_list)
+            # else:
+            #     cur_col += 1
+        old_theme = theme()
+        theme(_Debugger.DEBUGGER_MAIN_WINDOW_THEME)
+        popup_scrolled(out_text, title=title, non_blocking=True, font=_Debugger.DEBUGGER_VARIABLE_DETAILS_FONT, keep_on_top=True, icon=PSG_DEBUGGER_LOGO)
+        theme(old_theme)
 
     '''
         #####                                        #     #
@@ -23970,7 +23976,7 @@ class _Debugger:
 
     def _choose_auto_watches(self, my_locals):
         old_theme = theme()
-        theme(COLOR_SCHEME)
+        theme(_Debugger.DEBUGGER_MAIN_WINDOW_THEME)
         num_cols = 3
         output_text = ''
         num_lines = 2
@@ -23998,7 +24004,7 @@ class _Debugger:
         layout += [
             [Ok(), Cancel(), Button('Clear All'), Button('Select [almost] All', key='-AUTO_SELECT-')]]
 
-        window = Window('All Locals', layout, icon=PSG_DEBUGGER_LOGO, finalize=True)
+        window = Window('Choose Watches', layout, icon=PSG_DEBUGGER_LOGO, finalize=True, keep_on_top=True)
 
         while True:  # event loop
             event, values = window.read()
@@ -24053,7 +24059,7 @@ class _Debugger:
         if self.popout_window:  # if floating window already exists, close it first
             self.popout_window.Close()
         old_theme = theme()
-        theme(DEBUGGER_POPOUT_THEME)
+        theme(_Debugger.DEBUGGER_POPOUT_THEME)
         num_cols = 2
         width_var = 15
         width_value = 30
@@ -24070,10 +24076,10 @@ class _Debugger:
         for key in self.popout_choices:
             if self.popout_choices[key] is True:
                 value = str(self.locals.get(key))
-                h = min(len(value) // width_value + 1, MAX_LINES_PER_RESULT_FLOATING)
-                line += [Text('{}'.format(key), size=(width_var, 1), font=POPOUT_WINDOW_FONT),
-                         Text(' = ', font=POPOUT_WINDOW_FONT),
-                         Text(value, key=key, size=(width_value, h), font=POPOUT_WINDOW_FONT)]
+                h = min(len(value) // width_value + 1, _Debugger.MAX_LINES_PER_RESULT_FLOATING)
+                line += [Text('{}'.format(key), size=(width_var, 1), font=_Debugger.DEBUGGER_POPOUT_WINDOW_FONT),
+                         Text(' = ', font=_Debugger.DEBUGGER_POPOUT_WINDOW_FONT),
+                         Text(value, key=key, size=(width_value, h), font=_Debugger.DEBUGGER_POPOUT_WINDOW_FONT)]
                 if col + 1 < num_cols:
                     line += [VerticalSeparator(), T(' ')]
                 col += 1
@@ -26244,4 +26250,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#72a37da2ed2698572ff1dd1ff7c3117548c6d90f24a80357f9ab68bf2ce2631e77578781d2a862823b929a07256888312fd4d577981e55c841544ea2aa0705867d41371f9b5ebf3e779fa0af4dee1bbacc65e6c4c8f8524a881eebb41121b3664966154f6346594dd364552465cd951eae92dfd878fb092ebc3885e4186537addeca75a45074d7027d7c91c0a9f294770d35757a46164a5d33e16f18eac7ca661fc184cc68d2d9204e34b01ad877ac4aadb020bf86e36decdeb51417866aa9e03a9ee34902c9ed84f604f15267cdfd6d4dc75bb0cd7b989c4552941a91ec3fecfa7abc13c179cfcbc943ca197f42d602c22966e40eb4230381a12da8d5a8c9c1ba31c8a857cbb3376a7d046b5e27567680abc2c10f4fde972371fd8b3005fc536f998834139061bfe8291aa641c767cd6996d7684d36bf388da4ea8ff26685625f4c757520df5772af2d2e1029009562628aad1acdc91d924269eb44d6e1427ffda09c46e44dcfac8bf46d3cd8139c20109e61966695176386ff8fd289ef9d62419824283ba656b9e744ad49eb0345375e1d3cefbc11c2a09f4309d9b33edf38de9dbbf2656198459b5bd051b18b1dc8ccd5edc87fe45b85e6b083b52c1748e16f4952609278705daa1475b83669922dd1168db67b4ea7dbfa1526e9bd89f3c30a4334fd198ce05f3dfcc4358cd1682428890d795541fea9b405447ee485d0ff
+#33fbe913c63f0fa0f0893ef55e3f6af4895e599092b2f002692e055f221a53df9b32f5642ce0d85df2d6f7a8eb74aaea23ff3e3b7b60db9bb7746ea8383c9a3c9950c8a1eef3573bd88760d605dd513dee435968c36503c87cc5ae59e2bc32406922fc801a2ce114f12134c6fdc40207a08a93164c44591824222cd0fd6eb7e13255257ba3359d2d2026c8404e351949788c32d159018219ac53b5ca362e86c0c8d6e44158ee39d142f6b2326d16c1616ca86e2f17299d2df53dedd7af1a7f7ff5ed61aa78881f3f4ecf612ca5b170c780122bb4c7cd53dfe3cb421bd78b1748f611b3de86357a98e0258e08480b8d0e3a81978565a11db28a2ba288e6f1271b01b93561e35e7aa1107801896afd249b9ba60c5557bf1040656c6e6d790a72f6dfeedf5cf4b7270e90a897e5b86964bf1c87f6c3c49f2df6e6474f2b4397c2804d16b69d289440e8763373ed5fd73f967203e65b0aec8ef83add0a286c41c4d324faa94b0dd1fd6b0f49ab61755317a954dada3b2661e24afef5cc9721f6ac9a8468b0b051c98993202e4dabb0607dc98720712adc9f567613d3237491a7933881a7efa57f2ff6776b6d49674c24e334ce3d6a006d2b5e7e0d9c6b5253688bd86ba462bd2df37b5ece8a1050b9379f9da0e0fea97868eaaff566d2f5ad34f71456495138244bf983be36be53a90ecc1c2b712bdb123391296a7c770bfff48590
