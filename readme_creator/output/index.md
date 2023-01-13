@@ -2078,11 +2078,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|            str             |     title     | text to display in eleemnt |
+|            str             |     title     | text to display in titlebar of window |
 |            int             | current_value | current value |
-|            int             |   max_value   | max value of QuickMeter |
-|            Any             |     *args     | stuff to output |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|            int             |   max_value   | max value of progress meter |
+|            Any             |     *args     | stuff to output as text in the window along with the meter |
+| str or int or tuple or object |      key      | Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |     (str, str) or str      |   bar_color   | The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background. |
 |     (str, str) or str      | button_color  | button color (foreground, background) |

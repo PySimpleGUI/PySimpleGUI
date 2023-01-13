@@ -11420,15 +11420,13 @@ Parameter Descriptions:
 
 ### get
 
-Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
-edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
-user when Table was created or Updated.
+Get the selected rows using tktiner's selection method.  Experimenting with this change....
 
 `get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
+|List[List[Any]]| **return** | the current table values |
 
 ### get_next_focus
 
@@ -11652,15 +11650,13 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### Get
 
-Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
-edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
-user when Table was created or Updated.
+Get the selected rows using tktiner's selection method.  Experimenting with this change....
 
 `Get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
+|List[List[Any]]| **return** | the current table values |
 
 ### SetFocus
 
@@ -14919,6 +14915,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |         locale         | defines the locale used to get day names |
 |                                      str                                       |         format         | formats result using this strftime format |
+|                                      int                                       |  begin_at_sunday_plus  | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
 |                                   List[str]                                    |      month_names       | optional list of month names to use (should be 12 items) |
 |                                   List[str]                                    |   day_abbreviations    | optional list of abbreviations to display as the day of week |
 |                                      str                                       |         title          | Title shown on the date chooser window |
@@ -16571,11 +16568,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|            str             |     title     | text to display in eleemnt |
+|            str             |     title     | text to display in titlebar of window |
 |            int             | current_value | current value |
-|            int             |   max_value   | max value of QuickMeter |
-|            Any             |     *args     | stuff to output |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|            int             |   max_value   | max value of progress meter |
+|            Any             |     *args     | stuff to output as text in the window along with the meter |
+| str or int or tuple or object |      key      | Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |     (str, str) or str      |   bar_color   | The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background. |
 |     (str, str) or str      | button_color  | button color (foreground, background) |
@@ -16625,11 +16622,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|            str             |     title     | text to display in eleemnt |
+|            str             |     title     | text to display in titlebar of window |
 |            int             | current_value | current value |
-|            int             |   max_value   | max value of QuickMeter |
-|            Any             |     *args     | stuff to output |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|            int             |   max_value   | max value of progress meter |
+|            Any             |     *args     | stuff to output as text in the window along with the meter |
+| str or int or tuple or object |      key      | Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |     (str, str) or str      |   bar_color   | The 2 colors that make up a progress bar. Either a tuple of 2 strings or a string. Tuple - (bar, background). A string with 1 color changes the background of the bar only. A string with 2 colors separated by "on" like "red on blue" specifies a red bar on a blue background. |
 |     (str, str) or str      | button_color  | button color (foreground, background) |
@@ -16942,6 +16939,9 @@ popup_get_date(start_mon = None,
     locale = None,
     month_names = None,
     day_abbreviations = None,
+    day_font = "TkFixedFont 9",
+    mon_year_font = "TkFixedFont 10",
+    arrow_font = "TkFixedFont 7",
     modal = True)
 ```
 
@@ -16963,6 +16963,9 @@ Parameter Descriptions:
 |     bool      |     keep_on_top      | If True the window will remain above all current windows |
 |   List[str]   |     month_names      | optional list of month names to use (should be 12 items) |
 |   List[str]   |  day_abbreviations   | optional list of abbreviations to display as the day of week |
+| str or tuple  |       day_font       | Font and size to use for the calendar |
+| str or tuple  |    mon_year_font     | Font and size to use for the month and year at the top |
+| str or tuple  |      arrow_font      | Font and size to use for the arrow buttons |
 |     bool      |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
 
