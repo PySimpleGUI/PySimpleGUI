@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.139 Unreleased"
+version = __version__ = "4.60.4.140 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -344,7 +344,9 @@ _change_log = """
     4.60.4.138
         Added begin_at_sunday_plus to the CalendarButton docstring
     4.60.4.139
-        Moved debugger constants to sinde of the debugger class. Simplified the locals and globals popups.
+        Moved debugger constants to inside of the debugger class. Simplified the locals and globals popups.
+    4.60.4.140
+        Experimental change.... Table.get now returns the values from the widget's selection method
         
     """
 
@@ -9284,15 +9286,14 @@ class Table(Element):
 
     def get(self):
         """
-        Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
-        edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
-        user when Table was created or Updated.
+        Get the selected rows using tktiner's selection method.  Experimenting with this change....
 
-        :return: the current table values (for now what was originally provided up updated)
+        :return: the current table values
         :rtype:  List[List[Any]]
         """
-        return self.Values
-
+        selections = self.TKTreeview.selection()
+        selected_rows = [int(x) - 1 for x in selections]
+        return selected_rows
 
     def get_last_clicked_position(self):
         """
@@ -26250,4 +26251,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#33fbe913c63f0fa0f0893ef55e3f6af4895e599092b2f002692e055f221a53df9b32f5642ce0d85df2d6f7a8eb74aaea23ff3e3b7b60db9bb7746ea8383c9a3c9950c8a1eef3573bd88760d605dd513dee435968c36503c87cc5ae59e2bc32406922fc801a2ce114f12134c6fdc40207a08a93164c44591824222cd0fd6eb7e13255257ba3359d2d2026c8404e351949788c32d159018219ac53b5ca362e86c0c8d6e44158ee39d142f6b2326d16c1616ca86e2f17299d2df53dedd7af1a7f7ff5ed61aa78881f3f4ecf612ca5b170c780122bb4c7cd53dfe3cb421bd78b1748f611b3de86357a98e0258e08480b8d0e3a81978565a11db28a2ba288e6f1271b01b93561e35e7aa1107801896afd249b9ba60c5557bf1040656c6e6d790a72f6dfeedf5cf4b7270e90a897e5b86964bf1c87f6c3c49f2df6e6474f2b4397c2804d16b69d289440e8763373ed5fd73f967203e65b0aec8ef83add0a286c41c4d324faa94b0dd1fd6b0f49ab61755317a954dada3b2661e24afef5cc9721f6ac9a8468b0b051c98993202e4dabb0607dc98720712adc9f567613d3237491a7933881a7efa57f2ff6776b6d49674c24e334ce3d6a006d2b5e7e0d9c6b5253688bd86ba462bd2df37b5ece8a1050b9379f9da0e0fea97868eaaff566d2f5ad34f71456495138244bf983be36be53a90ecc1c2b712bdb123391296a7c770bfff48590
+#54251a437ae53503c980748d9b49f5e541745a71f9633a639b5d1df4f2ce9722d3521a73a57c87dcf17e57225f46f455ccf04dbe5066e1c09e19830a9ab3866b40f91f8af4093c954e5c608f8eb49d7e1d82b9db4b9a680fde861b4c55b5ccb68e918710b9df3395fc5f156c88ab737739dde188ca4ae0e7559179b06d9573e18eb597cee9a8dc7363380e5bbeee99aef17f5b81ed8d06e533b4a38e1b1ed79a2fc4ad4e9a19f93042ac1f5eb637b2875694b65908f35888aa27fbb2361599332411117fa5a6090eace1b0d3f749a6ccbbf52f80b39cf04fd7dacaeb79893792017f79da8749338b4dbb4e9203f17a1728248a323d6f67c09a1052e44f2ccb821b0c7b6c41ce2d52fec97ffcd02e3257853d3691e5c6bc6ed9ada4eef49174560dad6e7d25c8346c1f634e759dd4d07e71363809c39d54ecacfaf662231a43e76d253d332a2eccde36823ea99d14bf6c62ace0cedcf815045deb9839efa7b5407fed7ce368059a19a50692b16c429cecebdbb62bcf46d4f66fa43647c4a03453fabc56f18a4ac92a8225bdb6fbb6d968fd189889392c0377d4b2ca34b45683a3ae5efdb959a06dd3e61ddf3d2a7dd3f4da60aecb3912277dc53534c74a2f768563ad77819269d9c39ed11194666e6a0f0c9581bcfb7cbb0afa19731500e1e4f9d92de8bc2ab3fa835dfe454b6dffb6e215a94c2ae5b03b1c7a75876880494dcc
