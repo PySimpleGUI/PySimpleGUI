@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.140 Unreleased"
+version = __version__ = "4.60.4.141 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -347,6 +347,8 @@ _change_log = """
         Moved debugger constants to inside of the debugger class. Simplified the locals and globals popups.
     4.60.4.140
         Experimental change.... Table.get now returns the values from the widget's selection method
+    4.60.4.141
+        Made the Debugger's use of popups change the theme to the same dark gray theme used in the rest of the debugger windows.
         
     """
 
@@ -23804,7 +23806,10 @@ class _Debugger:
                 result = str(eval(str(var), myglobals, mylocals))
             except:
                 result = ''
+            old_theme = theme()
+            theme(_Debugger.DEBUGGER_MAIN_WINDOW_THEME)
             popup_scrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + result, title=var, non_blocking=True, font=_Debugger.DEBUGGER_VARIABLE_DETAILS_FONT)
+            theme(old_theme)
         # BUTTON - OBJ
         elif event.endswith('_OBJ_'):  # OBJECT BUTTON
             var = values['_VAR{}_'.format(event[4])]
@@ -23816,7 +23821,10 @@ class _Debugger:
                     result = ObjToStringSingleObj(result)
                 except Exception as e:
                     result = '{}\nError showing object {}'.format(e, var)
-            popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=Debugger.DEBUGGER_VARIABLE_DETAILS_FONT)
+            old_theme = theme()
+            theme(_Debugger.DEBUGGER_MAIN_WINDOW_THEME)
+            popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=_Debugger.DEBUGGER_VARIABLE_DETAILS_FONT)
+            theme(old_theme)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
         elif event == '-LOCALS-':  # Show all locals BUTTON
@@ -26251,4 +26259,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#54251a437ae53503c980748d9b49f5e541745a71f9633a639b5d1df4f2ce9722d3521a73a57c87dcf17e57225f46f455ccf04dbe5066e1c09e19830a9ab3866b40f91f8af4093c954e5c608f8eb49d7e1d82b9db4b9a680fde861b4c55b5ccb68e918710b9df3395fc5f156c88ab737739dde188ca4ae0e7559179b06d9573e18eb597cee9a8dc7363380e5bbeee99aef17f5b81ed8d06e533b4a38e1b1ed79a2fc4ad4e9a19f93042ac1f5eb637b2875694b65908f35888aa27fbb2361599332411117fa5a6090eace1b0d3f749a6ccbbf52f80b39cf04fd7dacaeb79893792017f79da8749338b4dbb4e9203f17a1728248a323d6f67c09a1052e44f2ccb821b0c7b6c41ce2d52fec97ffcd02e3257853d3691e5c6bc6ed9ada4eef49174560dad6e7d25c8346c1f634e759dd4d07e71363809c39d54ecacfaf662231a43e76d253d332a2eccde36823ea99d14bf6c62ace0cedcf815045deb9839efa7b5407fed7ce368059a19a50692b16c429cecebdbb62bcf46d4f66fa43647c4a03453fabc56f18a4ac92a8225bdb6fbb6d968fd189889392c0377d4b2ca34b45683a3ae5efdb959a06dd3e61ddf3d2a7dd3f4da60aecb3912277dc53534c74a2f768563ad77819269d9c39ed11194666e6a0f0c9581bcfb7cbb0afa19731500e1e4f9d92de8bc2ab3fa835dfe454b6dffb6e215a94c2ae5b03b1c7a75876880494dcc
+#4db6b98b71ad586548e87cc9e4d297e44fcf6242b3833a738c844f448f1e5c7ddc085afd61eabde9bb8750619f12db065e69640cebf5edf9f4b745c4a3caf5e1670d2d8ad3a7e8090bdca1322ccad1c69967e866aef3c1bd5e118d3de7cba9e6f8b96b334ba3add026cddd8ce35be473577d5be009100e3ffb4ec78807b3916a8e40f292032ef67ba342ab9a971f3aac089684e21da209b728eaf8b9f0a7158b9aae4139f0212e1909a961c60951b56ffe832778b6537f85e29d5a77b4444fcf680a48a4340a4be5d910b11ce0e5675ac40a7f556ba062602c1cf2e19138782546118b343fae8c7bcd9765318996f5c7ebd1f7a7d079839d9456320d14cd2e62a14be59f40d25b11d1cfe1b902304f87bb27bbbc58bff1d1c333bb184b9d3033ee9c60b2bd72d69363708ab0280104c481453b0aee209f4e0c3af21dcbb8e64c165b1284d82a4a9b2ecd89522cb89807f297c5a41ee98a98a3aaf498e65eea040a309f41732f3105858d08266bcf0781fa7cd1ce218968b3e5ac8a660c1335aee944c0cbb17ea4766f603b2fbc10e28da3981d2160e256183e9d52355efe2a22e4c1369fd4e3838923b27e6db641955310a4c3c95cce90a6371d52ef3e7ca8104e0b88ebf340ddc7c133c1b696d5b34d796ebbdeac5e3b419b425b72a0bc0db3d6d572dadaf20abad3e81e7a64e7432af588b3f635202b4cfa6025bd4ca3812f
