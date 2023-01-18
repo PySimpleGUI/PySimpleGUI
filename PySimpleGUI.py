@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.141 Unreleased"
+version = __version__ = "4.60.4.142 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -349,6 +349,8 @@ _change_log = """
         Experimental change.... Table.get now returns the values from the widget's selection method
     4.60.4.141
         Made the Debugger's use of popups change the theme to the same dark gray theme used in the rest of the debugger windows.
+    4.60.4.142
+        Added selected_text_color & selected_background_color to Input element. Will override the default values
         
     """
 
@@ -2287,7 +2289,7 @@ class Input(Element):
     def __init__(self, default_text='', size=(None, None), s=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None,
-                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, expand_x=False, expand_y=False,
+                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, selected_text_color=None, selected_background_color=None, expand_x=False, expand_y=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
@@ -2336,6 +2338,10 @@ class Input(Element):
         :type disabled_readonly_background_color:  (str)
         :param disabled_readonly_text_color:       If state is set to readonly or disabled, the color to use for the text
         :type disabled_readonly_text_color:        (str)
+        :param selected_text_color:                Color of text when it is selected (using mouse or control+A, etc)
+        :type selected_text_color:                 (str)
+        :param selected_background_color:          Color of background when it is selected (using mouse or control+A, etc)
+        :type selected_background_color:           (str)
         :param expand_x:                           If True the element will automatically expand in the X direction to fill available space
         :type expand_x:                            (bool)
         :param expand_y:                           If True the element will automatically expand in the Y direction to fill available space
@@ -2353,6 +2359,8 @@ class Input(Element):
         self.PasswordCharacter = password_char
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.seclected_text_color = selected_text_color
+        self.selected_background_color = selected_background_color
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
@@ -16425,11 +16433,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
                 element.TKEntry.bind('<Return>', element._ReturnKeyHandler)
 
+
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
                 if text_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(fg=text_color, selectbackground=text_color)
-
+                if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKEntry.configure(selectbackground=element.selected_background_color)
+                if element.seclected_text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKEntry.configure(selectforeground=element.seclected_text_color)
                 if element.disabled_readonly_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
                 if element.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -26259,4 +26271,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4db6b98b71ad586548e87cc9e4d297e44fcf6242b3833a738c844f448f1e5c7ddc085afd61eabde9bb8750619f12db065e69640cebf5edf9f4b745c4a3caf5e1670d2d8ad3a7e8090bdca1322ccad1c69967e866aef3c1bd5e118d3de7cba9e6f8b96b334ba3add026cddd8ce35be473577d5be009100e3ffb4ec78807b3916a8e40f292032ef67ba342ab9a971f3aac089684e21da209b728eaf8b9f0a7158b9aae4139f0212e1909a961c60951b56ffe832778b6537f85e29d5a77b4444fcf680a48a4340a4be5d910b11ce0e5675ac40a7f556ba062602c1cf2e19138782546118b343fae8c7bcd9765318996f5c7ebd1f7a7d079839d9456320d14cd2e62a14be59f40d25b11d1cfe1b902304f87bb27bbbc58bff1d1c333bb184b9d3033ee9c60b2bd72d69363708ab0280104c481453b0aee209f4e0c3af21dcbb8e64c165b1284d82a4a9b2ecd89522cb89807f297c5a41ee98a98a3aaf498e65eea040a309f41732f3105858d08266bcf0781fa7cd1ce218968b3e5ac8a660c1335aee944c0cbb17ea4766f603b2fbc10e28da3981d2160e256183e9d52355efe2a22e4c1369fd4e3838923b27e6db641955310a4c3c95cce90a6371d52ef3e7ca8104e0b88ebf340ddc7c133c1b696d5b34d796ebbdeac5e3b419b425b72a0bc0db3d6d572dadaf20abad3e81e7a64e7432af588b3f635202b4cfa6025bd4ca3812f
+#1a3a9f560ea0d7827ea35a6f671e4232f531fe8510b4d98dd30dcea7e27ea5d820cc220d0146cdb57452d1e869e91c6b5660834e98a0a65495ca9060ac4b84f4398cee2fe2b7e6fd3654ac4f4ce0661a19e370c66aeef8f724677db6b0b8a0b005b2728f6f72079747a33515c3716868d94c2c31e0feec3f8da32947c651b399775130dfaa2bca1ce71f4a65ca4dcde455d0ca46f00863de191f80cf4e894e38c0ec483edc586496c062e51844a7fc77bb68963096c1ecac54ac0073c5d42ada0ef747f26f3752d70de1f8ba55fd66f88751aec8281ca3312b84f7fc11523117118b56f6c153cce8a2d8dde522388e82b633644d8a11da3f8a08eea66c9b56a519c831d11ad717a585f72e933a5cfb77f03c61fd58e978e5e1fc1deb3a6e187b29ce1ade80b3214f78e2fde39106c7c95537a4251d02c55ce773e02c36ced132ba5187c69de894dea2be52ce34fef51286e291a72a7684e5ff5bce381d05af0b70c67c0deb0681f9291d2da87b8523f66b0b1ce1afc248a17aa6c8726f33f440c4ff2de4f07e8ac7b8f05f3a4fa14b502425c465c838d9d7e1fe41d197be17655d37aa399178363147fe9654c495a25abe3f4a4ed4b0ddff35995d26fede35dba2a2358c46b6de8b90e0922402e4a326f74f2d8221f6aaed051881a55e31e8dbe26235f00ef0a624afa171144d6bc0d9df19c41fa5bc2624134809861a76cf62
