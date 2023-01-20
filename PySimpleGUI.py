@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.142 Unreleased"
+version = __version__ = "4.60.4.143 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -351,6 +351,8 @@ _change_log = """
         Made the Debugger's use of popups change the theme to the same dark gray theme used in the rest of the debugger windows.
     4.60.4.142
         Added selected_text_color & selected_background_color to Input element. Will override the default values
+    4.60.4.143
+        Fixed bug in Combo.update - the width of the element wasn't getting updated to match new values
         
     """
 
@@ -2648,7 +2650,7 @@ class Combo(Element):
                     width = self.Size[0]
                 else:
                     width = max_line_len + 1
-                # self.TKCombo.configure(width=width)
+                self.TKCombo.configure(width=width)
             else:
                 self.TKCombo.configure(height=size[1])
                 self.TKCombo.configure(width=size[0])
@@ -26271,4 +26273,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1a3a9f560ea0d7827ea35a6f671e4232f531fe8510b4d98dd30dcea7e27ea5d820cc220d0146cdb57452d1e869e91c6b5660834e98a0a65495ca9060ac4b84f4398cee2fe2b7e6fd3654ac4f4ce0661a19e370c66aeef8f724677db6b0b8a0b005b2728f6f72079747a33515c3716868d94c2c31e0feec3f8da32947c651b399775130dfaa2bca1ce71f4a65ca4dcde455d0ca46f00863de191f80cf4e894e38c0ec483edc586496c062e51844a7fc77bb68963096c1ecac54ac0073c5d42ada0ef747f26f3752d70de1f8ba55fd66f88751aec8281ca3312b84f7fc11523117118b56f6c153cce8a2d8dde522388e82b633644d8a11da3f8a08eea66c9b56a519c831d11ad717a585f72e933a5cfb77f03c61fd58e978e5e1fc1deb3a6e187b29ce1ade80b3214f78e2fde39106c7c95537a4251d02c55ce773e02c36ced132ba5187c69de894dea2be52ce34fef51286e291a72a7684e5ff5bce381d05af0b70c67c0deb0681f9291d2da87b8523f66b0b1ce1afc248a17aa6c8726f33f440c4ff2de4f07e8ac7b8f05f3a4fa14b502425c465c838d9d7e1fe41d197be17655d37aa399178363147fe9654c495a25abe3f4a4ed4b0ddff35995d26fede35dba2a2358c46b6de8b90e0922402e4a326f74f2d8221f6aaed051881a55e31e8dbe26235f00ef0a624afa171144d6bc0d9df19c41fa5bc2624134809861a76cf62
+#05575c0321f1544102608baf59fa822078b0f49b10c74497210f0b121630604b4e499d86b8da16c35e5055a1f4b2439e4d517292dcc71d28ffa0ddd88356b4c858f039198e04890a2545f5c0c202aa4d3dbb213c9fd0582922f29a5b669f16c380fc4b34d78b3af787347e3bf2b6b8b8632bb666239749709ae4f0dd35591964d841408ba1a71dac773e09a71356bb280f6c80d4ff30cb1385b4bd4cc6c930fc79f4b28418e40a30723f26fe5ad64c772e542949029265b1cd66d12b2593f95b48982777759ee64920b9f33a22e3f3aa7dfae01a6eb55782832496ef299a33174991261aa2e8dc76b2d273e8a0c56ac69fdfea2460c7a6299c41182faa0a7bd3d4f85fbef8ba36de2d70381244510ad153df900e371cf4d1b3d2e9c09b00a54503e4504dcbc5ad9b5c50aa0c2fa10d5b0bf94a707fdd594bd92c00e8f675fce40cef403187639ba2ac30c685e7e838faa5d208c47fe18fb31f590dd2ff8a9055894f73fd026d5ef2f8580b6a1a1ea4e7072a2ba64d3185e399fc487a1b828ac8a4802f757d498bfaf7a54e18cb9ae1e4d38e911c4ece4e9cd3ca735f1605b3fec2b5ab52c63791be5a1766169f575e2eb3a63f7185b24864e27019c32aa9470b74d507be1f90b6a05e385d4d8ad22e390a34913b28c265a0b45ed9da45dcad2c7ede9162740333735ed2b686524453e1e8321515c7f08f31e1ee8d9ce74f476b
