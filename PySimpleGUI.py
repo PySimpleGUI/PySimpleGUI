@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.143 Unreleased"
+version = __version__ = "4.60.4.144 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -353,7 +353,9 @@ _change_log = """
         Added selected_text_color & selected_background_color to Input element. Will override the default values
     4.60.4.143
         Fixed bug in Combo.update - the width of the element wasn't getting updated to match new values
-        
+    4.60.4.144
+        Added selected_text_color & selected_background_color to Multiline element. Will override the default values
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2361,7 +2363,7 @@ class Input(Element):
         self.PasswordCharacter = password_char
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
-        self.seclected_text_color = selected_text_color
+        self.selected_text_color = selected_text_color
         self.selected_background_color = selected_background_color
         self.Focus = focus
         self.do_not_clear = do_not_clear
@@ -3735,7 +3737,7 @@ class Multiline(Element):
     """
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
-                 size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None,  horizontal_scroll=False, change_submits=False,
+                 size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, selected_text_color=None, selected_background_color=None, horizontal_scroll=False, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, wrap_lines=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
@@ -3760,6 +3762,10 @@ class Multiline(Element):
         :type background_color:              (str)
         :param text_color:                   color of the text
         :type text_color:                    (str)
+        :param selected_text_color:          Color of text when it is selected (using mouse or control+A, etc)
+        :type selected_text_color:           (str)
+        :param selected_background_color:    Color of background when it is selected (using mouse or control+A, etc)
+        :type selected_background_color:     (str)
         :param horizontal_scroll:            Controls if a horizontal scrollbar should be shown.  If True a horizontal scrollbar will be shown in addition to vertical
         :type horizontal_scroll:             (bool)
         :param change_submits:               DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -3835,6 +3841,9 @@ class Multiline(Element):
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        self.selected_text_color = selected_text_color
+        self.selected_background_color = selected_background_color
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -16442,8 +16451,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(fg=text_color, selectbackground=text_color)
                 if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(selectbackground=element.selected_background_color)
-                if element.seclected_text_color not in (None, COLOR_SYSTEM_DEFAULT):
-                    element.TKEntry.configure(selectforeground=element.seclected_text_color)
+                if element.selected_text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKEntry.configure(selectforeground=element.selected_text_color)
                 if element.disabled_readonly_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
                 if element.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -16744,9 +16753,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
+                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
+                    element.TKText.configure(fg=text_color, selectbackground=text_color)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
-
+                if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKText.configure(selectbackground=element.selected_background_color)
+                if element.selected_text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKText.configure(selectforeground=element.selected_text_color)
                 element.TKText.tag_configure("center", justify='center')
                 element.TKText.tag_configure("left", justify='left')
                 element.TKText.tag_configure("right", justify='right')
@@ -16781,8 +16795,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
                     toplevel_form.FocusSet = True
                     element.TKText.focus_set()
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKText.configure(fg=text_color, selectbackground=text_color)
+
 
 
                 if element.Disabled is True:
@@ -26273,4 +26286,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#05575c0321f1544102608baf59fa822078b0f49b10c74497210f0b121630604b4e499d86b8da16c35e5055a1f4b2439e4d517292dcc71d28ffa0ddd88356b4c858f039198e04890a2545f5c0c202aa4d3dbb213c9fd0582922f29a5b669f16c380fc4b34d78b3af787347e3bf2b6b8b8632bb666239749709ae4f0dd35591964d841408ba1a71dac773e09a71356bb280f6c80d4ff30cb1385b4bd4cc6c930fc79f4b28418e40a30723f26fe5ad64c772e542949029265b1cd66d12b2593f95b48982777759ee64920b9f33a22e3f3aa7dfae01a6eb55782832496ef299a33174991261aa2e8dc76b2d273e8a0c56ac69fdfea2460c7a6299c41182faa0a7bd3d4f85fbef8ba36de2d70381244510ad153df900e371cf4d1b3d2e9c09b00a54503e4504dcbc5ad9b5c50aa0c2fa10d5b0bf94a707fdd594bd92c00e8f675fce40cef403187639ba2ac30c685e7e838faa5d208c47fe18fb31f590dd2ff8a9055894f73fd026d5ef2f8580b6a1a1ea4e7072a2ba64d3185e399fc487a1b828ac8a4802f757d498bfaf7a54e18cb9ae1e4d38e911c4ece4e9cd3ca735f1605b3fec2b5ab52c63791be5a1766169f575e2eb3a63f7185b24864e27019c32aa9470b74d507be1f90b6a05e385d4d8ad22e390a34913b28c265a0b45ed9da45dcad2c7ede9162740333735ed2b686524453e1e8321515c7f08f31e1ee8d9ce74f476b
+#4e3d3948980125933466017e428c1dc993601ea86dfe8356c300cf2b0cfcb6441b6bdd5efcd5787f432fa4ba558cfa0243d09ec1ed5d78c5d2b25639ac4a7ec9bbddea5d00379aab0d46996b8dab188d0d361470abe50841d6e7bfa102c8cbacb60734b261f7bd81fbd66498e0b1890822902dc4c16a29914c39d78c10ae462b4e00093bd28fe7fb1ca8a1a43ec4e56b29fa1a6d38feff72885e38ba37f727ec7b0eaece73e8c49e7b2fa3563f06fa9e3e9575596d5824a490510b412fc67f40c4713d27d74d7e0065741b7f05dd9b00715fde6f877867e828f51c34b31091e72b47a7afa600d4eb27d4b9f1971ef181b0f44ff0d0e2a355aca1bf98da4660d2f58a7b65b680e51f16d65ffe2f5e4151434dd2bf3c726e65bc1e863e080b61a4241b2e5e59558eb637a34b557b1ae44fcaf75aa25db7d4dc782d4d9c8e190e9b6093a69706ae98937ee96c5cd98242378e58159f65b90042077d26ccc62e4425c80abefc0d5e44dd757255be58bf8c8831d2ccab684fdd0950db23deaea9d3bbb96fe87c4b361c2ee7e072422718bfdf1fe7b082856a264d3148a11ffc2a2a5b64898133a6275b774b32114415daf11bd17ee3c3c6f9cc42d47bdc12cb6f418db25215be6341ade53528529e907d5d18adf34b4c2990425b3739556cf652ad08b64d1b2ed93dbc1b4c0991ea95efce22b0ab1f1476827ce51c56b972b1286176
