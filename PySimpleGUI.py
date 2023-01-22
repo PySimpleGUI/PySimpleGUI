@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.60.4.144 Unreleased"
+version = __version__ = "4.60.4.145 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -355,6 +355,8 @@ _change_log = """
         Fixed bug in Combo.update - the width of the element wasn't getting updated to match new values
     4.60.4.144
         Added selected_text_color & selected_background_color to Multiline element. Will override the default values
+    4.60.4.145
+        Fixed bind_return_key docstrings in the pre-defined buttons. Made the Button bind_return_key docstring more descriptive
 
     """
 
@@ -2529,7 +2531,7 @@ class Combo(Element):
         :type button_background_color:  (str)
         :param button_arrow_color:      The color of the arrow on the button on the combo box
         :type button_arrow_color:       (str)
-        :param bind_return_key:         If True, then the return key will cause a the Combo to generate an event
+        :param bind_return_key:         If True, then the return key will cause a the Combo to generate an event when return key is pressed
         :type bind_return_key:          (bool)
         :param change_submits:          DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:           (bool)
@@ -2896,7 +2898,7 @@ class Listbox(Element):
         :type change_submits:              (bool)
         :param enable_events:              Turns on the element specific events. Listbox generates events when an item is clicked
         :type enable_events:               (bool)
-        :param bind_return_key:            If True, then the return key will cause a the Listbox to generate an event
+        :param bind_return_key:            If True, then the return key will cause a the Listbox to generate an event when return key is pressed
         :type bind_return_key:             (bool)
         :param size:                       w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                        (int, int) |  (int, None) | int
@@ -3562,7 +3564,7 @@ class Spin(Element):
         :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
-        :param bind_return_key:  If True, then the return key will cause a the element to generate an event
+        :param bind_return_key:  If True, then the return key will cause a the element to generate an event when return key is pressed
         :type bind_return_key:   (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              (str or (str, int[, str]) or None)
@@ -4881,7 +4883,7 @@ class Button(Element):
         :type use_ttk_buttons:        (bool)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
-        :param bind_return_key:       If True the return key will cause this button to be pressed
+        :param bind_return_key:       If True then pressing the return key in an Input or Multiline Element will cause this button to appear to be clicked (generates event with this button's key
         :type bind_return_key:        (bool)
         :param focus:                 if True, initial focus will be put on this button
         :type focus:                  (bool)
@@ -13726,7 +13728,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) | str
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -13777,7 +13779,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -13827,7 +13829,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -13876,7 +13878,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -13925,7 +13927,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type button_color:      (str, str) | str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -13978,7 +13980,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:
@@ -14027,7 +14029,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:             (bool)
@@ -14076,7 +14078,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:
@@ -14125,7 +14127,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:
@@ -14223,7 +14225,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :type font:              (str or (str, int[, str]) or None)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:
@@ -14275,7 +14277,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :type font:              (str or (str, int[, str]) or None)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:
@@ -14339,7 +14341,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -14401,7 +14403,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -14461,7 +14463,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type button_color:      (str, str) | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -14530,7 +14532,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:             (bool)
@@ -14598,7 +14600,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
     :type focus:             (bool)
@@ -14671,7 +14673,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type disabled:                (bool)
     :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                    (str or (str, int[, str]) or None)
-    :param bind_return_key:        (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:         bool
     :param focus:                  if focus should be set to this
     :type focus:                   bool
@@ -14765,7 +14767,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
-    :param bind_return_key:  If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key:  (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options
     :type bind_return_key:   (bool)
     :param focus:            Determines if initial focus should go to this element.
     :type focus:             (bool)
@@ -26286,4 +26288,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4e3d3948980125933466017e428c1dc993601ea86dfe8356c300cf2b0cfcb6441b6bdd5efcd5787f432fa4ba558cfa0243d09ec1ed5d78c5d2b25639ac4a7ec9bbddea5d00379aab0d46996b8dab188d0d361470abe50841d6e7bfa102c8cbacb60734b261f7bd81fbd66498e0b1890822902dc4c16a29914c39d78c10ae462b4e00093bd28fe7fb1ca8a1a43ec4e56b29fa1a6d38feff72885e38ba37f727ec7b0eaece73e8c49e7b2fa3563f06fa9e3e9575596d5824a490510b412fc67f40c4713d27d74d7e0065741b7f05dd9b00715fde6f877867e828f51c34b31091e72b47a7afa600d4eb27d4b9f1971ef181b0f44ff0d0e2a355aca1bf98da4660d2f58a7b65b680e51f16d65ffe2f5e4151434dd2bf3c726e65bc1e863e080b61a4241b2e5e59558eb637a34b557b1ae44fcaf75aa25db7d4dc782d4d9c8e190e9b6093a69706ae98937ee96c5cd98242378e58159f65b90042077d26ccc62e4425c80abefc0d5e44dd757255be58bf8c8831d2ccab684fdd0950db23deaea9d3bbb96fe87c4b361c2ee7e072422718bfdf1fe7b082856a264d3148a11ffc2a2a5b64898133a6275b774b32114415daf11bd17ee3c3c6f9cc42d47bdc12cb6f418db25215be6341ade53528529e907d5d18adf34b4c2990425b3739556cf652ad08b64d1b2ed93dbc1b4c0991ea95efce22b0ab1f1476827ce51c56b972b1286176
+#40e80a71aea2a1b41dfdcba9263cffd1ea8d8dba433feb55ec28f46041ead94584c0357919f99c17c0f55cc1270b5f742f90a6cb967060d420598da884b48952987be0aa687b06556ac829c34bf84d705ef76b6a11eefc2fd3bc808e968f6fe4aca40d643643ec2906f4a8420af6d4fce3ca585591591cce1bf067c77edd7a555f5977205bd8ed1ea55ce615dd47e1f138c54f6fe23dc14764563c00d158164c9b7daab5c5b772c90ad040133a441a45e39b66567f4b957b5db188a8155e2fe72d0c06ba927c55260d1c2e4199a86d69765872b059f5b167202fcebed340c6fd91da8d7831f7ced36886e0a5a51947aeba24f62e8a5675ec01ee0e122983bc8cc9d9c7dfc77d78708f8e889ba91676b3b183aaf8cae3ed0cf79051561a2cd692f933b5f40a17b987644978c59962ead7011f369580e30d665fd5f4860411df8fea4d1027e653da3b2e7baff69c5035a311143efba8609383af517ed23e363af68fa1a1f95a1ef3c7991b79f55634787e14e32a0c32442feaf4df13a0212754c207cb27a129fc702d206d50d90bfbd4d10d10ede5fba0dedf3ec2c0d66e4741c30033356bc5911de8395977214646517e6e94e8130b32330d0e63fb13ec8eeaee673a68e94151ed9ecb92a506e184df9c53b798277c5cb10acec0e3f2a1dafba2510687d9eaad97a79d729ce2a33b2e9229f03289c111f8f3774e89e329e76c4e
