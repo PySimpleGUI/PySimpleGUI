@@ -126,7 +126,7 @@ Parameter Descriptions:
 |                               (str, str) or str                                |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
 |                                      bool                                      |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
 |                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      |    bind_return_key    | If True the return key will cause this button to be pressed |
+|                                      bool                                      |    bind_return_key    | If True then pressing the return key in an Input or Multiline Element will cause this button to appear to be clicked (generates event with this button's key |
 |                                      bool                                      |         focus         | if True, initial focus will be put on this button |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -2214,7 +2214,7 @@ Parameter Descriptions:
 |                                      str                                       |       text_color        | color of the text |
 |                                      str                                       | button_background_color | The color of the background of the button on the combo box |
 |                                      str                                       |   button_arrow_color    | The color of the arrow on the button on the combo box |
-|                                      bool                                      |     bind_return_key     | If True, then the return key will cause a the Combo to generate an event |
+|                                      bool                                      |     bind_return_key     | If True, then the return key will cause a the Combo to generate an event when return key is pressed |
 |                                      bool                                      |     change_submits      | DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                      bool                                      |      enable_events      | Turns on the element specific events. Combo event is when a choice is made |
 |                                      bool                                      | enable_per_char_events  | Enables generation of events for every character that's input. This is like the Input element's events |
@@ -4881,6 +4881,8 @@ Input(default_text = "",
     readonly = False,
     disabled_readonly_background_color = None,
     disabled_readonly_text_color = None,
+    selected_text_color = None,
+    selected_background_color = None,
     expand_x = False,
     expand_y = False,
     right_click_menu = None,
@@ -4915,6 +4917,8 @@ Parameter Descriptions:
 |                                      bool                                      |              readonly              | If True tkinter state set to 'readonly'. Use this in place of use_readonly_for_disable as another way of achieving readonly. Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag |
 |                                      str                                       | disabled_readonly_background_color | If state is set to readonly or disabled, the color to use for the background |
 |                                      str                                       |    disabled_readonly_text_color    | If state is set to readonly or disabled, the color to use for the text |
+|                                      str                                       |        selected_text_color         | Color of text when it is selected (using mouse or control+A, etc) |
+|                                      str                                       |     selected_background_color      | Color of background when it is selected (using mouse or control+A, etc) |
 |                                      bool                                      |              expand_x              | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |              expand_y              | If True the element will automatically expand in the Y direction to fill available space |
 |                         List[List[ List[str] or str ]]                         |          right_click_menu          | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -5359,7 +5363,7 @@ Parameter Descriptions:
 |                                     [enum]                                     |        select_mode         | Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED |
 |                                      bool                                      |       change_submits       | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |       enable_events        | Turns on the element specific events. Listbox generates events when an item is clicked |
-|                                      bool                                      |      bind_return_key       | If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |      bind_return_key       | If True, then the return key will cause a the Listbox to generate an event when return key is pressed |
 |                       (int, int) or  (int, None) or int                        |            size            | w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |             s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |          disabled          | set disable state for element |
@@ -6250,6 +6254,8 @@ Multiline(default_text = "",
     auto_size_text = None,
     background_color = None,
     text_color = None,
+    selected_text_color = None,
+    selected_background_color = None,
     horizontal_scroll = False,
     change_submits = False,
     enable_events = False,
@@ -6289,49 +6295,51 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                      Any                                       |     default_text      | Initial text to show |
-|                                      bool                                      |     enter_submits     | if True, the Window.read call will return is enter key is pressed in this element |
-|                                      bool                                      |       disabled        | set disable state |
-|                                      bool                                      |      autoscroll       | If True the contents of the element will automatically scroll as more data added to the end |
-|                                      int                                       |     border_width      | width of border around element in pixels |
-|                       (int, int)  or (None, None) or int                       |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
-|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                      bool                                      |    auto_size_text     | if True will size the element to match the length of the text |
-|                                      str                                       |   background_color    | color of background |
-|                                      str                                       |      text_color       | color of the text |
-|                                      bool                                      |   horizontal_scroll   | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
-|                                      bool                                      |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |     enable_events     | If True then any key press that happens when the element has focus will generate an event. |
-|                                      bool                                      |     do_not_clear      | if False the element will be cleared any time the Window.read call returns |
-|                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      bool                                      |      write_only       | If True then no entry will be added to the values dictionary when the window is read |
-|                                      bool                                      |     auto_refresh      | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
-|                                      bool                                      |    reroute_stdout     | If True then all output to stdout will be output to this element |
-|                                      bool                                      |    reroute_stderr     | If True then all output to stderr will be output to this element |
-|                                      bool                                      |    reroute_cprint     | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
-|                                      bool                                      |  echo_stdout_stderr   | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
-|                                      bool                                      |         focus         | if True initial focus will go to this element |
-|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
-|                                      str                                       |     justification     | text justification. left, right, center. Can use single characters l, r, c. |
-|                                      bool                                      |     no_scrollbar      | If False then a vertical scrollbar will be shown (the default) |
-|                                      bool                                      |      wrap_lines       | If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping. |
-|                                      str                                       |   sbar_trough_color   | Scrollbar color of the trough |
-|                                      str                                       | sbar_background_color | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
-|                                      str                                       |   sbar_arrow_color    | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
-|                                      int                                       |      sbar_width       | Scrollbar width in pixels |
-|                                      int                                       |   sbar_arrow_width    | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
-|                                      str                                       |   sbar_frame_color    | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
-|                                      str                                       |      sbar_relief      | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
-|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |        rstrip         | If True the value returned in will have whitespace stripped from the right side |
-|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |        visible        | set visibility state of the element |
-|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
+|                                      Any                                       |       default_text        | Initial text to show |
+|                                      bool                                      |       enter_submits       | if True, the Window.read call will return is enter key is pressed in this element |
+|                                      bool                                      |         disabled          | set disable state |
+|                                      bool                                      |        autoscroll         | If True the contents of the element will automatically scroll as more data added to the end |
+|                                      int                                       |       border_width        | width of border around element in pixels |
+|                       (int, int)  or (None, None) or int                       |           size            | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |             s             | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |      auto_size_text       | if True will size the element to match the length of the text |
+|                                      str                                       |     background_color      | color of background |
+|                                      str                                       |        text_color         | color of the text |
+|                                      str                                       |    selected_text_color    | Color of text when it is selected (using mouse or control+A, etc) |
+|                                      str                                       | selected_background_color | Color of background when it is selected (using mouse or control+A, etc) |
+|                                      bool                                      |     horizontal_scroll     | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
+|                                      bool                                      |      change_submits       | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |       enable_events       | If True then any key press that happens when the element has focus will generate an event. |
+|                                      bool                                      |       do_not_clear        | if False the element will be cleared any time the Window.read call returns |
+|                         str or int or tuple or object                          |            key            | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |        write_only         | If True then no entry will be added to the values dictionary when the window is read |
+|                                      bool                                      |       auto_refresh        | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
+|                                      bool                                      |      reroute_stdout       | If True then all output to stdout will be output to this element |
+|                                      bool                                      |      reroute_stderr       | If True then all output to stderr will be output to this element |
+|                                      bool                                      |      reroute_cprint       | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
+|                                      bool                                      |    echo_stdout_stderr     | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
+|                                      bool                                      |           focus           | if True initial focus will go to this element |
+|                       (str or (str, int[, str]) or None)                       |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad            | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             p             | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      str                                       |          tooltip          | text, that will appear when mouse hovers over the element |
+|                                      str                                       |       justification       | text justification. left, right, center. Can use single characters l, r, c. |
+|                                      bool                                      |       no_scrollbar        | If False then a vertical scrollbar will be shown (the default) |
+|                                      bool                                      |        wrap_lines         | If True, the lines will be wrapped automatically. Other parms affect this setting, but this one will override them all. Default is it does nothing and uses previous settings for wrapping. |
+|                                      str                                       |     sbar_trough_color     | Scrollbar color of the trough |
+|                                      str                                       |   sbar_background_color   | Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over |
+|                                      str                                       |     sbar_arrow_color      | Scrollbar color of the arrow at the ends of the scrollbar (it looks like a button). Switches to background color when mouse is over |
+|                                      int                                       |        sbar_width         | Scrollbar width in pixels |
+|                                      int                                       |     sbar_arrow_width      | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
+|                                      str                                       |     sbar_frame_color      | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
+|                                      str                                       |        sbar_relief        | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                                      bool                                      |         expand_x          | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |         expand_y          | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |          rstrip           | If True the value returned in will have whitespace stripped from the right side |
+|                         List[List[ List[str] or str ]]                         |     right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |          visible          | set visibility state of the element |
+|                                      Any                                       |         metadata          | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -9616,7 +9624,7 @@ Parameter Descriptions:
 |                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
-|                                      bool                                      | bind_return_key  | If True, then the return key will cause a the element to generate an event |
+|                                      bool                                      | bind_return_key  | If True, then the return key will cause a the element to generate an event when return key is pressed |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       | background_color | color of background |
 |                                      str                                       |    text_color    | color of the text |
@@ -14907,7 +14915,7 @@ Parameter Descriptions:
 |                               (str, str) or str                                |      button_color      | button color (foreground, background) |
 |                                      bool                                      |        disabled        | set disable state for element (Default = False) |
 |                       (str or (str, int[, str]) or None)                       |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |    bind_return_key     | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |         focus          | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -14960,7 +14968,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15018,7 +15026,7 @@ Parameter Descriptions:
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |      focus       | Determines if initial focus should go to this element. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15069,7 +15077,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15131,7 +15139,7 @@ Parameter Descriptions:
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15176,7 +15184,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15429,7 +15437,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15517,7 +15525,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
@@ -15562,7 +15570,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
@@ -15607,7 +15615,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
@@ -15654,7 +15662,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15709,7 +15717,7 @@ Parameter Descriptions:
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15751,7 +15759,7 @@ Parameter Descriptions:
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
@@ -15849,7 +15857,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
@@ -15896,7 +15904,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
@@ -15953,7 +15961,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
@@ -16006,7 +16014,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
@@ -16064,7 +16072,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
@@ -16121,7 +16129,7 @@ Parameter Descriptions:
 |                                      bool                                      | auto_size_button | True if button size is determined by button text |
 |                               (str, str) or str                                |   button_color   | button color (foreground, background) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, this button will appear to be clicked when return key is pressed in other elements such as Input and elements with return key options |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
