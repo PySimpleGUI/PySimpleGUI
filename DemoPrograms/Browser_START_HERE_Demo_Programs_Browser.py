@@ -5,7 +5,7 @@ import warnings
 
 import PySimpleGUI as sg
 
-__version__ = '1.12.0'
+__version__ = '1.12.2'
 
 """
     PySimpleGUI Demo Program Browser
@@ -36,7 +36,7 @@ __version__ = '1.12.0'
     Versions:
         1.8.0 - Addition of option to show ALL file types, not just Python files
         1.12.0 - Fix for problem with spaces in filename and using an editor specified in the demo program settings  
-                                
+        1.12.2 - Better error handling for no editor configured                   
     Copyright 2021, 2022 PySimpleGUI.org
 """
 
@@ -577,16 +577,16 @@ def main():
                     sg.cprint(f'Editing using {editor_program}', c='white on red', end='')
                     sg.cprint('')
                     sg.cprint(f'{full_filename}', c='white on purple')
-                    # if line != 1:
-                    if using_local_editor():
-                        sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
+                    if not get_editor():
+                        sg.popup_error_with_traceback('No editor has been configured', 'You need to configure an editor in order to use this feature', 'You can configure the editor in the Demo Brower Settings or the PySimpleGUI Global Settings')
                     else:
-                        try:
-                            sg.execute_editor(full_filename, line_number=int(line))
-                        except:
+                        if using_local_editor():
                             sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
-                    # else:
-                    #     sg.execute_editor(full_filename)
+                        else:
+                            try:
+                                sg.execute_editor(full_filename, line_number=int(line))
+                            except:
+                                sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
                 else:
                     sg.cprint('Editing canceled')
         elif event == 'Run':
