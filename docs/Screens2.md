@@ -1,3 +1,24 @@
+[J-Josu](https://github.com/J-Josu) 2023-01-30T13:20:08Z
+Hi! I'm a stundent of Computer Science in Argentina and i`ve had to do a Final project for my Python Course. The project its about a card game where you can choose between availible themes to try to guess the correct option. The data is automtically loaded from cvs.
+
+Here are some screenshoots of the final result:
+
+![image](https://user-images.githubusercontent.com/92873227/215487552-cd9a9185-5ca1-4c63-8c4e-b084a1fce2e5.png)
+
+![image](https://user-images.githubusercontent.com/92873227/215487639-4facc1ba-2c5f-430f-ac41-2cceb4f52708.png)
+
+![image](https://user-images.githubusercontent.com/92873227/215487687-61a880c8-13f2-4641-80c9-455a8378a9a3.png)
+
+![image](https://user-images.githubusercontent.com/92873227/215487759-278903f6-de06-4d47-b016-d0f5324ad6e2.png)
+
+And other pages...
+
+All the ui its in spanish, but the code all written in english.
+The project includes a mini-framework to build pages easly and some cli utilities.
+Also the code have all the corresponding typing annotations and more interesting stuff.
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-01-29T15:31:26Z
 @eagleEggs I briefly saw a version of this GUI and then it disappeared.  I'm THRILLED you've posted it.  ![image](https://user-images.githubusercontent.com/46163555/215336720-2cc04845-ecf1-4c80-8769-8d8d92026c93.png)
 
