@@ -21,7 +21,7 @@ def make_key(key):
     the lack of parameters and associated docstrings when creating the layout.
 
     :param key:
-    :return: Dict(
+    :return: Dict
     """
     return {'default_text':sg.user_settings_get_entry(key, ''), 'key':key}
 
