@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.145 Unreleased"
+version = __version__ = "4.61.0.148 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -361,6 +361,8 @@ _change_log = """
         Changed version numbers to 4.61.0 to try and fix the confusion about what's been released to PyPI.
     4.61.0.147
         New Udemy coupon code
+    4.61.0.1478
+        Removed the print when the Mac Alpha Channel 0.99 patch is applied
 
     """
 
@@ -26273,14 +26275,9 @@ if running_windows():
 _read_mac_global_settings()
 
 if _mac_should_set_alpha_to_99():
-    print('Applyting Mac OS 12.3+ Alpha Channel fix.  Your default Alpha Channel is now 0.99')
+    # Applyting Mac OS 12.3+ Alpha Channel fix.  Sets the default Alpha Channel to 0.99
     set_options(alpha_channel=0.99)
-# if running_mac():
-#     print('Your Mac patches are:')
-#     print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
-#     print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
-#     print ('No grab anywhere allowed  with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
-#     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
+
  
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
@@ -26294,4 +26291,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#753c3cc3e8af2d597bd5a08789e25369e99425377e65d1d52d4e330a7ab3f28b9f3437473c786e76333f8cb40396e30e906f346d0fde4ab86b6a518446115f06a63eadd521a0b2cf1825e1daabbe1e837590b9daa2f7c3b5588370032afa4df52779710ede2cb3da6aad71a6fca8b65d15ecd91fa73d05d3ff90288af2e4ba44ce3c83483680f5f5172eae92d49497b3460c5b2376e0d903f7c6cd5637690f7a57d2c2cf55669cfee92259a8c570ff0bd1fa0f04a2d2d4a6624aec44d96ba1e04d5c919d56b49cd5b18c648011aa9c2aa0f68cbd37982e71c7c1cf3f129c3276e70b5480f15d488c72a002bb15b6ab3a0698341175c5ca2c289f94fc6ae99724d9abc5c41b7e010423775e3e06da28e06b62b3932414b1208659c0f14d9834234de2e424b2fd1ccfcdd49f1351112eec7b60e842a91a76301aa830bfa46ab5c1468a47f1d47c99ba8e0b7171f169455785c8de71f6997e6fcb19fcccfdcf58a2a5782f538dc6f15c42bf18e2ae216efb235d95f7daafdf2d2c0ef760ebe5fd908dcd96ed2d9d04d4ddff0efcc60157b88bb37cce44728019b338e409c185f44080fc0eef7b909542d61feb85e27407a4e59377d21cdda1d42468a4952fb9c06fcd5987dc80c34059eff622e138cdf7718c287d41f0c63a8c7c521d7e0f5566c7f6b3c7861a2499a158442215cfa344b1601bdc280bee34cf7bbaafd3770f4502
+#117ed542710a8b85aedee26a97f02052f1ebae317e9016c3657faebee46d06cf821ca4d2d12fe6187ddbf37233bdcdac3adf87e0f3ef9d631f050f490d1255d3efed2a062cdd03e806cb5d986b86ae588114b51c7018ee869e2b0b606ffdc16e7cc65342c5b12a1ff53a80d0aa477b050e18f3c9ce734748f1273fff1b55d860d0003ddc4a760bdb5ec888c9c394b51286cbd1805b5807bf709581f724ac8fed75a4e5a263a9172bacc12a4992ce6ed4bca58c9c9199c41d95fc20916287d60d6b6a0f0f016ae86d751e541efe2163b46bbe6a4f2ca5b713064b0de324b448fea9474f857c8a09a1955c347e620d0a7b2e4a78664e1a204871cce8f4336affb30eff2fdbc960f24b0912e5872cfc355273dbe401efcb059f9d660a308d05079bb9d6f03b5b5705e9ab21a6b626076eac07954458a75c6fd1ca2cdc08a387e7b1f732a952ad04889c402a4e7450096009c07c59765084a6f76e353c182876869a18aa3aeee2d2f4d826de913b787f9fc5ab74c1e281d180fe83bfc5fb14102553e7e4532f70d7887125daa387a79f957eddbe094e393c277a2eef2a9524f663e536274b724cb4c06a22095edc84d481b4b0896ac099dc89ceec14bc4601ddcb77b70ebe2135b671d256ebcec80f91b42281fb2d5649221673cadc1092d568d4eeca04d4c41ce72eac9b0de2044f6ccdc7034531de0f13cabd70481057758a26d5
