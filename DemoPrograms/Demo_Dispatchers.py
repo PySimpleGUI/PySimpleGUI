@@ -12,6 +12,7 @@
         * If-Else
         * Dictionaries
         * Functions as keys
+        * Lambda as key (callable like functions are)
 
     The handlers in this demo are all functions that are called once the event is detected
 
@@ -22,7 +23,7 @@
     event loop rather than functions, then do it in the event loop.
 
     http://www.PySimpleGUI.org
-    Copyright 2021 PySimpleGUI
+    Copyright 2021, 2022, 2023 PySimpleGUI
 """
 
 import PySimpleGUI as sg
@@ -76,7 +77,7 @@ def main():
               [sg.Text('Status:'), sg.Text(size=(3, 1), key='-STATUS-')],
               [sg.Text(size=(50, 1), key='-OUT-')],
               [sg.Button('Simple'), sg.Button('Go'), sg.Button('Stop'), sg.Button('Other', key=do_other),
-               sg.Button('Tuple', key=(1,2)), sg.Button('Bad')]]
+               sg.Button('Tuple', key=(1,2)), sg.Button('Lambda', key= lambda window: do_other(window)), sg.Button('Bad')]]
 
     window = sg.Window('Dispatchers', layout, font='Default 16', keep_on_top=True)
 
