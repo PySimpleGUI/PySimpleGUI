@@ -1,3 +1,12 @@
+[PySimpleGUI](https://github.com/PySimpleGUI) 2023-02-08T22:16:35Z
+Thank you @J-Josu ![image](https://user-images.githubusercontent.com/46163555/217663277-1e69dfcf-c816-4930-aada-610b157eaf0a.png) for sharing your program and your story. I love hearing when students use PySimpleGUI!  I'm glad it went well.  The screenshots look great!  
+
+Code annotation too?  Do you have a GitHub Repo with your code?  
+
+I'm impressed by bi-lingual programmers.  It's hard enough coding, reading, writing, and thinking just in English.  Throwing another language on top of all that is next-level stuff.  Really happy you posted what you've made!
+
+-----------
+
 [J-Josu](https://github.com/J-Josu) 2023-01-30T13:20:08Z
 Hi! I'm a stundent of Computer Science in Argentina and i`ve had to do a Final project for my Python Course. The project its about a card game where you can choose between availible themes to try to guess the correct option. The data is automtically loaded from cvs.
 
