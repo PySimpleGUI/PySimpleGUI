@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.148 Unreleased"
+version = __version__ = "4.61.0.149 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -361,8 +361,10 @@ _change_log = """
         Changed version numbers to 4.61.0 to try and fix the confusion about what's been released to PyPI.
     4.61.0.147
         New Udemy coupon code
-    4.61.0.1478
+    4.61.0.148
         Removed the print when the Mac Alpha Channel 0.99 patch is applied
+    4.61.0.149
+        Removed second print when Mac patch applied
 
     """
 
@@ -23629,7 +23631,7 @@ def _mac_should_set_alpha_to_99():
         platform_mac_ver = platform.mac_ver()[0]
         mac_ver = platform_mac_ver.split('.') if '.' in platform_mac_ver  else (platform_mac_ver, 0)
         if (int(mac_ver[0]) >= 12 and int(mac_ver[1]) >= 3) or int(mac_ver[0]) >= 13 :
-            print("Mac OS Version is {} and patch enabled so applying the patch".format(platform_mac_ver))
+            # print("Mac OS Version is {} and patch enabled so applying the patch".format(platform_mac_ver))
             return True
     except Exception as e:
         warnings.warn('_mac_should_seet_alpha_to_99 Exception while trying check mac_ver. Error = {}'.format(e), UserWarning)
@@ -26291,4 +26293,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#117ed542710a8b85aedee26a97f02052f1ebae317e9016c3657faebee46d06cf821ca4d2d12fe6187ddbf37233bdcdac3adf87e0f3ef9d631f050f490d1255d3efed2a062cdd03e806cb5d986b86ae588114b51c7018ee869e2b0b606ffdc16e7cc65342c5b12a1ff53a80d0aa477b050e18f3c9ce734748f1273fff1b55d860d0003ddc4a760bdb5ec888c9c394b51286cbd1805b5807bf709581f724ac8fed75a4e5a263a9172bacc12a4992ce6ed4bca58c9c9199c41d95fc20916287d60d6b6a0f0f016ae86d751e541efe2163b46bbe6a4f2ca5b713064b0de324b448fea9474f857c8a09a1955c347e620d0a7b2e4a78664e1a204871cce8f4336affb30eff2fdbc960f24b0912e5872cfc355273dbe401efcb059f9d660a308d05079bb9d6f03b5b5705e9ab21a6b626076eac07954458a75c6fd1ca2cdc08a387e7b1f732a952ad04889c402a4e7450096009c07c59765084a6f76e353c182876869a18aa3aeee2d2f4d826de913b787f9fc5ab74c1e281d180fe83bfc5fb14102553e7e4532f70d7887125daa387a79f957eddbe094e393c277a2eef2a9524f663e536274b724cb4c06a22095edc84d481b4b0896ac099dc89ceec14bc4601ddcb77b70ebe2135b671d256ebcec80f91b42281fb2d5649221673cadc1092d568d4eeca04d4c41ce72eac9b0de2044f6ccdc7034531de0f13cabd70481057758a26d5
+#4bd4c2928c05ef62f978ee22c0209c8ce6661bc7f6757237b0fdc8d554f00ae326998ad0aec28c7011c2d089538791ad29f95dd658f9971230bfd5a9075fa230a8e7f1bcd8cb6cce0b47cfb9f71f7869b1f69ef96d70abbc89f64b9b2a59c55900f7dd047d2c26dd161b3984eeea41d503ed28762002688104d33839ab836bef661fd4afe7130d7351e64f7159227a4dec589fac243fa62153924bc1d549a85831e06780c607c17547eea96ee3edc33cd8d3daefa187917be115febb2179cab1cda0fe66113183a9c8be79689e4ddab15756afe9bd66febbf90246e8f6e6e721e46c85f82f6918ac3b0557c7d3439d0ec136b28fc8cf2e469cebdc00ffe39e48098b119ba5fbbfebf69f1840beff08b6a49587ea4df954f5b0425b3c0a73429932022bacdf5ba625c52d5064415446656f45cd87cda0dc1a414ad9d4c4ff8ca213a7ccd5d9bb07652d39c558454eedd89a7158bb8cd431d9c35c7c9588f5a74ee23ccbf7d0adecd5aea293c28482e150a064a68ce7bc226159d385ab7b07b7245deb4f9182de0aebbfeb8ae23224ec761f4b76ee4c2dd6c8227913a82d462e094a39c99a1ac5c352a14ec0678eb75132754ff4128e257ef1cea33f6705cb0ab6317e90c59cc35eef24c63e6e6f45f30573038619d5f930f2880f2518b7fbc7b11dd893ef2ac08208e0ddd598631d888c695237be60d4b01b9551889b86d3ad64
