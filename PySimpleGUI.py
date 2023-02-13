@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.149 Unreleased"
+version = __version__ = "4.61.0.150 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -365,7 +365,8 @@ _change_log = """
         Removed the print when the Mac Alpha Channel 0.99 patch is applied
     4.61.0.149
         Removed second print when Mac patch applied
-
+    4.61.0.150
+        Tree Element new parameter - click_toggles_select - if True then clicking a selected item will unselect it
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9353,7 +9354,7 @@ class Tree(Element):
 
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10, col0_heading='',
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
-                 change_submits=False, enable_events=False, font=None, justification='right', text_color=None, border_width=None,
+                 change_submits=False, enable_events=False, click_toggles_select=None, font=None, justification='right', text_color=None, border_width=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, header_border_width=None, header_relief=None, num_rows=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
                  row_height=None, vertical_scroll_only=True, hide_vertical_scroll=False, pad=None, p=None, key=None, k=None, tooltip=None,
@@ -9385,6 +9386,8 @@ class Tree(Element):
         :type change_submits:           (bool)
         :param enable_events:           Turns on the element specific events. Tree events happen when row is clicked
         :type enable_events:            (bool)
+        :param click_toggles_select:    If True then clicking a row will cause the selection for that row to toggle between selected and deselected
+        :type click_toggles_select:     (bool)
         :param font:                    specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                     (str or (str, int[, str]) or None)
         :param justification:           'left', 'right', 'center' are valid choices
@@ -9467,7 +9470,7 @@ class Tree(Element):
         self.HeaderBorderWidth = header_border_width
         self.BorderWidth = border_width
         self.HeaderRelief = header_relief
-
+        self.click_toggles_select = click_toggles_select
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
             selected_row_colors = theme_button_color()
@@ -9518,8 +9521,14 @@ class Tree(Element):
         """
 
         selections = self.TKTreeview.selection()
-        # self.SelectedRows = [x for x in selections]
+        selected_rows = [self.IdToKey[x] for x in selections]
+        if self.click_toggles_select:
+            if set(self.SelectedRows) == set(selected_rows):
+                for item in selections:
+                    self.TKTreeview.selection_remove(item)
+                selections = []
         self.SelectedRows = [self.IdToKey[x] for x in selections]
+
         if self.ChangeSubmits:
             MyForm = self.ParentForm
             if self.Key is not None:
@@ -9530,6 +9539,7 @@ class Tree(Element):
             # if self.ParentForm.CurrentlyRunningMainloop:
             #     self.ParentForm.TKroot.quit()
             _exit_mainloop(self.ParentForm)
+
 
     def add_treeview_data(self, node):
         """
@@ -26293,4 +26303,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#4bd4c2928c05ef62f978ee22c0209c8ce6661bc7f6757237b0fdc8d554f00ae326998ad0aec28c7011c2d089538791ad29f95dd658f9971230bfd5a9075fa230a8e7f1bcd8cb6cce0b47cfb9f71f7869b1f69ef96d70abbc89f64b9b2a59c55900f7dd047d2c26dd161b3984eeea41d503ed28762002688104d33839ab836bef661fd4afe7130d7351e64f7159227a4dec589fac243fa62153924bc1d549a85831e06780c607c17547eea96ee3edc33cd8d3daefa187917be115febb2179cab1cda0fe66113183a9c8be79689e4ddab15756afe9bd66febbf90246e8f6e6e721e46c85f82f6918ac3b0557c7d3439d0ec136b28fc8cf2e469cebdc00ffe39e48098b119ba5fbbfebf69f1840beff08b6a49587ea4df954f5b0425b3c0a73429932022bacdf5ba625c52d5064415446656f45cd87cda0dc1a414ad9d4c4ff8ca213a7ccd5d9bb07652d39c558454eedd89a7158bb8cd431d9c35c7c9588f5a74ee23ccbf7d0adecd5aea293c28482e150a064a68ce7bc226159d385ab7b07b7245deb4f9182de0aebbfeb8ae23224ec761f4b76ee4c2dd6c8227913a82d462e094a39c99a1ac5c352a14ec0678eb75132754ff4128e257ef1cea33f6705cb0ab6317e90c59cc35eef24c63e6e6f45f30573038619d5f930f2880f2518b7fbc7b11dd893ef2ac08208e0ddd598631d888c695237be60d4b01b9551889b86d3ad64
+#75255ce9495078dee42b4285a47339005dbe8ae17df3a0f8074fb8c4b6db8829af1d9642cc849eeebe02b5cc6e21c4fec2dc69c2235ff42cb35a84a57be3e18547396319d1ae66e5e6956104c1dd9e89be6ea486f05b5646cd1a73766a7ce0c0eb52ab4f288603fe90d7b7cbe1395160f6d9ef75be5952d6831d3350101c1c0c07610a040cda224064c2126638ad9a4fbc04cc0c8000b4d9eea653d662d101ddb48bb1a6943214eb0ae8c06d667178d2f0d9dcc7d46164cd9ad986baf3a822ab4599b2f3721b8edc4883ed2d1128a36c58c1cec91bdd02c805270c7f2376f340fee931ba8a4b557c7b8fbd9b8bd68b2d81544fadbbb616f238871ba796f9fa7d300606ee243fc67662a537d1a240b3f6232ecc2f3565e148695abfecb757d6ee1dd6cb75eeb8c28cd1d49e61cb3365f9325fbb08d0aef679e1cb79e418a7160cb25f710f854f88b314e64e2a6fe766e246cfc5077a25ed47989a2a3cc4ec07ff3acf0ad487e6a029796b6956f9c68ab2373739322b4fbc1548a2fe9dfaceb7c680510403dd7b59733c91fb5a3dd9ecc2407c0194c12a3907531b0ceedfb572bc70bcee19e27328ad1858279a7a55293fc5cbded9b87adef21751bf5c94ecedd11fa01c249a792449c7b6ab94629d47b0412a88e0a818b314050f4b171578d8da28983e9e3a851f36eac1e3e7182693b7dc4d54b46d3127e4cdddfbbf01c4865a
