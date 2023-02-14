@@ -1,3 +1,31 @@
+[J-Josu](https://github.com/J-Josu) 2023-02-14T12:29:42Z
+> Thank you @J-Josu ![image](https://user-images.githubusercontent.com/46163555/217663277-1e69dfcf-c816-4930-aada-610b157eaf0a.png) for sharing your program and your story. I love hearing when students use PySimpleGUI! I'm glad it went well. The screenshots look great!
+> 
+> Code annotation too? Do you have a GitHub Repo with your code?
+> 
+> I'm impressed by bi-lingual programmers. It's hard enough coding, reading, writing, and thinking just in English. Throwing another language on top of all that is next-level stuff. Really happy you posted what you've made!
+
+Hi @PySimpleGUI, yes i have uploaded the project to the following [repository](https://github.com/J-Josu/FiguRace)
+
+Thanks you for all!
+
+-----------
+
+[chanon-kr](https://github.com/chanon-kr) 2023-02-14T06:27:10Z
+Hi, I use PySimpleGUI to make a Simple Object Detection GUI with YOLOv8.
+
+Check my GitHub repo from this link.
+
+[Simple Object Detection GUI](https://github.com/chanon-kr/simple_imagui_app)
+
+And here is a screenshot of the GUI.
+
+![image](https://user-images.githubusercontent.com/64777509/218656441-a53a0b28-76ac-4be0-a90b-3f4e57a71a56.png)
+
+Thanks to @PySimpleGUI for suggestions and improvement!!
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-02-08T22:16:35Z
 Thank you @J-Josu ![image](https://user-images.githubusercontent.com/46163555/217663277-1e69dfcf-c816-4930-aada-610b157eaf0a.png) for sharing your program and your story. I love hearing when students use PySimpleGUI!  I'm glad it went well.  The screenshots look great!  
 
