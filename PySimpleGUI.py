@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.150 Unreleased"
+version = __version__ = "4.61.0.151 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -367,6 +367,8 @@ _change_log = """
         Removed second print when Mac patch applied
     4.61.0.150
         Tree Element new parameter - click_toggles_select - if True then clicking a selected item will unselect it
+    4.61.0.151
+        Fixed problem with TabGroups when the text was blank for a Tab. Was not correctly identifying the active tab in the Values dictionary
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7642,6 +7644,7 @@ class TabGroup(Element):
         self.Rows = []
         self.TKNotebook = None  # type: ttk.Notebook
         self.Widget = None  # type: ttk.Notebook
+        self.tab_index_to_key = {}      # has a list of the tabs in the notebook and their associated key
         self.TabCount = 0
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -7768,6 +7771,21 @@ class TabGroup(Element):
                     return element.Key
         return None
 
+
+    def find_currently_active_tab_key(self):
+        """
+        Returns the key for the currently active tab in this TabGroup
+        :return:    Returns the key or None of no key found
+        :rtype:     key | None
+        """
+        try:
+            current_index = self.TKNotebook.index('current')
+            key = self.tab_index_to_key.get(current_index, None)
+        except:
+            key = None
+
+        return key
+
     def get(self):
         """
         Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
@@ -7781,7 +7799,7 @@ class TabGroup(Element):
 
         try:
             value = self.TKNotebook.tab(self.TKNotebook.index('current'))['text']
-            tab_key = self.FindKeyFromTabName(value)
+            tab_key = self.find_key_from_tab_name(value)
             if tab_key is not None:
                 value = tab_key
         except:
@@ -15108,7 +15126,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
                         value = element.TKNotebook.tab(element.TKNotebook.index('current'))['text']
-                        tab_key = element.FindKeyFromTabName(value)
+                        tab_key = element.find_currently_active_tab_key()
+                        # tab_key = element.FindKeyFromTabName(value)
                         if tab_key is not None:
                             value = tab_key
                     except:
@@ -17181,6 +17200,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element = element  # type: Tab
+                form = form   # type: TabGroup
                 element.TKFrame = element.Widget = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
                 state = 'normal'
@@ -17232,6 +17252,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
+                form.tab_index_to_key[element.TabID] = element.key      # has a list of the tabs in the notebook and their associated key
                 form.TabCount += 1
                 if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                     element.TKFrame.configure(background=element.BackgroundColor, highlightbackground=element.BackgroundColor, highlightcolor=element.BackgroundColor)
@@ -26303,4 +26324,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#75255ce9495078dee42b4285a47339005dbe8ae17df3a0f8074fb8c4b6db8829af1d9642cc849eeebe02b5cc6e21c4fec2dc69c2235ff42cb35a84a57be3e18547396319d1ae66e5e6956104c1dd9e89be6ea486f05b5646cd1a73766a7ce0c0eb52ab4f288603fe90d7b7cbe1395160f6d9ef75be5952d6831d3350101c1c0c07610a040cda224064c2126638ad9a4fbc04cc0c8000b4d9eea653d662d101ddb48bb1a6943214eb0ae8c06d667178d2f0d9dcc7d46164cd9ad986baf3a822ab4599b2f3721b8edc4883ed2d1128a36c58c1cec91bdd02c805270c7f2376f340fee931ba8a4b557c7b8fbd9b8bd68b2d81544fadbbb616f238871ba796f9fa7d300606ee243fc67662a537d1a240b3f6232ecc2f3565e148695abfecb757d6ee1dd6cb75eeb8c28cd1d49e61cb3365f9325fbb08d0aef679e1cb79e418a7160cb25f710f854f88b314e64e2a6fe766e246cfc5077a25ed47989a2a3cc4ec07ff3acf0ad487e6a029796b6956f9c68ab2373739322b4fbc1548a2fe9dfaceb7c680510403dd7b59733c91fb5a3dd9ecc2407c0194c12a3907531b0ceedfb572bc70bcee19e27328ad1858279a7a55293fc5cbded9b87adef21751bf5c94ecedd11fa01c249a792449c7b6ab94629d47b0412a88e0a818b314050f4b171578d8da28983e9e3a851f36eac1e3e7182693b7dc4d54b46d3127e4cdddfbbf01c4865a
+#1ddab5912c76bfc3ff46839491a5aa200d7c5bb80fb2c4579f727a0cf0894a114c9701f5977d1edf3f6ea304828fd25042798d2e05491753c617d2bb39360d7de5bb75525b0126432244dd7fa9b70584ddeb5e7fdda756e682042aee6a35ac125a6d079ed7dcf0fe890d1a9405a1c3e2ae32c6e6ee4566a2f351f178a1cf628bc4d705c8a296a468fbbb24d9230d39410fab4de94c71565558534a40645fb8cd91d6ab114b827587f57132c2d520e192af92004e5d22967e6d99283e80ad8e3c5b834b1918bdaa27206df72b8da3661b09b3098070145945cca71ec7c7bede3cef364707ad021ab75addeb9e1fb3d141adaf97618aff27a7dd1711d4ed96af62fa093fc0a5f2279b67b1eaf4f2028d57e58989d15f9c35605a724557c791f26f9d1bec46598d54664ebc50123adaa422ec4bedff5a64ae92a32eba09cb241d659ea0947faa8444233218822fd6b7960581ddd3fb4a81396d830c7dbd541905e5f72d634881ccb243c0591557043fbc423edbdc0f97cd2d4d00b2bfbcaf9cfe76765f0299fc866f52025c44d41b66471fa9648abc2981dfd0ac92b88425def2052758902e0544a8c4a8f7866ecdf4287d1cfc719d61bf56ed02864c86f9a6303a63540e2c9337f83e0a0dd6f910e02377bd6f6e1be65c3f0d4f1d824234233f12dedeae4b4375547b5feba450b984b3b2e5c1b72a883a060fb93978a1a2fbb4bc
