@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.151 Unreleased"
+version = __version__ = "4.61.0.152 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -369,6 +369,8 @@ _change_log = """
         Tree Element new parameter - click_toggles_select - if True then clicking a selected item will unselect it
     4.61.0.151
         Fixed problem with TabGroups when the text was blank for a Tab. Was not correctly identifying the active tab in the Values dictionary
+    4.61.0.152
+        Updated TabGroup.get to use the same method to find the currently active tab that was just added above. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7790,21 +7792,20 @@ class TabGroup(Element):
         """
         Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
         the tab if no key is defined.  Returns None if an error occurs.
-        Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+        Note that this is exactly the same data that would be returned from a call to Window.read. Are you sure you
         are using this method correctly?
 
-        :return: The key of the currently selected tab or the tab's text if it has no key
+        :return: The key of the currently selected tab or None if there is an error
         :rtype:  Any | None
         """
 
         try:
-            value = self.TKNotebook.tab(self.TKNotebook.index('current'))['text']
-            tab_key = self.find_key_from_tab_name(value)
-            if tab_key is not None:
-                value = tab_key
+            current_index = self.TKNotebook.index('current')
+            key = self.tab_index_to_key.get(current_index, None)
         except:
-            value = None
-        return value
+            key = None
+
+        return key
 
     def add_tab(self, tab_element):
         """
@@ -26324,4 +26325,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1ddab5912c76bfc3ff46839491a5aa200d7c5bb80fb2c4579f727a0cf0894a114c9701f5977d1edf3f6ea304828fd25042798d2e05491753c617d2bb39360d7de5bb75525b0126432244dd7fa9b70584ddeb5e7fdda756e682042aee6a35ac125a6d079ed7dcf0fe890d1a9405a1c3e2ae32c6e6ee4566a2f351f178a1cf628bc4d705c8a296a468fbbb24d9230d39410fab4de94c71565558534a40645fb8cd91d6ab114b827587f57132c2d520e192af92004e5d22967e6d99283e80ad8e3c5b834b1918bdaa27206df72b8da3661b09b3098070145945cca71ec7c7bede3cef364707ad021ab75addeb9e1fb3d141adaf97618aff27a7dd1711d4ed96af62fa093fc0a5f2279b67b1eaf4f2028d57e58989d15f9c35605a724557c791f26f9d1bec46598d54664ebc50123adaa422ec4bedff5a64ae92a32eba09cb241d659ea0947faa8444233218822fd6b7960581ddd3fb4a81396d830c7dbd541905e5f72d634881ccb243c0591557043fbc423edbdc0f97cd2d4d00b2bfbcaf9cfe76765f0299fc866f52025c44d41b66471fa9648abc2981dfd0ac92b88425def2052758902e0544a8c4a8f7866ecdf4287d1cfc719d61bf56ed02864c86f9a6303a63540e2c9337f83e0a0dd6f910e02377bd6f6e1be65c3f0d4f1d824234233f12dedeae4b4375547b5feba450b984b3b2e5c1b72a883a060fb93978a1a2fbb4bc
+#5e9cfffaecef53291e73f11fc7bf1177bd35817e37b11537cdd2d8c784ed26ae4edf6f6b61fe1c48e7c4906af42108931762fefc04569827c7e01af1f93bf32ab317c1a8d8ac217036f2b1c61ec92fd0db526a3f4324bc123733eae92d2365026140925f104132afba06e1867b4eb4757444d8bf36bf9cd590d78bee5d768936ef17feacbae9109fee40db4b839fc9d48c4894245225747f9430b7327ef3489890bd5aabbb1a203d02c9474fe956c5dc2b889e7aff60bebbce790c2dc01a78d32e5c1d24e580c61cf34bc2354bf959ef990dcd249d9823afe4d9dfcdf84f0a08699ea346e3e4d1ce11157d576b7ef683a4032ba24d2f2acc603aa1ff507e76fbdc35aad2777422b0fcbf30e2ff6691710201cd64d7cc686983abe09d7300b395012c95969657ddc54ab6925a523ec8aa2f236ab679bed628e00d4f682bb734e8b3bbf705e07b60e6cbcc32a3742622b41cdeee8c8488c5b34274bd5c2f79f07da64241c3a46904e2b6e1006ff50336deffabd16a3d5817e35c0150b8eb55d1119ce530fe2f6533800198a2343c536b9d945075797b2c6a5bf40d74477706c4b441bb51dbd1fd4b6ab31702806f9f90acd31f24f8e58444d4899bb12c58de734566600f895ec73c2d92af242abcf65e6d28904d0a436343d40763d03f98a06537a726314d19c660f6a9ff8edd779aa66773868dfadeacf7cc31dad706df4aa013
