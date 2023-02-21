@@ -7088,7 +7088,7 @@ class Frame(Element):
             if type(element) == list:
                 PopupError('Error creating Frame layout',
                            'Layout has a LIST instead of an ELEMENT',
-                           'This means you have a badly placed ]',
+                           'This sometimes means you have a badly placed ]',
                            'The offensive list is:',
                            element,
                            'This list will be stripped from your layout',
@@ -7427,7 +7427,7 @@ class Tab(Element):
             if type(element) == list:
                 popup_error_with_traceback('Error creating Tab layout',
                            'Layout has a LIST instead of an ELEMENT',
-                           'This means you have a badly placed ]',
+                           'This sometimes means you have a badly placed ]',
                            'The offensive list is:',
                            element,
                            'This list will be stripped from your layout')
@@ -7685,7 +7685,7 @@ class TabGroup(Element):
             if type(element) == list:
                 PopupError('Error creating Tab layout',
                            'Layout has a LIST instead of an ELEMENT',
-                           'This means you have a badly placed ]',
+                           'This sometimes means you have a badly placed ]',
                            'The offensive list is:',
                            element,
                            'This list will be stripped from your layout', keep_on_top=True, image=_random_error_emoji()
@@ -8346,7 +8346,7 @@ class Column(Element):
             if type(element) == list:
                 PopupError('Error creating Column layout',
                            'Layout has a LIST instead of an ELEMENT',
-                           'This means you have a badly placed ]',
+                           'This sometimes means you have a badly placed ]',
                            'The offensive list is:',
                            element,
                            'This list will be stripped from your layout', keep_on_top=True, image=_random_error_emoji()
@@ -10372,7 +10372,7 @@ class Window:
                 continue
                 _error_popup_with_traceback('Error creating Window layout',
                                             'Layout has a LIST instead of an ELEMENT',
-                                            'This means you have a badly placed ]',
+                                            'This sometimes means you have a badly placed ]',
                                             'The offensive list is:',
                                             element,
                                             'This list will be stripped from your layout'
@@ -26325,4 +26325,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5e9cfffaecef53291e73f11fc7bf1177bd35817e37b11537cdd2d8c784ed26ae4edf6f6b61fe1c48e7c4906af42108931762fefc04569827c7e01af1f93bf32ab317c1a8d8ac217036f2b1c61ec92fd0db526a3f4324bc123733eae92d2365026140925f104132afba06e1867b4eb4757444d8bf36bf9cd590d78bee5d768936ef17feacbae9109fee40db4b839fc9d48c4894245225747f9430b7327ef3489890bd5aabbb1a203d02c9474fe956c5dc2b889e7aff60bebbce790c2dc01a78d32e5c1d24e580c61cf34bc2354bf959ef990dcd249d9823afe4d9dfcdf84f0a08699ea346e3e4d1ce11157d576b7ef683a4032ba24d2f2acc603aa1ff507e76fbdc35aad2777422b0fcbf30e2ff6691710201cd64d7cc686983abe09d7300b395012c95969657ddc54ab6925a523ec8aa2f236ab679bed628e00d4f682bb734e8b3bbf705e07b60e6cbcc32a3742622b41cdeee8c8488c5b34274bd5c2f79f07da64241c3a46904e2b6e1006ff50336deffabd16a3d5817e35c0150b8eb55d1119ce530fe2f6533800198a2343c536b9d945075797b2c6a5bf40d74477706c4b441bb51dbd1fd4b6ab31702806f9f90acd31f24f8e58444d4899bb12c58de734566600f895ec73c2d92af242abcf65e6d28904d0a436343d40763d03f98a06537a726314d19c660f6a9ff8edd779aa66773868dfadeacf7cc31dad706df4aa013
+#53b9d7c8cee4e60b4eb060f64170990c5fa5dfa2168dc6a65c062ecaec143d3d7d0a25bbc46c7b94417674ea9c91591856af3f6503e1acf1c61f885ad55e2bc6a030b22a0b6165fb426925ab544a1b4063bfc261af6be3120da31b75d68db047574c1b5c4a6b2486c7581fcd6fbf3df70e859af8af8d19b72a7284facfe30a44b8b98e88e69932df8758f382eb9d994afe894c5a6c25e785fd3dc9db3a49556d211f8e8fa72936c99fe36b8a55586398665fc04deb8979720ddb0a177f5f1c963b76b4ca8ac59b046e362f5a49cc4da3f8e65b2c0067675533c70bc15908faebeb1fb611486cea4ccab9d52c8223de11681d2731cf740c34d5ff91c7f581d35d210131863d89d44a8b15600445968e01bcead9cfb64ecec9d7e298233db246a2185997cd1721c2ab82a14159420f23f7b9d1270797950f1eb8b438ac3d4e1388b5ec68cd5fe8c37d19a29d36c1f10c3766c6ec464a99a7b4d0d12fe12145427b96e98d777095b7e154ad1c6f7e4f9d5395e933738c6575599040b560252532948cd9497edb334260c712ac07738b5ee6e3caba6b353cfe1c41b992059c238d479bad1e0df027e396d14eb44b13e62fe01d7cc5478ad2225b8386e86050afd3fd44d2bb3078ac87edaf1a6721b813add517175b0115fc1137f362597ca734ecd1a7d8b337283f32c9258ebc187379682a53c7bd93086ff394336b9645f245e6e0
