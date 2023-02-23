@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.153 Unreleased"
+version = __version__ = "4.61.0.154 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -373,6 +373,8 @@ _change_log = """
         Updated TabGroup.get to use the same method to find the currently active tab that was just added above. 
     4.61.0.153
         Updated layout error messages to include "sometimes" in the description of what may be causing error
+    4.61.0.154
+        Updated Window.start_timer docstring to include the constants EVENT_TIMER and TIMER_KEY since the call reference doesn't show the variable names but rather the string value. 
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12579,7 +12581,8 @@ class Window:
     def timer_start(self, frequency_ms, key=EVENT_TIMER, repeating=True):
         """
         Starts a timer that gnerates Timer Events.  The default is to repeat the timer events until timer is stopped.
-        You can provide your own key or a default key will be used.
+        You can provide your own key or a default key will be used.  The default key is defined
+        with the constants EVENT_TIMER or TIMER_KEY.  They both equal the same value.
         The values dictionary will contain the timer ID that is returned from this function.
         
         :param frequency_ms:    How often to generate timer events in milliseconds 
@@ -26327,4 +26330,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#224c2bf05eb43cd62fd9d35697b493668caab82e63b920e5c14a364a5020dacbf5eeaec4540d626978dd44352f40a6545fa6530af35ac0ad493948762dbd72ee99e47b5d124e5840c1795a29679fdf752a68334ae08cbb4e9128e34288c331f193e5f5607300fc9a80db915d5cb3a3160a643d8a0c4ab7592014539db972200012a4850335072b464eea1131c13f6f764c418712719e3bd67908ba25d1bae63a3f088e3387aa510c48d68ef1fda1bf21c342782ac15425bc76a9617b2fa34fe49e3974e09aef68850a1a226efcaf11aef021571dc226a442c11757c429727a95876935d191dac9a8681a261a99578965c10ce0c38010b1e772c9899e39cdeecf29a8ace331b299028fefceae30453e156c36741d2f9692e4e087b6eeeaeb1375452897e7e01b3ba09142de6e4dd3248f1a0ff684e933f4d62118aff44a6aadefc9ca28e6c76fd343c0340f5dfba0dcc8fa38c978b4463bbd6c3ead08ddb9a6d2ce18dff38ef321bd2f2e4de4d683302d84d8848249461d86dd690e76c16d287e8b06850a994d21113437fd22852d4e6c109dd843226575138f441c3d6de5a0f1d5a7249dc79a85d9047ca2c09fdc510f419dc04b170595ea13de083a2ccf66df8e02c7340198200757f99dc9b771622aef79597308a53357c63f8acdb8a8f76e986c0994b5bd1337cc15e4b82a61caf66ebf86395007f31ff2f701a42d139671
+#42b79b1bcb52a826b059ac9bb2ca70dba9418f275efc296cfac8eb77e2867f7c00de66abe0321614edd1eb498efe67bea8dc5bf4cb5f5c7ef1f49fd6df0e962387474b0ef0ce819e6b06bf69d1e3725b237a9041a9b09faeae2235178153f835f61e7bffec87d14f06fe47bcdb8c26bdd097d69f014a50130035811436bd02002c688248f367f3f60c22cb420e6101e2544dde863487cc19c6ba3880c781a8a9b23998ff6846b1a4f4149b7d7aa25f7affa41beb638b11175800f66eb772a946876f74ab0617d58360e90d879fb5a9dcc7b3635e93e0f64a8fcfc42dc344285d76e9e75ffa8de775b8514a98c3dc7f74af47b9a03e108b91386c84096e6adb013e6f5b49ab1b19b348988790d37cfe50f5e5c432f699298dde62942ca4166938a1169b0229da697494bf15c0ca060439f9d5de7072af8d3a1201c476829cde81cba2c7e42dc1e38620c3f09d27eb504213d5038538ac15e42df6df9f3e5d7f9e27b2beef7f2a885f5742d00161a4da326d1a2ac7ec8876362c76732e15c307d260f90e712633e805710ba861596faf62532b6baf1a332eb0e30e4f62011a71ed2c9eff338089958eace69aed2e6d1ca406bd2f20626a835c9a66db9b751a9bbd8427281cfe8be305dce8385eec3d5609d5370d3e8fc9cd881d010a4c830cbbd4138a0f2997cc589fd15daf783e377ef1c8762beb60062d0f7b47b32cf6f31248
