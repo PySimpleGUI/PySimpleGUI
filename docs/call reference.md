@@ -10988,14 +10988,14 @@ Parameter Descriptions:
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
-Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+Note that this is exactly the same data that would be returned from a call to Window.read. Are you sure you
 are using this method correctly?
 
 `get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
+|Any | None| **return** | The key of the currently selected tab or None if there is an error |
 
 ### get_next_focus
 
@@ -11220,14 +11220,14 @@ Parameter Descriptions:
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
-Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+Note that this is exactly the same data that would be returned from a call to Window.read. Are you sure you
 are using this method correctly?
 
 `Get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
+|Any | None| **return** | The key of the currently selected tab or None if there is an error |
 
 ### SetFocus
 
@@ -12198,6 +12198,7 @@ Tree(data = None,
     show_expanded = False,
     change_submits = False,
     enable_events = False,
+    click_toggles_select = None,
     font = None,
     justification = "right",
     text_color = None,
@@ -12249,6 +12250,7 @@ Parameter Descriptions:
 |                                      bool                                      |      show_expanded      | if True then the tree will be initially shown with all nodes completely expanded |
 |                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |      enable_events      | Turns on the element specific events. Tree events happen when row is clicked |
+|                                      bool                                      |  click_toggles_select   | If True then clicking a row will cause the selection for that row to toggle between selected and deselected |
 |                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
 |                                      str                                       |       text_color        | color of the text |
@@ -13851,6 +13853,59 @@ Parameter Descriptions:
 | Any |  func   | A lambda or a function name with no parms |
 | Any | end_key | The key that will be generated when the function returns |
 | threading.Thread | **RETURN** | The id of the thread
+
+### timer_get_active_timers
+
+Returns a list of currently active timers for a window
+
+`timer_get_active_timers()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|List[int]| **return** | List of timers for the window |
+
+### timer_start
+
+Starts a timer that gnerates Timer Events.  The default is to repeat the timer events until timer is stopped.
+You can provide your own key or a default key will be used.
+The values dictionary will contain the timer ID that is returned from this function.
+
+```
+timer_start(frequency_ms,
+    key = "__TIMER EVENT__",
+    repeating = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|            int             | frequency_ms | How often to generate timer events in milliseconds |
+| str or int or tuple or object |     key      | Key to be returned as the timer event |
+|            bool            |  repeating   | If True then repeat timer events until timer is explicitly stopped |
+| int | **RETURN** | Timer ID for the timer
+
+### timer_stop
+
+Stops a timer with a given ID
+
+```
+timer_stop(timer_id)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | timer_id | Timer ID of timer to stop |
+
+### timer_stop_all
+
+Stops all timers for THIS window
+
+```python
+timer_stop_all()
+```
 
 ### un_hide
 

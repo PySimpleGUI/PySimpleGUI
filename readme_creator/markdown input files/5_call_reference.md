@@ -3040,6 +3040,18 @@ Example:  If first row has a `VPush`, then your layout will be At the bottom of 
 ### start_thread
 <!-- <+Window.start_thread+> -->
 
+### timer_get_active_timers
+<!-- <+Window.timer_get_active_timers+> -->
+
+### timer_start
+<!-- <+Window.timer_start+> -->
+
+### timer_stop
+<!-- <+Window.timer_stop+> -->
+
+### timer_stop_all
+<!-- <+Window.timer_stop_all+> -->
+
 ### un_hide
 <!-- <+Window.un_hide+> -->
 
