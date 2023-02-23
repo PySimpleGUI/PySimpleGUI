@@ -7208,11 +7208,11 @@ Parameter Descriptions:
 
 ---------
 
-## Output Element (No longer recommended - USE `Multiline` instead)
+## Output Element
 
-Rather than use the `Output` element, it's recommended that you use the `Multiline` element instead.  The reason for this is that more controls have been added to the Multiline and in the future you can expect more features will be added to the Multiline while the `Output` element has stopped being enhanced.
+Output Element - a multi-lined text area to where stdout, stderr, cprint are rerouted.
 
-You can control which Multiline Element receives your stdout output as well as use the color-print (`cprint`) with a Multiline.
+Now based on the `Multiline` element
 
     Output Element - a multi-lined text area to where stdout, stderr, cprint are rerouted.
 
