@@ -13867,7 +13867,8 @@ Returns a list of currently active timers for a window
 ### timer_start
 
 Starts a timer that gnerates Timer Events.  The default is to repeat the timer events until timer is stopped.
-You can provide your own key or a default key will be used.
+You can provide your own key or a default key will be used.  The default key is defined
+with the constants EVENT_TIMER or TIMER_KEY.  They both equal the same value.
 The values dictionary will contain the timer ID that is returned from this function.
 
 ```
