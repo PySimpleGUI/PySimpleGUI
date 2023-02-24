@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.155 Unreleased"
+version = __version__ = "4.61.0.156 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -377,6 +377,8 @@ _change_log = """
         Updated Window.start_timer docstring to include the constants EVENT_TIMER and TIMER_KEY since the call reference doesn't show the variable names but rather the string value. 
     4.61.0.155
         Multiline new parameter autoscroll_only_at_bottom. When True, the element will autoscroll (keep scrollbar at the bottom) only if the scrollbar is already at the bottom.
+    4.61.0.156
+        Added the new Multiline parameter autoscroll_only_at_bottom so that the Output element can also use this option
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4780,7 +4782,7 @@ class Output(Multiline):
     so that an item is not included in the values dictionary on every window.read call
     """
 
-    def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, echo_stdout_stderr=False, font=None, tooltip=None,
+    def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, autoscroll_only_at_bottom=False, echo_stdout_stderr=False, font=None, tooltip=None,
                  key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None, wrap_lines=None, horizontal_scroll=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None,  sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None):
         """
@@ -4796,6 +4798,8 @@ class Output(Multiline):
         :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param autoscroll_only_at_bottom:   If True the contents of the element will automatically scroll only if the scrollbar is at the bottom of the multiline
+        :type autoscroll_only_at_bottom:    (bool)
         :param echo_stdout_stderr:          If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:           (bool)
         :param font:                        specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -4837,7 +4841,7 @@ class Output(Multiline):
         """
 
 
-        super().__init__(size=size, s=s, background_color=background_color, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll, key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, reroute_cprint=True, autoscroll=True, auto_refresh=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata, sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
+        super().__init__(size=size, s=s, background_color=background_color, autoscroll_only_at_bottom=autoscroll_only_at_bottom, text_color=text_color, pad=pad, p=p, echo_stdout_stderr=echo_stdout_stderr, font=font, tooltip=tooltip, wrap_lines=wrap_lines, horizontal_scroll=horizontal_scroll, key=key, k=k, right_click_menu=right_click_menu, write_only=True, reroute_stdout=True, reroute_stderr=True, reroute_cprint=True, autoscroll=True, auto_refresh=True, expand_x=expand_x, expand_y=expand_y, visible=visible, metadata=metadata, sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
 
 
@@ -26339,4 +26343,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5bc1d5b124c2216b47e22ac8ad4b7056272a9f7c35fc0983deabbcb752071e82133158d85f70d7a54b5efd1fe80f615487a881be28732875ec59108338aa747b4f18940fbb47aa3414068d71da2d4ec64c83cd0305d0b74be2e84d26519a104c7233c84b24ff68f6f470668a27f0ebd75ade3059d0386decf9274874c5d18565266b972e4ed06c84a5d4d66482c270543329af1778d100a20328793c02adc21228cd28d7d8ef85a3bad75a8dc97e861d11360f15c0e0947f0cf0ce354821ee3154e8c71d204ff996b6afa21615ee5eca314af589bfbe3e9be6455376646332c8b2b77c758e7b65608c4fec97fc3cbe628718a9249996b5a00ed9429059a377b042acea20eca277516d23739d6a94f0d89fded115ee19c1755a53896fdff68e13c61a88ce10d78b964d1c63f9d7089765783d80a7ddc18d304994e6d6a5fd7cffa1489d6a3da08a1c9d04c707f41c52fb97a76bbef32c216e2acdac203910cfcafc3e22e21d640f31bd473e8409cc7fa3fe4e9142304394a857afa100cff69d2a278cee3bdbf239088ad350002992ffdce24d4aba46fc98043b8573e9f6e1c2fb6360c1841a0e9dbf5b203d9625e5f1b5ebb59c2bd2b6d7824a397dff3954d525601d8261675599ff81c67ba9c2b4bd7e3dc4e49a615adfb3e1496f5cb0d0ff4272e96704d577bdcd376a9e646bc49c692e57288ab8ad2bf684339728bd78d6d0
+#29f00650f6027a50a70e9ed99df59876f83c29dbb03918935601275473d178e66f3e24ef76f973d2d8b5f32736ad3ad4178606a1dc46e350f8eaa4d76ceaee2690a5b62ab06e77765601fcd09c9eec05914c355fcbbc027500703a90577976c830232d550e074c7eb265687c33afb7028739fdbd7d6ece2e79899b99da85c75970bf603bad96e94b6899f78d9acc8eadeff67c6896c71b3ca41c40bf1e8100b64bbf640baef9092c2e5d53ce9ab235be342de5506cac579ea146e4642a3b1e10a581f039d139a398cf7cda6bc7958024c872782264998580e0c54d73eb82203b25df0c2e9c69b73aab882dbbc2181e8777c4b9a04a3dd7e894a2e1705d451666d39345356e84b22e2f10dc8828bcae58c238b565e0bdaaa181db7124cc88192224ae5f10e58a313d997cc56eb46f3e0522288d7b2a0b6d240393d7ee05fbd899bea63819af50e2eeab739aee0eb567f0b291fdee48d5208b5c84263daa0b0d257b9b6fdc2b750f17248f6f17c7c1c6cda7c4dd2a0d2d1b60cc263043e338550d313aaccff51b143cd8fb6001349796e629a9255f7e03b20855015db22673615ceb882dc6771355a83fd877988671e5a0cebae22f79b4c9f7f73f9e20c96dc46269e0366afc37c98e706fe63ffc64e97392c922109d7366919609e225951a627bbdd6ecac8f6852ed447ffd3a7fde7ccf732134385ec03e40fc1422ec2adcac4a
