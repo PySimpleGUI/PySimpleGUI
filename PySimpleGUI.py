@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.154 Unreleased"
+version = __version__ = "4.61.0.155 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -375,6 +375,8 @@ _change_log = """
         Updated layout error messages to include "sometimes" in the description of what may be causing error
     4.61.0.154
         Updated Window.start_timer docstring to include the constants EVENT_TIMER and TIMER_KEY since the call reference doesn't show the variable names but rather the string value. 
+    4.61.0.155
+        Multiline new parameter autoscroll_only_at_bottom. When True, the element will autoscroll (keep scrollbar at the bottom) only if the scrollbar is already at the bottom.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3755,7 +3757,7 @@ class Multiline(Element):
     one up in the future too.
     """
 
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, autoscroll_only_at_bottom=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, selected_text_color=None, selected_background_color=None, horizontal_scroll=False, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, wrap_lines=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
@@ -3769,6 +3771,8 @@ class Multiline(Element):
         :type disabled:                      (bool)
         :param autoscroll:                   If True the contents of the element will automatically scroll as more data added to the end
         :type autoscroll:                    (bool)
+        :param autoscroll_only_at_bottom:    If True the contents of the element will automatically scroll only if the scrollbar is at the bottom of the multiline
+        :type autoscroll_only_at_bottom:     (bool)
         :param border_width:                 width of border around element in pixels
         :type border_width:                  (int)
         :param size:                         (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -3889,6 +3893,7 @@ class Multiline(Element):
         self.reroute_stderr = reroute_stderr
         self.no_scrollbar = no_scrollbar
         self.hscrollbar = None      # The horizontal scrollbar
+        self.auto_scroll_only_at_bottom = autoscroll_only_at_bottom
         sz = size if size != (None, None) else s
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
@@ -3943,6 +3948,7 @@ class Multiline(Element):
 
         if autoscroll is not None:
             self.Autoscroll = autoscroll
+        current_scroll_position = self.TKText.yview()[1]
 
         if justification is not None:
             if justification.startswith('l'):
@@ -3989,8 +3995,11 @@ class Multiline(Element):
                 self.TKText.configure(state='disabled')
             self.DefaultText = value
 
+        # if self.Autoscroll:
+        #     self.TKText.see(tk.END)
         if self.Autoscroll:
-            self.TKText.see(tk.END)
+            if not self.auto_scroll_only_at_bottom or (self.auto_scroll_only_at_bottom and current_scroll_position == 1.0):
+                self.TKText.see(tk.END)
         if disabled is True:
             self.TKText.configure(state='disabled')
         elif disabled is False:
@@ -26330,4 +26339,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#42b79b1bcb52a826b059ac9bb2ca70dba9418f275efc296cfac8eb77e2867f7c00de66abe0321614edd1eb498efe67bea8dc5bf4cb5f5c7ef1f49fd6df0e962387474b0ef0ce819e6b06bf69d1e3725b237a9041a9b09faeae2235178153f835f61e7bffec87d14f06fe47bcdb8c26bdd097d69f014a50130035811436bd02002c688248f367f3f60c22cb420e6101e2544dde863487cc19c6ba3880c781a8a9b23998ff6846b1a4f4149b7d7aa25f7affa41beb638b11175800f66eb772a946876f74ab0617d58360e90d879fb5a9dcc7b3635e93e0f64a8fcfc42dc344285d76e9e75ffa8de775b8514a98c3dc7f74af47b9a03e108b91386c84096e6adb013e6f5b49ab1b19b348988790d37cfe50f5e5c432f699298dde62942ca4166938a1169b0229da697494bf15c0ca060439f9d5de7072af8d3a1201c476829cde81cba2c7e42dc1e38620c3f09d27eb504213d5038538ac15e42df6df9f3e5d7f9e27b2beef7f2a885f5742d00161a4da326d1a2ac7ec8876362c76732e15c307d260f90e712633e805710ba861596faf62532b6baf1a332eb0e30e4f62011a71ed2c9eff338089958eace69aed2e6d1ca406bd2f20626a835c9a66db9b751a9bbd8427281cfe8be305dce8385eec3d5609d5370d3e8fc9cd881d010a4c830cbbd4138a0f2997cc589fd15daf783e377ef1c8762beb60062d0f7b47b32cf6f31248
+#5bc1d5b124c2216b47e22ac8ad4b7056272a9f7c35fc0983deabbcb752071e82133158d85f70d7a54b5efd1fe80f615487a881be28732875ec59108338aa747b4f18940fbb47aa3414068d71da2d4ec64c83cd0305d0b74be2e84d26519a104c7233c84b24ff68f6f470668a27f0ebd75ade3059d0386decf9274874c5d18565266b972e4ed06c84a5d4d66482c270543329af1778d100a20328793c02adc21228cd28d7d8ef85a3bad75a8dc97e861d11360f15c0e0947f0cf0ce354821ee3154e8c71d204ff996b6afa21615ee5eca314af589bfbe3e9be6455376646332c8b2b77c758e7b65608c4fec97fc3cbe628718a9249996b5a00ed9429059a377b042acea20eca277516d23739d6a94f0d89fded115ee19c1755a53896fdff68e13c61a88ce10d78b964d1c63f9d7089765783d80a7ddc18d304994e6d6a5fd7cffa1489d6a3da08a1c9d04c707f41c52fb97a76bbef32c216e2acdac203910cfcafc3e22e21d640f31bd473e8409cc7fa3fe4e9142304394a857afa100cff69d2a278cee3bdbf239088ad350002992ffdce24d4aba46fc98043b8573e9f6e1c2fb6360c1841a0e9dbf5b203d9625e5f1b5ebb59c2bd2b6d7824a397dff3954d525601d8261675599ff81c67ba9c2b4bd7e3dc4e49a615adfb3e1496f5cb0d0ff4272e96704d577bdcd376a9e646bc49c692e57288ab8ad2bf684339728bd78d6d0
