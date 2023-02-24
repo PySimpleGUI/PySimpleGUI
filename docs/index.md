@@ -7112,11 +7112,53 @@ There are a number of demo programs that show how to use UserSettings to create 
 
 If you're using the default path, remember that previous runs of your file may have old settings that are still in your settings file.  It can get confusing when you've forgotten that you previously wrote a setting.  Not seeing the filename can have drawbacks like this.
 
-Also, because the settings automatically save after every update, it can be easy to accidently overwrite a previously saved setting.  If you want to avoid this, then perhaps it's best that you work with a dictionary within your code and then explicitly save your dictionary when you're ready to commit it to disk.
+Also, because the settings automatically save after every update, it can be easy to accidentally overwrite a previously saved setting.  If you want to avoid this, then perhaps it's best that you work with a dictionary within your code and then explicitly save your dictionary when you're ready to commit it to disk.
 
 To save your Python dictionary to a settings file, simply call `user_settings_write_new_dictionary(dict)`, passing in your dictionary as the parameter.
 
 -------------------------
+
+# Timer API
+
+The Timer API calls are in version 4.61.0 that is currently only available on the PySimpleGUI GitHub.  It has not been released to PyPI yet.
+
+## Do Not Use Sleeps In Your Event Loop...
+
+Instead of sleeping, you can request that an event be generated after some period of time.  If you need to "Sleep for 3 seconds" as part of some operation, instead schedule a timer for 3 seconds.  Your `window.read` call will return a value of `sg.TIMER_KEY` or `sg.EVENT_TIMER` (they are aliases and thus have the same value).
+
+## Timer API Calls
+
+These are the API calls that you'll use to manage timers:
+
+`window.timer_start` starts a timer  
+
+`window.timer_stop` stops a single timer  
+
+`window.timer_stop_all` stops all timers  
+
+`window.timer_get_active_timers` returns a list of active timer IDs
+
+Example - start a 3 second timer that does not repeat:
+
+```python
+window.timer_start(3000, repeating=False)       # start a 3-second timer
+```
+
+When this timer expires, you'll get an event `sg.EVENT_TIMER`.  If you want to specify your own key to be returned, then use the `key` parameter:
+
+```python
+window.timer_start(3000, key='-MY TIMER KEY-', repeating=False)
+```
+
+See the call reference for the details of each call.
+
+## Timer Demo Programs
+
+Using the PySimpleGUI Demo Browser, search for `window.timer_` to find Demo Programs that use the Timer API calls.
+
+The program `Demo_WindowTimer.py` demonstrates both repeating and non-repeating timers as well as using custom keys.  It's a simple set of API calls to use and the docstrings in combination with the Demo Programs should give you all you need to start using this capability.
+
+---------------------------
 
 # Extending PySimpleGUI
 
