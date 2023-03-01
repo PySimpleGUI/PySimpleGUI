@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.156 Unreleased"
+version = __version__ = "4.61.0.158 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -379,6 +379,10 @@ _change_log = """
         Multiline new parameter autoscroll_only_at_bottom. When True, the element will autoscroll (keep scrollbar at the bottom) only if the scrollbar is already at the bottom.
     4.61.0.156
         Added the new Multiline parameter autoscroll_only_at_bottom so that the Output element can also use this option
+    4.61.0.157
+        Added the _optional_window_data function that is used to help with local PySimpleGUI testing of release candidates. Not meant to be used by end-users.
+    4.61.0.158
+        Checked checkbox activeforeground to be the same as the text so mouseover doesn't change color
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10449,6 +10453,10 @@ class Window:
                            'This item will be stripped from your layout')
                 continue
             self.add_row(*row)
+        if _optional_window_data(self) is not None:
+            self.add_row(_optional_window_data(self))
+
+
 
     def layout(self, rows):
         """
@@ -16899,6 +16907,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
+                    element.TKCheckbutton.configure(activeforeground=element.TextColor)
 
                 element.Widget.configure(highlightthickness=1)
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -26300,6 +26309,18 @@ TimerStop = timer_stop
 test = main
 sdk_help = main_sdk_help
 
+def _optional_window_data(window):
+    """
+    A function to help with testing PySimpleGUI releases. Makes it easier to add a watermarked line to the bottom
+    of a window while testing release candidates.
+
+    :param window:
+    :type window:       Window
+    :return:            An element that will be added to the bottom of the layout
+    :rtype:             None | Element
+    """
+    return None
+
 pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 # ------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
 
@@ -26343,4 +26364,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#29f00650f6027a50a70e9ed99df59876f83c29dbb03918935601275473d178e66f3e24ef76f973d2d8b5f32736ad3ad4178606a1dc46e350f8eaa4d76ceaee2690a5b62ab06e77765601fcd09c9eec05914c355fcbbc027500703a90577976c830232d550e074c7eb265687c33afb7028739fdbd7d6ece2e79899b99da85c75970bf603bad96e94b6899f78d9acc8eadeff67c6896c71b3ca41c40bf1e8100b64bbf640baef9092c2e5d53ce9ab235be342de5506cac579ea146e4642a3b1e10a581f039d139a398cf7cda6bc7958024c872782264998580e0c54d73eb82203b25df0c2e9c69b73aab882dbbc2181e8777c4b9a04a3dd7e894a2e1705d451666d39345356e84b22e2f10dc8828bcae58c238b565e0bdaaa181db7124cc88192224ae5f10e58a313d997cc56eb46f3e0522288d7b2a0b6d240393d7ee05fbd899bea63819af50e2eeab739aee0eb567f0b291fdee48d5208b5c84263daa0b0d257b9b6fdc2b750f17248f6f17c7c1c6cda7c4dd2a0d2d1b60cc263043e338550d313aaccff51b143cd8fb6001349796e629a9255f7e03b20855015db22673615ceb882dc6771355a83fd877988671e5a0cebae22f79b4c9f7f73f9e20c96dc46269e0366afc37c98e706fe63ffc64e97392c922109d7366919609e225951a627bbdd6ecac8f6852ed447ffd3a7fde7ccf732134385ec03e40fc1422ec2adcac4a
+#0d0ea93fb64af026d84d2013aa9668fa13acac5b5c3d26ea2b2210e0a6e41099998caabd813b486f52a22cf3bccc2b436ccb5bc40cd7f20304fe2445708fefaeb36f6438c79adf18db1c0a1ea942010adb37c97a5671f68ed639991d2df6396a2d76c81e8c91fdd42d54c61548253f9e34f991f0f4dcae66bd06eb370f2985d0ee8b7cf7768776bae229e860c019357a4fc8aaa956c93ab7b9d2b871e01a30f8485c04a35bb8a86798ba8f47d33f7afb8c2008a7687200feacb10835a9259620215d7ae19e87a45bcc7cc5c2ceda2419a137deeeb321cb227cfa5d3b5deca3fb2c06aeb98a0379cf61a4a52240129b091724cfc9c0693045a59d9707c0554f797eb6cf921849fd72bf2ff11c2e8ecf347c8b5bb89210a8b099d82ba614ad18b986f35ebea96a921bc9d667fa9c71e0e166451b9d7a45fe8fec665f7dd261354188bc0cc820dfd479da7aaf151934c72918b1dcec66ba8fee0790b495623f32f489a2c3430824186b7910cd91cc398202399ff9787d7cd1f5ad9bf58fbfe0ff79914f09c34a462a1d9d01ad17dc58d16e97a513130228fb3b8cc33eca70ae1b8aa69c1b1ae8b85f8bf2f0c412a40fdc94c5ec4469bc4a650141c50cc3ab3cf356dfc08b9062fd5bdac2e9d24240a3545549c1a9e3e17da862d5d1a85dea10556fecf62b1229cdfcfc10486435b41b519ca8a8ce3bbdbb52b7154fc34184539b73
