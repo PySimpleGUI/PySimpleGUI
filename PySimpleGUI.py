@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.159 Unreleased"
+version = __version__ = "4.61.0.160 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -385,6 +385,8 @@ _change_log = """
         Checked checkbox activeforeground to be the same as the text so mouseover doesn't change color
     4.61.0.159
         New Global Settings feature - Window watermarking. Can be forced on temporarily by settings watermark=True in your Window creation
+    4.61.0.160
+        Fix "Bold" crash from watermarking feature
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25496,7 +25498,7 @@ def _global_settings_get_watermark_info():
     prefix_text = pysimplegui_user_settings.get('-watermark text-', '')
     ver_text = ' ' + version if pysimplegui_user_settings.get('-watermark ver-', False if not forced else True) or forced else ''
     framework_ver_text = ' ' + framework_version  if pysimplegui_user_settings.get('-watermark framework ver-', False if not forced else True) or forced else ''
-    watermark_font = pysimplegui_user_settings.get('-watermark font-', '_ 9 Bold')
+    watermark_font = pysimplegui_user_settings.get('-watermark font-', '_ 9 bold')
     background_color = pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor')
 
     Window._watermark = lambda window: Text(prefix_text + ver_text + framework_ver_text, font=watermark_font, background_color= window.BackgroundColor)
@@ -26414,4 +26416,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#12fbca39ac400901c64a05c219145aca0904491fcb8decd81a8a4532f85730408eddcd9cedbeed4931de6fe46a7510f0381b4d38563405db543c53db01e1bc3eee1270aeb12c473729130d2b1e4630da8ae060b0fae190b93c792e91d122ce455b1919b5baa96eaa6c719dd893490fb0520e9ea4cbd0db32f947df2da66af38b03131f8a718c2a810171bbd37c5d29157c24579f859645690c5ca3056888d5d263341c94e28c8b2f956aad0f4dc737a20bc94bbb5ad332b4586c763a4cfeca8ae8ba0f3c4c5d90f1d4a9ef19b22a854844a015e84aecbe769ab66dbf68503c1d00b8205909a8d9126a9ffc79439fd2f0efb27610f3f3ccfd9824407a35f47a301bbe461a24040f23b7e9c1a632d3ef91e3c61646b74037d72ab93477a573acdeb6b88f55b56bb7d4a74cca8cbd77018db330b2476e07e5dec88faec29e4ec49440059b030275fe91ca27754a58593b1517c908f66576b98ee4bd8eb26badb89338372f2d679372deb022582d2eac8d55b85f3afdf6e332e140215bf9e708bd7d279b2d45e53dcc2928505e3d0deb9745b08375c1a05ecf59ffefdd061837e0791b2c95ecf101d8df72baf447f03a0bacdb30331def1f78984682586551f9905d3409733901b6dbc9541290e2ac61edcce39bdfe917c328dd407dbaf051dd1e4e32d60c57b0461524f5d206ddae91959c226ce5f777c8a8f7d6d71f61f1aab91b
+#2e985cee1c05c21e66c65647555cdb19d022a40185cfad6fc96617a35f12286adcdeb20234a21b9cd4ffe4ccd3e5a259aa9bbdf3d772c389d0e5550ee89901ea46ac134062a39601e62fab71080f784137d54e8d6ee0eb35d9e2b7f0517147534b79aaf35f2b1d7194f0ad6dc0ae79167c616e719a74054d5bfaecb394aa78556ef3c0dd37fbd275c6f22008294cd4e0734cc9b5d151b49a2f42b754b736eb7322a0f3fc24efb638fba9b5ecc8b49ee2df3b2d0ffea18fd736978f1cfea73eb41dfaee1e4a339fa02df2660851accc6ec1e07f37b83b26edece5fb3e3f04c0163e6a499aa3bad9df6843b864cc8f2ae7ea2dadcdd69814997c4a97599f860ec8482e9bbf3969d27c7c288069a7218dceebaa410a9af1bd40edc331b7d96b2faaf0861b5a9cc7234f91d00c545efc94f4874aed65646105c61776b900d90c2c84578cf054ba409e21034a00a7e30a7e971027cb08433de7ff9f5d7b56c31977acb08bc18c4da434928e02257810856237cc6e81bdd4ca95d97ba2e9d43f1ded28f9a21ef3136f8ac6075117feddc13daa808a3c6e419e355b2a1ee86d057f47f0fa51e6e344c39a0c95ccb9e3dd98d89c4fde2411ec0877137fa27065a4e9ca1e75d27dc6b69c1df15c32052d8b303504243916275195f28daccc02c7cd539bc66d407bd89a77da1fc183c756e94b44fd947b72d53464d9a4ecab02cc17501e9e
