@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.158 Unreleased"
+version = __version__ = "4.61.0.159 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -383,6 +383,8 @@ _change_log = """
         Added the _optional_window_data function that is used to help with local PySimpleGUI testing of release candidates. Not meant to be used by end-users.
     4.61.0.158
         Checked checkbox activeforeground to be the same as the text so mouseover doesn't change color
+    4.61.0.159
+        New Global Settings feature - Window watermarking. Can be forced on temporarily by settings watermark=True in your Window creation
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10019,6 +10021,8 @@ class Window:
     _rerouted_stderr_stack = []             # type: List[Tuple[Window, Element]]
     _original_stdout = None
     _original_stderr = None
+    _watermark = None
+    _watermark_temp_forced = False
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), relative_location=(None, None), size=(None, None),
@@ -10033,7 +10037,7 @@ class Window:
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False, enable_window_config_events=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
                  use_custom_titlebar=None, scaling=None,
-                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None,
+                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, watermark=None,
                  metadata=None):
         """
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
@@ -10156,6 +10160,8 @@ class Window:
         :type sbar_frame_color:                      (str)
         :param sbar_relief:                          Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
         :type sbar_relief:                           (str)
+        :param watermark:                            If True, then turns on watermarking temporarily for ALL windows created from this point forward. See global settings doc for more info
+        :type watermark:                             bool
         :param metadata:                             User metadata that can be set to ANYTHING
         :type metadata:                              (Any)
         """
@@ -10293,6 +10299,14 @@ class Window:
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
             self.NoTitleBar = True
+
+        if watermark is True:
+            Window._watermark_temp_forced = True
+            _global_settings_get_watermark_info()
+        elif watermark is False:
+            Window._watermark = None
+            Window._watermark_temp_forced = False
+
 
         self.ttk_part_overrides = TTKPartOverrides(sbar_trough_color=sbar_trough_color, sbar_background_color=sbar_background_color, sbar_arrow_color=sbar_arrow_color, sbar_width=sbar_width, sbar_arrow_width=sbar_arrow_width, sbar_frame_color=sbar_frame_color, sbar_relief=sbar_relief)
 
@@ -10453,8 +10467,10 @@ class Window:
                            'This item will be stripped from your layout')
                 continue
             self.add_row(*row)
-        if _optional_window_data(self) is not None:
-            self.add_row(_optional_window_data(self))
+        # if _optional_window_data(self) is not None:
+        #     self.add_row(_optional_window_data(self))
+        if Window._watermark is not None:
+            self.add_row(Window._watermark(self))
 
 
 
@@ -25472,6 +25488,20 @@ def _global_settings_get_ttk_scrollbar_info():
     DEFAULT_TTK_THEME = pysimplegui_user_settings.get('-ttk theme-', DEFAULT_TTK_THEME)
 
 
+def _global_settings_get_watermark_info():
+    if not pysimplegui_user_settings.get('-watermark-', False) and not Window._watermark_temp_forced:
+        Window._watermark = None
+        return
+    forced =  Window._watermark_temp_forced
+    prefix_text = pysimplegui_user_settings.get('-watermark text-', '')
+    ver_text = ' ' + version if pysimplegui_user_settings.get('-watermark ver-', False if not forced else True) or forced else ''
+    framework_ver_text = ' ' + framework_version  if pysimplegui_user_settings.get('-watermark framework ver-', False if not forced else True) or forced else ''
+    watermark_font = pysimplegui_user_settings.get('-watermark font-', '_ 9 Bold')
+    background_color = pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor')
+
+    Window._watermark = lambda window: Text(prefix_text + ver_text + framework_ver_text, font=watermark_font, background_color= window.BackgroundColor)
+
+
 def main_global_get_screen_snapshot_symcode():
     pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 
@@ -25608,8 +25638,18 @@ def main_global_pysimplegui_settings():
     theme_tab = Tab('Theme',
               [[T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
               [T('Default Theme For All Programs:'),
-               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')]],
-                        font='_ 16', expand_x=True)
+               Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme), Checkbox('Always use custom Titlebar', default=pysimplegui_user_settings.get('-custom titlebar-',False), k='-CUSTOM TITLEBAR-')],
+               [Frame('Window Watermarking',
+                       [[Checkbox('Enable Window Watermarking', pysimplegui_user_settings.get('-watermark-', False), k='-WATERMARK-')],
+                       [T('Prefix Text String:'), Input(pysimplegui_user_settings.get('-watermark text-', ''), k='-WATERMARK TEXT-')],
+                       [Checkbox('PySimpleGUI Version', pysimplegui_user_settings.get('-watermark ver-', False), k='-WATERMARK VER-')],
+                       [Checkbox('Framework Version',pysimplegui_user_settings.get('-watermark framework ver-', False), k='-WATERMARK FRAMEWORK VER-')],
+                       [T('Font:'), Input(pysimplegui_user_settings.get('-watermark font-', '_ 9 bold'), k='-WATERMARK FONT-')],
+                       # [T('Background Color:'), Input(pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor'), k='-WATERMARK BG COLOR-')],
+                        ],
+                font='_ 16', expand_x=True)]])
+
+
 
     # ------------------------- Security Tab -------------------------
     security_tab = Tab('Security',
@@ -25641,6 +25681,12 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-python command-', values['-PYTHON COMMAND-'])
             pysimplegui_user_settings.set('-custom titlebar-', values['-CUSTOM TITLEBAR-'])
             pysimplegui_user_settings.set('-theme-', new_theme)
+            pysimplegui_user_settings.set('-watermark-', values['-WATERMARK-'])
+            pysimplegui_user_settings.set('-watermark text-', values['-WATERMARK TEXT-'])
+            pysimplegui_user_settings.set('-watermark ver-', values['-WATERMARK VER-'])
+            pysimplegui_user_settings.set('-watermark framework ver-', values['-WATERMARK FRAMEWORK VER-'])
+            pysimplegui_user_settings.set('-watermark font-', values['-WATERMARK FONT-'])
+            # pysimplegui_user_settings.set('-watermark bg color-', values['-WATERMARK BG COLOR-'])
 
             # TTK SETTINGS
             pysimplegui_user_settings.set('-ttk theme-', values['-TTK THEME-'])
@@ -25671,6 +25717,7 @@ def main_global_pysimplegui_settings():
             theme(new_theme)
 
             _global_settings_get_ttk_scrollbar_info()
+            _global_settings_get_watermark_info()
 
             window.close()
             return True
@@ -26329,6 +26376,9 @@ theme(theme_global())
 # ------------------------ Read the ttk scrollbar info ------------------------
 _global_settings_get_ttk_scrollbar_info()
 
+# ------------------------ Read the window watermark info ------------------------
+_global_settings_get_watermark_info()
+
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
 if running_trinket():
     USE_CUSTOM_TITLEBAR = True
@@ -26364,4 +26414,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0d0ea93fb64af026d84d2013aa9668fa13acac5b5c3d26ea2b2210e0a6e41099998caabd813b486f52a22cf3bccc2b436ccb5bc40cd7f20304fe2445708fefaeb36f6438c79adf18db1c0a1ea942010adb37c97a5671f68ed639991d2df6396a2d76c81e8c91fdd42d54c61548253f9e34f991f0f4dcae66bd06eb370f2985d0ee8b7cf7768776bae229e860c019357a4fc8aaa956c93ab7b9d2b871e01a30f8485c04a35bb8a86798ba8f47d33f7afb8c2008a7687200feacb10835a9259620215d7ae19e87a45bcc7cc5c2ceda2419a137deeeb321cb227cfa5d3b5deca3fb2c06aeb98a0379cf61a4a52240129b091724cfc9c0693045a59d9707c0554f797eb6cf921849fd72bf2ff11c2e8ecf347c8b5bb89210a8b099d82ba614ad18b986f35ebea96a921bc9d667fa9c71e0e166451b9d7a45fe8fec665f7dd261354188bc0cc820dfd479da7aaf151934c72918b1dcec66ba8fee0790b495623f32f489a2c3430824186b7910cd91cc398202399ff9787d7cd1f5ad9bf58fbfe0ff79914f09c34a462a1d9d01ad17dc58d16e97a513130228fb3b8cc33eca70ae1b8aa69c1b1ae8b85f8bf2f0c412a40fdc94c5ec4469bc4a650141c50cc3ab3cf356dfc08b9062fd5bdac2e9d24240a3545549c1a9e3e17da862d5d1a85dea10556fecf62b1229cdfcfc10486435b41b519ca8a8ce3bbdbb52b7154fc34184539b73
+#12fbca39ac400901c64a05c219145aca0904491fcb8decd81a8a4532f85730408eddcd9cedbeed4931de6fe46a7510f0381b4d38563405db543c53db01e1bc3eee1270aeb12c473729130d2b1e4630da8ae060b0fae190b93c792e91d122ce455b1919b5baa96eaa6c719dd893490fb0520e9ea4cbd0db32f947df2da66af38b03131f8a718c2a810171bbd37c5d29157c24579f859645690c5ca3056888d5d263341c94e28c8b2f956aad0f4dc737a20bc94bbb5ad332b4586c763a4cfeca8ae8ba0f3c4c5d90f1d4a9ef19b22a854844a015e84aecbe769ab66dbf68503c1d00b8205909a8d9126a9ffc79439fd2f0efb27610f3f3ccfd9824407a35f47a301bbe461a24040f23b7e9c1a632d3ef91e3c61646b74037d72ab93477a573acdeb6b88f55b56bb7d4a74cca8cbd77018db330b2476e07e5dec88faec29e4ec49440059b030275fe91ca27754a58593b1517c908f66576b98ee4bd8eb26badb89338372f2d679372deb022582d2eac8d55b85f3afdf6e332e140215bf9e708bd7d279b2d45e53dcc2928505e3d0deb9745b08375c1a05ecf59ffefdd061837e0791b2c95ecf101d8df72baf447f03a0bacdb30331def1f78984682586551f9905d3409733901b6dbc9541290e2ac61edcce39bdfe917c328dd407dbaf051dd1e4e32d60c57b0461524f5d206ddae91959c226ce5f777c8a8f7d6d71f61f1aab91b
