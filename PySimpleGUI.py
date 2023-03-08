@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.160 Unreleased"
+version = __version__ = "4.61.0.161 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -387,6 +387,8 @@ _change_log = """
         New Global Settings feature - Window watermarking. Can be forced on temporarily by settings watermark=True in your Window creation
     4.61.0.160
         Fix "Bold" crash from watermarking feature
+    4.61.0.161
+        New set_options to control user-defined watermarks
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19013,7 +19015,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
-                hide_window_when_creating=None, use_button_shortcuts=None):
+                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -19147,6 +19149,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type hide_window_when_creating:        (bool)
     :param use_button_shortcuts:            If True then Shortcut Char will be used with Buttons
     :type use_button_shortcuts:             (bool)
+    :param watermark_text:                  Set the text that will be used if a window is watermarked
+    :type watermark_text:                   (str)
     :return:                                None
     :rtype:                                 None
     """
@@ -19424,6 +19428,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if use_button_shortcuts is not None:
         DEFAULT_USE_BUTTON_SHORTCUTS = use_button_shortcuts
+
+    if watermark_text is not None:
+        pysimplegui_user_settings.set('-watermark user text-', watermark_text)
+
     return True
 
 
@@ -25499,9 +25507,14 @@ def _global_settings_get_watermark_info():
     ver_text = ' ' + version if pysimplegui_user_settings.get('-watermark ver-', False if not forced else True) or forced else ''
     framework_ver_text = ' ' + framework_version  if pysimplegui_user_settings.get('-watermark framework ver-', False if not forced else True) or forced else ''
     watermark_font = pysimplegui_user_settings.get('-watermark font-', '_ 9 bold')
-    background_color = pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor')
+    # background_color = pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor')
+    user_text = pysimplegui_user_settings.get('-watermark user text-', '')
+    if user_text:
+        text = str(user_text)
+    else:
+        text = prefix_text + ver_text + framework_ver_text
+    Window._watermark = lambda window: Text(text, font=watermark_font, background_color= window.BackgroundColor)
 
-    Window._watermark = lambda window: Text(prefix_text + ver_text + framework_ver_text, font=watermark_font, background_color= window.BackgroundColor)
 
 
 def main_global_get_screen_snapshot_symcode():
@@ -26416,4 +26429,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2e985cee1c05c21e66c65647555cdb19d022a40185cfad6fc96617a35f12286adcdeb20234a21b9cd4ffe4ccd3e5a259aa9bbdf3d772c389d0e5550ee89901ea46ac134062a39601e62fab71080f784137d54e8d6ee0eb35d9e2b7f0517147534b79aaf35f2b1d7194f0ad6dc0ae79167c616e719a74054d5bfaecb394aa78556ef3c0dd37fbd275c6f22008294cd4e0734cc9b5d151b49a2f42b754b736eb7322a0f3fc24efb638fba9b5ecc8b49ee2df3b2d0ffea18fd736978f1cfea73eb41dfaee1e4a339fa02df2660851accc6ec1e07f37b83b26edece5fb3e3f04c0163e6a499aa3bad9df6843b864cc8f2ae7ea2dadcdd69814997c4a97599f860ec8482e9bbf3969d27c7c288069a7218dceebaa410a9af1bd40edc331b7d96b2faaf0861b5a9cc7234f91d00c545efc94f4874aed65646105c61776b900d90c2c84578cf054ba409e21034a00a7e30a7e971027cb08433de7ff9f5d7b56c31977acb08bc18c4da434928e02257810856237cc6e81bdd4ca95d97ba2e9d43f1ded28f9a21ef3136f8ac6075117feddc13daa808a3c6e419e355b2a1ee86d057f47f0fa51e6e344c39a0c95ccb9e3dd98d89c4fde2411ec0877137fa27065a4e9ca1e75d27dc6b69c1df15c32052d8b303504243916275195f28daccc02c7cd539bc66d407bd89a77da1fc183c756e94b44fd947b72d53464d9a4ecab02cc17501e9e
+#0ca08f0f911461d1d3ae002c055cdf86ca5d243565b37eef48a6b3e02a3e917ab3af8d7317296be3d6074b3257e506129a87b27b5ac89ab40f1ff33fbb907e4d32f218f30eb86903bcf017466d2291a534180cc363996ebac425524929e3caebd4d524524f380c2471d7497ac7f62df5a3525cbd9ebff46b6dcca3caf749c5c6e32b3697685a524169887216d4b24c66760e31c4b92f52e15c00a4adbf0b66b2b474fc8883def17a066b98ce9c0839f6c7900a4df01b49321b8410894264a7dd24babe7a66556ce725d0fe18810ba616e777c8db14978e56679262ef41c917dc52a2454b4926c52aa8c4415f86b824dbaadb89c15b020de386d263e13b609cd26a76925840970bcfb198ecc165609780d9fc24453a25d917254404251a69aa68b4503f761d5cdedbcb68ab281be964d1e04182d8f87135648a71b25a9655d02662593556b55f79d60109151403a478d4824c09264fb2b5b056b4fa57fbf7c391cf746c48ec98da618a509b2a72434d86c92c10961c85744c6172b37a183b3553299ae092a265764bf85d3d6c061f86dbf3c64c089bfa6f570beda30138c8c3427fe97b4a9c9b80571e7c67f718723f802d8d1959378b26df664ec7e1b0176c5cfbedb6f8d0280298633304d18bfdf3fd5d7900182bc47414d3b2ab7624f9756c33332e022160f619a0df34df54aebba8dc622b1cc68cb05807dd31372009363a
