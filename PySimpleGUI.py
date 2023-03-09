@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.161 Unreleased"
+version = __version__ = "4.61.0.162 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -389,6 +389,8 @@ _change_log = """
         Fix "Bold" crash from watermarking feature
     4.61.0.161
         New set_options to control user-defined watermarks
+    4.61.0.162
+        Addition of new parms to Combo.update - text color, background color.  Also font now applied correctly to dropdown list
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2624,7 +2626,7 @@ class Combo(Element):
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
-    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None), select=None):
+    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None), select=None, text_color=None, background_color=None):
         """
         Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
@@ -2637,25 +2639,30 @@ class Combo(Element):
         function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
         when made visible.
 
-        :param value:        change which value is current selected based on new list of previous list of choices
-        :type value:         (Any)
-        :param values:       change list of choices
-        :type values:        List[Any]
-        :param set_to_index: change selection to a particular choice starting with index = 0
-        :type set_to_index:  (int)
-        :param disabled:     disable or enable state of the element
-        :type disabled:      (bool)
-        :param readonly:     if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
-        :type readonly:      (bool)
-        :param font:         specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:          (str or (str, int[, str]) or None)
-        :param visible:      control visibility of element
-        :type visible:       (bool)
-        :param size:         width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
-        :type size:          (int, int)
-        :param select:       if True, then the text will be selected, if False then selection will be cleared
-        :type select:        (bool)
+        :param value:            change which value is current selected based on new list of previous list of choices
+        :type value:             (Any)
+        :param values:           change list of choices
+        :type values:            List[Any]
+        :param set_to_index:     change selection to a particular choice starting with index = 0
+        :type set_to_index:      (int)
+        :param disabled:         disable or enable state of the element
+        :type disabled:          (bool)
+        :param readonly:         if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
+        :type readonly:          (bool)
+        :param font:             specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:              (str or (str, int[, str]) or None)
+        :param visible:          control visibility of element
+        :type visible:           (bool)
+        :param size:             width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
+        :type size:              (int, int)
+        :param select:           if True, then the text will be selected, if False then selection will be cleared
+        :type select:            (bool)
+        :param background_color: color of background
+        :type background_color:  (str)
+        :param text_color:       color of the text
+        :type text_color:        (str)
         """
+
         if size != (None, None):
             if isinstance(size, int):
                 size = (size, 1)
@@ -2720,8 +2727,44 @@ class Combo(Element):
         elif disabled is False and self.Readonly is False:
                 self.TKCombo['state'] = 'enable'
         self.Disabled = disabled if disabled is not None else self.Disabled
+
+        combostyle = self.ttk_style
+        style_name = self.ttk_style_name
+        if text_color is not None:
+            combostyle.configure(style_name, foreground=text_color)
+            combostyle.configure(style_name, selectbackground=text_color)
+            combostyle.configure(style_name, insertcolor=text_color)
+            combostyle.map(style_name, fieldforeground=[('readonly', text_color)])
+            self.TextColor = text_color
+        if background_color is not None:
+            combostyle.configure(style_name, selectforeground=background_color)
+            combostyle.map(style_name, fieldbackground=[('readonly', background_color)])
+            combostyle.configure(style_name, fieldbackground=background_color)
+            self.BackgroundColor = background_color
+
+        if self.Readonly is True:
+            if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                combostyle.configure(style_name, selectforeground=text_color)
+            if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+                combostyle.configure(style_name, selectbackground=background_color)
+
+
         if font is not None:
+            self.Font = font
             self.TKCombo.configure(font=font)
+            self._dropdown_newfont = tkinter.font.Font(font=font)
+            self.ParentRowFrame.option_add("*TCombobox*Listbox*Font", self._dropdown_newfont)
+
+
+        # make tcl call to deal with colors for the drop-down formatting
+        try:
+            if self.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT) and \
+                self.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                self.Widget.tk.eval(
+            '[ttk::combobox::PopdownWindow {}].f.l configure -foreground {} -background {} -selectforeground {} -selectbackground {} -font {}'.format(self.Widget, self.TextColor, self.BackgroundColor, self.BackgroundColor, self.TextColor, self._dropdown_newfont))
+        except Exception as e:
+            pass    # going to let this one slide
+
         if visible is False:
             self._pack_forget_save_settings()
             # self.TKCombo.pack_forget()
@@ -2734,6 +2777,7 @@ class Combo(Element):
            self.TKCombo.select_range(0, tk.END)
         elif select is False:
            self.TKCombo.select_clear()
+
 
     def get(self):
         """
@@ -10027,6 +10071,8 @@ class Window:
     _original_stderr = None
     _watermark = None
     _watermark_temp_forced = False
+    _watermark_user_text = ''
+
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), relative_location=(None, None), size=(None, None),
@@ -16619,8 +16665,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 "Parent Window's Title: {}".format(toplevel_form.Title))
 
                 # Strange code that is needed to set the font for the drop-down list
-                element._newfont = tkinter.font.Font(font=font)
-                tk_row_frame.option_add("*TCombobox*Listbox*Font", element._newfont)
+                element._dropdown_newfont = tkinter.font.Font(font=font)
+                tk_row_frame.option_add("*TCombobox*Listbox*Font", element._dropdown_newfont)
 
                 element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width, textvariable=element.TKStringVar, font=font, style=style_name)
 
@@ -19430,7 +19476,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
         DEFAULT_USE_BUTTON_SHORTCUTS = use_button_shortcuts
 
     if watermark_text is not None:
-        pysimplegui_user_settings.set('-watermark user text-', watermark_text)
+        Window._watermark_user_text = watermark_text
 
     return True
 
@@ -26429,4 +26475,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0ca08f0f911461d1d3ae002c055cdf86ca5d243565b37eef48a6b3e02a3e917ab3af8d7317296be3d6074b3257e506129a87b27b5ac89ab40f1ff33fbb907e4d32f218f30eb86903bcf017466d2291a534180cc363996ebac425524929e3caebd4d524524f380c2471d7497ac7f62df5a3525cbd9ebff46b6dcca3caf749c5c6e32b3697685a524169887216d4b24c66760e31c4b92f52e15c00a4adbf0b66b2b474fc8883def17a066b98ce9c0839f6c7900a4df01b49321b8410894264a7dd24babe7a66556ce725d0fe18810ba616e777c8db14978e56679262ef41c917dc52a2454b4926c52aa8c4415f86b824dbaadb89c15b020de386d263e13b609cd26a76925840970bcfb198ecc165609780d9fc24453a25d917254404251a69aa68b4503f761d5cdedbcb68ab281be964d1e04182d8f87135648a71b25a9655d02662593556b55f79d60109151403a478d4824c09264fb2b5b056b4fa57fbf7c391cf746c48ec98da618a509b2a72434d86c92c10961c85744c6172b37a183b3553299ae092a265764bf85d3d6c061f86dbf3c64c089bfa6f570beda30138c8c3427fe97b4a9c9b80571e7c67f718723f802d8d1959378b26df664ec7e1b0176c5cfbedb6f8d0280298633304d18bfdf3fd5d7900182bc47414d3b2ab7624f9756c33332e022160f619a0df34df54aebba8dc622b1cc68cb05807dd31372009363a
+#0f39d7ccc690f323707b2c591286af1aa7833c959432b3478340c6818dff6f76095f647e438ccdd3bccf0b24b1ea4f2e65b3dd131346e60e564361f2638b765cc96144915a9e22af993eec69165cee78a4234a49360501170277d846db7b9d1503e1c73f55252cb82865bd79554d67a769ddb860d568c93e202e0944b5676ed64dabc0373a6ed98c283c8e91980b43e7b2ce817dae72ab7fc4199949f34e8953f7b8f17a3fefda65baeb53f49c8d55896f2402675298a42f3a0ffb8046b58c26e52fb40ec9118b8c7d369f75e77e6c91d95f9db37462e0f62b9a10cf98ac7cfe769235ce6310136ec9c88c22332ca877bfb8508c26b39a94b6b0c90160692d4756569aba1ff4ce0115840d145bf6b509b8de50fba63f56509ebb72401337697e6b9bb2d669e4e28210f5e753db71bd97432dc55759d0251346b5239d6c4f120d56141c1e7f8269c0dc4bcfac73ee79dd2b8d70f4049a5f93554bd87b246708c808ae1dc3f2bfb224ee6479824b3c1b653ed1c5918198670840d02e3eb2162319049dd1bf486492fb202fc87810127bc3f00770ba7b7251b7f33880b02284bf9e103428186576d28f89e6749e4f4dea026ef740528d21ab022858ab0f78b08186d9c919e5ea02b819c9934670f8437f869ba5026de5e0321030b9d863cb0b1b5e33c3e91f6e14034d89ecb13210ffaa6d23cb910bd8cbd33457a588a4c3c52439
