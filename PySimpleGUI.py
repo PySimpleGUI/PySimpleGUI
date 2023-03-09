@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.162 Unreleased"
+version = __version__ = "4.61.0.163 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -391,6 +391,8 @@ _change_log = """
         New set_options to control user-defined watermarks
     4.61.0.162
         Addition of new parms to Combo.update - text color, background color.  Also font now applied correctly to dropdown list
+    4.61.0.163
+        Checkbox - added highlight thickness parm to control how thick the focus ring is. Defaults to 1 still but now changable
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3423,54 +3425,57 @@ class Checkbox(Element):
     """
 
     def __init__(self, text, default=False, size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, tooltip=None,
+                 text_color=None, checkbox_color=None, highlight_thickness=1, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
-        :param text:             Text to display next to checkbox
-        :type text:              (str)
-        :param default:          Set to True if you want this checkbox initially checked
-        :type default:           (bool)
-        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
-        :type size:              (int, int)  | (None, None) | int
-        :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int)  | (None, None) | int
-        :param auto_size_text:   if True will size the element to match the length of the text
-        :type auto_size_text:    (bool)
-        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              (str or (str, int[, str]) or None)
-        :param background_color: color of background
-        :type background_color:  (str)
-        :param text_color:       color of the text
-        :type text_color:        (str)
-        :param checkbox_color:   color of background of the box that has the check mark in it. The checkmark is the same color as the text
-        :type checkbox_color:    (str)
-        :param change_submits:   DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :type change_submits:    (bool)
-        :param enable_events:    Turns on the element specific events. Checkbox events happen when an item changes
-        :type enable_events:     (bool)
-        :param disabled:         set disable state
-        :type disabled:          (bool)
-        :param key:              Used with window.find_element and with return values to uniquely identify this element
-        :type key:               str | int | tuple | object
-        :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                 str | int | tuple | object
-        :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param tooltip:          text, that will appear when mouse hovers over the element
-        :type tooltip:           (str)
-        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :type right_click_menu:  List[List[ List[str] | str ]]
-        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:          (bool)
-        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:          (bool)
-        :param visible:          set visibility state of the element
-        :type visible:           (bool)
-        :param metadata:         User metadata that can be set to ANYTHING
-        :type metadata:          (Any)
+        :param text:                Text to display next to checkbox
+        :type text:                 (str)
+        :param default:             Set to True if you want this checkbox initially checked
+        :type default:              (bool)
+        :param size:                (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
+        :type size:                 (int, int)  | (None, None) | int
+        :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                    (int, int)  | (None, None) | int
+        :param auto_size_text:      if True will size the element to match the length of the text
+        :type auto_size_text:       (bool)
+        :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                 (str or (str, int[, str]) or None)
+        :param background_color:    color of background
+        :type background_color:     (str)
+        :param text_color:          color of the text
+        :type text_color:           (str)
+        :param checkbox_color:      color of background of the box that has the check mark in it. The checkmark is the same color as the text
+        :type checkbox_color:       (str)
+        :param highlight_thickness: thickness of border around checkbox when gets focus
+        :type highlight_thickness:  (int)
+        :param change_submits:      DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits:       (bool)
+        :param enable_events:       Turns on the element specific events. Checkbox events happen when an item changes
+        :type enable_events:        (bool)
+        :param disabled:            set disable state
+        :type disabled:             (bool)
+        :param key:                 Used with window.find_element and with return values to uniquely identify this element
+        :type key:                  str | int | tuple | object
+        :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                    str | int | tuple | object
+        :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param tooltip:             text, that will appear when mouse hovers over the element
+        :type tooltip:              (str)
+        :param right_click_menu:    A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:     List[List[ List[str] | str ]]
+        :param expand_x:            If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:             (bool)
+        :param expand_y:            If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:             (bool)
+        :param visible:             set visibility state of the element
+        :type visible:              (bool)
+        :param metadata:            User metadata that can be set to ANYTHING
+        :type metadata:             (Any)
         """
+
 
 
         self.Text = text
@@ -3480,6 +3485,7 @@ class Checkbox(Element):
         self.Disabled = disabled
         self.TextColor = text_color if text_color else theme_text_color()
         self.RightClickMenu = right_click_menu
+        self.highlight_thickness = highlight_thickness
 
         # ---- compute color of circle background ---
         if checkbox_color is None:
@@ -16975,7 +16981,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(fg=text_color)
                     element.TKCheckbutton.configure(activeforeground=element.TextColor)
 
-                element.Widget.configure(highlightthickness=1)
+                element.Widget.configure(highlightthickness=element.highlight_thickness)
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.config(highlightbackground=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT:
@@ -26475,4 +26481,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#0f39d7ccc690f323707b2c591286af1aa7833c959432b3478340c6818dff6f76095f647e438ccdd3bccf0b24b1ea4f2e65b3dd131346e60e564361f2638b765cc96144915a9e22af993eec69165cee78a4234a49360501170277d846db7b9d1503e1c73f55252cb82865bd79554d67a769ddb860d568c93e202e0944b5676ed64dabc0373a6ed98c283c8e91980b43e7b2ce817dae72ab7fc4199949f34e8953f7b8f17a3fefda65baeb53f49c8d55896f2402675298a42f3a0ffb8046b58c26e52fb40ec9118b8c7d369f75e77e6c91d95f9db37462e0f62b9a10cf98ac7cfe769235ce6310136ec9c88c22332ca877bfb8508c26b39a94b6b0c90160692d4756569aba1ff4ce0115840d145bf6b509b8de50fba63f56509ebb72401337697e6b9bb2d669e4e28210f5e753db71bd97432dc55759d0251346b5239d6c4f120d56141c1e7f8269c0dc4bcfac73ee79dd2b8d70f4049a5f93554bd87b246708c808ae1dc3f2bfb224ee6479824b3c1b653ed1c5918198670840d02e3eb2162319049dd1bf486492fb202fc87810127bc3f00770ba7b7251b7f33880b02284bf9e103428186576d28f89e6749e4f4dea026ef740528d21ab022858ab0f78b08186d9c919e5ea02b819c9934670f8437f869ba5026de5e0321030b9d863cb0b1b5e33c3e91f6e14034d89ecb13210ffaa6d23cb910bd8cbd33457a588a4c3c52439
+#775d50bc7a349101f5f8cf0fa731a832480c6dbdfe73bdd2dcd1d96a86c9c4b7fddaf350d28ed990dded140d52689328f7f68ade01cb281e58332887235cc76411a24c9bc3cfb32fd32eb17a5d94660ec9117979f92137899377742bc6c1c45a7def3d6886e4d650ef8fd19b53dd8319dd1615df41aa4e6a967a8a7b01830e074b90d1dcfabd8ae7a5848cac7f3fc82cb1ec51e0fa4c3b2fd6b82a8ede0f6c257973ff4f8263bb41abe488a4bec28a15d9e9981aecfa59f5f46fcea8b9134acd3d43b2b0ceb15837aa1753f13ef12c4c9d4c2559302a02600f9cc32fb7dacc50f2c144dd996e4c5c1abb5ada3dc50b045e23e730c24dce5684132fc8d98c0725b2e61745b33ce258b6d695b2ddc13656ee8e4d867646807bc5e578eb5bbd51fa069bdd24f3ad4ade1971833a7a41e1d35d23ee41a54f276946e3b109e08ff72ce1994462021bcbdb337693caa803134196212f802e914026dfa8e055b8258fce2888c5affaac665c644f56af42a62935bec8b58dcf5d98f6d556337b26b6fa00a6aa33b76c73768713a666f58623304e59739e91587aa664055091465903ecfbde1d9aecd6696af5ff9b92096a2f007a1821cf74c107f58bc1d390c9d233af00e341a8ead04dfb29d748749a4d2ce1c59afb7efa501dd046cce5a3ef9d5fc05ad2aed21b32c4cd80364f40044396308bfbe3ae6dd1afb594b1380e42854d7ece
