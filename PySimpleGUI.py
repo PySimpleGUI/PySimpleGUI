@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.163 Unreleased"
+version = __version__ = "4.61.0.164 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -393,6 +393,8 @@ _change_log = """
         Addition of new parms to Combo.update - text color, background color.  Also font now applied correctly to dropdown list
     4.61.0.163
         Checkbox - added highlight thickness parm to control how thick the focus ring is. Defaults to 1 still but now changable
+    4.61.0.164
+        Input element - fixed problem where the input 'cursor' (the I-beam) was being set to the THEME'S color, not the color indicated by the individual element
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -16588,8 +16590,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
+
                 if text_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(fg=text_color, selectbackground=text_color)
+                    element.TKEntry.config(insertbackground=text_color)
                 if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.configure(selectbackground=element.selected_background_color)
                 if element.selected_text_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -16618,8 +16622,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu_and_grab(element)
-                if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
-                    element.Widget.config(insertbackground=theme_input_text_color())
 
                 # row_should_expand = True
 
@@ -26481,4 +26483,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#775d50bc7a349101f5f8cf0fa731a832480c6dbdfe73bdd2dcd1d96a86c9c4b7fddaf350d28ed990dded140d52689328f7f68ade01cb281e58332887235cc76411a24c9bc3cfb32fd32eb17a5d94660ec9117979f92137899377742bc6c1c45a7def3d6886e4d650ef8fd19b53dd8319dd1615df41aa4e6a967a8a7b01830e074b90d1dcfabd8ae7a5848cac7f3fc82cb1ec51e0fa4c3b2fd6b82a8ede0f6c257973ff4f8263bb41abe488a4bec28a15d9e9981aecfa59f5f46fcea8b9134acd3d43b2b0ceb15837aa1753f13ef12c4c9d4c2559302a02600f9cc32fb7dacc50f2c144dd996e4c5c1abb5ada3dc50b045e23e730c24dce5684132fc8d98c0725b2e61745b33ce258b6d695b2ddc13656ee8e4d867646807bc5e578eb5bbd51fa069bdd24f3ad4ade1971833a7a41e1d35d23ee41a54f276946e3b109e08ff72ce1994462021bcbdb337693caa803134196212f802e914026dfa8e055b8258fce2888c5affaac665c644f56af42a62935bec8b58dcf5d98f6d556337b26b6fa00a6aa33b76c73768713a666f58623304e59739e91587aa664055091465903ecfbde1d9aecd6696af5ff9b92096a2f007a1821cf74c107f58bc1d390c9d233af00e341a8ead04dfb29d748749a4d2ce1c59afb7efa501dd046cce5a3ef9d5fc05ad2aed21b32c4cd80364f40044396308bfbe3ae6dd1afb594b1380e42854d7ece
+#1c230bde4c3f139d563fda282c8f2524ee39106dd7788fc6410723b3bfa42ae4dd17ca7005afbaad58a9b4565d4e911be7ac9d5b021b8e5614eba2853c33fdc167ac180241ccc6d564cca79493816ed599b82423be23ab4c46833cae5ec471a98b08d2ca46b18be736818e71168b19877515246d92ffa1cd40202356cb3b3e09e50e75db6cb1584893dc242ad63f8c8b4d2574bdbaa958b5da63f043813c4534315cff6d39dade82cd3aa8231dafd0f7133e212f9a72051d0af5c25ce64f9be042a0077d3837b44a937d5d2c0871461e3422a40605039fae563d238ddd4a590d44a8c57475d46bf78083ded3544ee2b8b2c8f88d703e150d1e14edcbdf31b902a5596096570e21cbb5fb4d48b904460b477ea6747a69e66f03d2d1874eff2aed73ce733e98e7346ee99f5bbe9a791de36e6a96bd5367ea9cd6c34852c5b3ec2a9e1d8cd1c5602bc9e7a12eb0fdeeaa2355c28d589ffc922c586db55dcca3fa0758fa511662ba18ecf5914841d874c9013d0674e152d8dd74e7113a33eeea9d187b8ef8b312017a733f2490d228b5295f3bd323949a2ef199c6efdd4acd5da641059eed7d95be005f7c4f508fdc83bb2e0e22d85cdf9376e948ba95f4405e4ddd23cf4f26aa44f6e4f7d2b82d4627847fc73c642eb9356311c9096e63c91c9666c6230a24c9323552bf4f44fe4397bef40df1644859e52019d29283c5f67ca173
