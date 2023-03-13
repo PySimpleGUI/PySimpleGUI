@@ -2741,7 +2741,7 @@ class Combo(Element):
             combostyle.map(style_name, fieldforeground=[('readonly', text_color)])
             self.TextColor = text_color
         if background_color is not None:
-            combostyle.configure(style_name, selectforeground=background_color)
+            combostyle.configure(style_name, selectforeground=text_color)
             combostyle.map(style_name, fieldbackground=[('readonly', background_color)])
             combostyle.configure(style_name, fieldbackground=background_color)
             self.BackgroundColor = background_color
