@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.164 Unreleased"
+version = __version__ = "4.61.0.165 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -395,6 +395,9 @@ _change_log = """
         Checkbox - added highlight thickness parm to control how thick the focus ring is. Defaults to 1 still but now changable
     4.61.0.164
         Input element - fixed problem where the input 'cursor' (the I-beam) was being set to the THEME'S color, not the color indicated by the individual element
+    4.61.0.165
+        Multiline & Spin - Applied same fix for input "cursor" (I-Beam) color that was added to the Input element.
+        Added new method - set_ibeam_color to Input, Multiline and Spin elements.  Combo is a ttk element so it's not available using this call yet
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2517,6 +2520,28 @@ class Input(Element):
 
 
 
+    def set_ibeam_color(self, ibeam_color=None):
+        """
+        Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+        many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+        ibeam is used in this case.
+        :param ibeam_color: color to set the "I-Beam" used to indicate where characters will be inserted
+        :type ibeam_color:  (str)
+        """
+
+        if not self._widget_was_created():
+            return
+        if ibeam_color is not None:
+            try:
+                self.Widget.config(insertbackground=ibeam_color)
+            except Exception as e:
+                _error_popup_with_traceback('Error setting I-Beam color in set_ibeam_color',
+                           'The element has a key:', self.Key,
+                            'The color passed in was:', ibeam_color)
+
+
+
+
     def get(self):
         """
         Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
@@ -3788,6 +3813,30 @@ class Spin(Element):
         #     Window._window_that_exited = self.ParentForm
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
+
+
+
+    def set_ibeam_color(self, ibeam_color=None):
+        """
+        Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+        many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+        ibeam is used in this case.
+        :param ibeam_color: color to set the "I-Beam" used to indicate where characters will be inserted
+        :type ibeam_color:  (str)
+        """
+
+        if not self._widget_was_created():
+            return
+        if ibeam_color is not None:
+            try:
+                self.Widget.config(insertbackground=ibeam_color)
+            except Exception as e:
+                _error_popup_with_traceback('Error setting I-Beam color in set_ibeam_color',
+                           'The element has a key:', self.Key,
+                            'The color passed in was:', ibeam_color)
+
+
+
     def get(self):
         """
         Return the current chosen value showing in spinbox.
@@ -4229,6 +4278,31 @@ class Multiline(Element):
         # except:
         #     pass
         return
+
+
+
+
+
+    def set_ibeam_color(self, ibeam_color=None):
+        """
+        Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+        many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+        ibeam is used in this case.
+        :param ibeam_color: color to set the "I-Beam" used to indicate where characters will be inserted
+        :type ibeam_color:  (str)
+        """
+
+        if not self._widget_was_created():
+            return
+        if ibeam_color is not None:
+            try:
+                self.Widget.config(insertbackground=ibeam_color)
+            except Exception as e:
+                _error_popup_with_traceback('Error setting I-Beam color in set_ibeam_color',
+                           'The element has a key:', self.Key,
+                            'The color passed in was:', ibeam_color)
+
+
 
     def __del__(self):
         """
@@ -16898,6 +16972,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.config(highlightthickness=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color, selectbackground=text_color)
+                    element.TKText.config(insertbackground=text_color)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
                 if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -16940,7 +17015,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.focus_set()
 
 
-
                 if element.Disabled is True:
                     element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -16950,8 +17024,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     cprint_set_output_destination(toplevel_form, element.Key)
 
                 _add_right_click_menu_and_grab(element)
-                if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
-                    element.Widget.config(insertbackground=theme_input_text_color())
 
                 if element.reroute_stdout:
                     element.reroute_stdout_to_here()
@@ -17091,6 +17163,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
                     element.TKSpinBox.configure(buttonbackground=element.BackgroundColor)
+                if text_color  not in (None, COLOR_SYSTEM_DEFAULT):
+                    element.TKSpinBox.configure(fg=text_color)
+                    element.TKSpinBox.config(insertbackground=text_color)
                 element.Widget.config(highlightthickness=0)
                 if element.wrap is True:
                     element.Widget.configure(wrap=True)
@@ -17099,8 +17174,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.visible is False:
                     element._pack_forget_save_settings()
                     # element.TKSpinBox.pack_forget()
-                if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
-                    element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKSpinBox.configure(command=element._SpinboxSelectHandler)
                     # element.TKSpinBox.bind('<ButtonRelease-1>', element._SpinChangedHandler)
@@ -17114,8 +17187,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.BindReturnKey:
                     element.TKSpinBox.bind('<Return>', element._SpinboxSelectHandler)
-                if theme_input_text_color() not in (COLOR_SYSTEM_DEFAULT, None):
-                    element.Widget.config(insertbackground=theme_input_text_color())
                 _add_right_click_menu_and_grab(element)
                 # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -26483,4 +26554,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#1c230bde4c3f139d563fda282c8f2524ee39106dd7788fc6410723b3bfa42ae4dd17ca7005afbaad58a9b4565d4e911be7ac9d5b021b8e5614eba2853c33fdc167ac180241ccc6d564cca79493816ed599b82423be23ab4c46833cae5ec471a98b08d2ca46b18be736818e71168b19877515246d92ffa1cd40202356cb3b3e09e50e75db6cb1584893dc242ad63f8c8b4d2574bdbaa958b5da63f043813c4534315cff6d39dade82cd3aa8231dafd0f7133e212f9a72051d0af5c25ce64f9be042a0077d3837b44a937d5d2c0871461e3422a40605039fae563d238ddd4a590d44a8c57475d46bf78083ded3544ee2b8b2c8f88d703e150d1e14edcbdf31b902a5596096570e21cbb5fb4d48b904460b477ea6747a69e66f03d2d1874eff2aed73ce733e98e7346ee99f5bbe9a791de36e6a96bd5367ea9cd6c34852c5b3ec2a9e1d8cd1c5602bc9e7a12eb0fdeeaa2355c28d589ffc922c586db55dcca3fa0758fa511662ba18ecf5914841d874c9013d0674e152d8dd74e7113a33eeea9d187b8ef8b312017a733f2490d228b5295f3bd323949a2ef199c6efdd4acd5da641059eed7d95be005f7c4f508fdc83bb2e0e22d85cdf9376e948ba95f4405e4ddd23cf4f26aa44f6e4f7d2b82d4627847fc73c642eb9356311c9096e63c91c9666c6230a24c9323552bf4f44fe4397bef40df1644859e52019d29283c5f67ca173
+#491b45b926a0f4407364c8e3fe2d56e3c83693fbdcfea2f3ebe6a10bc6cf66ec10d1ee9f0754a70ea812aed411be7b8dde143fc345648c6f24ebf88205405d66dbdbb646ee77d0a3a241f13853623acead20c030948a771c86676303f5823fdf0e59c5d20d622c589cd3ec5da0a4eb3a8b1d84f964b0e67036f534b4499f7126cf8c9b39ad46fce9ee986fadb2cf89007b79b9f8ccc897a627653414ffda66f4dc140fa798559104d01f05584d7df51bc9b5b32a5c885efd6d19f9d77278e908d36cdffe0d7e3db0bd45722913b28a61c6e3cf9826bbaf0b60fd15b98296529727f67f6bcd4cfa21aff266072bb66a778732a9263f1a81251721755b28a6383b8763b31545db380bfbf663756a9bd4ba78ae2df1c3085eae809a2adc9ee04987e3d564b06558f52645259250506b24d32109a62e33d3794d343634720d2712618d670b32d7a60b2016791d050b772df9f2a80ef7e5c2c182f06e57a207e16ccde97cc248a071f873d563caea2ff7a36e15dc5f0c8495c6ec85c37895856f3bd0138b457d62bfc83e34e1934cee2308de94fcd185c85e9611d5eac8534927accca9ac53e0aa9cea56c6b9e6f1b06eb68c8d4ca3253314332f593c6473d73017a34608393853dc5db923a8bf1a96ddd9af17127952770bb89f2e753579c0e4ace28aea294d157417f1db9b0160e3cd1bc3c4d801adca5f1a0a9b34f25f0b3ca595
