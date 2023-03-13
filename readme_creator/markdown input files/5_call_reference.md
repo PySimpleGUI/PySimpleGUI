@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    07860559FF2298EF51E7
+                    A2E4F6B1B75EC3D90133input.
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=07860559FF2298EF51E7','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -1111,6 +1111,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### set_focus
 <!-- <+Input.set_focus+> -->
 
+### set_ibeam_color
+<!-- <+Input.set_ibeam_color+> -->
+
 ### set_size
 <!-- <+Input.set_size+> -->
 
@@ -1420,6 +1423,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### set_focus
 <!-- <+Multiline.set_focus+> -->
+
+### set_ibeam_color
+<!-- <+Input.set_ibeam_color+> -->
 
 ### set_size
 <!-- <+Multiline.set_size+> -->
@@ -2161,6 +2167,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### set_focus
 <!-- <+Spin.set_focus+> -->
+
+### set_ibeam_color
+<!-- <+Input.set_ibeam_color+> -->
 
 ### set_size
 <!-- <+Spin.set_size+> -->

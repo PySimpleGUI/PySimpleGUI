@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.165 Unreleased"
+version = __version__ = "4.61.0.166 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -398,6 +398,8 @@ _change_log = """
     4.61.0.165
         Multiline & Spin - Applied same fix for input "cursor" (I-Beam) color that was added to the Input element.
         Added new method - set_ibeam_color to Input, Multiline and Spin elements.  Combo is a ttk element so it's not available using this call yet
+    4.61.0.166
+        New Udemy coupon
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -26376,7 +26378,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=07860559FF2298EF51E7')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -26384,7 +26386,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '07860559FF2298EF51E7',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'A2E4F6B1B75EC3D90133',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
@@ -26554,4 +26556,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#491b45b926a0f4407364c8e3fe2d56e3c83693fbdcfea2f3ebe6a10bc6cf66ec10d1ee9f0754a70ea812aed411be7b8dde143fc345648c6f24ebf88205405d66dbdbb646ee77d0a3a241f13853623acead20c030948a771c86676303f5823fdf0e59c5d20d622c589cd3ec5da0a4eb3a8b1d84f964b0e67036f534b4499f7126cf8c9b39ad46fce9ee986fadb2cf89007b79b9f8ccc897a627653414ffda66f4dc140fa798559104d01f05584d7df51bc9b5b32a5c885efd6d19f9d77278e908d36cdffe0d7e3db0bd45722913b28a61c6e3cf9826bbaf0b60fd15b98296529727f67f6bcd4cfa21aff266072bb66a778732a9263f1a81251721755b28a6383b8763b31545db380bfbf663756a9bd4ba78ae2df1c3085eae809a2adc9ee04987e3d564b06558f52645259250506b24d32109a62e33d3794d343634720d2712618d670b32d7a60b2016791d050b772df9f2a80ef7e5c2c182f06e57a207e16ccde97cc248a071f873d563caea2ff7a36e15dc5f0c8495c6ec85c37895856f3bd0138b457d62bfc83e34e1934cee2308de94fcd185c85e9611d5eac8534927accca9ac53e0aa9cea56c6b9e6f1b06eb68c8d4ca3253314332f593c6473d73017a34608393853dc5db923a8bf1a96ddd9af17127952770bb89f2e753579c0e4ace28aea294d157417f1db9b0160e3cd1bc3c4d801adca5f1a0a9b34f25f0b3ca595
+#8191dd5d8352d3c13f89bde32cdd01d664da2f4cabeff579ec281e413131545b6aafe489020f8f73c96477dbdf9e86e0013c01759cae8c5837d9d7ea44c7fc75f9af3fb5bce6270b0254f6f6f2d966abc5257991792b3d83880d7690a85e8f4b59e4051b0ff2f7ac1a5fa27d5630c2365d70398b22cda91c1a988c4f19379c4575afb6f6c86e873e0bcda2ed4fc65879a8c4c7a297437742b1ac070de6d04019ffc5e350d6030ce97965d0414ef48ea670ba21bb359319f1c8be7e6da2ff46c727ea82f54eb30d3a74728b5aa20e1412b6812750cfb8cb6122b3e720f0a2c0106d7ddb0eba9313ed763aa3f404221e0d4ffe9bb324a56ebb410e5cd6f45f6b985db5c39369d1fe201fc2ee7c9e8017e8eb7a9e08edafa15ad8a89f6214b75b8e183e2dde4c67350975999d7f74572f0f17d422a9ca430c928f80e2ffee4dd376ce916999b7a263b39783ddf54242b1341e70240c6875832525d87100c9a733d09969465e38226d80ead49508692eb9851eaa4fba26ca5069cb2c6ee88647c79683860d9b12fa598a1d452015d80295a1b59236c38f8fb42edf1aa897db653f8c20ce79836641cc64c1e5975b8400edc98854ab5c26de57241ce8b89979173b84f9cf3e5dd455a63721545001b06af63a8b11ed7889a4e53af7a1527bbd3e14ae6e6a16eb569c79d7213d52e7f276f1a59423fb3a519adc122b73128196aec80a
