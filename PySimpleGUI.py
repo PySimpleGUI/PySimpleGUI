@@ -395,6 +395,8 @@ _change_log = """
         Checkbox - added highlight thickness parm to control how thick the focus ring is. Defaults to 1 still but now changable
     4.61.0.164
         Input element - fixed problem where the input 'cursor' (the I-beam) was being set to the THEME'S color, not the color indicated by the individual element
+    4.61.0.165
+        Changed color of text in combobox, when background color set, to be different from background color
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
