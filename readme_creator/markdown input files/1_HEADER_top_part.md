@@ -52,9 +52,9 @@ HOW DO I INSERT IMAGES ???
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    07860559FF2298EF51E7
+                    A2E4F6B1B75EC3D90133
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=07860559FF2298EF51E7','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133','_blank');">
                     click here to visit course page
                 </button>
             </div>

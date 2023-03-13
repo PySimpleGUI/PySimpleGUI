@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    07860559FF2298EF51E7
+                    A2E4F6B1B75EC3D90133input.
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=07860559FF2298EF51E7','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -1305,6 +1305,7 @@ Checkbox(text,
     background_color = None,
     text_color = None,
     checkbox_color = None,
+    highlight_thickness = 1,
     change_submits = False,
     enable_events = False,
     disabled = False,
@@ -1324,28 +1325,29 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                      str                                       |       text       | Text to display next to checkbox |
-|                                      bool                                      |     default      | Set to True if you want this checkbox initially checked |
-|                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
-|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
-|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                      str                                       | background_color | color of background |
-|                                      str                                       |    text_color    | color of the text |
-|                                      str                                       |  checkbox_color  | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
-|                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                      bool                                      |  enable_events   | Turns on the element specific events. Checkbox events happen when an item changes |
-|                                      bool                                      |     disabled     | set disable state |
-|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
-|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
-|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                      bool                                      |     visible      | set visibility state of the element |
-|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
+|                                      str                                       |        text         | Text to display next to checkbox |
+|                                      bool                                      |       default       | Set to True if you want this checkbox initially checked |
+|                       (int, int)  or (None, None) or int                       |        size         | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |   auto_size_text    | if True will size the element to match the length of the text |
+|                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |  background_color   | color of background |
+|                                      str                                       |     text_color      | color of the text |
+|                                      str                                       |   checkbox_color    | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
+|                                      int                                       | highlight_thickness | thickness of border around checkbox when gets focus |
+|                                      bool                                      |   change_submits    | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |    enable_events    | Turns on the element specific events. Checkbox events happen when an item changes |
+|                                      bool                                      |      disabled       | set disable state |
+|                         str or int or tuple or object                          |         key         | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      str                                       |       tooltip       | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |  right_click_menu   | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |      expand_x       | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |      expand_y       | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |       visible       | set visibility state of the element |
+|                                      Any                                       |      metadata       | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -2481,22 +2483,26 @@ update(value = None,
     font = None,
     visible = None,
     size = (None, None),
-    select = None)
+    select = None,
+    text_color = None,
+    background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |    value     | change which value is current selected based on new list of previous list of choices |
-|             List[Any]              |    values    | change list of choices |
-|                int                 | set_to_index | change selection to a particular choice starting with index = 0 |
-|                bool                |   disabled   | disable or enable state of the element |
-|                bool                |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
-| (str or (str, int[, str]) or None) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |   visible    | control visibility of element |
-|             (int, int)             |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
-|                bool                |    select    | if True, then the text will be selected, if False then selection will be cleared |
+|                Any                 |      value       | change which value is current selected based on new list of previous list of choices |
+|             List[Any]              |      values      | change list of choices |
+|                int                 |   set_to_index   | change selection to a particular choice starting with index = 0 |
+|                bool                |     disabled     | disable or enable state of the element |
+|                bool                |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | control visibility of element |
+|             (int, int)             |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
+|                bool                |      select      | if True, then the text will be selected, if False then selection will be cleared |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
 
 ### visible
 
@@ -2586,22 +2592,26 @@ Update(value = None,
     font = None,
     visible = None,
     size = (None, None),
-    select = None)
+    select = None,
+    text_color = None,
+    background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                Any                 |    value     | change which value is current selected based on new list of previous list of choices |
-|             List[Any]              |    values    | change list of choices |
-|                int                 | set_to_index | change selection to a particular choice starting with index = 0 |
-|                bool                |   disabled   | disable or enable state of the element |
-|                bool                |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
-| (str or (str, int[, str]) or None) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                bool                |   visible    | control visibility of element |
-|             (int, int)             |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
-|                bool                |    select    | if True, then the text will be selected, if False then selection will be cleared |
+|                Any                 |      value       | change which value is current selected based on new list of previous list of choices |
+|             List[Any]              |      values      | change list of choices |
+|                int                 |   set_to_index   | change selection to a particular choice starting with index = 0 |
+|                bool                |     disabled     | disable or enable state of the element |
+|                bool                |     readonly     | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | control visibility of element |
+|             (int, int)             |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
+|                bool                |      select      | if True, then the text will be selected, if False then selection will be cleared |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
 
 ---------
 
@@ -5100,6 +5110,22 @@ Parameter Descriptions:
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
+### set_ibeam_color
+
+Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+ibeam is used in this case.
+
+```
+set_ibeam_color(ibeam_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | ibeam_color | color to set the "I-Beam" used to indicate where characters will be inserted |
+
 ### set_size
 
 Changes the size of an element to a specific size.
@@ -6599,6 +6625,22 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
+
+### set_ibeam_color
+
+Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+ibeam is used in this case.
+
+```
+set_ibeam_color(ibeam_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | ibeam_color | color to set the "I-Beam" used to indicate where characters will be inserted |
 
 ### set_size
 
@@ -9820,6 +9862,22 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
+
+### set_ibeam_color
+
+Sets the color of the I-Beam that is used to "insert" characters. This is oftens called a "Cursor" by
+many users.  To keep from being confused with tkinter's definition of cursor (the mouse pointer), the term
+ibeam is used in this case.
+
+```
+set_ibeam_color(ibeam_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | ibeam_color | color to set the "I-Beam" used to indicate where characters will be inserted |
 
 ### set_size
 
@@ -13054,6 +13112,7 @@ Window(title,
     sbar_arrow_width = None,
     sbar_frame_color = None,
     sbar_relief = None,
+    watermark = None,
     metadata = None)
 ```
 
@@ -13121,6 +13180,7 @@ Parameter Descriptions:
 |                     int                     |           sbar_arrow_width           | Scrollbar width of the arrow on the scrollbar. It will potentially impact the overall width of the scrollbar |
 |                     str                     |           sbar_frame_color           | Scrollbar Color of frame around scrollbar (available only on some ttk themes) |
 |                     str                     |             sbar_relief              | Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID |
+|                    bool                     |              watermark               | If True, then turns on watermarking temporarily for ALL windows created from this point forward. See global settings doc for more info |
 |                     Any                     |               metadata               | User metadata that can be set to ANYTHING |
 
 ### add_row
@@ -20031,7 +20091,8 @@ set_options(icon = None,
     sbar_relief = None,
     alpha_channel = None,
     hide_window_when_creating = None,
-    use_button_shortcuts = None)
+    use_button_shortcuts = None,
+    watermark_text = None)
 ```
 
 Parameter Descriptions:
@@ -20104,6 +20165,7 @@ Parameter Descriptions:
 |                     float                      |          alpha_channel          | Default alpha channel to be used on all windows |
 |                      bool                      |    hide_window_when_creating    | If True then alpha will be set to 0 while a window is made and moved to location indicated |
 |                      bool                      |      use_button_shortcuts       | If True then Shortcut Char will be used with Buttons |
+|                      str                       |         watermark_text          | Set the text that will be used if a window is watermarked |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -20187,7 +20249,8 @@ SetOptions(icon = None,
     sbar_relief = None,
     alpha_channel = None,
     hide_window_when_creating = None,
-    use_button_shortcuts = None)
+    use_button_shortcuts = None,
+    watermark_text = None)
 ```
 
 Parameter Descriptions:
@@ -20260,6 +20323,7 @@ Parameter Descriptions:
 |                     float                      |          alpha_channel          | Default alpha channel to be used on all windows |
 |                      bool                      |    hide_window_when_creating    | If True then alpha will be set to 0 while a window is made and moved to location indicated |
 |                      bool                      |      use_button_shortcuts       | If True then Shortcut Char will be used with Buttons |
+|                      str                       |         watermark_text          | Set the text that will be used if a window is watermarked |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
