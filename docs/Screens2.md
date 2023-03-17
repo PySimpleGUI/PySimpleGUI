@@ -1,3 +1,45 @@
+[PySimpleGUI](https://github.com/PySimpleGUI) 2023-03-16T18:56:49Z
+@ssweber the color scheme looks like the `GrayGrayGray` theme to me which means no colors will be added (all system defaults will be used).  The important feature that's adding the images is either `Image` elements or `Button` elements.  Using a Base64 version of images will enable you to drop them directly into your source code.  The PySimpleGUI application `psgresizer` is very helpful in enabling you to quickly add button graphics to your application.
+
+Here are some steps I followed:
+
+- I made a video of a session where I took images that I clipped from @lucasmartins19 's application and saved them as PNG files 
+- Used `psgresizer` to convert each PNG file into a Base64 string
+- Pasted the Base64 string into my test program
+- Created a layout that used these Base64 images using the `Image` element.
+
+My layout looked liket his:
+```python
+    layout = [  [sg.Text('Base64 Images Example')],
+                [sg.Image(b1, key='-I1-')],
+                [sg.Image(b2, key='-I2-')],
+                [sg.Image(b3, key='-I3-')],
+                [sg.Button('Go'), sg.Button('Exit')]  ]
+```
+
+When I ran the code, this is the window I saw:
+
+![image](https://user-images.githubusercontent.com/46163555/225724235-81b435c8-84f2-48e8-9ba0-9353f6179517.png)
+
+If you enable events on the `Image` elements, then you'll get an event when the image is clicked.
+
+```python
+    layout = [  [sg.Text('Base64 Images Example')],
+                [sg.Image(b1, key='-I1-', enable_events=True)],
+                [sg.Image(b2, key='-I2-', enable_events=True)],
+                [sg.Image(b3, key='-I3-', enable_events=True)],
+                [sg.Button('Go'), sg.Button('Exit')]  ]
+```
+
+Here's how the process to do all this looked:
+
+
+https://user-images.githubusercontent.com/46163555/225724860-33b5b5ba-9e63-4159-9ccc-825b72aef11a.mp4
+
+
+
+-----------
+
 [lucasmartins19](https://github.com/lucasmartins19) 2023-03-16T14:04:53Z
 > @lucasmartins19 That looks amazing. Would you mind uploading that to a repository? I’m working on a general purpose pysimplegui toolkit and I really like your color-scheme /buttons. Would like to see how you put that all together.
 
