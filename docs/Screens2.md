@@ -1,3 +1,28 @@
+[Vintage08](https://github.com/Vintage08) 2023-03-25T01:29:07Z
+![Uploading Screenshot_2023-03-25-06-57-44-703_com.android.chrome.jpg…]()
+
+
+-----------
+
+[Vintage08](https://github.com/Vintage08) 2023-03-25T01:28:10Z
+Please Explain how to remove these locks step by step  . Is that possible at termux 
+![Uploading Screenshot_2023-03-25-06-57-54-793_com.android.chrome.jpg…]()
+
+
+-----------
+
+[andrewmk](https://github.com/andrewmk) 2023-03-24T22:40:00Z
+@PySimpleGUI spam comment: https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1483457256
+
+-----------
+
+[Vintage08](https://github.com/Vintage08) 2023-03-24T21:48:45Z
+![Screenshot_2023-03-25-03-18-19-964_com.android.chrome.jpg](https://user-images.githubusercontent.com/64662990/227647439-b555c2d6-5fa0-48d1-99d1-af35112b666f.jpg)
+
+How to hack this site to make profit
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-03-16T18:56:49Z
 @ssweber the color scheme looks like the `GrayGrayGray` theme to me which means no colors will be added (all system defaults will be used).  The important feature that's adding the images is either `Image` elements or `Button` elements.  Using a Base64 version of images will enable you to drop them directly into your source code.  The PySimpleGUI application `psgresizer` is very helpful in enabling you to quickly add button graphics to your application.
 
