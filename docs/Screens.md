@@ -1,21 +1,3 @@
-[Vintage08](https://github.com/Vintage08) 2023-03-25T01:29:07Z
-
-![Uploading Screenshot_2023-03-25-06-57-44-703_com.android.chrome.jpg…]()
-
------------
-
-[Vintage08](https://github.com/Vintage08) 2023-03-25T01:28:10Z
-
-![Uploading Screenshot_2023-03-25-06-57-54-793_com.android.chrome.jpg…]()
-
------------
-
-[Vintage08](https://github.com/Vintage08) 2023-03-24T21:48:45Z
-
-![Screenshot_2023-03-25-03-18-19-964_com.android.chrome.jpg](https://user-images.githubusercontent.com/64662990/227647439-b555c2d6-5fa0-48d1-99d1-af35112b666f.jpg)
-
------------
-
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-03-16T18:56:49Z
 
 ![image](https://user-images.githubusercontent.com/46163555/225724235-81b435c8-84f2-48e8-9ba0-9353f6179517.png)
@@ -812,7 +794,7 @@
 
 -----------
 
-[Scania-Creations-16](https://github.com/Scania-Creations-16) 2021-11-04T02:55:59Z
+[Pranav-P-16](https://github.com/Pranav-P-16) 2021-11-04T02:55:59Z
 
 ![yt1](https://user-images.githubusercontent.com/91425738/140249931-76fdda21-fbdf-42a0-81a7-add95ab122b6.png)
 ![yt2](https://user-images.githubusercontent.com/91425738/140249937-26fba679-b813-471e-a09c-f81ff1a7a53d.png)
@@ -821,7 +803,7 @@
 
 -----------
 
-[Scania-Creations-16](https://github.com/Scania-Creations-16) 2021-10-31T04:14:25Z
+[Pranav-P-16](https://github.com/Pranav-P-16) 2021-10-31T04:14:25Z
 
 ![mp1](https://user-images.githubusercontent.com/91425738/139567280-a9b18a68-e052-414a-898c-7537c90f2aac.png)
 ![mp2](https://user-images.githubusercontent.com/91425738/139567295-35c8d463-2a27-4724-94e6-c21c85aa55e4.png)

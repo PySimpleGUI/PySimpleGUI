@@ -1,25 +1,5 @@
-[Vintage08](https://github.com/Vintage08) 2023-03-25T01:29:07Z
-![Uploading Screenshot_2023-03-25-06-57-44-703_com.android.chrome.jpg…]()
-
-
------------
-
-[Vintage08](https://github.com/Vintage08) 2023-03-25T01:28:10Z
-Please Explain how to remove these locks step by step  . Is that possible at termux 
-![Uploading Screenshot_2023-03-25-06-57-54-793_com.android.chrome.jpg…]()
-
-
------------
-
 [andrewmk](https://github.com/andrewmk) 2023-03-24T22:40:00Z
 @PySimpleGUI spam comment: https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1483457256
-
------------
-
-[Vintage08](https://github.com/Vintage08) 2023-03-24T21:48:45Z
-![Screenshot_2023-03-25-03-18-19-964_com.android.chrome.jpg](https://user-images.githubusercontent.com/64662990/227647439-b555c2d6-5fa0-48d1-99d1-af35112b666f.jpg)
-
-How to hack this site to make profit
 
 -----------
 
@@ -3210,7 +3190,7 @@ Love all the graphics you're including your GUIs.  It adds a level up from the b
 
 -----------
 
-[Scania-Creations-16](https://github.com/Scania-Creations-16) 2021-11-04T02:55:59Z
+[Pranav-P-16](https://github.com/Pranav-P-16) 2021-11-04T02:55:59Z
 Created a Simple Youtube Downloader using PySimpleGUI :blush: 
 
 ![yt1](https://user-images.githubusercontent.com/91425738/140249931-76fdda21-fbdf-42a0-81a7-add95ab122b6.png)
@@ -3225,7 +3205,7 @@ Created a Simple Youtube Downloader using PySimpleGUI :blush:
 
 -----------
 
-[Scania-Creations-16](https://github.com/Scania-Creations-16) 2021-11-01T04:11:56Z
+[Pranav-P-16](https://github.com/Pranav-P-16) 2021-11-01T04:11:56Z
 > You're quite welcome.
 > 
 > **Thank you** @Scania-Creations-16 for posting your screenshot! Awesome awesome creation! I'm impressed!
@@ -3261,7 +3241,7 @@ I'm sure there are things that others can learn.  If you're a beginner, then I'm
 
 -----------
 
-[Scania-Creations-16](https://github.com/Scania-Creations-16) 2021-10-31T04:14:25Z
+[Pranav-P-16](https://github.com/Pranav-P-16) 2021-10-31T04:14:25Z
 I made a Music Player using PySimpleGUI
 
 
