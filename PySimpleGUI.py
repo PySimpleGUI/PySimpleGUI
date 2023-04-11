@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.166 Unreleased"
+version = __version__ = "4.61.0.167 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -159,7 +159,7 @@ _change_log = """
         Use Withdraw to hide window during creation
     4.61.0.63
         Addition of checklist item when logging new issue to  GitHub - upgraded to latest version of PySimpleGUI on PyPI
-        Listbox justification parameter found to not be implemented on some early verions of tkinter so had to protect this situation. This new feature crached on the Pi for example
+        Listbox justification parameter found to not be implemented on some early verions of tkinter so had to protect this situation. This new feature crashed on the Pi for example
     4.61.0.64
         Allow set_options(window_location=None) to indicate the OS should provide the window location.  
             This will stop the Alpha channel being set to 0 when the window is created
@@ -400,6 +400,9 @@ _change_log = """
         Added new method - set_ibeam_color to Input, Multiline and Spin elements.  Combo is a ttk element so it's not available using this call yet
     4.61.0.166
         New Udemy coupon
+    4.61.0.167
+        New Udemy coupon
+        Fix for bad user settings key for user watermark. Added Python version to watermark
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -25631,15 +25634,17 @@ def _global_settings_get_watermark_info():
         return
     forced =  Window._watermark_temp_forced
     prefix_text = pysimplegui_user_settings.get('-watermark text-', '')
-    ver_text = ' ' + version if pysimplegui_user_settings.get('-watermark ver-', False if not forced else True) or forced else ''
-    framework_ver_text = ' ' + framework_version  if pysimplegui_user_settings.get('-watermark framework ver-', False if not forced else True) or forced else ''
+
+    ver_text = ' ' + version.split(" ", 1)[0] if pysimplegui_user_settings.get('-watermark ver-', False if not forced else True) or forced else ''
+    framework_ver_text = ' Tk ' + framework_version  if pysimplegui_user_settings.get('-watermark framework ver-', False if not forced else True) or forced else ''
     watermark_font = pysimplegui_user_settings.get('-watermark font-', '_ 9 bold')
     # background_color = pysimplegui_user_settings.get('-watermark bg color-', 'window.BackgroundColor')
-    user_text = pysimplegui_user_settings.get('-watermark user text-', '')
+    user_text = pysimplegui_user_settings.get('-watermark text-', '')
+    python_text = ' Py {}.{}.{}'.format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro)
     if user_text:
         text = str(user_text)
     else:
-        text = prefix_text + ver_text + framework_ver_text
+        text = prefix_text + ver_text + python_text + framework_ver_text
     Window._watermark = lambda window: Text(text, font=watermark_font, background_color= window.BackgroundColor)
 
 
@@ -26378,7 +26383,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=65DBBEA0EC4C3B093FD1')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -26386,7 +26391,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", 'A2E4F6B1B75EC3D90133',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '65DBBEA0EC4C3B093FD1',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':
