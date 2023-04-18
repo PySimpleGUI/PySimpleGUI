@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.167 Unreleased"
+version = __version__ = "4.61.0.168 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -382,7 +382,7 @@ _change_log = """
     4.61.0.157
         Added the _optional_window_data function that is used to help with local PySimpleGUI testing of release candidates. Not meant to be used by end-users.
     4.61.0.158
-        Checked checkbox activeforeground to be the same as the text so mouseover doesn't change color
+        Changed Checkbox activeforeground to be the same as the text so mouseover doesn't change color
     4.61.0.159
         New Global Settings feature - Window watermarking. Can be forced on temporarily by settings watermark=True in your Window creation
     4.61.0.160
@@ -403,6 +403,9 @@ _change_log = """
     4.61.0.167
         New Udemy coupon
         Fix for bad user settings key for user watermark. Added Python version to watermark
+    4.61.0.168
+       Changed Radio activeforeground to be the same as the text so mouseover doesn't change color
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17137,6 +17140,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
+                    element.TKRadio.configure(activeforeground=text_color)
 
                 element.Widget.configure(highlightthickness=1)
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
