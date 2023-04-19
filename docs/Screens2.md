@@ -1,3 +1,12 @@
+[Kinetikal](https://github.com/Kinetikal) 2023-04-19T09:55:26Z
+I've been using PySimpleGUI to make a GUI for the Chocolatey Package Manager, thought of sending a screenshot of it here.
+
+![Chocolatey-GUI](https://user-images.githubusercontent.com/93329694/233038905-5a3b1f42-4794-4c6e-8411-f70f8fa79723.png)
+
+Thanks for this amazing module, I'm really having fun learning it!
+
+-----------
+
 [andrewmk](https://github.com/andrewmk) 2023-03-24T22:40:00Z
 @PySimpleGUI spam comment: https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1483457256
 
