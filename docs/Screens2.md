@@ -7,11 +7,6 @@ Thanks for this amazing module, I'm really having fun learning it!
 
 -----------
 
-[andrewmk](https://github.com/andrewmk) 2023-03-24T22:40:00Z
-@PySimpleGUI spam comment: https://github.com/PySimpleGUI/PySimpleGUI/issues/10#issuecomment-1483457256
-
------------
-
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-03-16T18:56:49Z
 @ssweber the color scheme looks like the `GrayGrayGray` theme to me which means no colors will be added (all system defaults will be used).  The important feature that's adding the images is either `Image` elements or `Button` elements.  Using a Base64 version of images will enable you to drop them directly into your source code.  The PySimpleGUI application `psgresizer` is very helpful in enabling you to quickly add button graphics to your application.
 
