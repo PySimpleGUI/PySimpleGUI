@@ -181,14 +181,14 @@ https://www.youtube.com/watch?v=tPCHCc-GiHM
 
 -----------
 
-[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T21:41:57Z
+[gnuchanos](https://github.com/gnuchanos) 2022-12-18T21:41:57Z
 ![2022-12-19-003757_1280x1012_scrot](https://user-images.githubusercontent.com/117280480/208321005-c731df95-a680-4fb7-8682-5c9b86bd6afb.png)
 this is what ı say ı can't do like my tiling manager
 
 
 -----------
 
-[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T21:05:02Z
+[gnuchanos](https://github.com/gnuchanos) 2022-12-18T21:05:02Z
 okay ı try example finish ı ask again
 
 -----------
@@ -198,7 +198,7 @@ okay ı try example finish ı ask again
 
 -----------
 
-[kubilayyalcinyt](https://github.com/kubilayyalcinyt) 2022-12-18T19:36:12Z
+[gnuchanos](https://github.com/gnuchanos) 2022-12-18T19:36:12Z
 ![displayManager](https://user-images.githubusercontent.com/117280480/208315826-fc2172ae-349d-42ba-9cdc-3c828b7e4c26.png)
 ![gnuchanOS_Window_Manager](https://user-images.githubusercontent.com/117280480/208315827-1e8eb182-ea3d-4cb7-8c3f-a093ca58d8ec.png)
 how ı create like this window first login screen second normal window ı try but ı can't do 
