@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.169 Unreleased"
+version = __version__ = "4.61.0.170 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -407,6 +407,8 @@ _change_log = """
        Changed Radio activeforeground to be the same as the text so mouseover doesn't change color
     4.61.0.169
         Allow no end-key to be specified for perform_long_operation/start_thread.  Careful with backward compatibility! If you skip adding parm on old versions of PySimpleGUI then it'll not work.
+    4.61.0.170
+        Possible fix for Mac Input Element issue that's been happening with no-titlebar windows on MacOS 13.2.1 Ventura
 
     """
 
@@ -18234,7 +18236,10 @@ def StartupTK(window):
 
     # for the Raspberry Pi. Need to set the attributes here, prior to the building of the window
     # so going ahead and doing it for all platforms, in addition to doing it after the window is packed
-    _no_titlebar_setup(window)
+    # 2023-April - this call seems to be causing problems on MacOS 13.2.1 Ventura.  Input elements become non-responsive
+    # if this call is made here and at the end of building the window
+    if not running_mac():
+        _no_titlebar_setup(window)
 
     if not window.Resizable:
         root.resizable(False, False)
