@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.168 Unreleased"
+version = __version__ = "4.61.0.169 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -405,6 +405,8 @@ _change_log = """
         Fix for bad user settings key for user watermark. Added Python version to watermark
     4.61.0.168
        Changed Radio activeforeground to be the same as the text so mouseover doesn't change color
+    4.61.0.169
+        Allow no end-key to be specified for perform_long_operation/start_thread.  Careful with backward compatibility! If you skip adding parm on old versions of PySimpleGUI then it'll not work.
 
     """
 
@@ -12621,7 +12623,7 @@ class Window:
         return grab
 
 
-    def perform_long_operation(self, func, end_key):
+    def perform_long_operation(self, func, end_key=None):
         """
         Call your function that will take a long time to execute.  When it's complete, send an event
         specified by the end_key.
@@ -12638,8 +12640,8 @@ class Window:
 
         :param func:    A lambda or a function name with no parms
         :type func:     Any
-        :param end_key: The key that will be generated when the function returns
-        :type end_key:  (Any)
+        :param end_key: Optional key that will be generated when the function returns
+        :type end_key:  (Any | None)
         :return:        The id of the thread
         :rtype:         threading.Thread
         """
@@ -12956,14 +12958,15 @@ def _long_func_thread(window, end_key, original_func):
 
     :param window:        The window that will get the event
     :type window:         (Window)
-    :param end_key:       The event that will be sent when function returns
-    :type end_key:        (Any)
+    :param end_key:       The event that will be sent when function returns. If None then no event will be sent when exiting thread
+    :type end_key:        (Any|None)
     :param original_func: The user's function that is called. Can be a function with no arguments or a lambda experession
     :type original_func:  (Any)
     """
 
     return_value = original_func()
-    window.write_event_value(end_key, return_value)
+    if end_key is not None:
+        window.write_event_value(end_key, return_value)
 
 
 def _exit_mainloop(exiting_window):
