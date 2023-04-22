@@ -11,7 +11,7 @@
         Displays the values dictionary entry for each element
         And more!
 
-    Copyright 2021, 2022 PySimpleGUI
+    Copyright 2021, 2022, 2023 PySimpleGUI
 """
 
 import PySimpleGUI as sg
@@ -94,12 +94,11 @@ def make_window(theme):
 
 def main():
     window = make_window(sg.theme())
-    
+
     # This is an Event Loop 
     while True:
         event, values = window.read(timeout=100)
         # keep an animation running so show things are happening
-        window['-GIF-IMAGE-'].update_animation(sg.DEFAULT_BASE64_LOADING_GIF, time_between_frames=100)
         if event not in (sg.TIMEOUT_EVENT, sg.WIN_CLOSED):
             print('============ Event = ', event, ' ==============')
             print('-------- Values Dictionary (key=value) --------')
@@ -108,7 +107,9 @@ def main():
         if event in (None, 'Exit'):
             print("[LOG] Clicked Exit!")
             break
-        elif event == 'About':
+
+        window['-GIF-IMAGE-'].update_animation(sg.DEFAULT_BASE64_LOADING_GIF, time_between_frames=100)
+        if event == 'About':
             print("[LOG] Clicked About!")
             sg.popup('PySimpleGUI Demo All Elements',
                      'Right click anywhere to see right click menu',
