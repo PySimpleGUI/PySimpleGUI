@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.170 Unreleased"
+version = __version__ = "4.61.0.173 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -409,7 +409,13 @@ _change_log = """
         Allow no end-key to be specified for perform_long_operation/start_thread.  Careful with backward compatibility! If you skip adding parm on old versions of PySimpleGUI then it'll not work.
     4.61.0.170
         Possible fix for Mac Input Element issue that's been happening with no-titlebar windows on MacOS 13.2.1 Ventura
-
+    4.61.0.171
+        Added formatted_datetime_now function for easy timestamps for logging
+    4.61.0.172
+        Added upgrade service - No notification popups should be shown yet.  Don't want to SPAM users while testing
+    4.61.0.173
+        Made changing the "Show only critical" setting in global settings take effect immediately rather than waiting until closed settings window
+        Added timer_stop_usec to return timer value in microseconds
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -633,9 +639,9 @@ def timer_start():
 
 def timer_stop():
     """
-    Time your code easily.... stop the timer and print the number of milliseconds since the timer start
+    Time your code easily.... stop the timer and print the number of MILLISECONDS since the timer start
 
-    :return: delta in milliseconds from timer_start was called
+    :return: delta in MILLISECONDS from timer_start was called
     :rtype:  int
     """
     global g_time_delta, g_time_end
@@ -643,6 +649,19 @@ def timer_stop():
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
     return int(g_time_delta * 1000)
+
+def timer_stop_usec():
+    """
+    Time your code easily.... stop the timer and print the number of MICROSECONDS since the timer start
+
+    :return: delta in MICROSECONDS from timer_start was called
+    :rtype:  int
+    """
+    global g_time_delta, g_time_end
+
+    g_time_end = time.time()
+    g_time_delta = g_time_end - g_time_start
+    return int(g_time_delta * 1000000)
 
 
 def _timeit(func):
@@ -698,6 +717,19 @@ def _timeit_summary(func):
         return result
 
     return wrapper
+
+
+def formatted_datetime_now():
+    """
+    Returns a string with current date and time formatted YYYY-MM-DD HH:MM:SS for easy logging
+
+    :return:    String with date and time formatted YYYY-MM-DD  HH:MM:SS
+    :rtype:     (str)
+    """
+    now = datetime.datetime.now()
+    current_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    return current_time
+
 
 
 def running_linux():
@@ -24811,6 +24843,179 @@ RED_X_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAQ5ElEQVR4nO1ca3S
 GREEN_CHECK_BASE64 = b'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'
 
 
+
+'''
+M""MMMMM""M                                           dP          
+M  MMMMM  M                                           88          
+M  MMMMM  M 88d888b. .d8888b. 88d888b. .d8888b. .d888b88 .d8888b. 
+M  MMMMM  M 88'  `88 88'  `88 88'  `88 88'  `88 88'  `88 88ooood8 
+M  `MMM'  M 88.  .88 88.  .88 88       88.  .88 88.  .88 88.  ... 
+Mb       dM 88Y888P' `8888P88 dP       `88888P8 `88888P8 `88888P' 
+MMMMMMMMMMM 88            .88                                     
+            dP        d8888P                                      
+MP""""""`MM                            oo                   
+M  mmmmm..M                                                 
+M.      `YM .d8888b. 88d888b. dP   .dP dP .d8888b. .d8888b. 
+MMMMMMM.  M 88ooood8 88'  `88 88   d8' 88 88'  `"" 88ooood8 
+M. .MMM'  M 88.  ... 88       88 .88'  88 88.  ... 88.  ... 
+Mb.     .dM `88888P' dP       8888P'   dP `88888P' `88888P' 
+MMMMMMMMMMM
+'''
+
+__upgrade_server_ip = 'upgradeapi.PySimpleGUI.com'
+__upgrade_server_port = '5353'
+
+
+def __send_dict(ip, port, dict_to_send):
+    """
+    Send a dictionary to the upgrade server and get back a dictionary in response
+    :param ip:           ip address of the upgrade server
+    :type ip:            str
+    :param port:         port number
+    :type port:          int | str
+    :param dict_to_send: dictionary of items to send
+    :type dict_to_send:  dict
+    :return:             dictionary that is the reply
+    :rtype:              dict
+    """
+
+    # print(f'sending dictionary to ip {ip} port {port}')
+    try:
+        # Create a socket object
+        s = socket.socket()
+
+        s.settimeout(5.0)       # set a 5 second timeout
+
+        # connect to the server on local computer
+        s.connect((ip , int(port)))
+        # send a python dictionary
+        s.send(json.dumps(dict_to_send).encode())
+
+        # receive data from the server
+        reply_data = s.recv(1024).decode()
+        # close the connection
+        s.close()
+    except Exception as e:
+        # print(f'Error sending to server:', e)
+        # print(f'payload:\n', dict_to_send)
+        reply_data = e
+    try:
+        data_dict = json.loads(reply_data)
+    except Exception as e:
+        # print(f'UPGRADE THREAD - Error decoding reply {reply_data} as a dictionary. Error = {e}')
+        data_dict = {}
+    return data_dict
+
+def __show_previous_upgrade_information():
+    """
+    Shows information about upgrades if upgrade information is waiting to be shown
+
+    :return:
+    """
+
+    # if nothing to show, then just return
+    # print('Checking for upgrade info:', pysimplegui_user_settings.get('-upgrade info available-', False), f'Seen: ', pysimplegui_user_settings.get('-upgrade info seen-', True))
+    if pysimplegui_user_settings.get('-upgrade info seen-', True) and not pysimplegui_user_settings.get('-upgrade info available-', False):
+        return
+
+    if pysimplegui_user_settings.get('-upgrade show only critical-', False) and pysimplegui_user_settings.get('-severity level-', '') != 'Critical':
+        return
+
+    message1 = pysimplegui_user_settings.get('-upgrade message 1-', '')
+    message2 = pysimplegui_user_settings.get('-upgrade message 2-', '')
+    recommended_version = pysimplegui_user_settings.get('-upgrade recommendation-', '')
+    layout = [[Image(EMOJI_BASE64_HAPPY_THUMBS_UP), T('A Message from the PySimpleGUI Upgrade Service', font='_ 14')],
+              [T('It is recommended you upgrade to version {}'.format(recommended_version))],
+              [T(message1)],
+              [T(message2)],
+              [CB('Do not show this message again in the future', default=True, k='-SKIP IN FUTURE-')],
+              [B('Close'), T('This window auto-closes in 30 seconds')]]
+
+    window = Window('PySimpleGUI Intelligent Upgrade', layout, disable_close=True, auto_close_duration=30, auto_close=True)
+
+    event, values = window.read(close=True)
+    if values['-SKIP IN FUTURE-']:
+        pysimplegui_user_settings['-upgrade info available-'] = False
+        pysimplegui_user_settings['-upgrade info seen-'] = True
+
+
+def __get_linux_distribution():
+    with open('/etc/os-release') as f:
+        data = f.read()
+    lines = data.split('\n')
+    for line in lines:
+        if line.startswith('PRETTY_NAME'):
+            line_split = line.split('=')[1].strip('"')
+            line_tuple = tuple(line_split.split(' '))
+            return line_tuple
+    return ('Linux Distro', 'Unknown','No lines Found in //etc//os-release')
+
+
+def __perform_upgrade_check_thread():
+    # print(f'Upgrade thread...seen = {pysimplegui_user_settings.get("-upgrade info seen-", False)}')
+    try:
+        if running_trinket():
+            os_name = 'Trinket'
+            os_ver = __get_linux_distribution()
+        elif running_replit():
+            os_name = 'REPL.IT'
+            os_ver = __get_linux_distribution()
+        elif running_windows():
+            os_name = 'Windows'
+            os_ver = platform.win32_ver()
+        elif running_linux():
+            os_name = 'Linux'
+            os_ver = __get_linux_distribution()
+        elif running_mac():
+            os_name = 'Mac'
+            os_ver = platform.mac_ver()
+        else:
+            os_name = 'Other'
+            os_ver = ''
+
+        psg_ver = version
+        framework_ver = framework_version
+        python_ver = sys.version
+
+        upgrade_dict = {
+            'OSName' : str(os_name),
+            'OSVersion' : str(os_ver),
+            'PythonVersion' : str(python_ver),
+            'PSGVersion' : str(psg_ver),
+            'FrameworkName' : 'tkinter',
+            'FrameworkVersion' : str(framework_ver),
+        }
+        reply_data = __send_dict(__upgrade_server_ip, __upgrade_server_port, upgrade_dict)
+
+        recommended_version = reply_data.get('SuggestedVersion', '')
+        message1 = reply_data.get('Message1', '')
+        message2 = reply_data.get('Message2', '')
+        severity_level = reply_data.get('SeverityLevel', '')
+        # if old information still hasn't been displayed, don't overwrite it. Only store data if there are messages that are available
+        if not pysimplegui_user_settings.get('-upgrade info available-', False) and (message1 or message2) and not running_trinket():
+            if pysimplegui_user_settings.get('-upgrade message 1-', '') != message1 or \
+               pysimplegui_user_settings.get('-upgrade message 2-', '') != message2 or \
+               pysimplegui_user_settings.get('-upgrade recommendation-', '') != recommended_version or \
+               pysimplegui_user_settings.get('-severity level-', '') != severity_level or \
+                    not pysimplegui_user_settings.get('-upgrade info seen-', False):
+                # Save the data to the settings file
+                pysimplegui_user_settings['-upgrade info seen-'] = False
+                pysimplegui_user_settings['-upgrade info available-'] = True
+                pysimplegui_user_settings['-upgrade message 1-'] = message1
+                pysimplegui_user_settings['-upgrade message 2-'] = message2
+                pysimplegui_user_settings['-upgrade recommendation-'] = recommended_version
+                pysimplegui_user_settings['-severity level-'] = severity_level
+    except Exception as e:
+        reply_data = {}
+        # print('Upgrade server error', e)
+    # print(f'Upgrade Reply = {reply_data}')
+
+def __perform_upgrade_check():
+    # For now, do not show data returned. Still testing and do not want to "SPAM" users with any popups
+    # __show_previous_upgrade_information()
+    threading.Thread(target=lambda: __perform_upgrade_check_thread(), daemon=True).start()
+
+
 # =========================================================================#
 # MP""""""`MM                                                                dP                  dP
 # M  mmmmm..M                                                                88                  88
@@ -25809,13 +26014,25 @@ def main_global_pysimplegui_settings():
                 font='_ 16', expand_x=True)]])
 
 
+    upgrade_recommendation_tab_layout = [[T('Latest Recommendation and Announcements For You')],
+                                         [T('Recommendation waiting:'), T(pysimplegui_user_settings.get('-upgrade info available-',''))],
+                                         [T('Severity Level of Update:'), T(pysimplegui_user_settings.get('-severity level-',''))],
+                                         [T('Recommended Version To Upgrade To:'), T(pysimplegui_user_settings.get('-upgrade recommendation-',''))],
+                                         [T(pysimplegui_user_settings.get('-upgrade message 1-',''))],
+                                         [T(pysimplegui_user_settings.get('-upgrade message 2-',''))],
+                                         [T('Message Seen:'), T(pysimplegui_user_settings.get('-upgrade info seen-',False))],
+                                         [Checkbox('Show Only Critical Messages', default=pysimplegui_user_settings.get('-upgrade show only critical-', False), key='-UPGRADE SHOW ONLY CRITICAL-', enable_events=True)],
+                                         [Button('Show Notification Again')],
+                                         ]
+    upgrade_tab = Tab('Upgrade',upgrade_recommendation_tab_layout,  expand_x=True)
+
 
     # ------------------------- Security Tab -------------------------
     security_tab = Tab('Security',
                 [[T('PySimpleGUI hashcode')], [T(scheck_hh())]],
                        expand_x=True)
 
-    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab ]])
+    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab, upgrade_tab ]])
     layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
@@ -25873,6 +26090,11 @@ def main_global_pysimplegui_settings():
                     if key[0] == '-TTK SCROLL-':
                         pysimplegui_user_settings.set(json.dumps(('-ttk scroll-', key[1])), value)
 
+            # Upgrade Service Settings
+            pysimplegui_user_settings.set('-upgrade show only critical-', values['-UPGRADE SHOW ONLY CRITICAL-'])
+
+
+
             theme(new_theme)
 
             _global_settings_get_ttk_scrollbar_info()
@@ -25900,6 +26122,12 @@ def main_global_pysimplegui_settings():
             for i in range(100):
                 Print(i, keep_on_top=True)
             Print('Close this window to continue...', keep_on_top=True)
+        elif event == 'Show Notification Again':
+            pysimplegui_user_settings.set('-upgrade info seen-', False)
+            __show_previous_upgrade_information()
+        elif event == '-UPGRADE SHOW ONLY CRITICAL-':
+            pysimplegui_user_settings.set('-upgrade show only critical-', values['-UPGRADE SHOW ONLY CRITICAL-'])
+
     window.close()
     # In case some of the settings were modified and tried out, reset the ttk info to be what's in the config file
     style = ttk.Style(Window.hidden_master_root)
@@ -26559,6 +26787,9 @@ _read_mac_global_settings()
 if _mac_should_set_alpha_to_99():
     # Applyting Mac OS 12.3+ Alpha Channel fix.  Sets the default Alpha Channel to 0.99
     set_options(alpha_channel=0.99)
+
+
+__perform_upgrade_check()
 
  
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
