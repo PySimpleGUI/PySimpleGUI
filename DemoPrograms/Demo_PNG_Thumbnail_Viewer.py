@@ -148,10 +148,11 @@ while True:
         display_index -= COLUMNS * ROWS
     elif event in ('Next:34', 'Next'):
         display_index += COLUMNS * ROWS
-    if display_index < 0:
-        display_index = 0
     if display_index >= len(img_files) - COLUMNS * ROWS:
-        display_index = len(img_files) - COLUMNS * ROWS - 1
+        display_index = len(img_files) - (COLUMNS * ROWS + 1)
+        # will make display_index negative for 0 images!
+    if display_index < 0:  # but this will fix it.
+        display_index = 0        
     #window['-slider-'].update(display_index)
     # ----------------- Menu choices -----------------
     if event == 'Open Folder':
