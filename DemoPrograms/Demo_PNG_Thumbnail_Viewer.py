@@ -141,17 +141,17 @@ while True:
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event in ('MouseWheel:Down', 'Down:40',):
-        display_index += 8
+        display_index += COLUMNS
     elif event in ('MouseWheel:Up', 'Up:38',):
-        display_index -= 8
+        display_index -= COLUMNS
     elif event in ('Prior:33', 'Prev'):
-        display_index -= 64
+        display_index -= COLUMNS * ROWS
     elif event in ('Next:34', 'Next'):
-        display_index += 64
+        display_index += COLUMNS * ROWS
     if display_index < 0:
         display_index = 0
-    if display_index >= len(img_files) - 64:
-        display_index = len(img_files) - 65
+    if display_index >= len(img_files) - COLUMNS * ROWS:
+        display_index = len(img_files) - COLUMNS * ROWS - 1
     #window['-slider-'].update(display_index)
     # ----------------- Menu choices -----------------
     if event == 'Open Folder':
