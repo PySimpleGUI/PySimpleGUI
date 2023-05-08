@@ -266,7 +266,7 @@ If you are a professional or skilled in how to develop software, then you unders
 
 ***It WILL be required, at times, for you to read or search this document in order to be successful.***
 
-Using Stack Overflow and other sites to post your questions has resulted in advice given by a lot of users that have never looked at the package and are sometimes just flat bad advice.  When possible, post an Issue on this GitHub. Definitely go through the Issue checklist.  Take a look through the docs again.
+Using Stack Overflow and other sites to post your questions has resulted in advice given by a lot of users that have never looked at the package and are sometimes just flat bad advice.  When possible, post an Issue on this [GitHub](https://github.com/PySimpleGUI/PySimpleGUI). Definitely go through the Issue checklist.  Take a look through the docs again.
 
 There are 5 resources that work together to provide you with the fastest path to success.  They are:
 
