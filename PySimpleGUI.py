@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.173 Unreleased"
+version = __version__ = "4.61.0.177 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -416,6 +416,14 @@ _change_log = """
     4.61.0.173
         Made changing the "Show only critical" setting in global settings take effect immediately rather than waiting until closed settings window
         Added timer_stop_usec to return timer value in microseconds
+    4.61.0.174
+        Overwrite upgrade data if any portion has changed
+    4.61.0.175
+        Notification window - added countdown counter. Added hand cursor if message is a link and enable clicking of link to open the browser to that link
+    4.61.0.176
+        Improved linux distro detection
+    4.61.0.177
+        Custom Titlebar - Support for disabling resizing (maximizing too), support for disable minimize and disable close
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12781,14 +12789,17 @@ class Window:
         :return:
         """
         if key == TITLEBAR_MINIMIZE_KEY:
-            self._custom_titlebar_minimize()
+            if not self.DisableMinimize:
+                self._custom_titlebar_minimize()
         elif key == TITLEBAR_MAXIMIZE_KEY:
-            if self.maximized:
-                self.normal()
-            else:
-                self.maximize()
+            if self.Resizable:
+                if self.maximized:
+                    self.normal()
+                else:
+                    self.maximize()
         elif key == TITLEBAR_CLOSE_KEY:
-            self._OnClosingCallback()
+            if not self.DisableClose:
+                self._OnClosingCallback()
 
 
     def timer_start(self, frequency_ms, key=EVENT_TIMER, repeating=True):
@@ -24914,41 +24925,65 @@ def __show_previous_upgrade_information():
     """
 
     # if nothing to show, then just return
-    # print('Checking for upgrade info:', pysimplegui_user_settings.get('-upgrade info available-', False), f'Seen: ', pysimplegui_user_settings.get('-upgrade info seen-', True))
     if pysimplegui_user_settings.get('-upgrade info seen-', True) and not pysimplegui_user_settings.get('-upgrade info available-', False):
         return
-
     if pysimplegui_user_settings.get('-upgrade show only critical-', False) and pysimplegui_user_settings.get('-severity level-', '') != 'Critical':
         return
 
     message1 = pysimplegui_user_settings.get('-upgrade message 1-', '')
     message2 = pysimplegui_user_settings.get('-upgrade message 2-', '')
     recommended_version = pysimplegui_user_settings.get('-upgrade recommendation-', '')
-    layout = [[Image(EMOJI_BASE64_HAPPY_THUMBS_UP), T('A Message from the PySimpleGUI Upgrade Service', font='_ 14')],
+    severity_level = pysimplegui_user_settings.get('-severity level-', '')
+
+    # message2 = r'https://www.PySimpleGUI.org'
+
+    layout = [[Image(EMOJI_BASE64_HAPPY_THUMBS_UP), T('An upgrade is available & recommended', font='_ 14')],
               [T('It is recommended you upgrade to version {}'.format(recommended_version))],
-              [T(message1)],
-              [T(message2)],
+              [T(message1, enable_events=True, k='-MESSAGE 1-')],
+              [T(message2, enable_events=True, k='-MESSAGE 2-')],
               [CB('Do not show this message again in the future', default=True, k='-SKIP IN FUTURE-')],
-              [B('Close'), T('This window auto-closes in 30 seconds')]]
+              [B('Close'), T('This window auto-closes in'), T('30', k='-CLOSE TXT-', text_color='white', background_color='red'), T('seconds')]]
 
-    window = Window('PySimpleGUI Intelligent Upgrade', layout, disable_close=True, auto_close_duration=30, auto_close=True)
+    window = Window('PySimpleGUI Intelligent Upgrade', layout, finalize=True)
+    if 'http' in message1:
+        window['-MESSAGE 1-'].set_cursor('hand1')
+    if 'http' in message2:
+        window['-MESSAGE 2-'].set_cursor('hand1')
 
-    event, values = window.read(close=True)
-    if values['-SKIP IN FUTURE-']:
-        pysimplegui_user_settings['-upgrade info available-'] = False
-        pysimplegui_user_settings['-upgrade info seen-'] = True
+    seconds_left=30
+    while True:
+        event, values = window.read(timeout=1000)
+        if event in ('Close', WIN_CLOSED) or seconds_left < 1:
+            break
+        if values['-SKIP IN FUTURE-']:
+            if not running_trinket():
+                pysimplegui_user_settings['-upgrade info available-'] = False
+                pysimplegui_user_settings['-upgrade info seen-'] = True
+        if event == '-MESSAGE 1-' and 'http' in message1 and webbrowser_available:
+            webbrowser.open_new_tab(message1)
+        elif event == '-MESSAGE 2-' and 'http' in message2 and webbrowser_available:
+            webbrowser.open_new_tab(message2)
+        window['-CLOSE TXT-'].update(seconds_left)
+        seconds_left -= 1
+
+    window.close()
 
 
 def __get_linux_distribution():
-    with open('/etc/os-release') as f:
-        data = f.read()
-    lines = data.split('\n')
-    for line in lines:
-        if line.startswith('PRETTY_NAME'):
-            line_split = line.split('=')[1].strip('"')
-            line_tuple = tuple(line_split.split(' '))
-            return line_tuple
-    return ('Linux Distro', 'Unknown','No lines Found in //etc//os-release')
+    line_tuple = ('Linux Distro', 'Unknown', 'No lines Found in //etc//os-release')
+    try:
+        with open('/etc/os-release') as f:
+            data = f.read()
+        lines = data.split('\n')
+        for line in lines:
+            if line.startswith('PRETTY_NAME'):
+                line_split = line.split('=')[1].strip('"')
+                line_tuple = tuple(line_split.split(' '))
+                return line_tuple
+    except:
+        line_tuple = ('Linux Distro', 'Exception','Error reading//processing //etc//os-release')
+
+    return line_tuple
 
 
 def __perform_upgrade_check_thread():
@@ -24991,13 +25026,12 @@ def __perform_upgrade_check_thread():
         message1 = reply_data.get('Message1', '')
         message2 = reply_data.get('Message2', '')
         severity_level = reply_data.get('SeverityLevel', '')
-        # if old information still hasn't been displayed, don't overwrite it. Only store data if there are messages that are available
-        if not pysimplegui_user_settings.get('-upgrade info available-', False) and (message1 or message2) and not running_trinket():
+        # If any part of the reply has changed from the last reply, overwrite the data and set flags so user will be informed
+        if (message1 or message2) and not running_trinket():
             if pysimplegui_user_settings.get('-upgrade message 1-', '') != message1 or \
                pysimplegui_user_settings.get('-upgrade message 2-', '') != message2 or \
                pysimplegui_user_settings.get('-upgrade recommendation-', '') != recommended_version or \
-               pysimplegui_user_settings.get('-severity level-', '') != severity_level or \
-                    not pysimplegui_user_settings.get('-upgrade info seen-', False):
+               pysimplegui_user_settings.get('-severity level-', '') != severity_level:
                 # Save the data to the settings file
                 pysimplegui_user_settings['-upgrade info seen-'] = False
                 pysimplegui_user_settings['-upgrade info available-'] = True
@@ -26014,25 +26048,12 @@ def main_global_pysimplegui_settings():
                 font='_ 16', expand_x=True)]])
 
 
-    upgrade_recommendation_tab_layout = [[T('Latest Recommendation and Announcements For You')],
-                                         [T('Recommendation waiting:'), T(pysimplegui_user_settings.get('-upgrade info available-',''))],
-                                         [T('Severity Level of Update:'), T(pysimplegui_user_settings.get('-severity level-',''))],
-                                         [T('Recommended Version To Upgrade To:'), T(pysimplegui_user_settings.get('-upgrade recommendation-',''))],
-                                         [T(pysimplegui_user_settings.get('-upgrade message 1-',''))],
-                                         [T(pysimplegui_user_settings.get('-upgrade message 2-',''))],
-                                         [T('Message Seen:'), T(pysimplegui_user_settings.get('-upgrade info seen-',False))],
-                                         [Checkbox('Show Only Critical Messages', default=pysimplegui_user_settings.get('-upgrade show only critical-', False), key='-UPGRADE SHOW ONLY CRITICAL-', enable_events=True)],
-                                         [Button('Show Notification Again')],
-                                         ]
-    upgrade_tab = Tab('Upgrade',upgrade_recommendation_tab_layout,  expand_x=True)
-
-
     # ------------------------- Security Tab -------------------------
     security_tab = Tab('Security',
                 [[T('PySimpleGUI hashcode')], [T(scheck_hh())]],
                        expand_x=True)
 
-    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab, upgrade_tab ]])
+    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab ]])
     layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
@@ -26122,11 +26143,6 @@ def main_global_pysimplegui_settings():
             for i in range(100):
                 Print(i, keep_on_top=True)
             Print('Close this window to continue...', keep_on_top=True)
-        elif event == 'Show Notification Again':
-            pysimplegui_user_settings.set('-upgrade info seen-', False)
-            __show_previous_upgrade_information()
-        elif event == '-UPGRADE SHOW ONLY CRITICAL-':
-            pysimplegui_user_settings.set('-upgrade show only critical-', values['-UPGRADE SHOW ONLY CRITICAL-'])
 
     window.close()
     # In case some of the settings were modified and tried out, reset the ttk info to be what's in the config file
@@ -26469,13 +26485,22 @@ def _create_main_window():
 
     frame6 = [[VPush()],[graph_elem]]
 
-    global_settings_tab_layout = [[T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
-                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,8), write_only=True)],
-                                  ]
-
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
                          [T('If you want to change the default theme for PySimpleGUI, use the Global Settings')],
                          [B('Themes'), B('Theme Swatches'), B('Switch Themes')]]
+
+
+    upgrade_recommendation_tab_layout = [[T('Latest Recommendation and Announcements For You', font='_ 14')],
+                                         [T('Severity Level of Update:'), T(pysimplegui_user_settings.get('-severity level-',''))],
+                                         [T('Recommended Version To Upgrade To:'), T(pysimplegui_user_settings.get('-upgrade recommendation-',''))],
+                                         [T(pysimplegui_user_settings.get('-upgrade message 1-',''))],
+                                         [T(pysimplegui_user_settings.get('-upgrade message 2-',''))],
+                                         [Checkbox('Show Only Critical Messages', default=pysimplegui_user_settings.get('-upgrade show only critical-', False), key='-UPGRADE SHOW ONLY CRITICAL-', enable_events=True)],
+                                         [Button('Show Notification Again'), B('Upgrade from GitHub', button_color='white on red', key='-UPGRADE FROM GITHUB-'),
+],
+                                         ]
+    tab_upgrade = Tab('Upgrade\n',upgrade_recommendation_tab_layout,  expand_x=True)
+
 
     tab1 = Tab('Graph\n', frame6, tooltip='Graph is in here', title_color='red')
     tab2 = Tab('CB, Radio\nList, Combo',
@@ -26488,7 +26513,6 @@ def _create_main_window():
     tab6 = Tab('Course or\nSponsor', frame7, k='-TAB SPONSOR-')
     tab7 = Tab('Popups\n', pop_test_tab_layout, k='-TAB POPUP-')
     tab8 = Tab('Themes\n', themes_tab_layout, k='-TAB THEMES-')
-    tab9 = Tab('Global\nSettings', global_settings_tab_layout, k='-TAB GlOBAL SETTINGS-')
 
     def VerLine(version, description, justification='r', size=(40, 1)):
         return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size, pad=(0,0)), T(description, font='Any 12', pad=(0,0))]
@@ -26507,7 +26531,7 @@ def _create_main_window():
 
     layout_bottom = [
         [B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE TABS-'),
-         pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='-TAB_GROUP-')]], k='-TAB GROUP COL-'))],
+         pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab_upgrade]], key='-TAB_GROUP-')]], k='-TAB GROUP COL-'))],
         [B('Button', highlight_colors=('yellow', 'red'),pad=(1, 0)),
          B('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button',pad=(1, 0)),
          B('See-through Mode', tooltip='Make the background transparent',pad=(1, 0)),
@@ -26610,7 +26634,7 @@ def main():
         elif event.startswith('See'):
             window._see_through = not window._see_through
             window.set_transparent_color(theme_background_color() if window._see_through else '')
-        elif event == '-INSTALL-':
+        elif event in ('-INSTALL-', '-UPGRADE FROM GITHUB-'):
             _upgrade_gui()
         elif event == 'Popup':
             popup('This is your basic popup', keep_on_top=True)
@@ -26681,6 +26705,15 @@ def main():
             window.minimize()
             main_open_github_issue()
             window.normal()
+        elif event == 'Show Notification Again':
+            if not running_trinket():
+                pysimplegui_user_settings.set('-upgrade info seen-', False)
+            __show_previous_upgrade_information()
+        elif event == '-UPGRADE SHOW ONLY CRITICAL-':
+            if not running_trinket():
+                pysimplegui_user_settings.set('-upgrade show only critical-', values['-UPGRADE SHOW ONLY CRITICAL-'])
+
+
         i += 1
         # _refresh_debugger()
     print('event = ', event)
