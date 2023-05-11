@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.177 Unreleased"
+version = __version__ = "4.61.0.178 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -424,6 +424,8 @@ _change_log = """
         Improved linux distro detection
     4.61.0.177
         Custom Titlebar - Support for disabling resizing (maximizing too), support for disable minimize and disable close
+    4.61.0.178
+        Input element - fix for bug with text color & logic wasn't quite right with the "read for disabled" stuff in the update as well as when making window
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2519,11 +2521,25 @@ class Input(Element):
             _error_popup_with_traceback('Error in Input.update - The window was closed')
             return
 
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
+            self.TKEntry.configure(background=background_color)
+            self.BackgroundColor = background_color
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+            self.TKEntry.configure(fg=text_color)
+            self.TextColor = text_color
+
         if disabled is True:
-            self.TKEntry['state'] = 'readonly' if self.UseReadonlyForDisable else 'disabled'
+            if self.UseReadonlyForDisable:
+                self.TKEntry.configure(fg=self.disabled_readonly_text_color)
+                self.TKEntry['state'] = 'readonly'
+            else:
+                self.TKEntry.configure(fg=self.TextColor)
+                self.TKEntry['state'] = 'disabled'
+            self.Disabled = True
         elif disabled is False:
-            self.TKEntry['state'] = 'readonly' if self.ReadOnly else 'normal'
-        self.Disabled = disabled if disabled is not None else self.Disabled
+            self.TKEntry['state'] = 'normal'
+            self.TKEntry.configure(fg=self.TextColor)
+            self.Disabled = False
 
         if readonly is True:
             self.TKEntry['state'] = 'readonly'
@@ -2532,10 +2548,7 @@ class Input(Element):
 
 
 
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKEntry.configure(background=background_color)
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKEntry.configure(fg=text_color)
+
         if value is not None:
             if paste is not True:
                 try:
@@ -16730,7 +16743,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(selectforeground=element.selected_text_color)
                 if element.disabled_readonly_background_color not in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
-                if element.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                if element.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT) and element.Disabled:
                     element.TKEntry.config(fg=element.disabled_readonly_text_color)
 
                 element.Widget.config(highlightthickness=0)
