@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    A2E4F6B1B75EC3D90133.
+                    9AF99B123C49D51EB547.
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=A2E4F6B1B75EC3D90133','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=9AF99B123C49D51EB547','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -13685,15 +13685,15 @@ IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleG
 the function you provide with the exception of one function, Window.write_event_value.
 
 ```
-perform_long_operation(func, end_key)
+perform_long_operation(func, end_key = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any |  func   | A lambda or a function name with no parms |
-| Any | end_key | The key that will be generated when the function returns |
+|     Any      |  func   | A lambda or a function name with no parms |
+| (Any or None) | end_key | Optional key that will be generated when the function returns |
 | threading.Thread | **RETURN** | The id of the thread
 
 ### read
@@ -13907,15 +13907,15 @@ IMPORTANT - This method uses THREADS... this means you CANNOT make any PySimpleG
 the function you provide with the exception of one function, Window.write_event_value.
 
 ```
-start_thread(func, end_key)
+start_thread(func, end_key = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any |  func   | A lambda or a function name with no parms |
-| Any | end_key | The key that will be generated when the function returns |
+|     Any      |  func   | A lambda or a function name with no parms |
+| (Any or None) | end_key | Optional key that will be generated when the function returns |
 | threading.Thread | **RETURN** | The id of the thread
 
 ### timer_get_active_timers
