@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.178 Unreleased"
+version = __version__ = "4.61.0.179 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -426,6 +426,8 @@ _change_log = """
         Custom Titlebar - Support for disabling resizing (maximizing too), support for disable minimize and disable close
     4.61.0.178
         Input element - fix for bug with text color & logic wasn't quite right with the "read for disabled" stuff in the update as well as when making window
+    4.61.0.179
+        New Udemy coupon
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -26660,7 +26662,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=65DBBEA0EC4C3B093FD1')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=9AF99B123C49D51EB547')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -26668,7 +26670,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '65DBBEA0EC4C3B093FD1',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '9AF99B123C49D51EB547',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
 
         elif event == 'Themes':

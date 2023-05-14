@@ -9,8 +9,8 @@
       <img src="https://www.dropbox.com/s/6wzf3ebmj97v4zs/PySimpleGUI-GitHub-Udemy-Course.png?raw=1" width=200 alt="PySimpleGUI Udemy Course">
     </td>
     <td>
-      <h5>apply coupon for discount:<br>65DBBEA0EC4C3B093FD1</h6>
-      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=65DBBEA0EC4C3B093FD1">click here to visit course page</a>
+      <h5>apply coupon for discount:<br>9AF99B123C49D51EB547</h6>
+      <a href="https://www.udemy.com/course/pysimplegui/?couponCode=9AF99B123C49D51EB547">click here to visit course page</a>
     </td>
   </tr>
 </table>
