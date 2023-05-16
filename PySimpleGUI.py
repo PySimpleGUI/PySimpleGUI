@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.179 Unreleased"
+version = __version__ = "4.61.0.181 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -428,6 +428,11 @@ _change_log = """
         Input element - fix for bug with text color & logic wasn't quite right with the "read for disabled" stuff in the update as well as when making window
     4.61.0.179
         New Udemy coupon
+    4.61.0.180
+        Removed Security tab from system settings
+    4.61.0.181
+        Added check for None and COLOR_SYSTEM_DEFAULT before any colors being set in Input.update
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2532,15 +2537,18 @@ class Input(Element):
 
         if disabled is True:
             if self.UseReadonlyForDisable:
-                self.TKEntry.configure(fg=self.disabled_readonly_text_color)
+                if self.disabled_readonly_text_color not in (None, COLOR_SYSTEM_DEFAULT):
+                    self.TKEntry.configure(fg=self.disabled_readonly_text_color)
                 self.TKEntry['state'] = 'readonly'
             else:
-                self.TKEntry.configure(fg=self.TextColor)
+                if self.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                    self.TKEntry.configure(fg=self.TextColor)
                 self.TKEntry['state'] = 'disabled'
             self.Disabled = True
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
-            self.TKEntry.configure(fg=self.TextColor)
+            if self.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
+                self.TKEntry.configure(fg=self.TextColor)
             self.Disabled = False
 
         if readonly is True:
@@ -26063,12 +26071,8 @@ def main_global_pysimplegui_settings():
                 font='_ 16', expand_x=True)]])
 
 
-    # ------------------------- Security Tab -------------------------
-    security_tab = Tab('Security',
-                [[T('PySimpleGUI hashcode')], [T(scheck_hh())]],
-                       expand_x=True)
 
-    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab, security_tab ]])
+    settings_tab_group = TabGroup([[theme_tab, ttk_tab, interpreter_tab, explorer_tab, editor_tab, snapshots_tab,  ]])
     layout += [[settings_tab_group]]
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
