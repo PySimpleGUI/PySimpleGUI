@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-from PIL import ImageGrab
 
 """
     Demo - Drawing and moving demo
@@ -7,21 +6,8 @@ from PIL import ImageGrab
     This demo shows how to use a Graph Element to (optionally) display an image and then use the
     mouse to "drag" and draw rectangles and circles.
     
-    Copyright 2020 PySimpleGUI.org
+    Copyright 2020, 2021, 2022, 2023 PySimpleGUI.org
 """
-
-def save_element_as_file(element, filename):
-    """
-    Saves any element as an image file.  Element needs to have an underlyiong Widget available (almost if not all of them do)
-    :param element: The element to save
-    :param filename: The filename to save to. The extension of the filename determines the format (jpg, png, gif, ?)
-    """
-    widget = element.Widget
-    box = (widget.winfo_rootx(), widget.winfo_rooty(), widget.winfo_rootx() + widget.winfo_width(), widget.winfo_rooty() + widget.winfo_height())
-    grab = ImageGrab.grab(bbox=box)
-    grab.save(filename)
-
-
 
 def main():
 
@@ -38,7 +24,6 @@ def main():
            [sg.R('Bring to front', 1, key='-FRONT-', enable_events=True)],
            [sg.R('Move Everything', 1, key='-MOVEALL-', enable_events=True)],
            [sg.R('Move Stuff', 1, key='-MOVE-', enable_events=True)],
-           [sg.B('Save Image', key='-SAVE-')],
            ]
 
     layout = [[sg.Graph(
@@ -49,20 +34,19 @@ def main():
                 enable_events=True,
                 background_color='lightblue',
                 drag_submits=True,
-                right_click_menu=[[],['Erase item',]]
+                motion_events=True,
+                right_click_menu=[[''],['Erase item','Send to back']]
                 ), sg.Col(col, key='-COL-') ],
             [sg.Text(key='-INFO-', size=(60, 1))]]
 
     window = sg.Window("Drawing and Moving Stuff Around", layout, finalize=True)
 
     # get the graph element for ease of use later
-    graph = window["-GRAPH-"]  # type: sg.Graph
+    graph = window["-GRAPH-"]       # type: sg.Graph
     graph.draw_image(data=logo200, location=(0,400))
-
     dragging = False
     start_point = end_point = prior_rect = None
-    # graph.bind('<Button-3>', '+RIGHT+')
-
+    crosshair_lines = []
     while True:
         event, values = window.read()
         print(event, values)
@@ -73,7 +57,14 @@ def main():
             graph.set_cursor(cursor='fleur')          # not yet released method... coming soon!
         elif not event.startswith('-GRAPH-'):
             graph.set_cursor(cursor='left_ptr')       # not yet released method... coming soon!
-
+        if event.endswith('+MOVE'):
+            window["-INFO-"].update(value=f"mouse {values['-GRAPH-']}")
+        # Delete crosshairs if any exists
+        if len(crosshair_lines):
+            for fig in crosshair_lines:
+                graph.delete_figure(fig)
+            crosshair_lines = []
+            window.refresh()
         if event == "-GRAPH-":  # if there's a "Graph" event, then it's a mouse
             x, y = values["-GRAPH-"]
             if not dragging:
@@ -114,25 +105,28 @@ def main():
                     for fig in drag_figures:
                         graph.send_figure_to_back(fig)
             window["-INFO-"].update(value=f"mouse {values['-GRAPH-']}")
-        elif event.endswith('+UP'):  # The drawing has ended because mouse up
+        elif event.endswith('+UP'):         # The drawing has ended because mouse up
             window["-INFO-"].update(value=f"grabbed rectangle from {start_point} to {end_point}")
             start_point, end_point = None, None  # enable grabbing a new rect
             dragging = False
             prior_rect = None
-        elif event.endswith('+RIGHT+'):  # Righ click
-            window["-INFO-"].update(value=f"Right clicked location {values['-GRAPH-']}")
-        elif event.endswith('+MOTION+'):  # Righ click
-            window["-INFO-"].update(value=f"mouse freely moving {values['-GRAPH-']}")
-        elif event == '-SAVE-':
-            # filename = sg.popup_get_file('Choose file (PNG, JPG, GIF) to save to', save_as=True)
-            filename=r'test.jpg'
-            save_element_as_file(window['-GRAPH-'], filename)
+        # elif event.endswith('+RIGHT+'):     # Right click
+        #     window["-INFO-"].update(value=f"Right clicked location {values['-GRAPH-']}")
+        # elif event.endswith('+MOTION+'):    # Right click
+        #     window["-INFO-"].update(value=f"mouse freely moving {values['-GRAPH-']}")
+        elif event == 'Send to back':       # Right clicked menu item
+            figures = graph.get_figures_at_location(values["-GRAPH-"])      # get items in front-to-back order
+            if figures:                     # make sure at least 1 item found
+                graph.send_figure_to_back(figures[-1])  # get the last item which will be the top-most
         elif event == 'Erase item':
             window["-INFO-"].update(value=f"Right click erase at {values['-GRAPH-']}")
             if values['-GRAPH-'] != (None, None):
-                drag_figures = graph.get_figures_at_location(values['-GRAPH-'])
-                for figure in drag_figures:
-                    graph.delete_figure(figure)
+                figures = graph.get_figures_at_location(values['-GRAPH-'])
+                if figures:
+                    graph.delete_figure(figures[-1])    # delete the one on top
+        location = values['-GRAPH-']
+        crosshair_lines = [graph.draw_line((location[0], 0), (location[0], 800), color='red'),
+                              graph.draw_line((0, location[1]), (800, location[1]), color='red')]
 
     window.close()
 
