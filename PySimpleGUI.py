@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.181 Unreleased"
+version = __version__ = "4.61.0.182 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -432,6 +432,8 @@ _change_log = """
         Removed Security tab from system settings
     4.61.0.181
         Added check for None and COLOR_SYSTEM_DEFAULT before any colors being set in Input.update
+    4.61.0.182
+        Only enable the Mac alpha channel 0.99 patch when tkinter version is 8.6.12. Have learned this is not needed for any other tkinter version
 
     """
 
@@ -23918,6 +23920,10 @@ def _mac_should_set_alpha_to_99():
     if not ENABLE_MAC_ALPHA_99_PATCH:
         return False
 
+    # ONLY enable this patch for tkinter version 8.6.12
+    if framework_version != '8.6.12':
+        return False
+
     # At this point, we're running a Mac and the alpha patch is enabled
     # Final check is to see if Mac OS version is 12.3 or later
     try:
@@ -26843,7 +26849,7 @@ if _mac_should_set_alpha_to_99():
 
 __perform_upgrade_check()
 
- 
+
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
