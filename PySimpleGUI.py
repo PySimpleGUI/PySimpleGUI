@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.182 Unreleased"
+version = __version__ = "4.61.0.183 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -434,7 +434,8 @@ _change_log = """
         Added check for None and COLOR_SYSTEM_DEFAULT before any colors being set in Input.update
     4.61.0.182
         Only enable the Mac alpha channel 0.99 patch when tkinter version is 8.6.12. Have learned this is not needed for any other tkinter version
-
+    4.61.0.183
+        Show Critical upgrade service messages.  Removed the extra upgrade from github button from tab.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -458,7 +459,7 @@ port = 'PySimpleGUI'
 
 
 """
-    Copyright 2018, 2019, 2020, 2021, 2022 PySimpleGUI(tm)
+    Copyright 2018, 2019, 2020, 2021, 2022, 2023 PySimpleGUI(tm)
 
     Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
 
@@ -24964,7 +24965,8 @@ def __show_previous_upgrade_information():
     recommended_version = pysimplegui_user_settings.get('-upgrade recommendation-', '')
     severity_level = pysimplegui_user_settings.get('-severity level-', '')
 
-    # message2 = r'https://www.PySimpleGUI.org'
+    if severity_level != 'Critical':
+        return
 
     layout = [[Image(EMOJI_BASE64_HAPPY_THUMBS_UP), T('An upgrade is available & recommended', font='_ 14')],
               [T('It is recommended you upgrade to version {}'.format(recommended_version))],
@@ -25075,7 +25077,7 @@ def __perform_upgrade_check_thread():
 
 def __perform_upgrade_check():
     # For now, do not show data returned. Still testing and do not want to "SPAM" users with any popups
-    # __show_previous_upgrade_information()
+    __show_previous_upgrade_information()
     threading.Thread(target=lambda: __perform_upgrade_check_thread(), daemon=True).start()
 
 
@@ -26521,7 +26523,7 @@ def _create_main_window():
                                          [T(pysimplegui_user_settings.get('-upgrade message 1-',''))],
                                          [T(pysimplegui_user_settings.get('-upgrade message 2-',''))],
                                          [Checkbox('Show Only Critical Messages', default=pysimplegui_user_settings.get('-upgrade show only critical-', False), key='-UPGRADE SHOW ONLY CRITICAL-', enable_events=True)],
-                                         [Button('Show Notification Again'), B('Upgrade from GitHub', button_color='white on red', key='-UPGRADE FROM GITHUB-'),
+                                         [Button('Show Notification Again'),
 ],
                                          ]
     tab_upgrade = Tab('Upgrade\n',upgrade_recommendation_tab_layout,  expand_x=True)
@@ -26682,7 +26684,6 @@ def main():
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
             popup_scrolled("Oh look!  It's a Udemy discount coupon!", '9AF99B123C49D51EB547',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
-
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
             if search_string is not None:
