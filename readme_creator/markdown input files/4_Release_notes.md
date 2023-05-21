@@ -2590,6 +2590,25 @@ Test Harness and Settings Windows fit on small screens better
 * Emergency Patch Release for Mac OS 12.3 and greater
 	* Fixed bug in Mac OS version check in yesterday's 4.60.2 release
 
+## 4.60.4 PySimpleGUI 10-Oct-2022
+
+* Dot release to quickly fix the Trinket detection which stopped working recently
+
+
+## 4.60.5 PySimpleGUI 21-May-2023
+
+* Mac fixes
+	* Fix for Input Element not working in no-titlebar windows on MacOs 13.2.1
+	* Change to the 0.99 Alpha fix made in 4.60.2. Now only applies patch when running on 8.6.12, regardless of Mac Control Panel setting in PySimpleGUI Global Settings. Removes the need for users to disable when upgrading tkinter.
+* Added Intelligent Upgrade Service -  inform users when there are releases of PySimpleGUI that fix a problem that may be unique to their combination of components
+* Change to GitHub Issue GUI
+	* Added checkbox for checking if running latest PyPI version
+	* Recommended using Demo Browser to search Demo Programs
+	* Use platform module to fill in the OS information field
+* SDK Help Window - changed all readthedocs links to use the PySimpleGUI.org hostname for better portability
+
+
+
 
 ## Code Condition
 
