@@ -1,3 +1,17 @@
+[eagleEggs](https://github.com/eagleEggs) 2023-05-24T04:03:28Z
+Started this a few days ago. Thanks to PSG it has already proven the hypothesis as valid - Streamlining novel development in a curated parameter driven manner with op3nAI API. Much more functionality to add in, but what an amazing GUI framework <3 <3 <3 And thanks to @jason990420 for all of the tkinter hacks he's posted which has always covered everything I've needed :)
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/29800532/5751e594-4748-431b-a1b2-76b1b7f346db)
+
+
+-----------
+
+[gnuchanos](https://github.com/gnuchanos) 2023-05-24T02:35:07Z
+![2023-05-24-053345_1280x1024_scrot](https://github.com/PySimpleGUI/PySimpleGUI/assets/117280480/acb7b360-af3a-4ec1-a226-a35d76676167)
+not finish yet
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-05-12T09:55:03Z
 I saw this awesome screenshot:
 
