@@ -1,3 +1,20 @@
+[mrtnbm](https://github.com/mrtnbm) 2023-05-25T16:24:22Z
+Thanks to PSG, I've created the nicest GUI I've ever made that I'm now using for my own little naive prompt lib.
+
+- Main window:
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/49289399/1a234b86-9457-4d10-8080-ea064e915397)
+
+- Edit Window:
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/49289399/faf9adc7-6de7-42c7-b405-05e5bf081095)
+
+The heart can be clicked and will change to outline or fill mode.
+
+ - For reference, here is a screenshot without rescaling:
+ 
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/49289399/55a72eec-56d7-4442-b660-b42e122be488)
+
+-----------
+
 [eagleEggs](https://github.com/eagleEggs) 2023-05-24T04:03:28Z
 Started this a few days ago. Thanks to PSG it has already proven the hypothesis as valid - Streamlining novel development in a curated parameter driven manner with op3nAI API. Much more functionality to add in, but what an amazing GUI framework <3 <3 <3 And thanks to @jason990420 for all of the tkinter hacks he's posted which has always covered everything I've needed :)
 
