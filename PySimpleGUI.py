@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.183 Unreleased"
+version = __version__ = "4.61.0.184 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -436,6 +436,8 @@ _change_log = """
         Only enable the Mac alpha channel 0.99 patch when tkinter version is 8.6.12. Have learned this is not needed for any other tkinter version
     4.61.0.183
         Show Critical upgrade service messages.  Removed the extra upgrade from github button from tab.
+    4.61.0.184
+        Fix for Combo.update background color changing incorrect widget setting.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2839,12 +2841,12 @@ class Combo(Element):
         style_name = self.ttk_style_name
         if text_color is not None:
             combostyle.configure(style_name, foreground=text_color)
-            combostyle.configure(style_name, selectbackground=text_color)
+            combostyle.configure(style_name, selectforeground=text_color)
             combostyle.configure(style_name, insertcolor=text_color)
             combostyle.map(style_name, fieldforeground=[('readonly', text_color)])
             self.TextColor = text_color
         if background_color is not None:
-            combostyle.configure(style_name, selectforeground=background_color)
+            combostyle.configure(style_name, selectbackground=background_color)
             combostyle.map(style_name, fieldbackground=[('readonly', background_color)])
             combostyle.configure(style_name, fieldbackground=background_color)
             self.BackgroundColor = background_color
