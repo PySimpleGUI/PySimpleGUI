@@ -9,7 +9,7 @@ import PySimpleGUI as sg
     GUI frameworks use, but there is no advantage to structuring you code in his manner.  It adds
     confusion, not clarity.  
     
-    The class version is 18 lines of code.  The plain version is 11 lines of code.  
+    The class version is 18 lines of code.  The plain version is 13 lines of code.  
     
     Two things about the class wrapper jump out as adding confusion:
     1. Unneccessary fragmentation of the event loop - the button click code is pulled out of the loop entirely
@@ -83,19 +83,21 @@ my_gui.run()
     MMMMMMMMMMM
 '''
 
-layout = [ [sg.Text('My layout')],
-         [sg.Input(key='-IN-')],
-         [sg.Button('Go'), sg.Button('Exit')] ]
+def gui_function():
+    layout = [ [sg.Text('My layout')],
+             [sg.Input(key='-IN-')],
+             [sg.Button('Go'), sg.Button('Exit')] ]
 
-window = sg.Window('My new window', layout)
+    window = sg.Window('My new window', layout)
 
-while True:             # Event Loop
-    event, values = window.read()
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
+    while True:             # Event Loop
+        event, values = window.read()
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
 
-    if event == 'Go':
-        sg.popup('Go button clicked', 'Input value:', values['-IN-'])
+        if event == 'Go':
+            sg.popup('Go button clicked', 'Input value:', values['-IN-'])
 
-window.close()
+    window.close()
 
+gui_function()
