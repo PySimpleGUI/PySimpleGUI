@@ -22,9 +22,9 @@ import PySimpleGUI as sg
     Copyright 2020, 2022 PySimpleGUI.org
 """
 
-layout = [  [sg.Text('Hide Button or Input. Button3 hides Input.  Buttons 1 & 2 hide Button 2')],
+layout = [  [sg.Text('Hide Button or Multiline. Buttons 1 & 2 hide Button 2')],
             [sg.pin(sg.Multiline(size=(60, 10), key='-MLINE-'))],
-            [sg.pin(sg.Button('Button1')), sg.pin(sg.Button('Button2'), shrink=False), sg.B('Button3'), sg.B('Toggle Multiline')],
+            [sg.pin(sg.Button('Button1')), sg.pin(sg.Button('Button2'), shrink=False), sg.B('Toggle Multiline')],
         ]
 
 window = sg.Window('Visible / Invisible Element Demo', layout)
@@ -39,9 +39,6 @@ while True:             # Event Loop
     if event in ('Button1', 'Button2'):
         window['Button2'].update(visible=toggle)
         toggle = not toggle
-    if event == 'Button3':
-        window['-IN-'].update(visible=toggle_in)
-        toggle_in = not toggle_in
     elif event == 'Toggle Multiline':
         window['-MLINE-'].update(visible=not window['-MLINE-'].visible)
 window.close()
