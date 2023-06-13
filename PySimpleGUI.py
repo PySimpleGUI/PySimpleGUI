@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.184 Unreleased"
+version = __version__ = "4.61.0.185 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -438,6 +438,9 @@ _change_log = """
         Show Critical upgrade service messages.  Removed the extra upgrade from github button from tab.
     4.61.0.184
         Fix for Combo.update background color changing incorrect widget setting.
+    4.61.0.185
+        Fix for crash when no headings specified for a table by casting values into strings
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17677,6 +17680,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
+                    heading = str(heading)
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         col_width = column_widths.get(i, len(heading))      # in case more headings than there are columns of data
