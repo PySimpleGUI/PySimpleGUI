@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.185 Unreleased"
+version = __version__ = "4.61.0.186 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -440,6 +440,8 @@ _change_log = """
         Fix for Combo.update background color changing incorrect widget setting.
     4.61.0.185
         Fix for crash when no headings specified for a table by casting values into strings
+    4.61.0.186
+        Fix for popup_get_file when using no_window=True. Now returns None if cancelled or window closed
 
     """
 
@@ -17680,7 +17682,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
-                    heading = str(heading)
+                    # heading = str(heading)
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
                         col_width = column_widths.get(i, len(heading))      # in case more headings than there are columns of data
@@ -21974,6 +21976,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         if not multiple_files and type(filename) in (tuple, list):
             if len(filename):  # only if not 0 length, otherwise will get an error
                 filename = filename[0]
+        if not filename:
+            return None
         return filename
 
     if save_as:
