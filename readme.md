@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
-  <h2 align="center">Python GUIs for Humans</h2>
+  <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="GUIs for Humans">
+  <h2 align="center">GUIs for Humans<sup>TM</sup></h2>
 </p>
 
 <table>
