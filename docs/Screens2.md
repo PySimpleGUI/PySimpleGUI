@@ -1,3 +1,25 @@
+[luisegarduno](https://github.com/luisegarduno) 2023-06-25T05:18:40Z
+**Chess (updated!)**
+
+Originally added/created by @MikeTheWatchGuy, the chess demos (player vs. player & player vs. Ai) were included in PySimpleGUI ([see here](https://github.com/PySimpleGUI/PySimpleGUI/tree/8b23740fca08b7f5bad3f0d32760f42a5202d3e1/Chess)), but were removed from the main branch towards the end of 2022.
+
+In terms of the changes that I made to the original code (see #5052):
+
+I updated **requirements.txt** to include the latest versions:
+```
+PySimpleGUI==4.60.5
+python-chess==1.999
+```
+I then made changes within both of the demo files to remove any outdated or deprecated code causing errors. I also added compatibility for Linux, allowing users to import files that do not end in ".exe".
+
+Both chess demos have only been tested on Ubuntu 20.04 but should also work on Windows since not much was changed from the original code. Lastly, for the engine, I resulted in having to use Stockfish 13, since there was several issues when trying to use Stockfish 14 or Stockfish 15.
+
+https://github.com/luisegarduno/ChessGUI
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/30121656/80b10f6e-30f7-4159-8574-5f79bff705b1)
+
+-----------
+
 [mrtnbm](https://github.com/mrtnbm) 2023-05-25T16:24:22Z
 Thanks to PSG, I've created the nicest GUI I've ever made that I'm now using for my own little naive prompt lib.
 
