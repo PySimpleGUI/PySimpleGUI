@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.187 Unreleased"
+version = __version__ = "4.61.0.188 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -444,6 +444,8 @@ _change_log = """
         Fix for popup_get_file when using no_window=True. Now returns None if cancelled or window closed
     4.61.0.187
         Corrected the Table.get docstring to reflect that it returns a list of ints
+    4.61.0.188
+        Finished correcting the Table.get docstring.... think I got it right this time....
 
     """
 
@@ -9579,7 +9581,7 @@ class Table(Element):
         """
         Get the selected rows using tktiner's selection method.  Returns a list of the selected rows.
 
-        :return: the current table values
+        :return: a list of the index of the selected rows (a list of ints)
         :rtype:  List[int]
         """
 
