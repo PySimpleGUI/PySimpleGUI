@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.186 Unreleased"
+version = __version__ = "4.61.0.187 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -442,6 +442,8 @@ _change_log = """
         Fix for crash when no headings specified for a table by casting values into strings
     4.61.0.186
         Fix for popup_get_file when using no_window=True. Now returns None if cancelled or window closed
+    4.61.0.187
+        Corrected the Table.get docstring to reflect that it returns a list of ints
 
     """
 
@@ -9575,11 +9577,12 @@ class Table(Element):
 
     def get(self):
         """
-        Get the selected rows using tktiner's selection method.  Experimenting with this change....
+        Get the selected rows using tktiner's selection method.  Returns a list of the selected rows.
 
         :return: the current table values
-        :rtype:  List[List[Any]]
+        :rtype:  List[int]
         """
+
         selections = self.TKTreeview.selection()
         selected_rows = [int(x) - 1 for x in selections]
         return selected_rows
