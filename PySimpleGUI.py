@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.188 Unreleased"
+version = __version__ = "4.61.0.189 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -446,6 +446,9 @@ _change_log = """
         Corrected the Table.get docstring to reflect that it returns a list of ints
     4.61.0.188
         Finished correcting the Table.get docstring.... think I got it right this time....
+    4.61.0.189
+        Changed Table click events to be generated on Button Release instead of Button (down). Was not getting the
+            correct selected rows in the values dictionary when the click event was generated using down. Now the selected rows is correct
 
     """
 
@@ -9566,7 +9569,7 @@ class Table(Element):
                     self.TKTreeview.selection_set(selections)
         # print(selections)
         self.SelectedRows = [int(x) - 1 for x in selections]
-        # print('The new selected rows = ', self.SelectedRows)
+        # print('The new selected rows = ', self.SelectedRows, 'selections =', selections)
         if self.enable_click_events is True:
             if self.Key is not None:
                 self.ParentForm.LastButtonClicked = (self.Key, TABLE_CLICKED_INDICATOR, (row, column))
@@ -17767,7 +17770,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview.configure(style=style_name)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.enable_click_events is True:
-                    treeview.bind('<Button-1>', element._table_clicked)
+                    treeview.bind('<ButtonRelease-1>', element._table_clicked)
                 if element.right_click_selects:
                     if running_mac():
                         treeview.bind('<Button-2>', element._table_clicked)
