@@ -35,6 +35,7 @@ class Playfield():
         ground_shape = pymunk.Segment(body, pt_from, pt_to, 1.0)
         ground_shape.friction = 0.8
         ground_shape.elasticity = .99
+        self.space.add(body)
         self.space.add(ground_shape)
 
     def add_balls(self, num_balls = 30):
