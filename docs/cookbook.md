@@ -1,7 +1,7 @@
 <div style="display: flex; gap: 50px; justify-content: center;">
     <div>
-        <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
-        <h1 style="text-align: center;">Python GUIs for Humans</h1>
+        <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="User Interfaces for Humans">
+        <h1 style="text-align: center;">User Interfaces for Humans<sup>TM</sup></h1>
     </div>
     <div>
         <div>

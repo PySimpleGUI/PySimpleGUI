@@ -11490,13 +11490,13 @@ Parameter Descriptions:
 
 ### get
 
-Get the selected rows using tktiner's selection method.  Experimenting with this change....
+Get the selected rows using tktiner's selection method.  Returns a list of the selected rows.
 
 `get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|List[List[Any]]| **return** | the current table values |
+|List[int]| **return** | a list of the index of the selected rows (a list of ints) |
 
 ### get_next_focus
 
@@ -11720,13 +11720,13 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### Get
 
-Get the selected rows using tktiner's selection method.  Experimenting with this change....
+Get the selected rows using tktiner's selection method.  Returns a list of the selected rows.
 
 `Get()`
 
 |Type|Name|Meaning|
 |---|---|---|
-|List[List[Any]]| **return** | the current table values |
+|List[int]| **return** | a list of the index of the selected rows (a list of ints) |
 
 ### SetFocus
 

@@ -1,7 +1,7 @@
 <div style="display: flex; gap: 50px; justify-content: center;">
     <div>
-        <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
-        <h1 style="text-align: center;">Python GUIs for Humans</h1>
+        <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="User Interfaces for Humans">
+        <h1 style="text-align: center;">User Interfaces for Humans<sup>TM</sup></h1>
     </div>
     <div>
         <div>
@@ -57,7 +57,7 @@
 
 # PySimpleGUI User's Manual
 
-## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
+## User Interfaces for Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
 ## <span>The Call Reference Section Moved to <a href="https://pysimplegui.readthedocs.io/en/latest/call%20reference/">here</a></span>
 
