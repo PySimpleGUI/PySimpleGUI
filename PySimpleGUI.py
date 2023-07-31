@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.189 Unreleased"
+version = __version__ = "4.61.0.190 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -449,6 +449,9 @@ _change_log = """
     4.61.0.189
         Changed Table click events to be generated on Button Release instead of Button (down). Was not getting the
             correct selected rows in the values dictionary when the click event was generated using down. Now the selected rows is correct
+    4.61.0.190
+        Addition of black2 theme
+        Fix typo of text in _widget_was_created
 
     """
 
@@ -2186,7 +2189,7 @@ class Element():
             if SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS:
                 return False
 
-            warnings.warn('You cannot Update element with key = {} until the window.read() is called or finalized=True when creating window'.format(self.Key), UserWarning)
+            warnings.warn('You cannot Update element with key = {} until the window.read() is called or set finalize=True when creating window'.format(self.Key), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
                 _error_popup_with_traceback('Unable to complete operation on element with key {}'.format(self.Key),
                                             'You cannot perform operations (such as calling update) on an Element until:',
@@ -19713,6 +19716,8 @@ LOOK_AND_FEEL_TABLE = {
               "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
     "Black": {"BACKGROUND": "#000000", "TEXT": "#FFFFFF", "INPUT": "#4D4D4D", "TEXT_INPUT": "#FFFFFF", "SCROLL": "#707070", "BUTTON": ("#000000", "#FFFFFF"),
               "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
+    "Black2": {"BACKGROUND": "#000000", "TEXT": "#FFFFFF", "INPUT": "#000000", "TEXT_INPUT": "#FFFFFF", "SCROLL": "#FFFFFF", "BUTTON": ("#000000", "#FFFFFF"),
+               "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
     "Tan": {"BACKGROUND": "#fdf6e3", "TEXT": "#268bd1", "INPUT": "#eee8d5", "TEXT_INPUT": "#6c71c3", "SCROLL": "#eee8d5", "BUTTON": ("#FFFFFF", "#063542"),
             "PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE, "BORDER": 1, "SLIDER_DEPTH": 0, "PROGRESS_DEPTH": 0, },
     "TanBlue": {"BACKGROUND": "#e5dece", "TEXT": "#063289", "INPUT": "#f9f8f4", "TEXT_INPUT": "#242834", "SCROLL": "#eee8d5", "BUTTON": ("#FFFFFF", "#063289"),
