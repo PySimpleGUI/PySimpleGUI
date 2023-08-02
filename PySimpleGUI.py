@@ -452,7 +452,8 @@ _change_log = """
     4.61.0.190
         Addition of black2 theme
         Fix typo of text in _widget_was_created
-
+    4.61.0.191
+        Fix typo of text in VSeparator
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7485,7 +7486,7 @@ class VerticalSeparator(Element):
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
-VSeperator = VerticalSeparator
+VSeparator = VerticalSeparator
 VSeparator = VerticalSeparator
 VSep = VerticalSeparator
 
