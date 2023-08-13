@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.190 Unreleased"
+version = __version__ = "4.61.0.191 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -452,6 +452,8 @@ _change_log = """
     4.61.0.190
         Addition of black2 theme
         Fix typo of text in _widget_was_created
+    4.61.0.191
+        Fixed bug in Button.update.  Was setting the activeforeground and activebackground which broke the mouseover or mouse press colors
 
     """
 
@@ -5574,9 +5576,11 @@ class Button(Element):
                     button_style.configure(style_name, background=bc[1])
             else:
                 if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
-                    self.TKButton.config(foreground=bc[0], activeforeground=bc[0])
+                    # self.TKButton.config(foreground=bc[0], activeforeground=bc[0])    # Removed 13-Aug-2023. Was causing mouseover to not work
+                    self.TKButton.config(foreground=bc[0])
                 if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
-                    self.TKButton.config(background=bc[1], activebackground=bc[1])
+                    # self.TKButton.config(background=bc[1], activebackground=bc[1])    # Removed 13-Aug-2023. Was causing mouseover to not work
+                    self.TKButton.config(background=bc[1])
             self.ButtonColor = bc
         if disabled is True:
             self.TKButton['state'] = 'disabled'
