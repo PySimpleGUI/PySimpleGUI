@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.192 Unreleased"
+version = __version__ = "4.61.0.193 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -456,6 +456,8 @@ _change_log = """
         Fixed bug in Button.update.  Was setting the activeforeground and activebackground which broke the mouseover or mouse press colors
     4.61.0.192
         Fixed bug in Button.update.  Corrected when activeforeground and activebackground are set.  Removing them in version above was a mistake
+    4.61.0.193
+        Fixed spelling errors... resuse should have been reuse
 
     """
 
@@ -7358,7 +7360,7 @@ class Frame(Element):
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
-                    '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
+                    '*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 _error_popup_with_traceback('Error creating Frame layout',
                                             'The layout specified has already been used',
@@ -7694,7 +7696,7 @@ class Tab(Element):
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
-                    '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
+                    '*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 popup_error_with_traceback('Error creating Tab layout',
                            'The layout specified has already been used',
@@ -7953,7 +7955,7 @@ class TabGroup(Element):
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
-                    '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
+                    '*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 PopupError('Error creating Tab layout',
                            'The layout specified has already been used',
@@ -8614,7 +8616,7 @@ class Column(Element):
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
-                    '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
+                    '*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 PopupError('Error creating Column layout',
                            'The layout specified has already been used',
@@ -10655,10 +10657,10 @@ class Window:
                 continue
             if element.ParentContainer is not None:
                 warnings.warn(
-                    '*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
+                    '*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***',
                     UserWarning)
                 _error_popup_with_traceback('Error detected in layout - Contains an element that has already been used.',
-                                            'You have attempted to resuse an element in your layout.',
+                                            'You have attempted to reuse an element in your layout.',
                                             "The layout specified has an element that's already been used.",
                                             'You MUST start with a "clean", unused layout every time you create a window',
                                             'The offensive Element = ',
