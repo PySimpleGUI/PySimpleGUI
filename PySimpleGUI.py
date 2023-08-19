@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.193 Unreleased"
+version = __version__ = "4.61.0.194 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -458,6 +458,8 @@ _change_log = """
         Fixed bug in Button.update.  Corrected when activeforeground and activebackground are set.  Removing them in version above was a mistake
     4.61.0.193
         Fixed spelling errors... resuse should have been reuse
+    4.61.0.194
+        Added Listbox.select_index and Listbox.set_index_color
 
     """
 
@@ -3326,6 +3328,80 @@ class Listbox(Element):
         except:
             value = []
         return value
+
+
+
+    def select_index(self, index, highlight_text_color=None, highlight_background_color=None):
+        """
+        Selects an index while providing capability to setting the selected color for the index to specific text/background color
+
+        :param index:                      specifies which item to change. index starts at 0 and goes to length of values list minus one
+        :type  index:                      (int)
+        :param highlight_text_color:       color of the text when this item is selected.
+        :type  highlight_text_color:        (str)
+        :param highlight_background_color: color of the background when this item is selected
+        :type  highlight_background_color:  (str)
+        """
+
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Listbox.select_item - The window was closed')
+            return
+
+        if index >= len(self.Values):
+            _error_popup_with_traceback('Index {} is out of range for Listbox.select_index. Max allowed index is {}.'.format(index, len(self.Values)-1))
+            return
+
+        self.TKListbox.selection_set(index, index)
+
+        if highlight_text_color is not None:
+            text_color = highlight_text_color
+        else:
+            text_color = None
+
+        if highlight_background_color is not None:
+            background_color = highlight_background_color
+        else:
+            background_color = None
+
+        if text_color is not None:
+            self.widget.itemconfig(index, selectforeground=text_color)
+        if background_color is not None:
+            self.widget.itemconfig(index, selectbackground=background_color)
+
+
+    def set_index_color(self, index, text_color=None, background_color=None):
+        """
+        Sets the color of a specific item without selecting it
+
+        :param index:            specifies which item to change. index starts at 0 and goes to length of values list minus one
+        :type  index:            (int)
+        :param text_color:       color of the text for this item
+        :type  text_color:       (str)
+        :param background_color: color of the background for this item
+        :type  background_color: (str)
+        """
+
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+
+        if self._this_elements_window_closed():
+            _error_popup_with_traceback('Error in Listbox.set_item_color - The window was closed')
+            return
+
+        if index >= len(self.Values):
+            _error_popup_with_traceback('Index {} is out of range for Listbox.set_index_color. Max allowed index is {}.'.format(index, len(self.Values)-1))
+            return
+
+
+        if text_color is not None:
+            self.widget.itemconfig(index, fg=text_color)
+        if background_color is not None:
+            self.widget.itemconfig(index, bg=background_color)
+
+
 
     GetIndexes = get_indexes
     GetListValues = get_list_values
