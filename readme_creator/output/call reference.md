@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    9AF99B123C49D51EB547.
+                    62A4C02AB0A3DAB34388.
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=9AF99B123C49D51EB547','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=62A4C02AB0A3DAB34388','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -5583,6 +5583,24 @@ Metadata is an Element property that you can use at any time to hold any value
 |---|---|---|
 |(Any)| **return** | the current metadata value |
 
+### select_index
+
+Selects an index while providing capability to setting the selected color for the index to specific text/background color
+
+```
+select_index(index,
+    highlight_text_color = None,
+    highlight_background_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int |           index            | specifies which item to change. index starts at 0 and goes to length of values list minus one |
+| str |    highlight_text_color    | color of the text when this item is selected. |
+| str | highlight_background_color | color of the background when this item is selected |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -5615,6 +5633,24 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
+
+### set_index_color
+
+Sets the color of a specific item without selecting it
+
+```
+set_index_color(index,
+    text_color = None,
+    background_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int |      index       | specifies which item to change. index starts at 0 and goes to length of values list minus one |
+| str |    text_color    | color of the text for this item |
+| str | background_color | color of the background for this item |
 
 ### set_size
 
