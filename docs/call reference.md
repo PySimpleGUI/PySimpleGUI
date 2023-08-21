@@ -5641,16 +5641,20 @@ Sets the color of a specific item without selecting it
 ```
 set_index_color(index,
     text_color = None,
-    background_color = None)
+    background_color = None,
+    highlight_text_color = None,
+    highlight_background_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| int |      index       | specifies which item to change. index starts at 0 and goes to length of values list minus one |
-| str |    text_color    | color of the text for this item |
-| str | background_color | color of the background for this item |
+| int |           index            | specifies which item to change. index starts at 0 and goes to length of values list minus one |
+| str |         text_color         | color of the text for this item |
+| str |      background_color      | color of the background for this item |
+| str |    highlight_text_color    | color of the text when this item is selected. |
+| str | highlight_background_color | color of the background when this item is selected |
 
 ### set_size
 
