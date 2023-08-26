@@ -1,3 +1,12 @@
+[definite-d](https://github.com/definite-d) 2023-08-26T16:34:23Z
+[Themera](https://github.com/definite-d/Themera) v2.1.0 has been released (available [here](https://github.com/definite-d/Themera/releases/tag/v2.1.0)). I'd like to share screenshots and point out that with Windows 11, the color of the "built-in" titlebar can be customized. I accomplished it within Themera with a bit of a non-standard solution, but it's proof of concept.
+
+![launcher_dark](https://github.com/PySimpleGUI/PySimpleGUI/assets/38317208/579bc2be-abaa-4fd6-a1ea-609ada3be1a9)
+![editor_dark](https://github.com/PySimpleGUI/PySimpleGUI/assets/38317208/725fd3bd-4147-4b45-a034-c85b5bd3d74d)
+
+
+-----------
+
 [luisegarduno](https://github.com/luisegarduno) 2023-06-25T05:18:40Z
 **Chess (updated!)**
 
