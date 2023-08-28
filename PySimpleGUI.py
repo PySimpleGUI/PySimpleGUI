@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.196 Unreleased"
+version = __version__ = "4.61.0.197 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -464,6 +464,8 @@ _change_log = """
         New Udemy Coupon
     4.61.0.196
         Added highlight colors to the set_index_color method. Parms highlight_text_color & highlight_background_color control changing the highlight colors 
+    4.61.0.197
+        Made Table Element Header mouse-over and clicked be the inverse of the normal header colors. Makes for a much nicer experience
 
 
     """
@@ -17854,6 +17856,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 table_style.configure(style_name, font=font)
                 if element.BorderWidth is not None:
                     table_style.configure(style_name, borderwidth=element.BorderWidth)
+
+                if element.HeaderBackgroundColor not in  (None, COLOR_SYSTEM_DEFAULT) and  element.HeaderTextColor not in  (None, COLOR_SYSTEM_DEFAULT):
+                    table_style.map(style_name + ".Heading", background=[('pressed', '!focus', element.HeaderBackgroundColor),
+                                                                         ('active', element.HeaderTextColor),])
+                    table_style.map(style_name + ".Heading", foreground=[('pressed', '!focus', element.HeaderTextColor),
+                                                                         ('active', element.HeaderBackgroundColor),])
+
                 treeview.configure(style=style_name)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.enable_click_events is True:
