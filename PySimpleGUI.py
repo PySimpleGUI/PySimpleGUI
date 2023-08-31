@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.197 Unreleased"
+version = __version__ = "4.61.0.198 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -466,6 +466,8 @@ _change_log = """
         Added highlight colors to the set_index_color method. Parms highlight_text_color & highlight_background_color control changing the highlight colors 
     4.61.0.197
         Made Table Element Header mouse-over and clicked be the inverse of the normal header colors. Makes for a much nicer experience
+    4.61.0.198
+        Added no_buffering option to popup_animated
 
 
     """
@@ -22435,7 +22437,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
 # --------------------------- PopupAnimated ---------------------------
 
 def popup_animated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True,
-                   location=(None, None), relative_location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
+                   location=(None, None), relative_location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None, no_buffering=False):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -22472,6 +22474,8 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type title:                (str)
     :param icon:                Same as Window icon parameter. Can be either a filename or Base64 byte string. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon:                 str | bytes
+    :param no_buffering:        If True then no buffering will be used for the GIF. May work better if you have a large animation
+    :type no_buffering:         (str)
     :return:                    True if the window updated OK. False if the window was closed
     :rtype:                     bool
     """
@@ -22497,7 +22501,10 @@ def popup_animated(image_source, message=None, background_color=None, text_color
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
-        window['-IMAGE-'].update_animation(image_source, time_between_frames=time_between_frames)
+        if no_buffering:
+            window['-IMAGE-'].update_animation_no_buffering(image_source, time_between_frames=time_between_frames)
+        else:
+            window['-IMAGE-'].update_animation(image_source, time_between_frames=time_between_frames)
     event, values = window.read(1)
     if event == WIN_CLOSED:
         return False
