@@ -1,3 +1,15 @@
+[onyx-and-iris](https://github.com/onyx-and-iris) 2023-09-06T00:00:13Z
+A small remote utility for Voicemeeter, designed to work with the NVDA screen reader.
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/55352169/f99212f5-1870-4387-ba4c-159dd40d4c8e)
+https://github.com/onyx-and-iris/nvda-voicemeeter
+
+Thanks for creating PYSimpleGUI, first time using but very impressed!
+
+
+
+-----------
+
 [definite-d](https://github.com/definite-d) 2023-08-26T16:34:23Z
 [Themera](https://github.com/definite-d/Themera) v2.1.0 has been released (available [here](https://github.com/definite-d/Themera/releases/tag/v2.1.0)). I'd like to share screenshots and point out that with Windows 11, the color of the "built-in" titlebar can be customized. I accomplished it within Themera with a bit of a non-standard solution, but it's proof of concept.
 
