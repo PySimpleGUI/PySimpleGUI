@@ -2384,7 +2384,7 @@ Obviously the GUI was the easy part!
 
 -----------
 
-[vohe](https://github.com/vohe) 2022-01-23T13:53:09Z
+[ghost](https://github.com/ghost) 2022-01-23T13:53:09Z
 The Januar Version is ready to go.
 I manged it , finally, to work without lastfm. For everyone who can use this:
 Audiorecorder,, records (e.g.) spotify web player - with free account. 
@@ -4507,7 +4507,7 @@ GitHub.com/MOABdali/megaCheckers if anyone wants to try it.  Please keep in mind
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-08-08T11:11:29Z
+[ghost](https://github.com/ghost) 2020-08-08T11:11:29Z
 Ready to go, 
 I found that putting move than 3000 elements in a sg.treedata() structure works, but as i close that there'll be a huge garbage collection of tkinter under the hood.
 So my directory popup window isn't usable for a 'normal' user directory, especially if the show hidden files option is active.
@@ -4521,7 +4521,7 @@ Have Fun, stay healthy.
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-08-05T13:31:05Z
+[ghost](https://github.com/ghost) 2020-08-05T13:31:05Z
 In addition to get a Folder Browser running , which does not
 - show hidden files,
 - throws errors on Permissions
@@ -4544,7 +4544,7 @@ The bars for each color have the color of the original image and the other-color
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-08-02T17:28:23Z
+[ghost](https://github.com/ghost) 2020-08-02T17:28:23Z
 Hi folks,
 here is another one i playing with....
 The TreeElement is not as flexible as i want it. But many things are possible. 
@@ -4554,7 +4554,7 @@ I got the functionallity i want, but the interface isn't that what i like to get
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-07-05T16:45:42Z
+[ghost](https://github.com/ghost) 2020-07-05T16:45:42Z
 Thank you,
 first of all i got it as i like (but not so elegant) First of all it works.
 ![english](https://user-images.githubusercontent.com/7021635/86537489-b61c7180-beef-11ea-9b65-4d11b0a4d515.png)
@@ -4579,7 +4579,7 @@ https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&templat
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-07-04T21:28:44Z
+[ghost](https://github.com/ghost) 2020-07-04T21:28:44Z
 > Very nice @vohe ! Thanks for posting it!
 > I like they use of tabs. Great , simple layout. I might have to use that idea for settings sometime. It's never dawned on me before to put them into a tab like that.
 
@@ -4596,7 +4596,7 @@ I like they use of tabs.  Great , simple layout.  I might have to use that idea 
 
 -----------
 
-[vohe](https://github.com/vohe) 2020-07-04T15:43:31Z
+[ghost](https://github.com/ghost) 2020-07-04T15:43:31Z
 ![Audiorecorder (spotify)](https://user-images.githubusercontent.com/7021635/86515989-6a00fc80-be1d-11ea-89c9-08411c829eb7.png)
 
 A little Programm, that records files form a webside (actually open.spotify) store them as mp3, tag them, sort them into directorys , notify the user when a new song is beginning. 
