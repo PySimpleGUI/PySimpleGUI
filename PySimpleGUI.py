@@ -22475,7 +22475,7 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :param icon:                Same as Window icon parameter. Can be either a filename or Base64 byte string. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon:                 str | bytes
     :param no_buffering:        If True then no buffering will be used for the GIF. May work better if you have a large animation
-    :type no_buffering:         (str)
+    :type no_buffering:         (bool)
     :return:                    True if the window updated OK. False if the window was closed
     :rtype:                     bool
     """
