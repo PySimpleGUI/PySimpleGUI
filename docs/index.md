@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    62A4C02AB0A3DAB34388
+                    2F6C6BE01B8940D3E457
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=62A4C02AB0A3DAB34388','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=2F6C6BE01B8940D3E457','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -2028,7 +2028,8 @@ popup_animated(image_source,
     time_between_frames = 0,
     transparent_color = None,
     title = "",
-    icon = None)
+    icon = None,
+    no_buffering = False)
 ```
 
 Parameter Descriptions:
@@ -2050,6 +2051,7 @@ Parameter Descriptions:
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str         |        title        | Title that will be shown on the window |
 |    str or bytes    |        icon         | Same as Window icon parameter. Can be either a filename or Base64 byte string. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|        bool        |    no_buffering     | If True then no buffering will be used for the GIF. May work better if you have a large animation |
 | bool | **RETURN** | True if the window updated OK. False if the window was closed
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
