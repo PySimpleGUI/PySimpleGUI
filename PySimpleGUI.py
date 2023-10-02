@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.199 Unreleased"
+version = __version__ = "4.61.0.200 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -470,6 +470,8 @@ _change_log = """
         Added no_buffering option to popup_animated
     4.61.0.199
         Updated Udemy coupon code
+    4.61.0.200
+        Fix for grab anywhere window movement and control+left_mouse_drag.  Window move smoother, including the Move-All-Windows feature. Thank you JASON for the help!
 
     """
 
@@ -11745,8 +11747,8 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-
-        self._StartMove(event)
+        self._start_move_save_offset(event)
+        return
 
 
     def _StartMoveGrabAnywhere(self, event):
@@ -11760,31 +11762,11 @@ class Window:
         if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
-
-        self._StartMove(event)
-
+        self._start_move_save_offset(event)
 
     def _StartMove(self, event):
-        try:
-            geometry = self.TKroot.geometry()
-            location = geometry[geometry.find('+')+1:].split('+')
-            self._startx = int(location[0])
-            self._starty = int(location[1])
-            self._mousex = event.x + event.widget.winfo_rootx()
-            self._mousey = event.y + event.widget.winfo_rooty()
-            # print(self._startx, self._starty)
-            # print(self._mousex, self._mousey)
-            # print(self.TKroot.geometry())
-        except:
-            pass
-        # print('Start move {},{} widget {}'.format(event.x,event.y, event.widget))
-
-        if Window._move_all_windows:
-            for window in Window._active_windows:
-                window._offsetx = event.x + event.widget.winfo_rootx() - window.TKroot.winfo_rootx()
-                window._offsety = event.y + event.widget.winfo_rooty() - window.TKroot.winfo_rooty()
-
-
+        self._start_move_save_offset(event)
+        return
 
     def _StopMove(self, event):
         """
@@ -11794,6 +11776,28 @@ class Window:
         :type event:  (event)
         """
         return
+
+    def _start_move_save_offset(self, event):
+        self._mousex = event.x + event.widget.winfo_rootx()
+        self._mousey = event.y + event.widget.winfo_rooty()
+        geometry = self.TKroot.geometry()
+        location = geometry[geometry.find('+') + 1:].split('+')
+        self._startx = int(location[0])
+        self._starty = int(location[1])
+        self._mouse_offset_x = self._mousex - self._startx
+        self._mouse_offset_y = self._mousey - self._starty
+        # ------ Move All Windows code ------
+        if Window._move_all_windows:
+            # print('Moving all')
+            for win in Window._active_windows:
+                if win == self:
+                    continue
+                geometry = win.TKroot.geometry()
+                location = geometry[geometry.find('+') + 1:].split('+')
+                _startx = int(location[0])
+                _starty = int(location[1])
+                win._mouse_offset_x = event.x_root - _startx
+                win._mouse_offset_y = event.y_root - _starty
 
 
     def _OnMotionUsingControlKey(self, event):
@@ -11815,22 +11819,16 @@ class Window:
 
 
     def _OnMotion(self, event):
-        try:
 
-            _mousex = event.x + event.widget.winfo_rootx()
-            _mousey = event.y + event.widget.winfo_rooty()
-            deltax = _mousex - self._mousex
-            deltay = _mousey - self._mousey
-            x = self._startx + deltax
-            y = self._starty + deltay
-            self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+        self.TKroot.geometry(f"+{event.x_root-self._mouse_offset_x}+{event.y_root-self._mouse_offset_y}")
+        # print(f"+{event.x_root}+{event.y_root}")
+        # ------ Move All Windows code ------
+        try:
             if Window._move_all_windows:
-                for window in Window._active_windows:
-                    deltax = window._offsetx
-                    deltay = window._offsety
-                    x = window.TKroot.winfo_pointerx() - deltax
-                    y = window.TKroot.winfo_pointery() - deltay
-                    window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+                for win in Window._active_windows:
+                    if win == self:
+                        continue
+                    win.TKroot.geometry(f"+{event.x_root-win._mouse_offset_x}+{event.y_root-win._mouse_offset_y}")
         except Exception as e:
             print('on motion error', e)
 
