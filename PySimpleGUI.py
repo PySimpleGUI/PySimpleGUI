@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.198 Unreleased"
+version = __version__ = "4.61.0.199 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -468,7 +468,8 @@ _change_log = """
         Made Table Element Header mouse-over and clicked be the inverse of the normal header colors. Makes for a much nicer experience
     4.61.0.198
         Added no_buffering option to popup_animated
-
+    4.61.0.199
+        Updated Udemy coupon code
 
     """
 
@@ -26797,7 +26798,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=62A4C02AB0A3DAB34388')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=2F6C6BE01B8940D3E457')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -26805,7 +26806,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '62A4C02AB0A3DAB34388',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '2F6C6BE01B8940D3E457',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
