@@ -56,7 +56,7 @@ def convert_to_bytes(file_or_bytes, resize=None, fill=False):
     if resize:
         new_width, new_height = resize
         scale = min(new_height / cur_height, new_width / cur_width)
-        img = img.resize((int(cur_width * scale), int(cur_height * scale)), PIL.Image.ANTIALIAS)
+        img = img.resize((int(cur_width * scale), int(cur_height * scale)), PIL. Image.LANCZOS)
     if fill:
         img = make_square(img, THUMBNAIL_SIZE[0])
     with io.BytesIO() as bio:

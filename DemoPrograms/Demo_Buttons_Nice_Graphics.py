@@ -26,7 +26,7 @@ def resize_base64_image(image64, size):
     '''
     image_file = io.BytesIO(base64.b64decode(image64))
     img = Image.open(image_file)
-    img.thumbnail(size, Image.ANTIALIAS)
+    img.thumbnail(size,  Image.LANCZOS)
     bio = io.BytesIO()
     img.save(bio, format='PNG')
     imgbytes = bio.getvalue()

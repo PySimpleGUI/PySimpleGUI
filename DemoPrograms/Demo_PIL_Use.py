@@ -60,7 +60,7 @@ def convert_to_bytes(source, size=(None, None), subsample=None, zoom=None, fill=
     elif zoom is not None:
         scale = zoom
 
-    resized_image = image.resize((int(width * scale), int(height * scale)), Image.ANTIALIAS) if scale is not None else image
+    resized_image = image.resize((int(width * scale), int(height * scale)),  Image.LANCZOS) if scale is not None else image
     if fill and scale is not None:
         resized_image = make_square(resized_image)
     # encode a PNG formatted version of image into BASE64
