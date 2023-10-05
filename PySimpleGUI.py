@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.200 Unreleased"
+version = __version__ = "4.61.0.201 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -472,6 +472,8 @@ _change_log = """
         Updated Udemy coupon code
     4.61.0.200
         Fix for grab anywhere window movement and control+left_mouse_drag.  Window move smoother, including the Move-All-Windows feature. Thank you JASON for the help!
+    4.61.0.201
+        Added init for _mouse_offset_x and y in case tkinter doesn't call the mouse down callback
 
     """
 
@@ -10618,6 +10620,7 @@ class Window:
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
             self.NoTitleBar = True
+        self._mouse_offset_x = self._mouse_offset_y = 0
 
         if watermark is True:
             Window._watermark_temp_forced = True
@@ -26985,4 +26988,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#8191dd5d8352d3c13f89bde32cdd01d664da2f4cabeff579ec281e413131545b6aafe489020f8f73c96477dbdf9e86e0013c01759cae8c5837d9d7ea44c7fc75f9af3fb5bce6270b0254f6f6f2d966abc5257991792b3d83880d7690a85e8f4b59e4051b0ff2f7ac1a5fa27d5630c2365d70398b22cda91c1a988c4f19379c4575afb6f6c86e873e0bcda2ed4fc65879a8c4c7a297437742b1ac070de6d04019ffc5e350d6030ce97965d0414ef48ea670ba21bb359319f1c8be7e6da2ff46c727ea82f54eb30d3a74728b5aa20e1412b6812750cfb8cb6122b3e720f0a2c0106d7ddb0eba9313ed763aa3f404221e0d4ffe9bb324a56ebb410e5cd6f45f6b985db5c39369d1fe201fc2ee7c9e8017e8eb7a9e08edafa15ad8a89f6214b75b8e183e2dde4c67350975999d7f74572f0f17d422a9ca430c928f80e2ffee4dd376ce916999b7a263b39783ddf54242b1341e70240c6875832525d87100c9a733d09969465e38226d80ead49508692eb9851eaa4fba26ca5069cb2c6ee88647c79683860d9b12fa598a1d452015d80295a1b59236c38f8fb42edf1aa897db653f8c20ce79836641cc64c1e5975b8400edc98854ab5c26de57241ce8b89979173b84f9cf3e5dd455a63721545001b06af63a8b11ed7889a4e53af7a1527bbd3e14ae6e6a16eb569c79d7213d52e7f276f1a59423fb3a519adc122b73128196aec80a
+#5550034f4202b0dde48a8ff1a870d871f1759f6e59b3a92f40150e8c42204e1b06eaafbe206994c7f0ff811df9f61018269480e40a91fe781b16dac2c81dfe0c0977090f8557e435b97d4d8e7c5ec1c91f2be19033b9dc2f5a8f16e0b5d1cab1e692d998dbb4f5fc26b551befa483142430c1cadee39363aba10ed19675867ed15ef534fd40fcdf38c811e3431751de160dd6eb567091160b936a580305902387dca997ce20b90f80984644e8289882eabf1809b3f54f98a80ea80f2c5a644ebeac34413cf68b4c8cf2c7d69072abee5fddd075e7daae6f7644e4eba3deaa228cc4d4dbcb59cdc62c73c2c830f630653cc10646d314eeba1736f43a8a603c57221eb9977f2ad6a05692f87f161238e8514b317d20fcaec1e84faead09e0e8c9ecac402c38a021b490086fd3d07d3f2777627f21946f0ff1b4b0e66d28e1b0484a21b9d61f4929bfd9ca58c48ec1e7bd764cbfe21cc827ae7239d544ee324a0f4a1d9d4aa75d5e76a0fed5f8540ba275fdc3684d2d7b722028cabee2d3d7aa469ab4c9cf5c3c66cb7dbcc749b57991988e726c5191ac02224d345d87ba6eb5b209f5f755fa1318f10034de6c828aead47f333f80de385ae13e0a0be2a8c76cfa9162c24c6ff9dc55c0031af42464adaf2ccb95bebbd17f24cfd2938140c3538109491bea1f409c7358dde3a2466f4788a68cd3c3bb45cbd33589475a149617549
