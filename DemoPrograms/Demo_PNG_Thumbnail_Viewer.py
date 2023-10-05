@@ -59,7 +59,7 @@ def convert_to_bytes(file_or_bytes, resize=None):
     if resize:
         new_width, new_height = resize
         scale = min(new_height / cur_height, new_width / cur_width)
-        img = img.resize((int(cur_width * scale), int(cur_height * scale)), PIL. Image.LANCZOS)
+        img = img.resize((int(cur_width * scale), int(cur_height * scale)), PIL.Image.LANCZOS)
     with io.BytesIO() as bio:
         img.save(bio, format="PNG")
         del img
@@ -80,7 +80,7 @@ def convert_to_bytes(file_or_bytes, resize=None):
 
 def set_image_to_blank(key):
     img = PIL.Image.new('RGB', (100, 100), (255, 255, 255))
-    img.thumbnail((1, 1), PIL. Image.LANCZOS)
+    img.thumbnail((1, 1), PIL.Image.LANCZOS)
     bio = io.BytesIO()
     img.save(bio, format='PNG')
     imgbytes = bio.getvalue()
