@@ -55,7 +55,7 @@ def resize(input_file, size, output_file=None, encode_format='PNG'):
     new_width, new_height = size
     if new_width != width or new_height != height:  # if the requested size is different than original size
         scale = min(new_height / height, new_width / width)
-        resized_image = image.resize((int(width * scale), int(height * scale)), Image.ANTIALIAS)
+        resized_image = image.resize((int(width * scale), int(height * scale)),  Image.LANCZOS)
     else:
         resized_image = image
 
