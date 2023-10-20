@@ -1,3 +1,13 @@
+[maria-korosteleva](https://github.com/maria-korosteleva) 2023-10-20T11:52:13Z
+I've used the framework to build a garment design configurator in my latest research paper on programmable garments =) 
+https://github.com/maria-korosteleva/GarmentCode
+https://igl.ethz.ch/projects/garmentcode/
+
+<img width="957" alt="Screenshot GUI_2_mosaic" src="https://github.com/PySimpleGUI/PySimpleGUI/assets/6837635/76c59bcf-5b43-4e33-9ac4-fb0afb490da2">
+
+
+-----------
+
 [onyx-and-iris](https://github.com/onyx-and-iris) 2023-09-06T00:00:13Z
 A small remote utility for Voicemeeter, designed to work with the NVDA screen reader.
 
