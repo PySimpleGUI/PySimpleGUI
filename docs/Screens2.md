@@ -1,3 +1,32 @@
+[PySimpleGUI](https://github.com/PySimpleGUI) 2023-10-26T09:38:54Z
+We're on very similar wavelengths @ikeman32.  It's great to see some add-on tools to help users.
+
+As part of the PySimpleGUI 5 release of the PySimpleGUI applications and add-on modules, I've written a GUI tool that creates all of the necessary files to upload a PySimpleGUI application to PyPI, opening up distribution of Python applications to PySimpleGUI users.  We've been releasing tools via PyPI for some time.  "psgresizer" is a good example.  Users can pip install it and then once installed it can be run by typing "psgresizer" from the command line.  There's already a tool, psgshortcut, that takes it all a start further by making shortcuts (icons) that can be pinned to the taskbar or double-clicked.
+
+The idea is to make distribution easy as well as the result be familiar feeling.  The command line isn't a normal part of a normal Windows user's world, so getting it out of the way entirely makes a lot of sense.  I've just about got the final tool finished that will make it all work end to end.
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/46163555/c68c3fdd-3bc3-4654-9cef-7b8cf1565443)
+
+
+-----------
+
+[ikeman32](https://github.com/ikeman32) 2023-10-25T21:58:09Z
+I have created a simple bash script to initialize a PySimpleGUI project. It can be found here: https://github.com/ikeman32/ScriptHelpers/tree/main/devscripts
+
+It's very basic at the moment, but functional. For Windows users, I do have an AI-generated port, but it remains untested as I gave up my Windows addiction in 2017.  I may eventually create a platform-independent version of the script using Python.
+
+I do accept code contributions, so if there are Windows users that want to develop a Windows batch equivalent or a Python version of this script, see the README. Or you can code your own.
+
+PySimpleGUI is an absolute God-sent for me. I like simplicity, and I am also lazy, so if there is an easier way to do something, I'm all for it. I'm also in the planning stages for a visual editor/IDE for PySimpleGUI applications. 
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/7841462/fdddd0e4-6654-41c0-a6c7-a9262c903e8d)
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/7841462/f61d5e2b-7178-4008-8fad-6ae482aa5cfc)
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/7841462/90dac6a7-92b0-4e34-9813-aa557d4a47e7)
+
+
+
+-----------
+
 [maria-korosteleva](https://github.com/maria-korosteleva) 2023-10-23T09:26:11Z
 @PySimpleGUI Thank you very much for your kind words! 🥰
 
