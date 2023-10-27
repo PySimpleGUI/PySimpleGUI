@@ -1,7 +1,10 @@
 version: 2
 
+version: 2
+build:
+  os: "ubuntu-22.04"
+
 python:
-  version: 3.6
   install:
     - requirements: docs/requirements.txt
 
