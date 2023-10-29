@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.201 Unreleased"
+version = __version__ = "4.61.0.203 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -474,6 +474,10 @@ _change_log = """
         Fix for grab anywhere window movement and control+left_mouse_drag.  Window move smoother, including the Move-All-Windows feature. Thank you JASON for the help!
     4.61.0.201
         Added init for _mouse_offset_x and y in case tkinter doesn't call the mouse down callback
+    4.61.0.202
+        Added doctring and destroy previous right click menu to set_right_click_menu
+    4.61.0.203
+        Changed Sizer element to use Canvas instead of Column element
 
     """
 
@@ -2267,6 +2271,12 @@ class Element():
 
 
     def set_right_click_menu(self, menu=None):
+        """
+        Sets a right click menu for an element.
+        If a menu is already set for the element, it will call the tkinter destroy method to remove it
+        :param menu:                   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type menu:                    List[List[ List[str] | str ]]
+        """
         if menu == MENU_RIGHT_CLICK_DISABLED:
             return
         if menu is None:
@@ -2274,6 +2284,12 @@ class Element():
             if menu is None:
                 return
         if menu:
+            # If previously had a menu destroy it
+            if self.TKRightClickMenu:
+                try:
+                    self.TKRightClickMenu.destroy()
+                except:
+                    pass
             top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
 
             if self.ParentForm.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
@@ -13595,8 +13611,8 @@ def Sizer(h_pixels=0, v_pixels=0):
     :rtype:          (Column)
     """
 
-    return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
-
+    # return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
+    return Canvas(size=(h_pixels, v_pixels), pad=(0,0))
 
 def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None):
     """
@@ -26988,4 +27004,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5550034f4202b0dde48a8ff1a870d871f1759f6e59b3a92f40150e8c42204e1b06eaafbe206994c7f0ff811df9f61018269480e40a91fe781b16dac2c81dfe0c0977090f8557e435b97d4d8e7c5ec1c91f2be19033b9dc2f5a8f16e0b5d1cab1e692d998dbb4f5fc26b551befa483142430c1cadee39363aba10ed19675867ed15ef534fd40fcdf38c811e3431751de160dd6eb567091160b936a580305902387dca997ce20b90f80984644e8289882eabf1809b3f54f98a80ea80f2c5a644ebeac34413cf68b4c8cf2c7d69072abee5fddd075e7daae6f7644e4eba3deaa228cc4d4dbcb59cdc62c73c2c830f630653cc10646d314eeba1736f43a8a603c57221eb9977f2ad6a05692f87f161238e8514b317d20fcaec1e84faead09e0e8c9ecac402c38a021b490086fd3d07d3f2777627f21946f0ff1b4b0e66d28e1b0484a21b9d61f4929bfd9ca58c48ec1e7bd764cbfe21cc827ae7239d544ee324a0f4a1d9d4aa75d5e76a0fed5f8540ba275fdc3684d2d7b722028cabee2d3d7aa469ab4c9cf5c3c66cb7dbcc749b57991988e726c5191ac02224d345d87ba6eb5b209f5f755fa1318f10034de6c828aead47f333f80de385ae13e0a0be2a8c76cfa9162c24c6ff9dc55c0031af42464adaf2ccb95bebbd17f24cfd2938140c3538109491bea1f409c7358dde3a2466f4788a68cd3c3bb45cbd33589475a149617549
+#3479bf01bf15751ece66f3f051045efd19442e1a59258450609b19789838cae7bbd47b4657b8be3c77b23ad9f7462bcae6b15e0b43683b19d464210391f37adb9ad6279915d2e85f5ca2ce1005462bc70fbdb5bb957ad4ac22a5c9fd814a4bf5a50bd7f7a46b155b3444b37716189b38bcdf3088ebe49f4ad9ffd162aa06adf2d54f7d096116d166575f3ad564f0a400bfd506d6adbbb663281d25ca19d243092411da18391e01feaaf5b75e6714095d82982302403c26de5855d8676df91f1ae694b4a0d47757b1c15dd507ff7843494d5c300be97fd53094ef77da5eec0a8a812ddecb01d294b3bce407ac04f79269bfaea95e375c19ed3fecdb75c8e8c6d6a93fc13c7c6cbea20dbabf10e9e28c3567d79a63f5c8b1a766fa640e7fb9397cf9000aa4127bf360aebb000c433531fa6d1cfbfa473efcbf0b72c89903a9b9c2e1eed43a4710ef0a9ee62fd94c297aabfb8db4e1ca913fea58b80c4131f5bf62a147a91220261af9f76fdea5556a63886581d76c96a955af6b26aeec5cb3f41c4b84c80623e099f04dfdc4fbc1d63c1291129c80b7aba628c3ceedb9244dcd8c05f8991cdf2fcdd510cb2f1f28134587a8f0d3ee01cabcbf29c9eff72cd120614d06423f372b30221f7f3a0ce985a29ec1c7561213fac5bed8023c07698b26775fb14027676fbd8fea17ff7c5a3839bc69bf680cc227b544fd2defd8a08cb02f
