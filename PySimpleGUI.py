@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.203 Unreleased"
+version = __version__ = "4.61.0.204 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -478,6 +478,8 @@ _change_log = """
         Added doctring and destroy previous right click menu to set_right_click_menu
     4.61.0.203
         Changed Sizer element to use Canvas instead of Column element
+    4.61.0.204
+        One more change to sizer so that it uses pad instead of size.
 
     """
 
@@ -13607,12 +13609,11 @@ def Sizer(h_pixels=0, v_pixels=0):
     :type h_pixels:  (int)
     :param v_pixels: number of vertical pixels
     :type v_pixels:  (int)
-    :return:         (Column) A column element that has a pad setting set according to parameters
-    :rtype:          (Column)
+    :return:         (Canvas) A canvas element that has a pad setting set according to parameters
+    :rtype:          (Canvas)
     """
 
-    # return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
-    return Canvas(size=(h_pixels, v_pixels), pad=(0,0))
+    return Canvas(size=(0, 0), pad=((h_pixels, 0), (v_pixels, 0)))
 
 def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None):
     """
@@ -27004,4 +27005,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#3479bf01bf15751ece66f3f051045efd19442e1a59258450609b19789838cae7bbd47b4657b8be3c77b23ad9f7462bcae6b15e0b43683b19d464210391f37adb9ad6279915d2e85f5ca2ce1005462bc70fbdb5bb957ad4ac22a5c9fd814a4bf5a50bd7f7a46b155b3444b37716189b38bcdf3088ebe49f4ad9ffd162aa06adf2d54f7d096116d166575f3ad564f0a400bfd506d6adbbb663281d25ca19d243092411da18391e01feaaf5b75e6714095d82982302403c26de5855d8676df91f1ae694b4a0d47757b1c15dd507ff7843494d5c300be97fd53094ef77da5eec0a8a812ddecb01d294b3bce407ac04f79269bfaea95e375c19ed3fecdb75c8e8c6d6a93fc13c7c6cbea20dbabf10e9e28c3567d79a63f5c8b1a766fa640e7fb9397cf9000aa4127bf360aebb000c433531fa6d1cfbfa473efcbf0b72c89903a9b9c2e1eed43a4710ef0a9ee62fd94c297aabfb8db4e1ca913fea58b80c4131f5bf62a147a91220261af9f76fdea5556a63886581d76c96a955af6b26aeec5cb3f41c4b84c80623e099f04dfdc4fbc1d63c1291129c80b7aba628c3ceedb9244dcd8c05f8991cdf2fcdd510cb2f1f28134587a8f0d3ee01cabcbf29c9eff72cd120614d06423f372b30221f7f3a0ce985a29ec1c7561213fac5bed8023c07698b26775fb14027676fbd8fea17ff7c5a3839bc69bf680cc227b544fd2defd8a08cb02f
+#2e3530bf7b9c7d2770054a0b33bc671dac9415010a5538c10185614a700119e33eec9c81d34cbc215dbfaa9ca4946883ed0a8b6f1a81acfbf7bdd16af1102b43edf840bb0e67ac7032f4b7dbb04748fa00966884ce0ef41bddb9ee8ded4c74bf20fe787093a041598701a9644096abe75706158341a9d82ce2b230c784bc71d960ecc2f98e37836b559099f3373de729771db2ba3bd3522b2c8b3faa9cb2ec4ae7dbaa4b88e8d289ceb3d423ac63cfe5e279540efe13e246bb8061231432eb3eb3b2eac1af56b38b9e1f2c688f2b5ccb1f187a0492de065aa985fabda3d9dbc463c2a62cdae1b516852179b1da7855198c03fb6bb9d05495d64e04b6809d8b40ccc532a6fabd1577a1f83af4fa928349a69994f5c010400a4ec81f6804badd61a6efa608372f39cc113cd33bdc6c568e46828657d5fe21828a6157ba7101295c7039f0c3d31f35b9f2ef9bbbc245fd7e26efe218914edfeceed69651d9d9d90839d5ce21098c8898551025438be74bd2e4cefed8470242b52fed9c47dbbf3b38b4d4eeaa11f62ddf6630bdc7ee863cbd1a17bb845750c3eda5431c75a791e64961076a08664e11e6f83dc5d004f524b69d43e8cca324a8cd2399552bb8bb01028ebd0f662695900a5fb5a5c9ba681212eb064e2e1e86bd047f2f825a1760f8f61b7846eb1e160c9f10bb7bef84508f8d0936e25f2a3caf5767a833278ed317c0
