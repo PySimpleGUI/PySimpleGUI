@@ -3,12 +3,11 @@ import PySimpleGUI as sg
 
 # Usage of Graph element.
 
-layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='red', enable_events=True, key='graph')],
+layout = [[graph := sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='red', enable_events=True)],
           [sg.Text('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]]
 
 window = sg.Window('Graph test', layout, finalize=True)
 
-graph = window['graph']         # type: sg.Graph
 circle = graph.draw_circle((75, 75), 25, fill_color='black', line_color='white')
 point = graph.draw_point((75, 75), 10, color='green')
 oval = graph.draw_oval((25, 300), (100, 280), fill_color='purple', line_color='purple')
