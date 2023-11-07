@@ -1,3 +1,42 @@
+[SaSp73](https://github.com/SaSp73) 2023-11-07T15:52:58Z
+Thanks for your kind words. I will send you the code in a couple of days when I return back home.
+It need some extra hardware (PICAN-M board, Adafruit ADC and BME280 barometer), but you will manage to get around this with a little bit of tinkering.
+Basically the whole control is a graph with elements redrawing according to the calculated data...
+
+BTW, a Rotate_Figure(figure_id, center_point, degrees_of_rotation) would be very helpful (I will open a suggestion later)
+
+-----------
+
+[PySimpleGUI](https://github.com/PySimpleGUI) 2023-11-07T14:22:15Z
+WOW @SaSp73 !!
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/46163555/1cedfd51-46ca-4fef-bfa3-2b05dfba09bc)
+
+Truly mind-blowing and very inspiring to see.  I've never seen anything like this done with PySimpleGUI!  One of the things I love about this project are the surprises by what people create.
+
+I would love to see how you did some of the things you did if you ever care to share the code (even privately would be great.... I'll be confidential.  I'm curious what features were helpful).
+
+Thank you so so much for sharing.
+
+
+
+-----------
+
+[kcl1s](https://github.com/kcl1s) 2023-11-07T11:01:09Z
+Wow 
+Those graphics are fantastic. Thanks for sharing.
+
+
+-----------
+
+[SaSp73](https://github.com/SaSp73) 2023-11-07T09:35:57Z
+This is my use of PySimpleGUI, a program reading NMEA200 networks, running on raspberry pi 4, and presenting various data used for sail racing.
+<img width="779" alt="Screen Shot 2023-10-25 at 8 00 25 PM" src="https://github.com/PySimpleGUI/PySimpleGUI/assets/145710363/eedb2ea9-7df5-47ab-b0cb-0894f10c0753">
+
+
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-10-26T09:38:54Z
 We're on very similar wavelengths @ikeman32.  It's great to see some add-on tools to help users.
 
