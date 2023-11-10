@@ -31,7 +31,7 @@ Those graphics are fantastic. Thanks for sharing.
 
 [SaSp73](https://github.com/SaSp73) 2023-11-07T09:35:57Z
 This is my use of PySimpleGUI, a program reading NMEA200 networks, running on raspberry pi 4, and presenting various data used for sail racing.
-<img width="779" alt="Screen Shot 2023-10-25 at 8 00 25 PM" src="https://github.com/PySimpleGUI/PySimpleGUI/assets/145710363/eedb2ea9-7df5-47ab-b0cb-0894f10c0753">
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/145710363/eedb2ea9-7df5-47ab-b0cb-0894f10c0753)
 
 
 
@@ -176,7 +176,7 @@ It's got a nice design and the custom buttons look great.
 
 -----------
 
-[Kinetikal](https://github.com/Kinetikal) 2023-04-19T09:55:26Z
+[zaricj](https://github.com/zaricj) 2023-04-19T09:55:26Z
 I've been using PySimpleGUI to make a GUI for the Chocolatey Package Manager, thought of sending a screenshot of it here.
 
 ![Chocolatey-GUI](https://user-images.githubusercontent.com/93329694/233038905-5a3b1f42-4794-4c6e-8411-f70f8fa79723.png)

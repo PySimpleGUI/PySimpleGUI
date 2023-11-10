@@ -4,6 +4,12 @@
 
 -----------
 
+[SaSp73](https://github.com/SaSp73) 2023-11-07T09:35:57Z
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/145710363/eedb2ea9-7df5-47ab-b0cb-0894f10c0753)
+
+-----------
+
 [PySimpleGUI](https://github.com/PySimpleGUI) 2023-10-26T09:38:54Z
 
 ![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/46163555/c68c3fdd-3bc3-4654-9cef-7b8cf1565443)
@@ -69,7 +75,7 @@
 
 -----------
 
-[Kinetikal](https://github.com/Kinetikal) 2023-04-19T09:55:26Z
+[zaricj](https://github.com/zaricj) 2023-04-19T09:55:26Z
 
 ![Chocolatey-GUI](https://user-images.githubusercontent.com/93329694/233038905-5a3b1f42-4794-4c6e-8411-f70f8fa79723.png)
 
