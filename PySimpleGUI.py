@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.61.0.204 Unreleased"
+version = __version__ = "4.61.0.205 Unreleased"
 
 _change_log = """
     Changelog since 4.60.0 released to PyPI on 8-May-2022
@@ -480,6 +480,9 @@ _change_log = """
         Changed Sizer element to use Canvas instead of Column element
     4.61.0.204
         One more change to sizer so that it uses pad instead of size.
+    4.61.0.205
+        Fixed docstring for execute_command_subprocess.  The command description was incorrect
+    
 
     """
 
@@ -23693,7 +23696,7 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
     The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
     Returns a subprocess Popen object.
 
-    :param command:                  Filename to load settings from (and save to in the future)
+    :param command:                  The command/file to execute. What you would type at a console to run a program or shell command.
     :type command:                   (str)
     :param *args:                    Variable number of arguments that are passed to the program being started as command line parms
     :type *args:                     (Any)
@@ -27005,4 +27008,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#2e3530bf7b9c7d2770054a0b33bc671dac9415010a5538c10185614a700119e33eec9c81d34cbc215dbfaa9ca4946883ed0a8b6f1a81acfbf7bdd16af1102b43edf840bb0e67ac7032f4b7dbb04748fa00966884ce0ef41bddb9ee8ded4c74bf20fe787093a041598701a9644096abe75706158341a9d82ce2b230c784bc71d960ecc2f98e37836b559099f3373de729771db2ba3bd3522b2c8b3faa9cb2ec4ae7dbaa4b88e8d289ceb3d423ac63cfe5e279540efe13e246bb8061231432eb3eb3b2eac1af56b38b9e1f2c688f2b5ccb1f187a0492de065aa985fabda3d9dbc463c2a62cdae1b516852179b1da7855198c03fb6bb9d05495d64e04b6809d8b40ccc532a6fabd1577a1f83af4fa928349a69994f5c010400a4ec81f6804badd61a6efa608372f39cc113cd33bdc6c568e46828657d5fe21828a6157ba7101295c7039f0c3d31f35b9f2ef9bbbc245fd7e26efe218914edfeceed69651d9d9d90839d5ce21098c8898551025438be74bd2e4cefed8470242b52fed9c47dbbf3b38b4d4eeaa11f62ddf6630bdc7ee863cbd1a17bb845750c3eda5431c75a791e64961076a08664e11e6f83dc5d004f524b69d43e8cca324a8cd2399552bb8bb01028ebd0f662695900a5fb5a5c9ba681212eb064e2e1e86bd047f2f825a1760f8f61b7846eb1e160c9f10bb7bef84508f8d0936e25f2a3caf5767a833278ed317c0
+#5545a931e7a1314d3f851ca20a18423484698ab868afd5a96927317b2c5ec13896f3fc634b68f9c1fcd9a381ce0192c51d13088670cb215e207f61f2be6088b1f20e0d4bdb5b992f0f2387b4cb205451cd5452041ca66159c87788d3e7bb84a6183d845012e02fc199b20342dfc2cd0c781d0e1624ee0602f85a4b83cb9004fa98b36565125a64234030a93e7c413be3fa1ec5740a13718f2126ab3e3db059037e676670b5dd4b2192058c9b41f25e868dc95a5064a83b6a10106d8002c142300394a583000c5f6ad76b9b2ee2d5ad357acc6e670576374e5562114f16a0a88328daa2d3e08539507011660a931dc97e72c1b399fffd00b2e7769992c05e6e25d99dac6e96d6095a36843484dcaef2b09c551da47a599bab6e143a583e72de15a769fa80b6af001582ce0391fb1e5652dc992354d553481e819e690d43e729883b285d3735ba88f48fc5ebceca15c460007ad88b689623c6b4f774b53a91cbe0eb8212951bbdc6991aafeb292e7d31faa11f4f884c934805398c511a9ed99b1a3d7baf0a7bee8aacc6e71638fa87f5796a316216d23f766bd0c9b194d9ac660b97f5a8de1b93ace083c74fd3d59e07f1c3d76a8afdf90cca75f820153f73cd3b0f7614e0d9ecb3b53ecb479a2b6a5738d966bb87c07566161bf6fff882102ca6ffa05cf53049f5002fd711685e2df18a630abe4bebb3d9c73495ac44bd8d3fe0
