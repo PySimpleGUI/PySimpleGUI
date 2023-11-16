@@ -697,8 +697,14 @@ g_time_delta = 0
 
 def timer_start():
     """
-    Time your code easily.... starts the timer.
-    Uses the time.time value, a technique known to not be terribly accurage, but tis' gclose enough for our purposes
+    Start a global timer for benchmarking purposes.
+
+    This function initializes a global timer used to measure the execution time of code. It relies on the time.time() 
+    function, which provides system's time. Note that while this method is generally accurate enough for basic 
+    timing needs, it may not be precise for high-resolution timing due to system-specific limitations.
+
+    Usage:
+        Call timer_start() to begin timing, and then use the global variable g_time_start to access the start time.
     """
     global g_time_start
 
