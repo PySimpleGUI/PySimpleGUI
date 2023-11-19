@@ -1,3 +1,36 @@
+[splatert](https://github.com/splatert) 2023-11-19T04:48:55Z
+Hello. I would like to thank you for the awesome UI framework you built as it really does help create interfaces in a really simple manner. I've given credit to you on my project's readme file and provided a link that leads to your github page.
+
+With the power of your library, I've created an alternative UI frontend for SpotDL. A tool for downloading Spotify tracks using URLs that you provide. Now SpotDL does have their own interface which is loaded onto the web browser but It felt like it was slow as it took a couple of seconds to start up, which is why I wanted to create my own.
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/749bd2e5-d6fa-4a83-8508-a04aabc63202)
+
+The way this frontend is used is that you provide each link into the interface's textbox then hit the plus button to pass them to a list of URLs (which then the listbox shown above displays the urls list).
+
+Upon providing URLs, you then press the download button to initiate the download process (given that you provide the SpotDL executable).
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/3beb849e-63b0-4d55-a541-116c8789f364)
+If the control shown above is checked, the program would ask you to provide a name for the folder you want to create and send downloaded songs to. Prompt dialog is shown below.
+
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/16c8b7a0-3b55-40c0-9f82-13d73797374f)
+Pressing **OK** will assign the folder name to a string variable then tell the program that you want to create a folder.
+Pressing **Cancel** or having the checkbox mentioned above unmarked would not tell the program to create any folders.
+
+
+After information is provided, the program executes SpotDL with the links you entered passed as arguments and will wait for it to complete the download job.
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/758d4b52-9cb1-4aa7-982f-953168ba5fed)
+
+
+After the download job is finished, songs get transferred over to the frontend's music directory and you will get a message saying that the download process has been completed.
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/970cddfc-3aa9-4932-8f38-8c12f44a0fae)
+![image](https://github.com/PySimpleGUI/PySimpleGUI/assets/82643571/cf85ee38-17c4-4f19-b473-4c0427c3d203)
+
+
+Here's a link to the project repository.
+https://github.com/splatert/spotdl-ui
+
+-----------
+
 [SaSp73](https://github.com/SaSp73) 2023-11-07T15:52:58Z
 Thanks for your kind words. I will send you the code in a couple of days when I return back home.
 It need some extra hardware (PICAN-M board, Adafruit ADC and BME280 barometer), but you will manage to get around this with a little bit of tinkering.
