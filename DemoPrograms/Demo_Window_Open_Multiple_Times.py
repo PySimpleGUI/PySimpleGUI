@@ -38,11 +38,13 @@ def main():
     while True:  # Event Loop
         event, values = window.read()
         print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event == 'Exit':
             window.close()
             window = make_window()
         elif event == 'Go':
             window['-OUT-'].update(values['-IN-'])
+        elif event == sg.WIN_CLOSED:
+            break
 
 
 if __name__ == '__main__':
