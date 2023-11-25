@@ -482,6 +482,8 @@ _change_log = """
         One more change to sizer so that it uses pad instead of size.
     4.61.0.205
         Fixed docstring for execute_command_subprocess.  The command description was incorrect
+    4.61.0.206
+        New Udemy Coupon code
     
 
     """
@@ -26819,7 +26821,7 @@ def main():
         elif event == 'Get Text':
             popup_scrolled('Returned:', popup_get_text('Enter some text', keep_on_top=True))
         elif event.startswith('-UDEMY-'):
-                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=2F6C6BE01B8940D3E457')
+                webbrowser.open_new_tab(r'https://www.udemy.com/course/pysimplegui/?couponCode=522B20BF5EF123C4AB30')
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/pythongui')
@@ -26827,7 +26829,7 @@ def main():
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event in  ('-EMOJI-HEARTS-', '-HEART-', '-PYTHON HEARTS-'):
-            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '2F6C6BE01B8940D3E457',
+            popup_scrolled("Oh look!  It's a Udemy discount coupon!", '522B20BF5EF123C4AB30',
                            'A personal message from Mike -- thank you so very much for supporting PySimpleGUI!', title='Udemy Coupon', image=EMOJI_BASE64_MIKE, keep_on_top=True)
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
@@ -27008,4 +27010,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-#5545a931e7a1314d3f851ca20a18423484698ab868afd5a96927317b2c5ec13896f3fc634b68f9c1fcd9a381ce0192c51d13088670cb215e207f61f2be6088b1f20e0d4bdb5b992f0f2387b4cb205451cd5452041ca66159c87788d3e7bb84a6183d845012e02fc199b20342dfc2cd0c781d0e1624ee0602f85a4b83cb9004fa98b36565125a64234030a93e7c413be3fa1ec5740a13718f2126ab3e3db059037e676670b5dd4b2192058c9b41f25e868dc95a5064a83b6a10106d8002c142300394a583000c5f6ad76b9b2ee2d5ad357acc6e670576374e5562114f16a0a88328daa2d3e08539507011660a931dc97e72c1b399fffd00b2e7769992c05e6e25d99dac6e96d6095a36843484dcaef2b09c551da47a599bab6e143a583e72de15a769fa80b6af001582ce0391fb1e5652dc992354d553481e819e690d43e729883b285d3735ba88f48fc5ebceca15c460007ad88b689623c6b4f774b53a91cbe0eb8212951bbdc6991aafeb292e7d31faa11f4f884c934805398c511a9ed99b1a3d7baf0a7bee8aacc6e71638fa87f5796a316216d23f766bd0c9b194d9ac660b97f5a8de1b93ace083c74fd3d59e07f1c3d76a8afdf90cca75f820153f73cd3b0f7614e0d9ecb3b53ecb479a2b6a5738d966bb87c07566161bf6fff882102ca6ffa05cf53049f5002fd711685e2df18a630abe4bebb3d9c73495ac44bd8d3fe0
+#722a483aea42030011461a21e54c30712fc87a01c22c71b5cfce8bb74b1913f74bb8376a9a47006947a1b1262fbe3ef81e7f9432c131563602dea877d84d6fadb9a977ff422e90eddde2c4917b5a969b2bd7b944f7ef9c08d3426620ee2917461e2323a76d725ae99cb239a73b9e7970533bb2a34a35bf2d2f339c087489c4023c0099a36c54991f378034265c3a84e159c0baa26983724908dd8897117fe7fe7e2428346c3e7f8eae8fc29222005b0dbfba9cac5ff663dc9dd7d598ac015d40b2e542eb08303c8e5c4cb06c2cdedb5d6349ce4a4d08cec2fddc26b19a4fe4cdb3d8d845c2d0740d9f3580ca6ef491c0c7396e573a41d31197e2e582c1a1910487ca3ebdaccf66ced2cf02ce34f3bfa883758dc4f78d8a097b79518aa5eec4a087d7d9ac42e60a396d4a3019b87c8249cf8797558d5dc9ded9e401c4550f812e4f1a627cb3b806723350d704b4c8cb89a460a89451ec4b5c7ed618c4242a80160932c19168390ce4ac346cb95c74100da2c3de06b833c2e063e6c246386d009df1586bc16d6e8bda892b7217e3027fcafab9fa628b2aa1c8e5c249a8ca46df7934aa061dffea226278f7c7e69312ac4038e42b75935574540c8435c01da375d09d021e34225ee474fac27bccfefb8149186d103c2ed93015406463f53476beab267de36cf4f433cec1c65a5e3e29fc829ec0307bfb298f583eae53f40b8b6d9c

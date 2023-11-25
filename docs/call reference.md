@@ -25,9 +25,9 @@
                     <span style="font-weight: normal;">
                         apply coupon for discount: 
                     </span>
-                    C967880E71496470E40E.
+                    522B20BF5EF123C4AB30.
                 </div>
-                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=C967880E71496470E40E','_blank');">
+                <button style="margin: 0 auto; display: block; width: 200px; height: 70px; border-radius: 14px; border: none; padding: 10px; font-size: 18px; background-color: #357296; color: white; cursor: pointer;" onclick="window.open('https://www.udemy.com/course/pysimplegui/?couponCode=522B20BF5EF123C4AB30','_blank');">
                     click here to visit course page
                 </button>
             </div>
@@ -8996,7 +8996,7 @@ Parameter Descriptions:
 |--|--|--|
 | int | h_pixels | number of horizontal pixels |
 | int | v_pixels | number of vertical pixels |
-| (Column) | **RETURN** | (Column) A column element that has a pad setting set according to parameters
+| (Canvas) | **RETURN** | (Canvas) A canvas element that has a pad setting set according to parameters
 
 -------
 
@@ -19879,7 +19879,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str  |         command          | Filename to load settings from (and save to in the future) |
+| str  |         command          | The command/file to execute. What you would type at a console to run a program or shell command. |
 | Any  |          *args           | Variable number of arguments that are passed to the program being started as command line parms |
 | bool |           wait           | If True then wait for the subprocess to finish |
 | str  |           cwd            | Working directory to use when executing the subprocess |
