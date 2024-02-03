@@ -70,13 +70,6 @@ def main():
             state = State.start
         elif event == NEXT_STATE:
             state = values[event]
-        elif event == sg.TIMER_KEY:
-            if state == State.delay_3_sec:
-                window.write_event_value(NEXT_STATE, State.close_win)
-                continue  # skip state processing until next_state is received by read
-            elif state == State.delay_2_sec:
-                window.write_event_value(NEXT_STATE, State.enable_send)
-                continue  # skip state processing until next_state is received by read
 
         window['-STATE-'].update(state)
         if window_send:
@@ -87,12 +80,16 @@ def main():
             window['-SEND-'].update(disabled=True)
             window_send = make_send_window()
             window.write_event_value(NEXT_STATE, State.delay_3_sec)
+        elif event == sg.TIMER_KEY and state == State.delay_3_sec:      # be sure the if with the timer check AND state is above if with only state
+            window.write_event_value(NEXT_STATE, State.close_win)
         elif state == State.delay_3_sec:
             window.timer_start(TIMER1, repeating=False)
         elif state == State.close_win:
             window_send.close()
             window_send = None
             window.write_event_value(NEXT_STATE, State.delay_2_sec)
+        elif event == sg.TIMER_KEY and state == State.delay_2_sec:
+            window.write_event_value(NEXT_STATE, State.enable_send)
         elif state == State.delay_2_sec:
             window.timer_start(TIMER2, repeating=False)
         elif state == State.enable_send:
