@@ -97,4 +97,4 @@ PySimpleGUI provides extensive documentation. Here are some starting points, dep
 * [Updated Documentation](https://docs.PySimpleGUI.com) - Everything you need to know about the latest and best PySimpleGUI
 	* [Cookbook](https://cookbook.PySimpleGUI.com) - Hundreds of basic PySimpleGUI examples. Find a starting point that is close to what you need.
 	* [Call Reference](https://cookbook.PySimpleGUI.com) - Just the facts, Ma'am
-* [Udemy Course](https://udemy.PySimpleGUI.com) - Become a PySimpleGUI expert in no time. Bundled with $99/yr Commercial Developer ubscription.
+* [Udemy Course](https://udemy.PySimpleGUI.com) - Become a PySimpleGUI expert in no time. Bundled with $99/yr Commercial Developer subscription.
