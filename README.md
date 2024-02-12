@@ -93,10 +93,9 @@ PySimpleGUI provides extensive documentation. Here are some starting points, dep
 * [Cookbook](https://cookbook.pysimplegui.com/) - Step-by-step cookbook of PySimpleGUI basics. Find a recipe that is close to what you want to build and use it as a starting point.
 * [Examples](https://examples.pysimplegui.com/) - Hundreds of sample PySimpleGUI applications.
 * [SDK Reference](https://sdk.pysimplegui.com/) - details for each PySimpleGUI element
-* [PySimpleGUI Home Website](https://PySimpleGUI.com)
-* [PySimpleGUI GitHub Repo](https://github.PySimpleGUI.com)
-* [PySimpleGUI GitHub Account](https://githubaccount.PySimpleGUI.com)
-* [Consolidated Documentation](https://docs.PySimpleGUI.com) Use the tabs to navigate, or links to get to specific sections:
+* [Home Website](https://PySimpleGUI.com) - New PySimpleGUI home page
+* [GitHub Repo](https://github.PySimpleGUI.com) - Informational only. Download from PyPi with pip.
+* [Updated Documentation](https://docs.PySimpleGUI.com) - Everything you need to know about PySimpleGUI
 	* [Cookbook](https://cookbook.PySimpleGUI.com)
 	* [Call Reference](https://cookbook.PySimpleGUI.com)
-* [Udemy Course](https://udemy.PySimpleGUI.com)
+* [Udemy Course](https://udemy.PySimpleGUI.com) - Become a GUI expert with PySimpleGUI
