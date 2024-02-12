@@ -1,0 +1,588 @@
+PySimpleGUI License Agreement
+
+Version 1.0, Last updated: January 17, 2024
+
+This PySimpleGUI License Agreement (the "Agreement") governs the use,
+reproduction, distribution, modification and all other exploitation of
+PySimpleGUI. The Agreement is made by and between PySimpleSoft, Inc.
+("Licensor") and the person or legal entity using PySimpleGUI hereunder
+("Licensee" and, together with Licensor, the "Parties").
+
+If you are using PySimpleGUI on behalf of a legal entity such as an employer,
+then "Licensee" means that legal entity, and you represent and warrant that you
+have the authority and capacity to enter into this Agreement on behalf of
+Licensee.
+
+"PySimpleGUI" consists of the following materials:
+* the PySimpleGUI software library, version 5.0 or later (the "Library");
+* the PySimpleGUI Library documentation (the "Documentation");
+* sample programs demonstrating use of the Library (the "Demo Programs"); and
+* utility programs relating to PySimpleGUI (the "Utilities").
+
+PySimpleGUI may require you to obtain and use third-party software which is
+distributed under separate license terms. Any such software is not considered
+"PySimpleGUI" hereunder and is subject solely to such separate license terms.
+
+PySimpleGUI is made available to Licensee pursuant to this Agreement for the
+purpose of (1) pursuant to Section 1.2, enabling Authorized Developers to use
+the Library in connection with developing Licensee Applications, and to use the
+Documentation, the Demo Programs and the Utilities in connection therewith; and
+(2) pursuant to Section 1.3, enabling End Users of the Licensee Applications to
+execute the Library as a dependency of the Licensee Applications; each as
+defined and more fully set forth herein and subject to the limitations set
+forth herein.
+
+Licensor agrees to license PySimpleGUI to Licensee only in accordance with the
+terms of this Agreement. By using PySimpleGUI, Licensee agrees to be bound by
+the terms of this Agreement. If you do not agree to the terms of this
+Agreement, you may not copy, use, distribute, modify or otherwise attempt to
+exploit PySimpleGUI.
+
+Licensee acknowledges that Licensor may from time to time update or modify this
+Agreement, by publishing a new version of this Agreement on Licensor's website.
+Licensee may continue to use the version of PySimpleGUI that it previously
+obtained under the prior version of this Agreement, but any version of
+PySimpleGUI received or used thereafter shall be subject to the updated version
+of this Agreement.
+
+Accordingly, in consideration of the mutual covenants set forth herein, the
+receipt and sufficiency of which is hereby acknowledged, the Parties agree as
+follows.
+
+1.	Authorized Developers; License Grants; Limitations.
+
+1.1.	Definitions. As used herein:
+
+* "Authorized Developer" means any individual person who has registered on
+  Licensor's site at https://PySimpleGUI.com (the "Site") to develop one or
+  more of Licensee's own applications which make use of the Library as a
+  dependency in accordance with Section 1.5 (collectively, "Licensee
+  Applications") and is either (1) a Hobbyist Developer; or (2) a Commercial
+  Developer who has purchased an active PySimpleGUI paid license hereunder, in
+  effect at the time of development, which is fully paid up pursuant to Section
+  3.
+
+* "Hobbyist Developer" means any individual who uses PySimpleGUI for
+  development purposes solely for either or both of the following: (1) personal
+  (e.g., not on behalf of an employer or other third party), Non-Commercial
+  purposes; or (2) Non-Commercial educational or learning purposes (1 and 2
+  together, the "Permitted No-cost Purposes").
+
+* "Commercial Developer" means any individual who uses PySimpleGUI for
+  development purposes who is not a Hobbyist Developer.
+
+As used in this Section 1, "Non-Commercial" means use which is both (1) not on
+behalf or for the benefit of any company or other organization; and (2) not
+involving the receipt of any commercial advantage or monetary compensation. If
+you have questions about whether your contemplated use is "Non-Commercial,"
+please contact us at license@pysimplegui.com.
+
+For the avoidance of doubt: 
+
+* Only Authorized Developers (e.g., Hobbyist Developers and Commercial
+  Developers who satisfy the requirements for Authorized Developers) may use
+  PySimpleGUI for development purposes.
+
+* A Hobbyist Developer may not use PySimpleGUI for any development purpose
+  other than the Permitted No-cost Purposes.
+
+* Only Commercial Developers may use PySimpleGUI to develop Licensee
+  Applications for any commercial purpose; for the benefit of, on behalf of or
+  on computer hardware belonging to an employing company or other organization;
+  or for commercial educational purposes, such as the development of a paid
+  training course.
+
+If you have questions about whether your contemplated Licensee Application
+would be a Permitted No-cost Purpose subject to a Hobbyist Developer license,
+please contact us at license@pysimplegui.com.
+
+1.2.	Development License Grants. Subject to the terms and conditions of this
+Agreement:
+
+1.2.1.	Library. Licensor grants Licensee a limited, personal, revocable,
+non-exclusive, non-sublicensable, non-transferable license during the Term (1)
+for its Authorized Developers to internally install, use, reproduce and modify
+the Library to develop Licensee Applications; and (2) to redistribute the
+Library to recipients of its Licensee Applications ("End Users"); provided,
+that such redistribution may not include publishing the source code of the
+Library (in modified or unmodified form) in a publicly accessible website or
+repository or in other publicly accessible form.
+
+1.2.2.	Documentation. Licensor grants Licensee a limited, personal, revocable,
+non-exclusive, non-sublicensable, non-transferable license during the Term for
+its Authorized Developers to internally access, use, and reproduce a reasonable
+number of copies of the Documentation for the sole purpose of facilitating the
+use of the Library by Licensee Applications in accordance with this Agreement.
+For the avoidance of doubt, Licensee may not modify or redistribute the
+Documentation.
+
+1.2.3.	Demo Programs. Licensor grants Licensee a limited, personal, revocable,
+non-exclusive, non-sublicensable, non-transferable license during the Term to
+install, use, execute, reproduce and modify the Demo Programs, and to
+incorporate modified portions of the Demo Programs into the Licensee
+Applications; provided, that (1) the Demo Programs may not be used for any
+purposes other than in connection with the use of the Library; and (2) the Demo
+Programs may not be (individually or as a whole) redistributed in unmodified
+form or as a program with substantially similar functionality to the Demo
+Programs.
+
+1.2.4.	Utilities. Licensor grants Licensee a limited, personal, revocable,
+non-exclusive, non-sublicensable, non-transferable license during the Term to
+install, use, execute, reproduce and modify the Utilities, but not to
+distribute or publish the Utilities or any modified version.
+
+1.2.5.	Developer Key Required. The licenses granted in this Section 1.2 may
+only be exercised by Authorized Developers within the period of time during
+which each such Authorized Developer has a then-active Developer Key pursuant
+to Section 3. Licensor may in its discretion permit recipients of PySimpleGUI
+to make limited use of it for a limited trial period without a Developer Key.
+
+1.2.6.	Limitations for Hobbyist Developers. For Hobbyist Developers, the
+licenses granted in this Section 1.2 may only be exercised for the Permitted
+No-cost Purposes.
+
+1.2.7.	Limitations on Modification of the Library. Licensee's right to modify
+the Library pursuant to this Section 1.2 is further limited as follows: (a)
+Licensee may not modify or extend the Library or take any other action which
+has the effect of enabling bypass of the Library's protection mechanisms
+requiring the use of valid Developer Keys or Distribution Keys. (b) Licensee
+explicitly acknowledges and agrees that Licensor's digital signature of the
+Library is only applicable to the unmodified Library as made available by
+Licensor, and that any modifications to the Library will result in Licensor's
+digital signature no longer applying to the modified version.
+
+1.2.8.	Limitations on Distribution of the Library. Licensee's right to
+distribute the Library (in modified or unmodified form) pursuant to this
+Section 1.2 is subject to Licensee (a) including the applicable proprietary
+notices set forth in Section 2.2; and (b) including the PySimpleGUI Flow-Down
+License Terms set forth in Exhibit A in the license terms that Licensee uses to
+distribute the Licensee Application.
+
+1.2.9.	Distribution Keys. Commercial Developers may obtain from Licensor a
+PySimpleGUI distribution key ("Distribution Key") through the Authorized
+Developer's Site account and utilizing the Distribution Key through the
+protection mechanism made available in the Library to permit distribution to
+End Users. The Commercial Developer may use its Distribution Key to enable End
+Users to install and execute the Licensee Applications, including the Library
+incorporated therein, without requiring each recipient to obtain a Developer
+Key or be limited to a trial period as described in Section 1.2.5. Licensee
+shall be responsible for all activities occurring under Distribution Keys
+obtained by its Authorized Developers and for the compliance with this
+Agreement of all Licensee Applications using such Distribution Keys.
+
+1.3.	Run-time End User License Grant. Subject to the terms and conditions of
+this Agreement, Licensor grants Licensee a limited, personal, revocable,
+non-exclusive, non-sublicensable, non-transferable license during the Term to
+install and execute the Library solely for it and its employee End Users to
+internally use the corresponding Licensee Applications with which the Library
+is distributed. For the avoidance of doubt, the license set forth in this
+Section 1.3 does not permit modification, external redistribution, integration
+of the Library with other software, or any other use of the Library (for
+development purposes or otherwise) except solely as distributed with the
+unmodified Licensee Applications; any such activities are permitted only by
+Authorized Developers and only to the extent permitted by Section 1.2. If the
+Licensee Application does not include a valid Distribution Key from a
+Commercial Developer, then the period of use of the Library within the Licensee
+Application will be limited to a trial period for any End User who does not
+register as an Authorized Developer hereunder.
+
+1.4.	License Restrictions. The licenses granted to Licensee hereunder are
+expressly made subject to the following limitations: except as expressly
+permitted herein, Licensee may not (and shall not permit any third party to):
+(a) copy all or any portion of PySimpleGUI; (b) modify or translate
+PySimpleGUI; (c) reverse engineer, decompile or disassemble the Software, in
+whole or in part, except solely to the extent permitted under applicable law;
+(d) create derivative works based on PySimpleGUI; (e) publicly display or
+publish PySimpleGUI; (f) rent, lease, sublicense, sell, distribute, assign,
+transfer, or otherwise permit access to PySimpleGUI to any third party; (g)
+bypass or work around any requirements for license keys, limitations on access,
+or obfuscation or security mechanisms incorporated into PySimpleGUI; (h) use
+PySimpleGUI for illegal or otherwise harmful purposes, including without
+limitation harassment, defamation, creation or delivery of unsolicited emails
+or spam, infringement of third party intellectual property rights or other
+third party rights, or distribution of viruses, worms, malware or other harmful
+or destructive software; (i) incorporate PySimpleGUI or any portion thereof
+into any software that purports to subject it to open source software or
+similar license terms, including any prior version of PySimpleGUI (modified or
+unmodified) which was previously distributed under such licenses; or (j)
+exercise any other right to PySimpleGUI not expressly granted in this
+Agreement. 
+
+1.5.	Licensee Application Prohibitions. Notwithstanding anything else in
+this Agreement, Licensee shall ensure that Licensee Applications (a) do not
+have the purpose, intent or functionality of enabling End Users to make further
+use of PySimpleGUI for their own development purposes or to carry out any
+activities otherwise restricted or prohibited hereunder; (b) do not have a
+substantially similar purpose to PySimpleGUI; (c) do not enable End Users to
+interact, integrate or otherwise develop user interfaces via direct or indirect
+access to PySimpleGUI's functionality; and (d) are not intended or designed for
+use in high-risk use cases that could reasonably result in death, severe bodily
+injury, or other physical property or environmental damage.
+
+1.6.	No Use with Earlier Versions of PySimpleGUI. For the avoidance of
+doubt, no portions of PySimpleGUI distributed under this Agreement may be used
+in connection with, or in any way incorporated with or into, any versions of
+the PySimpleGUI library prior to version 5.0 that have been distributed under
+the GNU Lesser General Public License.
+
+1.7.	Additional Grant to Python Software Foundation. With regards to
+portions of PySimpleGUI that Licensor uploads to PyPI, Python Software
+Foundation ("PSF") may copy and redistribute such portions unmodified on PyPI
+in the form provided by Licensor, with no further action required by PSF.
+
+1.8.	Prohibition on Training Artificial Intelligence. As used herein,
+"Artificial Intelligence" means a system or model that is intended to generate
+or identify patterns in code or data, produce insights or correlations, or make
+predictions, recommendations, or decisions; in each case, where the system or
+model operates using machine learning, neural networks, large language models,
+or other approaches designed to approximate cognitive abilities. Licensee shall
+not (and shall not directly or indirectly permit or assist anyone else to) use
+PySimpleGUI, or any part thereof, to train an Artificial Intelligence that is
+offered to third parties on a commercial basis or as part of a larger
+commercial offering. The preceding sentence does not prohibit use of
+PySimpleGUI in conjunction with an Artificial Intelligence in other ways, such
+as developing a front-end user interface.
+
+2.	Intellectual Property Ownership; Notices.
+
+2.1.	Licensor Ownership. PySimpleGUI is not sold to Licensee, and all rights
+not expressly granted herein are reserved to Licensor. As between the parties,
+Licensor and its licensors own all right, title and interest in and to
+PySimpleGUI and any part thereof, including, without limitation, all
+copyrights, patents, trademarks, trade secrets or other intellectual property
+or proprietary rights.
+
+2.2.	Proprietary Notices. Licensee shall not modify or remove any copyright
+or patent notices or other proprietary notices or markings from any portion of
+PySimpleGUI (whether modified or unmodified) without Licensor's explicit
+written permission. Licensor shall ensure that any Licensee Applications that
+use the Library include a notice in the following form within the Licensee
+Application as well as any corresponding Licensee documentation or materials:
+
+For unmodified versions of PySimpleGUI:
+
+    This product includes PySimpleGUI (https://PySimpleGUI.com).  PySimpleGUI
+    is Copyright (c) PySimpleSoft, Inc. and/or its licensors.  Use of
+    PySimpleGUI is subject to the license terms available at
+    https://PySimpleGUI.com/eula
+
+    PYSIMPLEGUI IS PROVIDED "AS IS," WITHOUT ANY WARRANTIES, WHETHER EXPRESS OR
+    IMPLIED. PYSIMPLESOFT DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WITHOUT
+    LIMITATION THE IMPLIED WARRANTIES OF NONINFRINGEMENT, TITLE,
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+For modified versions of PySimpleGUI:
+
+    This product includes a modified version of PySimpleGUI
+    (https://PySimpleGUI.com).  PySimpleGUI is Copyright (c) PySimpleSoft, Inc.
+    and/or its licensors.  Use of PySimpleGUI is subject to the license terms
+    available at https://PySimpleGUI.com/eula
+
+    PYSIMPLEGUI IS PROVIDED "AS IS," WITHOUT ANY WARRANTIES, WHETHER EXPRESS OR
+    IMPLIED. PYSIMPLESOFT DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WITHOUT
+    LIMITATION THE IMPLIED WARRANTIES OF NONINFRINGEMENT, TITLE,
+    MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+If the Licensee Application or the corresponding Licensee documentation or
+materials include Licensee's copyright notices or other third parties' notices,
+then Licensee shall include the above notice together with such notices.
+
+2.3.	Licensor Marks. As between the parties hereto, all of Licensor's
+trademarks and service marks applicable to Licensor or PySimpleGUI
+(collectively, the "Licensor Marks") are the sole property of Licensor and/or
+its licensors. Subject to the terms and conditions of this Agreement, Licensor
+grants Licensee a limited, personal, revocable, non-exclusive,
+non-sublicensable, non-transferable license to use the Licensor Mark
+"PySimpleGUI" in connection with Licensee's permitted distribution of the
+Library hereunder. The license set forth in this Section 2.3 is explicitly
+conditioned on (a) Licensee's agreement not to challenge Licensor's ownership
+of the Licensor Marks at any time during the Term or thereafter; (b) Licensee
+ensuring that any modified version of the Library is clearly and prominently
+noted as such; (c) Licensee complying with all trademark usage guidelines and
+requirements that Licensor may publish from time to time; and (d) Licensee
+immediately correcting incorrect usage of the Licensor Marks upon request from
+Licensor. Licensee shall immediately cease usage of the Licensor Marks upon
+written notice thereof from Licensor. All goodwill arising from use of the
+Licensor Marks shall inure to the benefit of Licensor.
+
+3.	Developer Keys; Fees and Payments.
+
+3.1.	Developer Keys. In order to develop Licensee Applications pursuant to
+Section 1.2 (and subject to any limited trial period usage as may be permitted
+by Licensor from time to time), each Authorized Developer shall obtain a
+PySimpleGUI developer license key ("Developer Key") by registering on the Site
+as set forth therein. Each Developer Key is personal to the specific Authorized
+Developer, and Licensee shall not permit Authorized Developers to disclose,
+share or reuse Developer Keys. For the avoidance of doubt, any disclosure,
+sharing or reuse of a Developer Key by Licensee's Authorized Developers,
+whether or not authorized by Licensee, shall be a material breach permitting
+termination of this Agreement pursuant to Section 8.3. Developer Keys are
+Licensor's Confidential Information pursuant to Section 5. Developer Keys are
+limited to a specified time period (which shall be annual from the start date
+of the Developer Key, unless otherwise explicitly stated by Licensor). Upon the
+expiration of a Developer Key, the corresponding Authorized Developer may no
+longer use the Developer Key and must obtain a new Developer Key from the Site
+in order to continue using PySimpleGUI for development purposes pursuant to
+Section 1.2.
+
+3.2.	Fees for Commercial Developer Keys; Taxes. Before obtaining each
+Developer Key for a Commercial Developer, Licensee shall pay to Licensor the
+corresponding fees as stated on the Site and using the payment mechanism made
+available on the Site. All payments shall be made in United States dollars. All
+amounts payable by Licensee hereunder are exclusive of taxes and similar
+assessments, and Licensee is responsible for all sales, use, and excise taxes,
+and any other similar taxes of any kind imposed by any federal, state, or local
+governmental or regulatory authority on any amounts payable by Licensee
+hereunder, excluding any taxes imposed on Licensor's income.
+
+3.3.	Accuracy of Registration Details. Licensee represents and warrants that
+(a) all information provided by it and its Authorized Developers when
+registering for Developer Keys shall be truthful, accurate, complete and not
+misleading, and (b) it and its Authorized Developers shall not misrepresent
+their use of PySimpleGUI as qualifying for a Hobbyist Developer Key if their
+use does not satisfy the Permitted No-cost Purposes.
+
+4.	Support and Updates.
+
+4.1.	Support. Licensor has no obligation hereunder to provide support to
+Licensee or its Authorized Developers. Authorized Developers may submit
+Feedback (as defined in Section 5.4) consisting of issues and bug reports to
+the PySimpleGUI software repository as described on the Site or in the
+Documentation. Licensor may in its sole discretion address such issues or bug
+reports in current or future versions of PySimpleGUI, but has no obligation to
+do so.
+
+4.2.	Updates. Licensor has no obligation hereunder to make available updated
+versions of PySimpleGUI. In the event that Licensor elects to make available an
+updated version of PySimpleGUI, then Authorized Developers with a then-active
+Developer Key may download and use the updated version, and the updated version
+shall be included in the definition of "PySimpleGUI" thereafter for purposes of
+this Agreement.
+
+5.	Confidentiality; Feedback.
+
+5.1.	Confidential Information. Licensee acknowledges that portions of
+PySimpleGUI and certain other materials are confidential as provided herein.
+"Confidential Information" means any and all information, whether provided in
+writing, orally, visually, electronically or by other means, related to
+Licensor's or its licensors' services and/or business that, whether it
+constitutes a Trade Secret or not, is treated as confidential or secret by
+Licensor (that is, it is the subject of efforts by Licensor that are reasonable
+under the circumstances to maintain its secrecy), including, but not limited
+to, (i) Trade Secrets as defined below; (ii) any and all other information
+which is disclosed by Licensor to Licensee orally, electronically, visually, or
+in a document or other tangible form which is either identified as or should be
+reasonably understood to be confidential and/or proprietary; and, (iii) any
+notes, extracts, analysis, or materials prepared by Licensee which are copies
+of or derivative works of Licensor's or its licensors' proprietary or
+confidential information from which the substance of Confidential Information
+can be inferred or otherwise understood. Confidential Information shall not
+include information which Licensee can clearly establish by written evidence:
+(a) already is lawfully known to or independently developed by Licensee without
+access to the Confidential Information or Trade Secrets, (b) is disclosed by
+Licensor in non-confidential published materials, (c) is generally known to the
+public, or (d) is rightfully obtained from any third party without any
+obligation of confidentiality.
+
+5.2.	Trade Secrets. As used herein, "Trade Secrets" means all non-public
+information whether tangible or intangible related to Licensor's and its
+licensors' services or business that (i) derives economic value, actual or
+potential, from not being generally known to or readily ascertainable by other
+persons who can obtain economic value from its disclosure or use; and (ii) is
+the subject of efforts that are reasonable under the circumstances to maintain
+its secrecy, which may include, without limitation, (a) marking any information
+reduced to tangible form clearly and conspicuously with a legend identifying
+its confidential or trade secret nature; (b) identifying any oral communication
+as confidential or secret immediately before, during, or after such oral
+communication; or (c) otherwise treating such information as confidential.
+
+5.3.	Licensee Obligations. Licensee agrees not to disclose Confidential
+Information or Trade Secrets to any third party and will protect and treat all
+Confidential Information and Trade Secrets with the highest degree of care.
+Except as otherwise expressly provided in this Agreement, Licensee will not use
+or make any copies of Confidential Information or Trade Secrets, in whole or in
+part, without the prior written authorization of Licensor.  Licensee may
+disclose Confidential Information or Trade Secrets if required by statute,
+regulation, or order of a court of competent jurisdiction, provided that
+Licensee provides Licensor with prior notice, discloses only the minimum
+Confidential Information or Trade Secrets required to be disclosed, and
+cooperates with Licensor in taking appropriate protective measures.  These
+obligations shall continue for three (3) years following termination or
+expiration of this Agreement with respect to Confidential Information that does
+not rise to the level of a Trade Secret and shall continue for Trade Secrets so
+long as they remain Trade Secrets.
+
+5.4.	Feedback. As used herein, "Feedback" means any comments, questions,
+suggestions, issues, bug reports, or related feedback provided by Licensee to
+Licensor relating to PySimpleGUI, including, without limitation, suggesting or
+recommending changes to any part of PySimpleGUI, or new features or
+functionality relating thereto. All Feedback is, and will be treated as,
+non-confidential and non-proprietary, regardless of any markings Licensee may
+apply to it. Licensee hereby assigns to Licensor all right, title, and interest
+in, and Licensor is free to use without any attribution or compensation to
+Licensee, any ideas, know-how, concepts, techniques, or other intellectual
+property and proprietary rights contained in the Feedback, whether or not
+patentable, for any purpose whatsoever, including but not limited to,
+developing, manufacturing, having manufactured, licensing, marketing, and
+selling, directly or indirectly, products and services using such Feedback. To
+the extent the foregoing assignment of rights, title and interest in and to
+Feedback is prohibited by applicable law, Licensee hereby grants Licensor a
+non-exclusive, perpetual, irrevocable, royalty-free, fully paid-up, worldwide
+license (including the right to sublicense through multiple tiers) to (a) fully
+use, practice and exploit those non-assignable rights, title and interest,
+including, but not limited to, the right to use, reproduce, adapt, publicly
+perform, publicly display, modify, prepare derivative works, publish, transmit
+and distribute Feedback, or any portion thereof, in any form, medium or
+distribution method now known or hereafter existing, known or developed, for
+any purpose, and to develop, manufacture, have manufactured, license, market,
+and sell, directly or indirectly, products and services using Feedback; and (b)
+authorize any such use by others of Feedback, or any portion thereof, in the
+same manner.
+
+6.	NO LICENSOR WARRANTIES; LIABILITY.
+
+6.1.	DISCLAIMER OF WARRANTIES. PYSIMPLEGUI IS PROVIDED TO LICENSEE "AS IS".
+LICENSOR DOES NOT MAKE ANY, AND HEREBY SPECIFICALLY DISCLAIMS ANY,
+REPRESENTATIONS, ENDORSEMENTS, GUARANTEES, OR WARRANTIES, EXPRESS OR IMPLIED,
+RELATED TO PYSIMPLEGUI INCLUDING, BUT NOT LIMITED TO, ANY IMPLIED WARRANTY OF
+MERCHANTABILITY, TITLE, FITNESS FOR A PARTICULAR PURPOSE OR NONINFRINGEMENT OF
+INTELLECTUAL PROPERTY RIGHTS. Licensee acknowledges that Licensor does not
+guarantee compatibility between PySimpleGUI and any future versions thereof,
+and that Licensor makes no commitments as to future development, availability,
+release or licensing of any current or future versions of PySimpleGUI. Licensee
+will have sole responsibility for the adequate protection and backup of
+Licensee's software, data and equipment used with PySimpleGUI. The entire risk
+as to the quality and performance of PySimpleGUI and any obligation with
+respect to service and support is borne by Licensee. Licensee understands that
+Software hosted by Licensor for evaluation purposes may not be secure or
+stable. Licensee waives any claim against Licensor which may arise as a result
+of Licensee's breach of the foregoing. This Agreement does not grant Licensee
+any right to any maintenance, services, including without limitation, any
+support, enhancement, modification, bug fix or update to the Software, and
+Licensor is under no obligation to provide or inform Licensee of any such
+maintenance or services.
+
+6.2.	DISCLAIMER OF LIABILITY. LICENSEE EXPLICITLY AGREES THAT, TO THE
+MAXIMUM EXTENT PERMITTED BY LAW, LICENSOR SHALL NOT BE LIABLE UNDER ANY LEGAL
+THEORY FOR ANY DAMAGES SUFFERED IN CONNECTION WITH THE USE OF THE SOFTWARE,
+INCLUDING BUT NOT LIMITED TO ANY LOST PROFITS, LOST SAVINGS OR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES,
+WHETHER RESULTING FROM IMPAIRED OR LOST DATA, SOFTWARE OR COMPUTER FAILURE, THE
+LICENSEE APPLICATIONS, OR ANY OTHER CAUSE, BY LICENSEE OR ANY OTHER THIRD
+PARTY, EVEN IF IT HAS BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES.
+LICENSEE HEREBY EXPRESSLY RELEASES LICENSOR FROM ANY AND ALL LIABILITY OR
+RESPONSIBILITY TO ANY DAMAGE CAUSED, DIRECTLY OR INDIRECTLY, TO LICENSEE OR ANY
+THIRD PARTY AS A RESULT OF THE USE OF THE SOFTWARE OR THE INSTALLATION THEREOF
+INTO LICENSEE'S COMPUTER ENVIRONMENT. IN THE EVENT THAT THE DISCLAIMERS OF
+LIABILITY SET FORTH HEREIN ARE HELD TO BE UNENFORCEABLE, THE PARTIES AGREE THAT
+UNDER NO CIRCUMSTANCES SHALL LICENSOR'S AGGREGATE LIABILITY HEREUNDER OR IN
+CONNECTION WITH THIS AGREEMENT EXCEED THE AMOUNTS PAID BY LICENSEE TO LICENSOR
+IN THE 12 MONTHS PRECEDING THE DATE THAT A CLAIM FIRST ACCRUES. LICENSEE SHALL
+BRING ANY CLAIM AGAINST LICENSOR WITHIN 12 MONTHS OF THE DATE THAT THE CLAIM
+FIRST ACCRUES, AND HEREBY WAIVES ANY CLAIMS THAT IT DOES NOT BRING WITHIN SUCH
+TIME PERIOD.
+
+6.3.	Essential Terms. THIS SECTION 6 IS AN ESSENTIAL BASIS OF LICENSOR'S
+DECISION TO OFFER PYSIMPLEGUI, AND SHALL APPLY REGARDLESS OF THE LEGAL THEORY
+UPON WHICH DAMAGES MAY BE CLAIMED; REGARDLESS OF WHETHER A PARTY KNEW OR SHOULD
+HAVE KNOWN OF THE POSSIBILITY OF SUCH DAMAGES; AND REGARDLESS OF WHETHER THE
+FOREGOING LIMITATIONS OF LIABILITY CAUSE ANY REMEDY TO FAIL IN ITS ESSENTIAL
+PURPOSE.
+
+7.	Indemnification. Licensee agrees to defend, indemnify and hold Licensor
+and its directors, officers, employees and representatives harmless for any
+claims, expenses, losses, costs, fees (including attorneys' fees) or damages of
+any sort resulting from (a) Licensee's breach of this Agreement; (b) Licensee's
+use of PySimpleGUI or exercise of the license rights granted hereunder; or (c)
+the Licensee Applications, or Licensee's or any third party's use thereof. 
+
+8.	Term and Termination.
+
+8.1.	Term. This Agreement shall commence on the date on which Licensee
+downloads PySimpleGUI or otherwise obtains a copy of PySimpleGUI, and shall
+continue thereafter until terminated as set forth herein.
+
+8.2.	Termination by Licensee. Licensee may terminate this Agreement with
+written notice to Licensor, effective upon Licensee destroying all copies of
+PySimpleGUI in its possession and refraining from receiving or downloading
+further copies.
+
+8.3.	Termination for Licensee's Breach. This limited License will
+immediately terminate without notice if Licensee fails to comply with any
+obligation of this Agreement. Additionally, if Licensor reasonably suspects
+that Licensee has breached the Agreement, then Licensor may deliver written
+notice of the suspected breach to Licensee, and the Agreement shall
+automatically terminate 10 days following the date of such notice unless
+Licensee cures the breach to Licensor's satisfaction within such period.
+
+8.4.	Effect of Termination; Survival. Upon termination of this Agreement for
+any reason, the licenses granted to Licensee with respect to PySimpleGUI shall
+immediately terminate and Licensee hereby undertakes to: (i) immediately cease
+to use, distribute or otherwise exploit any part of PySimpleGUI or any modified
+version thereof; and (ii) promptly destroy and delete any copy of PySimpleGUI
+installed or copied by Licensee. Sections 2.1, 2.3, 3, 5-7, 8.4, 9 and 10 will
+survive termination of this Agreement indefinitely in accordance with their
+terms.
+
+9.	Assignment; Governing Law. The License is personal to Licensee and
+Licensee agrees not to transfer, sublicense, lease, rent, or assign their
+rights under this Agreement, and any such attempt shall be null and void.
+Licensor may assign, transfer, or sublicense this Agreement or any rights or
+obligations thereunder at any time in its sole discretion. This Agreement shall
+be governed by and construed in accordance with the laws of the State of North
+Carolina and the United States of America without regard to the conflicts of
+laws provisions thereof. The parties expressly exclude the United Nations
+Convention on Contracts for the International Sale of Goods from this
+Agreement. All actions arising out of or in connection with this Agreement
+shall be brought in the state or federal courts residing in Durham, North
+Carolina, United States of America, and both parties hereby irrevocably consent
+to the exclusive jurisdiction of such courts and waive any objections as to
+venue or inconvenience of forum.
+
+10.	Miscellaneous. No changes or modifications to this Agreement by
+Licensee or waivers of any provision of this Agreement by Licensor shall be
+effective unless evidenced in a writing referencing this Agreement and signed
+for and on behalf of Licensor. The failure of Licensor to enforce its rights
+under this Agreement at any time for any period shall not be construed as a
+waiver of such rights. There are no third party beneficiaries hereunder. This
+Agreement constitutes the entire agreement between the parties regarding the
+subject matter hereof and supersede all negotiations, conversations, or
+discussions between or among the parties relating to the subject matter of this
+Agreement. Neither Party relied on any promises or representations, written or
+oral, of the other party in forming this Agreement, except for those expressly
+contained herein. In the event that any provision of this Agreement shall be
+determined to be unenforceable, that provision will be limited or eliminated to
+the minimum extent necessary so that this Agreement shall otherwise remain in
+full force and effect and enforceable. Licensee may not distribute, download or
+otherwise export or re-export PySimpleGUI or any underlying technology except
+in full compliance with this Agreement, United States laws and regulations and
+any other applicable laws and regulations. Licensee represents and warrants
+that it and its Authorized Developers are not located in, under control of, or
+a national or resident of any country where exercise of the licenses granted
+hereunder would not comply with all such laws or regulations. It is agreed that
+because of the proprietary nature of PySimpleGUI, Licensor's remedies at law
+for a breach by the Licensee of its obligations under this Agreement may be
+inadequate and that Licensor will, in the event of such breach, be entitled to,
+in addition to any other remedy available to it, equitable relief, including
+injunctive relief, without the posting of any bond and in addition to all other
+remedies provided under this Agreement or available at law.
+
+Exhibit A
+
+PySimpleGUI Flow-Down License Terms
+
+This product (the "Product") includes PySimpleGUI (https://PySimpleGUI.com) or
+a version of PySimpleGUI modified by the person or legal entity that provided
+you with this product ("Provider").
+
+PySimpleGUI is Copyright (c) PySimpleSoft, Inc. and/or its licensors.
+
+Use of PySimpleGUI is subject to the license terms available at
+https://PySimpleGUI.com/eula, including all limitations of liability and other
+terms set forth therein. By using the Product, you acknowledge and agree that
+PySimpleSoft has no obligation or liability to you regarding the operation,
+support or maintenance of PySimpleGUI or of the Product. PYSIMPLEGUI IS
+PROVIDED "AS IS," WITHOUT ANY WARRANTIES, WHETHER EXPRESS OR IMPLIED.
+PYSIMPLESOFT DISCLAIMS ALL IMPLIED WARRANTIES, INCLUDING WITHOUT LIMITATION THE
+IMPLIED WARRANTIES OF NONINFRINGEMENT, TITLE, MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE.

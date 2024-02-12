@@ -1,0 +1,31 @@
+name: Auto Close Pull Requests
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  close-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Repository
+      uses: actions/checkout@v2
+
+    - name: Close Pull Request
+      run: |
+        gh pr close ${{ github.event.pull_request.number }} --comment "Hi there! 
+        Thank you for your interest in contributing to PySimpleGUI. However, we do not accept pull requests at this time.
+        (Refer to CONTRIBUTING.md)
+
+        Please open an issue instead and we'll be happy to discuss it with you. :D"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # - name: Error out
+    #   run:
+    #    exit 1
+    # with this commented, when a pr is closed it has a checkmark. if you'd prefer it to have an X, uncomment the code above ^^^
+       
