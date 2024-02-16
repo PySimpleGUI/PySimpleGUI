@@ -40,7 +40,7 @@ PySimpleGUI 5 takes PySimpleGUI to the next level, providing hundreds of improve
 including new features, enhanced security, and priority support.
 
 
-PySimpleGUI 5 is licensed software. As the [License Agreement](license.txt) explains, after a trial
+PySimpleGUI 5 is licensed software. As the [License Agreement](LICENSE.txt) explains, after a trial
 period, all PySimpleGUI 5 users must register at PySimpleGUI.com to obtain a Developer Key.
 For most users (Hobbyist Users), the license is at NO COST. If you are a Commercial User,
 subscriptions cost a nominal $99/year.
