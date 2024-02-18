@@ -1,5 +1,8 @@
+Changelog since last major release
+
 5.0.2       Released 14-Feb-2024
 5.0.2.1     Changed version numebr to 4 digits so that we can do development builds on top of the PyPI versions
 5.0.2.2     Tree.update - new parameter to expand/close a node with a key specified
             Added more info to Home Window
 5.0.2.3     Added ability to see release notes for the development build when upgrading in Home Window
+5.0.2.4     Button layout change for dev build windows
