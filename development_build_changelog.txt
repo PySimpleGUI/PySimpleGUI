@@ -8,3 +8,4 @@ Changelog since last major release
 5.0.2.4     Button layout change for dev build windows
 5.0.2.5     Added platform & platform version to Home Window
 5.0.2.6     Added Clear and Paste Buttons to key input tab in Home Window
+5.0.2.7     Automatically clean up keys that are pasted in Home Window
