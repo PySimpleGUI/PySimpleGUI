@@ -11,3 +11,4 @@ Changelog since last major release
 5.0.2.7     Automatically clean up keys that are pasted in Home Window
 5.0.2.8     Multiline support for popup_get_text.  If size height > 1 a Multiline element is used
 5.0.2.9     Fix error a very small number of keys with certain chars experienced
+5.0.2.10    Added remove_tooltip method to Elements
