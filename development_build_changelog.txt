@@ -2,3 +2,4 @@ Changelog since last major release
 
 5.0.3       Released 3-Mar-2024
 
+5.0.3.1     popup_get_text - setting focus so that the window focuses immediate and the cursor goes to the input. Something about modal wasn't doing this.
