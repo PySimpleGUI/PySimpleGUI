@@ -4,3 +4,5 @@ Changelog since last major release
 
 5.0.3.1     popup_get_text - setting focus so that the window focuses immediate and the cursor goes to the input. Something about modal wasn't doing this.
 5.0.3.2     execute_restart - changed how the restart is executed.  Now uses the execute python call and works corectly. execute_restart(__file__) is a handy pattern
+5.0.3.3     changed "development build" to "maintanence release"... documenation changes underway to match.
+5.0.3.4     fixed key error message
