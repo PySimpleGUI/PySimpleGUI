@@ -6,3 +6,4 @@ Changelog since last major release
 5.0.3.2     execute_restart - changed how the restart is executed.  Now uses the execute python call and works corectly. execute_restart(__file__) is a handy pattern
 5.0.3.3     changed "development build" to "maintanence release"... documenation changes underway to match.
 5.0.3.4     fixed key error message
+5.0.3.5     Changed Sign Up to Register.  Added Paste button to help paste keys.  
