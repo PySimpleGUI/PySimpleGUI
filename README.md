@@ -30,7 +30,7 @@ PySimpleGUI is more than a GUI library: PySimpleGUI simplifies much of your Pyth
 For the last 5 years, PySimpleGUI offered free software with the hope of sustaining the
 company by donations. We appreciate the support we received, but the amount has been too
 small to support the PySimpleGUI project. For this reason, PySimpleGUI is switching to a
-subscription model, where commercial users are expected to pay a nominal annual fee.
+commercial model, where commercial users are expected to pay a nominal license fee.
 
 
 PySimpleGUI is now part of PySimpleSoft, Inc., whose mission is to make the best Python
@@ -42,14 +42,13 @@ including new features, enhanced security, and priority support.
 
 PySimpleGUI 5 is licensed software. As the [License Agreement](LICENSE.txt) explains, after a trial
 period, all PySimpleGUI 5 users must register at PySimpleGUI.com to obtain a Developer Key.
-For most users (Hobbyist Users), the license is at NO COST. If you are a Commercial User,
-subscriptions cost a nominal $99/year.
+For most users (Hobbyist Users), the license is at NO COST. If you are a Commercial User, you must buy a license.
 
 <p align="center">
     <img height="350" src="https://github.com/PySimpleGUI/PySimpleGUI_NEW_HOME/assets/65144/0b0dabcc-a538-482b-a226-c194ae30aa24">
 </p>
 
-[Subscribe Now](https://pricing.PySimpleGUI.com) and help support the PySimpleGUI community.
+[Register Now](https://pricing.PySimpleGUI.com) and help support the PySimpleGUI community.
 
 ## Examples
 
@@ -83,7 +82,7 @@ and run some code, like
 
 (You might need to use `python3` instead of `python`.)
 
-You can try PySimpleGUI for 30 days, after which you will need to Sign Up. Hobbyist users sign up at no cost, and Commercial Users subscribe at $99/year. For more details, see [PySimpleGUI.com/pricing](https://pricing.PySimpleGUI.com).
+You can try PySimpleGUI for 30 days, after which you will need to register. Hobbyist users register at no cost, and Commercial Users must buy a license. For more details, see [PySimpleGUI.com/pricing](https://pricing.PySimpleGUI.com).
 
 ## Documentation
 
@@ -97,4 +96,4 @@ PySimpleGUI provides extensive documentation. Here are some starting points, dep
 * [Updated Documentation](https://docs.PySimpleGUI.com) - Everything you need to know about the latest and best PySimpleGUI
 	* [Cookbook](https://cookbook.PySimpleGUI.com) - Hundreds of basic PySimpleGUI examples. Find a starting point that is close to what you need.
 	* [Call Reference](https://cookbook.PySimpleGUI.com) - Just the facts, Ma'am
-* [Udemy Course](https://udemy.PySimpleGUI.com) - Become a PySimpleGUI expert in no time. Bundled with $99/yr Commercial Developer subscription.
+* [Udemy Course](https://udemy.PySimpleGUI.com) - Become a PySimpleGUI expert in no time. Bundled with Commercial Developer License.
