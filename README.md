@@ -89,7 +89,9 @@ You can try PySimpleGUI for 30 days, after which you will need to Sign Up. Hobby
 
 PySimpleGUI provides extensive documentation. Here are some starting points, depending on your needs and expertise:
 
-* [Documentation](https://docs.pysimplegui.com/) - Extensive PySimpleGUI documentation
+
+* [FAQ](https://faq.pysimplegui.com/) - Frequently Asked Questions
+* [Documentation](https://docs.pysimplegui.com/) - Extensive PySimpleGUI documentation*
 * [Examples](https://examples.pysimplegui.com/) - Hundreds of sample PySimpleGUI applications.
 * [SDK Reference](https://sdk.pysimplegui.com/) - details for each PySimpleGUI element
 * [Home Website](https://PySimpleGUI.com) - New PySimpleGUI home page
