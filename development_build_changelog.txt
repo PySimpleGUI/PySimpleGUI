@@ -8,3 +8,4 @@ Changelog since last major release
 5.0.3.4     fixed key error message
 5.0.3.5     Changed Sign Up to Register.  Added Paste button to help paste keys.  
 5.0.3.6     Switched away from subscription service   
+5.0.3.7     Added new license (ver 1.2) to the release package so that it's installed with the PySimpleGUI module   
