@@ -1,6 +1,6 @@
 PySimpleGUI License Agreement
 
-Version 1.0, Last updated: January 17, 2024
+Version 1.1, Last updated: March 26, 2024
 
 This PySimpleGUI License Agreement (the "Agreement") governs the use,
 reproduction, distribution, modification and all other exploitation of
@@ -58,9 +58,8 @@ follows.
   more of Licensee's own applications which make use of the Library as a
   dependency in accordance with Section 1.5 (collectively, "Licensee
   Applications") and is either (1) a Hobbyist Developer; or (2) a Commercial
-  Developer who has purchased an active PySimpleGUI paid license hereunder, in
-  effect at the time of development, which is fully paid up pursuant to Section
-  3.
+  Developer who has purchased an active PySimpleGUI paid license hereunder
+  which is fully paid up pursuant to Section 3.
 
 * "Hobbyist Developer" means any individual who uses PySimpleGUI for
   development purposes solely for either or both of the following: (1) personal
@@ -132,10 +131,11 @@ install, use, execute, reproduce and modify the Utilities, but not to
 distribute or publish the Utilities or any modified version.
 
 1.2.5.	Developer Key Required. The licenses granted in this Section 1.2 may
-only be exercised by Authorized Developers within the period of time during
-which each such Authorized Developer has a then-active Developer Key pursuant
-to Section 3. Licensor may in its discretion permit recipients of PySimpleGUI
-to make limited use of it for a limited trial period without a Developer Key.
+only be exercised by Authorized Developers. For Hobbyist Developers, these
+licenses may only be exercised within the period of time during which each such
+Hobbyist Developer has a then-active Developer Key pursuant to Section 3.
+Licensor may in its discretion permit recipients of PySimpleGUI to make limited
+use of it for a limited trial period without a Developer Key.
 
 1.2.6.	Limitations for Hobbyist Developers. For Hobbyist Developers, the
 licenses granted in this Section 1.2 may only be exercised for the Permitted
@@ -310,20 +310,23 @@ Licensor Marks shall inure to the benefit of Licensor.
 3.1.	Developer Keys. In order to develop Licensee Applications pursuant to
 Section 1.2 (and subject to any limited trial period usage as may be permitted
 by Licensor from time to time), each Authorized Developer shall obtain a
-PySimpleGUI developer license key ("Developer Key") by registering on the Site
-as set forth therein. Each Developer Key is personal to the specific Authorized
-Developer, and Licensee shall not permit Authorized Developers to disclose,
-share or reuse Developer Keys. For the avoidance of doubt, any disclosure,
-sharing or reuse of a Developer Key by Licensee's Authorized Developers,
-whether or not authorized by Licensee, shall be a material breach permitting
-termination of this Agreement pursuant to Section 8.3. Developer Keys are
-Licensor's Confidential Information pursuant to Section 5. Developer Keys are
-limited to a specified time period (which shall be annual from the start date
-of the Developer Key, unless otherwise explicitly stated by Licensor). Upon the
-expiration of a Developer Key, the corresponding Authorized Developer may no
-longer use the Developer Key and must obtain a new Developer Key from the Site
-in order to continue using PySimpleGUI for development purposes pursuant to
-Section 1.2.
+PySimpleGUI developer license key ("Developer Key") by registering on the
+Site as set forth therein. Each Developer Key is personal to the specific
+Authorized Developer, and Licensee shall not permit Authorized Developers to
+disclose, share or reuse Developer Keys. For the avoidance of doubt, any
+disclosure, sharing or reuse of a Developer Key by Licensee's Authorized
+Developers, whether or not authorized by Licensee, shall be a material breach
+permitting termination of this Agreement pursuant to Section 8.3. Developer
+Keys are Licensor's Confidential Information pursuant to Section 5. Developer
+Keys are limited to a specified time period (which shall be annual from the
+start date of the Developer Key, unless otherwise explicitly stated by
+Licensor). Upon the expiration of a Developer Key for a Hobbyist Developer,
+they may no longer use the Developer Key and must obtain a new Developer Key
+from the Site in order to continue using PySimpleGUI for development purposes
+pursuant to Section 1.2. Upon the expiration of a Developer Key for a
+Commercial Developer, they may continue to use their Developer Key for versions
+of PySimpleGUI released during that period, but may not obtain subsequent
+updated versions under Section 4.2 unless they purchase a new Developer Key.
 
 3.2.	Fees for Commercial Developer Keys; Taxes. Before obtaining each
 Developer Key for a Commercial Developer, Licensee shall pay to Licensor the
