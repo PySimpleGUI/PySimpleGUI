@@ -55,11 +55,9 @@ For most users (Hobbyist Users), the license is at NO COST. If you are a Commerc
 PySimpleGUI users have created thousands of amazing desktop applications. Here are a few screen shots. For more examples, see the [PySimpleGUI gallery](https://gallery.PySimpleGUI.com/).
 
 <p align="center">
-    <img height="150" src="https://github.com/PySimpleGUI/PSG5/assets/65144/c80eeaed-1029-4e22-83f9-c46fcc6916e6" />
-    &nbsp;
-    <img height="150" src="https://github.com/PySimpleGUI/PSG5/assets/65144/dea22a36-b330-4160-96f7-3c7fcb968977" />
-    &nbsp;
-    <img height="150" src="https://github.com/PySimpleGUI/PSG5/assets/65144/a9e30456-87aa-4174-90c2-c062f5cf84b9" />
+    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery1.jpg" />
+    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery2.jpg" />
+    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery3.jpg" />
 </p>
 
 ## Get Started at No Cost
