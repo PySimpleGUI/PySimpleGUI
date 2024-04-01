@@ -45,7 +45,7 @@ period, all PySimpleGUI 5 users must register at PySimpleGUI.com to obtain a Dev
 For most users (Hobbyist Users), the license is at NO COST. If you are a Commercial User, you must buy a license.
 
 <p align="center">
-    <img src="https://github.com/PySimpleGUI/PySimpleGUI/assets/65144/41a3f81c-9ea2-4e18-aaa9-267cf4ad9aa5">
+    <img src="https://pysimplegui.net/images/pricing_summary.png">
 </p>
 
 [Register Now](https://pricing.PySimpleGUI.com) and help support the PySimpleGUI community.
