@@ -20,10 +20,27 @@ from io import BytesIO
 """
 
 
+
 # Download the binary file (into a variable, not a local file)
 jpg_data = sg.net_download_file_binary(r'https://pysimplegui.net/images/tests/powered-by-pysimplegui-5.jpg')
 
 # Now display a JPG image. It requires converting the image to PNG before using with PySimpleGUI
+# Note a commented out version below of this same code. Here the context manager was removed for simplicity.
+jpg_image = Image.open(BytesIO(jpg_data))
+bio = BytesIO()
+jpg_image.save(bio, format='PNG')
+
+sg.Window('Download JPG', [[sg.Image(data=bio.getvalue())]]).read(close=True)
+
+del bio     # delete the BytesIO object since done with it
+
+
+
+
+# This is another implementation using the io module with a context manager
+# The "with" statement makes understanding what's going on a little more difficult
+# but is perhaps the "preferred" method to use.
+"""
 jpg_image = Image.open(BytesIO(jpg_data))
 
 with BytesIO() as bio:
@@ -31,3 +48,4 @@ with BytesIO() as bio:
     data = bio.getvalue()
 
 sg.Window('Download JPG', [[sg.Image(data=data)]]).read(close=True)
+"""
