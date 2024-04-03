@@ -2,4 +2,5 @@ Changelog since last major release
 
 5.0.4       Released 1-Apr-2024
 
+5.0.4.1     Fixed open GitHub issue window so that the checklist matches the newsest on GitHub
 
