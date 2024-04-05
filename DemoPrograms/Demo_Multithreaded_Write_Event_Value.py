@@ -1,4 +1,3 @@
-import threading
 import time
 import PySimpleGUI as sg
 
@@ -6,24 +5,17 @@ import PySimpleGUI as sg
 """
     Threaded Demo - Uses Window.write_event_value communications
     
-    Requires PySimpleGUI.py version 4.25.0 and later
-    
-    This is a really important demo  to understand if you're going to be using multithreading in PySimpleGUI.
-    
-    Older mechanisms for multi-threading in PySimpleGUI relied on polling of a queue. The management of a communications
-    queue is now performed internally to PySimpleGUI.
+    The only PySimpleGUI call allowed from a thread is write_event_value.
+    Using a tuple for thread events makes processing them easier to see and understand.
 
-    The importance of using the new window.write_event_value call cannot be emphasized enough.  It will hav a HUGE impact, in
-    a positive way, on your code to move to this mechanism as your code will simply "pend" waiting for an event rather than polling.
     
-    Copyright 2020-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2020-2024 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
     
     Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
     You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
-THREAD_EVENT = '-THREAD-'
 
 def the_thread(window):
     """
@@ -31,12 +23,13 @@ def the_thread(window):
 
     Once a second wakes and sends a new event and associated value to the window
     """
-    i = 0
-    while True:
-        time.sleep(1)
-        window.write_event_value('-THREAD-', (threading.current_thread().name, i))      # Data sent is a tuple of thread name and counter
-        i += 1
 
+    window.write_event_value(('-THREAD-', '-STARTED-'), None)  # Tell the GUI the thread started
+
+    for i in range(5):
+        time.sleep(1)
+        window.write_event_value(('-THREAD-', '-PRINT-'), i)      # Data sent is a tuple of thread name and counter
+    # Note that the thread ended event is sent automatically by PySimpleGUI if you started the thread using window.start_thread
 
 def main():
     """
@@ -50,20 +43,26 @@ def main():
                 [sg.Multiline(size=(65,20), key='-ML-', autoscroll=True, reroute_stdout=True, write_only=True, reroute_cprint=True)],
                 [sg.T('Input so you can see data in your dictionary')],
                 [sg.Input(key='-IN-', size=(30,1))],
-                [sg.B('Start A Thread'), sg.B('Dummy'), sg.Button('Exit')]  ]
+                [sg.B('Start A Thread', key='-START-'), sg.B('Dummy'), sg.Button('Exit')]  ]
 
-    window = sg.Window('Window Title', layout)
+    window = sg.Window('Multithreading + Tuple Events', layout)
 
     while True:             # Event Loop
         event, values = window.read()
         sg.cprint(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        if event.startswith('Start'):
-            threading.Thread(target=the_thread, args=(window,), daemon=True).start()
-        if event == THREAD_EVENT:
-            sg.cprint(f'Data from the thread ', colors='white on purple', end='')
-            sg.cprint(f'{values[THREAD_EVENT]}', colors='white on red')
+        if event == '-START-':
+            window.start_thread(lambda : the_thread(window), ('-THREAD-', '-ENDED-'))
+        if event[0] == '-THREAD-':
+            if event[1] == '-PRINT-':
+                sg.cprint(f'Data from the thread ', colors='white on purple', end='')
+                sg.cprint(f'{values[event]}', colors='white on red')
+            elif event[1] == '-ENDED-':
+                sg.cprint('Thread has ended', colors='white on blue')
+            elif event[1] == '-STARTED-':
+                sg.cprint('Thread has started', colors='white on green')
+
     window.close()
 
 
