@@ -2,4 +2,6 @@ Changelog since last major release
 
 5.0.4       Released 1-Apr-2024
 
+5.0.4.1     Fixed open GitHub issue window so that the checklist matches the newest on GitHub
+5.0.4.2     Fix for ButtonMenu not clearing the value dictionary entry after the event is returned. Used to work this way but broke along the way.
 
