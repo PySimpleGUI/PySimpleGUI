@@ -1,13 +1,18 @@
 #!/usr/bin/env python
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, FigureCanvasAgg
-import matplotlib.backends.tkagg as tkagg
+from matplotlib.backends.backend_tkagg import FigureCanvasAgg
 import matplotlib.pyplot as plt
 import PySimpleGUI as sg
-import tkinter as tk
-import ping
+import io
+import random
+import time
+import ping3
 
 """
-    Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Shows ping time to google.com using Matplotlib and ping3 module.
+    
+    Note that you will need to pip install ping3 for this demo program.
+    
+    Copyright 2023-2024 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
 
     Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
 
@@ -34,16 +39,13 @@ g_my_globals = MyGlobals()
 # ================================================================================
 
 
-def run_a_ping_and_graph():
+def graph_a_ping(ping_time):
     # graphs are global so that can be retained across multiple calls to this callback
     global g_my_globals
 
     #===================== Do the ping =====================#
-    response = ping.quiet_ping('google.com', timeout=1000)
-    if response[0] == 0:
-        ping_time = 1000
-    else:
-        ping_time = response[0]
+    # Insert your code to run a ping
+    # ping_time = random.randint(0, 100)
     #===================== Store current ping in historical array =====================#
     g_my_globals.ping_x_array.append(len(g_my_globals.ping_x_array))
     g_my_globals.ping_y_array.append(ping_time)
@@ -69,6 +71,14 @@ def run_a_ping_and_graph():
 # ================================================================================
 
 
+def ping_thread(window: sg.Window):
+    while True:
+        # time.sleep(.1)
+        # ping_time = random.randint(0, 100)
+        ping_time = ping3.ping('google.com')
+        window.write_event_value('-THREAD-', ping_time)
+
+
 def set_chart_labels():
     global g_my_globals
 
@@ -77,16 +87,25 @@ def set_chart_labels():
     g_my_globals.axis_ping.set_title('Current Ping Duration', fontsize=12)
 
 
-def draw(fig, canvas):
-    # Magic code that draws the figure onto the Canvas Element's canvas
-    figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds
-    figure_w, figure_h = int(figure_w), int(figure_h)
-    photo = tk.PhotoImage(master=canvas, width=figure_w, height=figure_h)
-    canvas.create_image(640 / 2, 480 / 2, image=photo)
-    figure_canvas_agg = FigureCanvasAgg(fig)
-    figure_canvas_agg.draw()
-    tkagg.blit(photo, figure_canvas_agg.get_renderer()._renderer, colormode=2)
-    return photo
+def draw(element, figure):
+    """
+    Draws the previously created "figure" in the supplied Image Element
+
+    :param element: an Image Element
+    :param figure: a Matplotlib figure
+    :return: The figure canvas
+    """
+
+    # plt.close('all')  # erases previously drawn plots
+    canv = FigureCanvasAgg(figure)
+    buf = io.BytesIO()
+    canv.print_figure(buf, format='png')
+    if buf is not None:
+        buf.seek(0)
+        element.update(data=buf.read())
+        return canv
+    else:
+        return None
 
 # ================================================================================
 #   Function:   MAIN
@@ -99,28 +118,28 @@ def main():
     # define the form layout
     layout = [[sg.Text('Animated Ping', size=(40, 1),
                     justification='center', font='Helvetica 20')],
-              [sg.Canvas(size=(640, 480), key='canvas')],
+              [sg.Image(size=(640, 480), key='-IMAGE-')],
               [sg.Button('Exit', size=(10, 2), pad=((280, 0), 3), font='Helvetica 14')]]
 
     # create the form and show it without the plot
     window = sg.Window(
         'Demo Application - Embedding Matplotlib In PySimpleGUI', layout, finalize=True)
 
-    canvas_elem = window['canvas']
-    canvas = canvas_elem.TKCanvas
+    image_elem = window['-IMAGE-']
 
     fig = plt.figure()
     g_my_globals.axis_ping = fig.add_subplot(1, 1, 1)
     set_chart_labels()
     plt.tight_layout()
-
+    window.start_thread(lambda: ping_thread(window))
     while True:
         event, values = window.read(timeout=0)
         if event in ('Exit', None):
             break
+        if event == '-THREAD-':
+            graph_a_ping(values[event])
+            draw(image_elem, fig)
 
-        run_a_ping_and_graph()
-        photo = draw(fig, canvas)
 
 
 if __name__ == '__main__':
