@@ -105,8 +105,8 @@ class GUI():
         self.min1 = self.window.find_element('-MIN1-')
         self.min2 = self.window.find_element('-MIN2-')
 
-        self.window['Exit'].set_cursor('hand2')
-        self.window['-CELCIUS-'].set_cursor('hand2')
+        self.window['Exit'].set_cursor('hand1')
+        self.window['-CELCIUS-'].set_cursor('hand1')
 
     def update_clock(self):
         # update the clock
