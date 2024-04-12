@@ -3,6 +3,7 @@ import PySimpleGUI as sg
 import datetime
 import calendar
 import requests
+import webbrowser
 
 '''
     Example of a weather App, using:
@@ -29,7 +30,7 @@ def settings_window(location=(None, None)):
               [sg.T('Latitude', s=tsize, justification='r'), sg.I(s=12, setting='', k='-lat-')],
               [sg.T('Longitude', s=tsize, justification='r'), sg.I(s=12, setting='', k='-lon-')],
               [sg.CB('Use F Degrees', s=tsize, setting=True, k='-faren-')],
-              [sg.OK(), sg.Cancel()],
+              [sg.OK(), sg.B('Register with openweathermap.org for API key', k='-register-'), sg.Cancel()],
               ]
 
     window = sg.Window('Settings', layout, location=location)
@@ -41,6 +42,9 @@ def settings_window(location=(None, None)):
         if event == 'OK':
             window.settings_save(values)
             break
+        if event == '-register-':
+            webbrowser.open(r'https://home.openweathermap.org/users/sign_up')
+
     window.close()
 
     return event == 'OK'
