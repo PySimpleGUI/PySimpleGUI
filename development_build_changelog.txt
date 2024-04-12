@@ -6,4 +6,5 @@ Changelog since last major release
 5.0.4.2     Fix for ButtonMenu not clearing the value dictionary entry after the event is returned. Used to work this way but broke along the way.
 5.0.4.3     Added set_hscroll_position for elements
 5.0.4.4     NEW FEATURE added - parameter repeating_timer_ms added to the Window object.  Causes a repeating timer to be started. 
+5.0.4.5     Uncommented line of code that imports askcolor from tkinter.  Not sure why it was commented out
 
