@@ -7,4 +7,5 @@ Changelog since last major release
 5.0.4.3     Added set_hscroll_position for elements
 5.0.4.4     NEW FEATURE added - parameter repeating_timer_ms added to the Window object.  Causes a repeating timer to be started. 
 5.0.4.5     Uncommented line of code that imports askcolor from tkinter.  Not sure why it was commented out
+5.0.4.6     Fix for bug that was showing trial expired in Home Window.  Added new function dict_to_string to format dictionaries nicely
 
