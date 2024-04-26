@@ -8,4 +8,7 @@ Changelog since last major release
 5.0.4.4     NEW FEATURE added - parameter repeating_timer_ms added to the Window object.  Causes a repeating timer to be started. 
 5.0.4.5     Uncommented line of code that imports askcolor from tkinter.  Not sure why it was commented out
 5.0.4.6     Fix for bug that was showing trial expired in Home Window.  Added new function dict_to_string to format dictionaries nicely
-
+5.0.4.7     Changed function dict_to_string to use the pprint.pformat function rather the reinvent the wheel this time... 
+                but at least my version did right justify keys in a field the width of the max key length.  :-) 
+            New option in global settings to control if formatted dictionary is printed when the automatic "print event values" feature is enabled
+            
