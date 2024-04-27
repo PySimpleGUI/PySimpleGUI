@@ -11,4 +11,6 @@ Changelog since last major release
 5.0.4.7     Changed function dict_to_string to use the pprint.pformat function rather the reinvent the wheel this time... 
                 but at least my version did right justify keys in a field the width of the max key length.  :-) 
             New option in global settings to control if formatted dictionary is printed when the automatic "print event values" feature is enabled
+5.0.4.8     Changed how Input.update select parm works:
+                If set to True, then the input is selected (highlighted). The new addition is that if False, it clears the selection  
             
