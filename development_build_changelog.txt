@@ -13,4 +13,6 @@ Changelog since last major release
             New option in global settings to control if formatted dictionary is printed when the automatic "print event values" feature is enabled
 5.0.4.8     Changed how Input.update select parm works:
                 If set to True, then the input is selected (highlighted). The new addition is that if False, it clears the selection  
+5.0.4.9     Internal test
+5.0.4.10    Added arrow and arrow_type to Graph.draw_line method
             
