@@ -15,4 +15,5 @@ Changelog since last major release
                 If set to True, then the input is selected (highlighted). The new addition is that if False, it clears the selection  
 5.0.4.9     Internal test
 5.0.4.10    Added arrow and arrow_type to Graph.draw_line method
+5.0.4.11    Made aliases for HorizontalSeparator using word "Line" (HorizontalLine, HLine, Line)
             
