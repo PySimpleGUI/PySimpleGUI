@@ -61,7 +61,7 @@ selected = {i for i, row in enumerate(data[1:][:]) if row[0] == CHECKED_BOX}
 # ------ Window Layout ------
 layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25, auto_size_columns=False, col_widths=[10, 10, 20, 20 ,30, 5],
                     display_row_numbers=True, justification='center', num_rows=20, key='-TABLE-', selected_row_colors='red on yellow',
-                    expand_x=False, expand_y=True, vertical_scroll_only=False, enable_click_events=True, font='_ 14'),
+                    expand_x=False, expand_y=True, vertical_scroll_only=False, enable_click_events=True, select_mode=sg.TABLE_SELECT_MODE_NONE, font='_ 14'),
            sg.Sizegrip()]]
 
 # ------ Create Window ------
