@@ -19,4 +19,5 @@ Changelog since last major release
 5.0.4.12    Internal test
 5.0.4.13    Updated the checklist in the builtin GitHub Issue logger to use the newest checklist. Was using an old one.
 5.0.4.14    Changed docstring for Table element and others that have "Select Mode" parameter to str
+5.0.4.15    Added right_click_menu paramter to Combo element
             
