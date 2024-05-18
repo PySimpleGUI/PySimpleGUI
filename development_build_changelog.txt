@@ -21,4 +21,7 @@ Changelog since last major release
 5.0.4.14    Changed docstring for Table element and others that have "Select Mode" parameter to str
 5.0.4.15    Added right_click_menu paramter to Combo element
 5.0.4.16    Added window.right_click_menu_element.  Will either be None or the element that was right clicked if right click menu used
+5.0.4.17    Fix in def dict_to_string.  The pformat call didn't add the sort_dict parm until Python 3.8 so need to check python ver
+5.0.4.18    Made priority suport code field in markdown for GitHub issue be the same level as the manual form on GitHub
+5.0.4.19    Added new function execute_pip_get_local_package_version so that local version of pip installed package can be easily obtained
             
