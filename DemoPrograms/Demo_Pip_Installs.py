@@ -25,6 +25,7 @@ while True:             # Event Loop
     event, values = window.read()
     if event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT:
         window.settings_save(values)
+        break
     if event in (None, 'Exit'):
         break
     if event == 'Show':
