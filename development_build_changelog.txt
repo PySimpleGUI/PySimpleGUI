@@ -25,5 +25,8 @@ Changelog since last major release
 5.0.4.18    Made priority suport code field in markdown for GitHub issue be the same level as the manual form on GitHub
 5.0.4.19    Added new function execute_pip_get_local_package_version so that local version of pip installed package can be easily obtained
 5.0.4.20    Changed execute_command_subprocess so that the interpreter can have spaces for things like parameters (i.e. py -3.11)
-5.0.4.21    Changed the function execute_pip_get_local_package_version to use the temofile package so that there can be multiple requests outstanding at a time
+5.0.4.21    Changed the function execute_pip_get_local_package_version to use 
+                the tempfile package so that there can be multiple requests outstanding at a time
+5.0.4.22    Fixed all links to the online documenation in the built-in SDK Call Reference Window (You know about this window, right?) 
+                Type psghelp from the command line.  Or from the Home Window, click the help tab and the button "SDK Reference Window"
             
