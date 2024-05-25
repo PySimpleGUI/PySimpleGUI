@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
-import ping
-from threading import Thread
-import time
+import random
+try:
+    import ping3
+except:
+    ping3 = None
+    sg.popup_quick_message('WARNING!  You do not have ping3 installed so data will be simulated', font='_ 18', text_color='white', background_color='red', auto_close_duration=6)
 
 """
+    Use a Graph element to show ping times to a URL using a line graph
+
     Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
 
     Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
@@ -12,68 +17,72 @@ import time
     You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
-
-STEP_SIZE = 1
-SAMPLES = 1000
-CANVAS_SIZE = (1000, 500)
-
-# globale used to communicate with thread.. yea yea... it's working fine
-g_exit = False
-g_response_time = None
+if ping3:
+    ping_url = 'google.com'
+else:
+    ping_url = 'simulated data'
 
 
-def ping_thread(args):
-    global g_exit, g_response_time
-    while not g_exit:
-        g_response_time = ping.quiet_ping('google.com', timeout=1000)
+def ping_thread(window: sg.Window):
+    while True:
+        if ping3:
+            ping_time = int(ping3.ping(ping_url) * 1000)
+        else:
+            ping_time = random.randint(0, 100)
+        if ping_time:
+            window.write_event_value('-THREAD-', ping_time)
 
 
 def main():
-    global g_exit, g_response_time
+    global ping_url
 
-    # start ping measurement thread
-    thread = Thread(target=ping_thread, args=(None,))
-    thread.start()
+    STEP_SIZE = 1
+    SAMPLES = 100
+    CANVAS_SIZE = (1000, 500)
+    Y_MAX = 500
+    X_MAX = 500
 
     sg.theme('Black')
-    sg.set_options(element_padding=(0, 0))
 
     layout = [
-        [sg.Text('Ping times to Google.com', font='Any 12'),
-         sg.Quit(pad=((100, 0), 0), button_color=('white', 'black'))],
-        [sg.Graph(CANVAS_SIZE, (0, 0), (SAMPLES, 500),
-                  background_color='black', key='graph')]
+        sg.vbottom(
+        [sg.Column([[sg.T('Ping in MS'), sg.T(k='-TIME-', s=4)],[sg.Slider((50, Y_MAX), default_value=Y_MAX, orientation='v', size=(20, 20), k='-Y SLIDER-', expand_y=True, enable_events=True)]], expand_y=True, element_justification='r'),
+        sg.Column([
+        [sg.Graph(CANVAS_SIZE, (0, 0), (SAMPLES, 200), background_color='black', key='-GRAPH-')],
+        [sg.Text('# Samples:'), sg.Slider((50, X_MAX), default_value=SAMPLES, orientation='h', size=(50, 20), k='-X SLIDER-', expand_x=True, enable_events=True)],
+        [sg.Text('Ping times to:'), sg.Input(ping_url, size=15, key='-URL-', readonly=not ping3, use_readonly_for_disable=True, disabled_readonly_text_color='black', disabled=not ping3), sg.B('Set', disabled=not ping3)],])],
+            expand_x=True, expand_y=True)
     ]
 
-    window = sg.Window('Canvas test', layout,
-               grab_anywhere=True, background_color='black',
-               no_titlebar=False, use_default_focus=False)
+    window = sg.Window('Ping Graph', layout, background_color='black',  finalize=True, font='_ 16')
 
-    graph = window['graph']
-    prev_response_time = None
-    i = 0
-    prev_x, prev_y = 0, 0
+    graph = window['-GRAPH-']
+
+    i = prev_x = prev_y = 0
+
+    window.start_thread(lambda : ping_thread(window))
 
     while True:
-        event, values = window.read(timeout=200)
+        event, values = window.read()
         if event == 'Quit' or event == sg.WIN_CLOSED:
             break
-        if g_response_time is None or prev_response_time == g_response_time:
-            continue
-        new_x, new_y = i, g_response_time[0]
-        prev_response_time = g_response_time
+        if event == '-THREAD-':
+            new_x, new_y = i, values[event]
+            window['-TIME-'].update(values[event])
         if i >= SAMPLES:
             graph.move(-STEP_SIZE, 0)
             prev_x = prev_x - STEP_SIZE
         graph.draw_line((prev_x, prev_y), (new_x, new_y), color='white')
-        # window['graph'].draw_point((new_x, new_y), color='red')
         prev_x, prev_y = new_x, new_y
         i += STEP_SIZE if i < SAMPLES else 0
-
-    # tell thread we're done. wait for thread to exit
-    g_exit = True
-    thread.join()
-
+        if event == '-X SLIDER-' or event == '-Y SLIDER-':
+            graph.change_coordinates((0,0), (values['-X SLIDER-'], values['-Y SLIDER-']))
+            graph.erase()
+            i = 0
+            prev_x, prev_y = 0, 0
+            SAMPLES = values['-X SLIDER-']
+        if event == 'Set':      # set a new URL to ping
+            ping_url = values['-URL-']
     window.close()
 
 
