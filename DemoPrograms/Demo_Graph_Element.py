@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
 import random
+import time
 try:
     import ping3
 except:
@@ -28,6 +29,7 @@ def ping_thread(window: sg.Window):
         if ping3:
             ping_time = int(ping3.ping(ping_url) * 1000)
         else:
+            time.sleep(.001)
             ping_time = random.randint(0, 100)
         if ping_time:
             window.write_event_value('-THREAD-', ping_time)
