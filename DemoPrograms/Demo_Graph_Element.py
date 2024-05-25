@@ -6,7 +6,11 @@ try:
     import ping3
 except:
     ping3 = None
-    sg.popup_quick_message('WARNING!  You do not have ping3 installed so data will be simulated', font='_ 18', text_color='white', background_color='red', auto_close_duration=6)
+    if sg.popup_yes_no('This version of Python does not have the ping3 module installed. Would you like it to be installed?') == 'Yes':
+        sg.execute_pip_install_package('ping3')     # pip install the ping3 package
+        sg.execute_restart(__file__)                # restart this program so that it'll pick up the new ping3 installation
+    else:
+        sg.popup_quick_message('OK... Ping3 not installed so data will be simulated', font='_ 18', text_color='white', background_color='red', auto_close_duration=6)
 
 """
     Use a Graph element to show ping times to a URL using a line graph
