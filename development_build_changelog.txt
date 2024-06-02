@@ -1,5 +1,5 @@
 Changelog since last major release
 
-5.0.5       Released 2-Jun-2024
+5.0.5.1      Made the Window member variable right_click_menu_element a property so that it'll show up in the call reference documenation
 
 
