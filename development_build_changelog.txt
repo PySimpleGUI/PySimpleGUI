@@ -1,32 +1,7 @@
 Changelog since last major release
 
-5.0.4       Released 1-Apr-2024
+5.0.5.1      Made the Window member variable right_click_menu_element a property so that it'll show up in the call reference documentation
+5.0.5.2      Changed several docstrings that had type "enum" for parms like SELECT_MODE. They were "enum" and were changed to "str"
+                The reason for the change - PyCharm is highlighting those parms with a warning
 
-5.0.4.1     Fixed open GitHub issue window so that the checklist matches the newest on GitHub
-5.0.4.2     Fix for ButtonMenu not clearing the value dictionary entry after the event is returned. Used to work this way but broke along the way.
-5.0.4.3     Added set_hscroll_position for elements
-5.0.4.4     NEW FEATURE added - parameter repeating_timer_ms added to the Window object.  Causes a repeating timer to be started. 
-5.0.4.5     Uncommented line of code that imports askcolor from tkinter.  Not sure why it was commented out
-5.0.4.6     Fix for bug that was showing trial expired in Home Window.  Added new function dict_to_string to format dictionaries nicely
-5.0.4.7     Changed function dict_to_string to use the pprint.pformat function rather the reinvent the wheel this time... 
-                but at least my version did right justify keys in a field the width of the max key length.  :-) 
-            New option in global settings to control if formatted dictionary is printed when the automatic "print event values" feature is enabled
-5.0.4.8     Changed how Input.update select parm works:
-                If set to True, then the input is selected (highlighted). The new addition is that if False, it clears the selection  
-5.0.4.9     Internal test
-5.0.4.10    Added arrow and arrow_type to Graph.draw_line method
-5.0.4.11    Made aliases for HorizontalSeparator using word "Line" (HorizontalLine, HLine, Line)
-5.0.4.12    Internal test
-5.0.4.13    Updated the checklist in the builtin GitHub Issue logger to use the newest checklist. Was using an old one.
-5.0.4.14    Changed docstring for Table element and others that have "Select Mode" parameter to str
-5.0.4.15    Added right_click_menu paramter to Combo element
-5.0.4.16    Added window.right_click_menu_element.  Will either be None or the element that was right clicked if right click menu used
-5.0.4.17    Fix in def dict_to_string.  The pformat call didn't add the sort_dict parm until Python 3.8 so need to check python ver
-5.0.4.18    Made priority suport code field in markdown for GitHub issue be the same level as the manual form on GitHub
-5.0.4.19    Added new function execute_pip_get_local_package_version so that local version of pip installed package can be easily obtained
-5.0.4.20    Changed execute_command_subprocess so that the interpreter can have spaces for things like parameters (i.e. py -3.11)
-5.0.4.21    Changed the function execute_pip_get_local_package_version to use 
-                the tempfile package so that there can be multiple requests outstanding at a time
-5.0.4.22    Fixed all links to the online documenation in the built-in SDK Call Reference Window (You know about this window, right?) 
-                Type psghelp from the command line.  Or from the Home Window, click the help tab and the button "SDK Reference Window"
-            
+
