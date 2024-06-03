@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import threading
 import time
 import itertools
 import PySimpleGUI as sg
@@ -15,7 +14,7 @@ import PySimpleGUI as sg
     The PySimpleGUI code is structured just like a typical PySimpleGUI program.  A layout defined,
         a Window is created, and an event loop is executed.
 
-    Copyright 2020-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2020-2024 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
     
     Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
@@ -96,7 +95,7 @@ def worker_thread3(thread_name, run_freq,  window):
 #  ######    #######  ####
 
 
-def the_gui():
+def main():
     """
     Starts and executes the GUI
     Reads data from a Queue and displays the data to the window
@@ -108,16 +107,16 @@ def the_gui():
     layout = [[sg.Text('Multithreaded Window Example')],
               [sg.Text('', size=(15, 1), key='-OUTPUT-')],
               [sg.Multiline(size=(40, 26), key='-ML-', autoscroll=True)],
-              [sg.Button('Exit')], ]
+              [sg.Push(), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window', layout, finalize=True)
 
     # -- Create a Queue to communicate with GUI --
     # queue used to communicate between the gui and the threads
     # -- Start worker threads, each taking a different amount of time
-    threading.Thread(target=worker_thread1, args=('Thread 1', 500, window,),  daemon=True).start()
-    threading.Thread(target=worker_thread2, args=('Thread 2', 200, window,),  daemon=True).start()
-    threading.Thread(target=worker_thread3, args=('Thread 3', 1000, window,), daemon=True).start()
+    window.start_thread(lambda: worker_thread1('Thread 1', 500, window))
+    window.start_thread(lambda: worker_thread2('Thread 2', 200, window))
+    window.start_thread(lambda: worker_thread3('Thread 3', 1000, window))
     # -- Start the GUI passing in the Queue --
 
     sg.cprint_set_output_destination(window, '-ML-')
@@ -135,14 +134,6 @@ def the_gui():
     window.close()
 
 
-##     ##    ###    #### ##    ##
-###   ###   ## ##    ##  ###   ##
-#### ####  ##   ##   ##  ####  ##
-## ### ## ##     ##  ##  ## ## ##
-##     ## #########  ##  ##  ####
-##     ## ##     ##  ##  ##   ###
-##     ## ##     ## #### ##    ##
-
 if __name__ == '__main__':
-    the_gui()
+    main()
 
