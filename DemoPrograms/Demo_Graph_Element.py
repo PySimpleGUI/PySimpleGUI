@@ -2,6 +2,8 @@
 import PySimpleGUI as sg
 import random
 import time
+import gc
+
 try:
     import ping3
 except:
@@ -65,7 +67,7 @@ def main():
     graph = window['-GRAPH-']
 
     i = prev_x = prev_y = 0
-
+    fig_list = []
     window.start_thread(lambda : ping_thread(window))
 
     while True:
@@ -78,12 +80,19 @@ def main():
         if i >= SAMPLES:
             graph.move(-STEP_SIZE, 0)
             prev_x = prev_x - STEP_SIZE
-        graph.draw_line((prev_x, prev_y), (new_x, new_y), color='white')
+            fig = fig_list[0]
+            fig_list.pop(0)
+            graph.delete_figure(fig)
+            # gc.collect()                # Run garbage collect.  Uncomment if you want the space freed immediately
+        fig = graph.draw_line((prev_x, prev_y), (new_x, new_y), color='white')
+        fig_list.append(fig)
         prev_x, prev_y = new_x, new_y
         i += STEP_SIZE if i < SAMPLES else 0
         if event == '-X SLIDER-' or event == '-Y SLIDER-':
+            graph.delete_figure(fig_list)
             graph.change_coordinates((0,0), (values['-X SLIDER-'], values['-Y SLIDER-']))
             graph.erase()
+            fig_list = []
             i = 0
             prev_x, prev_y = 0, 0
             SAMPLES = values['-X SLIDER-']
