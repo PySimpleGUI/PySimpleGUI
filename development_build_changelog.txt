@@ -4,5 +4,6 @@ Changelog since last major release
 5.0.5.2      Changed several docstrings that had type "enum" for parms like SELECT_MODE. They were "enum" and were changed to "str"
                 The reason for the change - PyCharm is highlighting those parms with a warning
 5.0.5.3      Change to handle cx_freeze UnicodeDecodeError
+5.0.5.4      A better change to handle cx_freeze UnicodeDecodeError. As a test, will print "Frozen app detected" if successfully detected  
 
 
