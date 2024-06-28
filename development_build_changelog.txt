@@ -6,5 +6,5 @@ Changelog since last major release
 5.0.5.3      Change to handle cx_freeze UnicodeDecodeError
 5.0.5.4      A better change to handle cx_freeze UnicodeDecodeError. As a test, will print "Frozen app detected" if successfully detected  
 5.0.5.5      Removed the test print "Frozen app detected" if cx_freeze detected  
-
+5.0.5.6      Fix for PyInstaller uuid not found error  
 
