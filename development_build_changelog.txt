@@ -1,5 +1,6 @@
 Changelog since last major release
 
 5.0.6       Released 28-Jun-2024
-
+5.0.6.1     New Table feature - Editing individual table values using double-click/return key
+            New Table feature - values property returns the table's current values
 
