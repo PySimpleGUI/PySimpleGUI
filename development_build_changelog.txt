@@ -4,4 +4,5 @@ Changelog since last major release
 5.0.6.1     New Table feature - Editing individual table values using double-click/return key
             New Table feature - values property returns the table's current values
 5.0.6.2     New Table feature - Pressing Escape Key during cell edit will abort the edit and restore value
+5.0.6.3     New Vertical Separator alias added to match the Horizontal ones added earlier. VLine, VerticalLine
 
