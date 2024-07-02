@@ -1,9 +1,8 @@
 <p align="center">
-    <img src="https://pysimplegui.net/images/big_news_emoji.png">
+    <img src="https://pysimplegui.net/images/big_news_emoji2.png">
     <br>
     For more information visit <a href="https://home.PySimpleGUI.com">PySimpleGUI.com</a>
 </p>
-
 
 
 ##
