@@ -7,4 +7,7 @@ Changelog since last major release
 5.0.6.3     New Vertical Separator alias added to match the Horizontal ones added earlier. VLine, VerticalLine
 5.0.6.4     New Table feature - If user double-clicks and modifies a cell in a table, then an event with a tuple
                 is generated that is similar to the Clicked tuple. The constant TABLE_EDITED_INDICATOR will be part of tuple
+5.0.6.5     Table Element - Finishing up the cell editing by adding more parms to the Table element for edit colors and select color
+                cell_edit_colors controls colors of cells during editing
+                cell_edit_select_colors controls colors of the sections during editing
 
