@@ -10,4 +10,5 @@ Changelog since last major release
 5.0.6.5     Table Element - Finishing up the cell editing by adding more parms to the Table element for edit colors and select color
                 cell_edit_colors controls colors of cells during editing
                 cell_edit_select_colors controls colors of the sections during editing
+5.0.6.6     Menu Element - Added generating an event when a top level menu item has no submenu. NOTE this is not a normal Windows behavior.
 
