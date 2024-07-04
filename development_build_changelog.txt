@@ -11,4 +11,6 @@ Changelog since last major release
                 cell_edit_colors controls colors of cells during editing
                 cell_edit_select_colors controls colors of the sections during editing
 5.0.6.6     Menu Element - Added generating an event when a top level menu item has no submenu. NOTE this is not a normal Windows behavior.
-
+5.0.6.7     dict_to_string changed so width used with pformat is defined by constant DEFAULT_DICT_TO_STRING_WIDTH which is 80.
+                Made retroactive by changing the key in the global settings.  Old default was 1.
+                This function is used when print_event_values=True when making the window.
