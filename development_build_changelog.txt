@@ -15,3 +15,4 @@ Changelog since last major release
                 Made retroactive by changing the key in the global settings.  Old default was 1.
                 This function is used when print_event_values=True when making the window.
 5.0.6.8     Menu Element - Added support for using a key with a top-level menu item since these can now be events
+5.0.6.9     Fix for incorrectly calculating row when checking for type when Table editing
