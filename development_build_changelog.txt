@@ -14,3 +14,4 @@ Changelog since last major release
 5.0.6.7     dict_to_string changed so width used with pformat is defined by constant DEFAULT_DICT_TO_STRING_WIDTH which is 80.
                 Made retroactive by changing the key in the global settings.  Old default was 1.
                 This function is used when print_event_values=True when making the window.
+5.0.6.8     Menu Element - Added support for using a key with a top-level menu item since these can now be events
