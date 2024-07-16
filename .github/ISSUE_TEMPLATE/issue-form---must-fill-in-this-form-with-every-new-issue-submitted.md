@@ -22,7 +22,7 @@ assignees: ''
 
 ----------------------------------------
 
-## Versions
+## Versions (NOTE - PSG4 is no longer supported)
 
 Version information can be obtained by calling `sg.main_get_debug_data()`
 Or you can print each version shown in ()
@@ -35,14 +35,13 @@ Or you can print each version shown in ()
 #### PySimpleGUI Version (`sg.__version__`)
 
 
-
 #### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
 
 
 #### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
 
 
-### Priority Support Code (Commercial Users)
+### Priority Support Code (Commercial License Users)
 
 
 
