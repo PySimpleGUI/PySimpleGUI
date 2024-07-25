@@ -12,8 +12,14 @@ You may not redistribute, modify or otherwise use PySimpleGUI or its contents ex
 
 
 import PySimpleGUI as sg
+import random
 
 def main():
+
+    PROGRAM_TO_LAUNCH_WHEN_DOUBLE_CLICKED = 'explorer'      # This will be run when icon is double-clicked. Change to any program you want.
+
+    # Set to your own custom icon. This is dislayed on the desktop
+    # For fun, the icon is changed every 5 minutes to a random PSG Emoji
     icon=sg.EMOJI_BASE64_COOL
 
     #------- GUI definition & setup --------#
@@ -27,6 +33,8 @@ def main():
 
     window['-IMAGE-'].bind('<Double-Button-1>', '+DOUBLE_CLICK+')
 
+    window.timer_start(5*60*1000)         # every 5 minutes, change the icon (totally optional... just for fun)
+
     #------------ The Event Loop ------------#
     while True:
         event, values = window.read()
@@ -35,8 +43,10 @@ def main():
         # Add your double-click action here... such as launching another program
         if event == '-IMAGE-+DOUBLE_CLICK+':
             sg.popup_quick_message('Double Clicked', location=window.current_location(), font='_ 20', background_color='red', text_color='white')
-            # Example of launch explorer when the icon is double-clicked.  Add change to your own program.
-            sg.execute_command_subprocess('explorer', wait=False)
+            # Example of launch when the icon is double-clicked.  Of course you can do some other action than launching a program
+            sg.execute_command_subprocess(PROGRAM_TO_LAUNCH_WHEN_DOUBLE_CLICKED, wait=False)
+        elif event == sg.TIMER_KEY:     # Change the icon shown every TIMER event
+            window['-IMAGE-'].update(random.choice(sg.EMOJI_BASE64_HAPPY_LIST))
         elif event == 'Version':
             sg.popup_scrolled(sg.get_versions(), f'This Program: {__file__}' ,keep_on_top=True, non_blocking=True, location=window.current_location())
         elif event == 'Edit Me':
