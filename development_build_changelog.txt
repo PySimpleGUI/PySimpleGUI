@@ -18,3 +18,4 @@ Changelog since last major release
 5.0.6.9     Fix for incorrectly calculating row when checking for type when Table editing
 5.0.6.10    Test fix for Y-scrolling of columns that have other scrollable elements in them
 5.0.6.11    More changes to the scrollable Column to try and fix the Y-scrolling issue
+5.0.6.12    Applied above changes to the X-scrollling of columns (both using mouse wheel and scrollbars)
