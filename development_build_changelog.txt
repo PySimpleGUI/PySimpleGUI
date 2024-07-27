@@ -16,3 +16,4 @@ Changelog since last major release
                 This function is used when print_event_values=True when making the window.
 5.0.6.8     Menu Element - Added support for using a key with a top-level menu item since these can now be events
 5.0.6.9     Fix for incorrectly calculating row when checking for type when Table editing
+5.0.6.10    Test fix for Y-scrolling of columns that have other scrollable elements in them
