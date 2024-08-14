@@ -14,7 +14,7 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
-version = '5.0.0'
+version = '5.2.0'
 __version__ = version.split()[0]
 
 
@@ -52,7 +52,9 @@ packages_with_weird_names = {'cv2':'opencv-python',
                 
     Versions:
         5.0.0  11-Feb-2024  The NEW Demo Browser for use with PySimpleGUI 5!
-                           
+        5.1.0  08-Apr-2024  Several new Demo Programs, updated Matplotlib ping demo, license ver 1.1
+        5.2.0  14-Aug-2024  Fixed erronous import error (when import line started with "from")
+                            Added a new "Path" input so that an arbitrary file can be executed easily (or edited)
     Copyright 2021, 2022, 2023, 2024 PySimpleSoft Inc.
 """
 
@@ -112,6 +114,18 @@ def get_file_list():
     :rtype: List[str]
     """
     return sorted(list(get_file_list_dict().keys()))
+
+
+def get_file_list_full_filename():
+    """
+    Returns list of filenames of files to display
+    No path is shown, only the short filename
+
+    :return: List of filenames
+    :rtype: List[str]
+    """
+    return sorted(list(get_file_list_dict().values()))
+
 
 
 def get_demo_path():
@@ -310,7 +324,7 @@ def check_imports_in_file(filename):
             # Check if the module exists
             if not check_modules_on_import_line(sline):
                 all_passed = False
-        elif sline.startswith('from'):
+        elif sline.startswith('from') and 'import' in sline:
             module = re.search(r'from (\w+)', sline).group(1)
             if not check_module(module):
                 all_passed = False
@@ -335,6 +349,25 @@ M. .MMM'  M 88.  ... 88.  .88 88       88.  ... 88    88
 Mb.     .dM `88888P' `88888P8 dP       `88888P' dP    dP 
 MMMMMMMMMMM
 '''
+
+
+
+# def search_files(file_list, search_string):
+#     found_list = []
+#     for file in file_list:
+#         with open(file, 'r') as f:
+#             # Memory-map the file
+#             try:
+#                 mmapped_file = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
+#             except:
+#                 continue
+#             # Search for the string in the file
+#             if mmapped_file.find(bytes(search_string, 'utf-8')) != -1:
+#                 # print(f"String found in file: {file}")
+#                 found_list.append(os.path.basename(file))
+#             # else:
+#                 # print(f"String not found in file: {file}")
+#     return found_list
 
 def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None, ignore_case=True, show_first_match=True):
     """
@@ -645,19 +678,21 @@ def make_window():
     find_tooltip = "Find in file\nEnter a string in box to search for string inside of the files.\nFile list will update with list of files string found inside."
     filter_tooltip = "Filter files\nEnter a string in box to narrow down the list of files.\nFile list will update with list of files with string in filename."
     find_re_tooltip = "Find in file using Regular Expression\nEnter a string in box to search for string inside of the files.\nSearch is performed after clicking the FindRE button."
+    run_tooltip = "Run any python file\nEnter full absolute path and then click RUN button."
 
 
     left_col = sg.Column([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-', expand_x=True, expand_y=True)],
-        [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), focus=True, enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
+        [sg.Text('Filter (F1):', tooltip=filter_tooltip, s=8), sg.Input(size=(25, 1), focus=True, enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder'), sg.B('Copy Path')],
-        [sg.Text('Find (F2):', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
+        [sg.Text('Find (F2):', tooltip=find_tooltip, s=8), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
          sg.T(size=(15,1), k='-FIND NUMBER-')],
+        [sg.Text('Path (F3):', tooltip=run_tooltip, s=8), sg.Input(size=(25, 1), enable_events=True, key='-RUN PATH-', tooltip=run_tooltip)],
     ], element_justification='l', expand_x=True, expand_y=True)
 
     lef_col_find_re = sg.pin(sg.Col([
-        [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
+        [sg.Text('Find (F4):', tooltip=find_re_tooltip, s=8), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, expand_x=True, expand_y=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)],
@@ -687,10 +722,7 @@ def make_window():
               [options_at_bottom, sg.Sizegrip()]]
 
     # --------------------------------- Create Window ---------------------------------
-    # TODO Uncomment when deploy PSG5
-    # window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, auto_save_location=True)
-    # TODO Remove when deploy PSG5
-    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
+    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True,  resizable=True, use_default_focus=False, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, auto_save_location=True)
     window.set_min_size(window.size)
 
 
@@ -698,7 +730,8 @@ def make_window():
 
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
-    window.bind('<F3>', '-FOCUS RE FIND-')
+    window.bind('<F3>', '-FOCUS RUN PATH-')
+    window.bind('<F4>', '-FOCUS RE FIND-')
     if not advanced_mode():
         window['-FOLDER CHOOSE-'].update(visible=False)
         window['-RE COL-'].update(visible=False)
@@ -906,9 +939,16 @@ def main():
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
-
-            for file in values['-DEMO LIST-']:
-                file_to_run = str(file_list_dict[file])
+            if values['-RUN PATH-']:            # if a manual file was entered:
+                files_to_run = (values['-RUN PATH-'],)
+            else:
+                files_to_run = values['-DEMO LIST-']
+            # for file in values['-DEMO LIST-']:
+            for file in files_to_run:
+                try:
+                    file_to_run = str(file_list_dict[file])
+                except:
+                    file_to_run = file
                 # sg.cprint('Checking Imports....', c='white on green')
                 if sg.user_settings_get_entry('-check imports-', False) and not check_imports_in_file(file_to_run):
                    sg.cprint(f'The demo program {os.path.basename(file_to_run)} depends on modules that are not installed.')
@@ -949,7 +989,13 @@ def main():
             window['-FILTER-'].set_focus()
         elif event == '-FOCUS RE FIND-':
             window['-FIND RE-'].set_focus()
+        elif event == '-FOCUS RUN PATH-':
+            window['-RUN PATH-'].set_focus()
         elif event == '-FIND-' or event == '-FIRST MATCH ONLY-' or event == '-VERBOSE-' or event == '-FIND RE-':
+            # file_list = (search_files(get_file_list_full_filename(), values['-FIND-']))
+            # window['-DEMO LIST-'].update(file_list)
+            # continue
+
             is_ignore_case = values['-IGNORE CASE-']
             old_ignore_case = False
             current_typed_value = str(values['-FIND-'])
@@ -975,6 +1021,7 @@ def main():
                 window['-FILTER NUMBER-'].update('')
                 window['-FIND RE-'].update('')
                 window['-FILTER-'].update('')
+                window['-RUN PATH-'].update('')
             elif values['-FIND RE-']:
                 window['-ML-'].update('')
                 file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
@@ -983,6 +1030,7 @@ def main():
                 window['-FILTER NUMBER-'].update('')
                 window['-FIND-'].update('')
                 window['-FILTER-'].update('')
+                window['-RUN PATH-'].update('')
         elif event == 'Find RE':
             window['-ML-'].update('')
             file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
@@ -991,6 +1039,7 @@ def main():
             window['-FILTER NUMBER-'].update('')
             window['-FIND-'].update('')
             window['-FILTER-'].update('')
+            window['-RUN PATH-'].update('')
             sg.cprint('Regular expression find completed')
         elif event == 'Settings':
             if settings_window() is True:
@@ -1007,6 +1056,7 @@ def main():
             window['-DEMO LIST-'].update(file_list)
             window['-FIND NUMBER-'].update('')
             window['-FIND RE-'].update('')
+            window['-RUN PATH-'].update('')
             window['-ML-'].update('')
         elif event == '-FOLDERNAME-':
             sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
@@ -1019,6 +1069,7 @@ def main():
             window['-FIND-'].update('')
             window['-FIND RE-'].update('')
             window['-FILTER-'].update('')
+            window['-RUN PATH-'].update('')
         elif event == 'Open Folder':
             explorer_program = get_explorer()
             if explorer_program:
@@ -1054,6 +1105,7 @@ def main():
             window['-FIND-'].update('')
             window['-FIND RE-'].update('')
             window['-FILTER-'].update('')
+            window['-RUN PATH-'].update('')
     window.close()
 
 
