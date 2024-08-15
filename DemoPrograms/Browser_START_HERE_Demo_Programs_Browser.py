@@ -14,7 +14,7 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
-version = '5.2.0'
+version = '5.3.0'
 __version__ = version.split()[0]
 
 
@@ -55,6 +55,7 @@ packages_with_weird_names = {'cv2':'opencv-python',
         5.1.0  08-Apr-2024  Several new Demo Programs, updated Matplotlib ping demo, license ver 1.1
         5.2.0  14-Aug-2024  Fixed erronous import error (when import line started with "from")
                             Added a new "Path" input so that an arbitrary file can be executed easily (or edited)
+        5.3.0  15-Aug-2024  One last change for the new path input... clear other fields if chars are entered
     Copyright 2021, 2022, 2023, 2024 PySimpleSoft Inc.
 """
 
@@ -982,7 +983,17 @@ def main():
             window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
+            window['-RUN PATH-'].update('')
             window['-FIND RE-'].update('')
+        elif event == '-RUN PATH-':
+            file_list = get_file_list()
+            window['-FILTER-'].update('')
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
+            window['-FIND-'].update('')
+            window['-DEMO LIST-'].update(file_list)
+            window['-FIND NUMBER-'].update('')
+            window['-FIND RE-'].update('')
+            window['-ML-'].update('')
         elif event == '-FOCUS FIND-':
             window['-FIND-'].set_focus()
         elif event == '-FOCUS FILTER-':
