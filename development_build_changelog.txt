@@ -22,3 +22,4 @@ Changelog since last major release
 5.0.6.13    Fix for Table cell editing. Checked to make sure not already editing when get an edit request
 5.0.6.14    Fix for mouse scrollwheel crash when leaving a scrollable area and returning
 5.0.6.15    Fixed maintanence spelling error (ugh... sorry everyone...)
+5.0.6.16    Upgraded version of Python 3.13.0 used to build PySimpleGUI
