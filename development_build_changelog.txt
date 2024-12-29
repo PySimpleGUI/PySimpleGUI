@@ -3,4 +3,5 @@ Changelog since last major release
 5.0.7       Released 20-Oct-2024
 
 5.0.7.1     Added ability to indicate no emoji should be used in error popup. Needed so that recursive error calls aren't made from image element error
+5.0.7.2     Replaced call to StringVar.trace with StringVar.trace_add
 
