@@ -5,4 +5,9 @@ Changelog since last major release
 5.0.7.1     Added ability to indicate no emoji should be used in error popup. Needed so that recursive error calls aren't made from image element error
 5.0.7.2     Replaced call to StringVar.trace with StringVar.trace_add
 5.0.7.3     Support for Python 3.14 Alpha
+5.0.7.4     Swapped Window method in start_thread as the main definition and perform_long_operation as the alias for easier understanding
+5.0.7.5     New command line options:
+            versionnogui - prints versions numbers on the command line without creating any windows
+            upgrade nogui - prints the maint releases available without making nay windows
+            upgrade nogui x.x.x.x - upgrades to maint release specified by x.x.x.x without making nay windows
 
