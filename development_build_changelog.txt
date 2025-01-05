@@ -16,3 +16,4 @@ Changelog since last major release
 5.0.7.9     Added printing of command line options to the "help" command line option.  Will print the options and then open the SDK Help Window 
 5.0.7.10    Fixed problem when using upgrade command line option
 5.0.7.11    Added "version" command line option to the help that's printed
+5.0.7.12    A bit more upgrade command line problems..
