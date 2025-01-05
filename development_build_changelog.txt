@@ -10,4 +10,5 @@ Changelog since last major release
             versionnogui - prints versions numbers on the command line without creating any windows
             upgrade nogui - prints the maint releases available without making nay windows
             upgrade nogui x.x.x.x - upgrades to maint release specified by x.x.x.x without making nay windows
+5.0.7.6     Added new command line function to the __main__ when building a release... hopefully this will work...
 
