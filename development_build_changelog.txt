@@ -14,3 +14,4 @@ Changelog since last major release
 5.0.7.7     Added specific version number optional parm to the psgupgrade command to make specific maint release installs easier
 5.0.7.8     Fixed typo in specifying "versionnogui" on the command line. Changed to using just "version":   python -m PySimpleGUI version
 5.0.7.9     Added printing of command line options to the "help" command line option.  Will print the options and then open the SDK Help Window 
+5.0.7.10    Fixed problem when using upgrade command line option
