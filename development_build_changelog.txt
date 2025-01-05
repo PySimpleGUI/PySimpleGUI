@@ -11,4 +11,4 @@ Changelog since last major release
             upgrade nogui - prints the maint releases available without making nay windows
             upgrade nogui x.x.x.x - upgrades to maint release specified by x.x.x.x without making nay windows
 5.0.7.6     Added new command line function to the __main__ when building a release... hopefully this will work...
-
+5.0.7.7     Added specific version number optional parm to the psgupgrade command to make specific maint release installs easier
