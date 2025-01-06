@@ -1,19 +1,4 @@
 Changelog since last major release
 
-5.0.7       Released 20-Oct-2024
+5.0.8       Released 06-Jan-2025
 
-5.0.7.1     Added ability to indicate no emoji should be used in error popup. Needed so that recursive error calls aren't made from image element error
-5.0.7.2     Replaced call to StringVar.trace with StringVar.trace_add
-5.0.7.3     Support for Python 3.14 Alpha
-5.0.7.4     Swapped Window method in start_thread as the main definition and perform_long_operation as the alias for easier understanding
-5.0.7.5     New command line options:
-            versionnogui - prints versions numbers on the command line without creating any windows
-            upgrade nogui - prints the maint releases available without making nay windows
-            upgrade nogui x.x.x.x - upgrades to maint release specified by x.x.x.x without making nay windows
-5.0.7.6     Added new command line function to the __main__ when building a release... hopefully this will work...
-5.0.7.7     Added specific version number optional parm to the psgupgrade command to make specific maint release installs easier
-5.0.7.8     Fixed typo in specifying "versionnogui" on the command line. Changed to using just "version":   python -m PySimpleGUI version
-5.0.7.9     Added printing of command line options to the "help" command line option.  Will print the options and then open the SDK Help Window 
-5.0.7.10    Fixed problem when using upgrade command line option
-5.0.7.11    Added "version" command line option to the help that's printed
-5.0.7.12    A bit more upgrade command line problems..
