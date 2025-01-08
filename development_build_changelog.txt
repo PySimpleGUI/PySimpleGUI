@@ -2,3 +2,4 @@ Changelog since last major release
 
 5.0.8       Released 06-Jan-2025
 
+5.0.8.1     User Setting API - if attempting to read the global PSG settings file and it's empty, print an error rather than attempting to display an error window
