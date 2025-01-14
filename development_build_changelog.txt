@@ -7,3 +7,5 @@ Changelog since last major release
             Added new functions to set a widget's foreground and background colors... first step in a major refactor
             Added protection against recursive errors to the popup error with traceback function which caused problems if error creating a window
             Maybe fixed (or maybe created) a bug in Input.update. Was setting foreground color when switching to enabled but not the background. Added setting background color
+5.0.8.3     Added import of ssl and a line of code to fix error we're seeing on the Mac
+            
