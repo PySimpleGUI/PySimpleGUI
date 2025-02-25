@@ -1,21 +1,11 @@
 Changelog since last major release
 
-5.0.6       Released 28-Jun-2024
-5.0.6.1     New Table feature - Editing individual table values using double-click/return key
-            New Table feature - values property returns the table's current values
-5.0.6.2     New Table feature - Pressing Escape Key during cell edit will abort the edit and restore value
-5.0.6.3     New Vertical Separator alias added to match the Horizontal ones added earlier. VLine, VerticalLine
-5.0.6.4     New Table feature - If user double-clicks and modifies a cell in a table, then an event with a tuple
-                is generated that is similar to the Clicked tuple. The constant TABLE_EDITED_INDICATOR will be part of tuple
-5.0.6.5     Table Element - Finishing up the cell editing by adding more parms to the Table element for edit colors and select color
-                cell_edit_colors controls colors of cells during editing
-                cell_edit_select_colors controls colors of the sections during editing
-5.0.6.6     Menu Element - Added generating an event when a top level menu item has no submenu. NOTE this is not a normal Windows behavior.
-5.0.6.7     dict_to_string changed so width used with pformat is defined by constant DEFAULT_DICT_TO_STRING_WIDTH which is 80.
-                Made retroactive by changing the key in the global settings.  Old default was 1.
-                This function is used when print_event_values=True when making the window.
-5.0.6.8     Menu Element - Added support for using a key with a top-level menu item since these can now be events
-5.0.6.9     Fix for incorrectly calculating row when checking for type when Table editing
-5.0.6.10    Test fix for Y-scrolling of columns that have other scrollable elements in them
-5.0.6.11    More changes to the scrollable Column to try and fix the Y-scrolling issue
-5.0.6.12    Applied above changes to the X-scrollling of columns (both using mouse wheel and scrollbars)
+5.0.8       Released 06-Jan-2025
+
+5.0.8.1     User Setting API - if attempting to read the global PSG settings file and it's empty, print an error rather than attempting to display an error window
+5.0.8.2     Fix in Input.update for crash when using one of the "system default" themes. Was trying to set foreground color to magic number COLOR_SYSTEM_DEFAULT
+            Added new functions to set a widget's foreground and background colors... first step in a major refactor
+            Added protection against recursive errors to the popup error with traceback function which caused problems if error creating a window
+            Maybe fixed (or maybe created) a bug in Input.update. Was setting foreground color when switching to enabled but not the background. Added setting background color
+5.0.8.3     Added import of ssl and a line of code to fix error we're seeing on the Mac
+            
