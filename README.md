@@ -1,98 +1,73 @@
-<p align="center">
-    <img src="https://pysimplegui.net/images/big_news_emoji2.png">
-    <br>
-    For more information visit <a href="https://home.PySimpleGUI.com">PySimpleGUI.com</a>
-</p>
-
-
-##
 
 <p align="center">
     <img height="250" src="https://pysimplegui.net/images/logos/Logo_Full_Transparent_Cropped.png">
-    <h2 align="center">User Interfaces for Humans<sup>TM</sup></h2>
+  
 </p>
 
-# Welcome to PySimpleGUI 5 !!
+ ![](https://PySimpleGUI.net/images/emojis/news_112.png)
+ 
+# Two Important updates about PySimpleGUI 
+ 
+  ![](https://PySimpleGUI.net/images/emojis/search_56.png)
+ 
+ ## 1. New Package Location 
+ 
+We were recently informed by PyPI that PySimpleGUI does not meet updated PyPI Terms of Service, that it needs to be removed, and hosted on a private server.  As a result, you’ll need to add a parameter to your pip install commands in order to access the PySimpleGUI private PyPI server.
+The parameter to add is:  
 
-Do you use PySimpleGUI 4? [Here is what you need to know.](https://docs.pysimplegui.com/en/latest/readme/sunset/)
+`-i https://PySimpleGUI.net/install`
 
-**PySimpleGUI creates desktop applications easily**, enhancing the tkinter, Qt, WxPython, and Remi frameworks with a much simpler programming interface:
+The basic install/upgrade command was: 
 
-1. PySimpleGUI user interfaces are defined using core Python data types (lists and dictionaries) that are easily understood by beginners.
-2. PySimpleGUI event handling changes from a complex callback-based model to a simple message passing one.
-3. PySimpleGUI uses simple Python code and has no requirement for object oriented architecture.
+`python -m pip install –-upgrade PySimpleGUI`  
 
-PySimpleGUI is more than a GUI library: PySimpleGUI simplifies much of your Python development process. Sure, it makes developing user interfaces much easier, but PySimpleGUI also tames advanced Python functionality (such as threading) and makes it easy for all users to take their Python applications to the next level. PySimpleGUI is a robust toolkit.
+or for Linux/Mac  
 
-## Introducing PySimpleGUI 5
+`python3 -m pip install –-upgrade PySimpleGUI`
 
-For the last 5 years, PySimpleGUI offered free software with the hope of sustaining the
-company by donations. We appreciate the support we received, but the amount has been too
-small to support the PySimpleGUI project. For this reason, PySimpleGUI is switching to a
-commercial model, where commercial users are expected to pay a nominal license fee.
+The **new command** with the new parameter is:  
 
+`python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
 
-PySimpleGUI is now part of PySimpleSoft, Inc., whose mission is to make the best Python
-application development environment much, much better. Since launching in 2018, PySimpleGUI
-has helped hobbyists and professionals alike create Python GUIs in a fraction of the time.
-PySimpleGUI 5 takes PySimpleGUI to the next level, providing hundreds of improvements,
-including new features, enhanced security, and priority support.
+  ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
+ 
+## 2. PySimpleGUI Shutdown 
 
+We gave it our best shot…. After 7 years of attempting to make the PySimpleGUI project sustainable, we are stopping the PySimpleGUI project.  
 
-PySimpleGUI 5 is licensed software. As the [License Agreement](LICENSE.txt) explains, after a trial
-period, all PySimpleGUI 5 users must register at PySimpleGUI.com to obtain a Developer Key.
-For most users (Hobbyist Users), the license is at NO COST. If you are a Commercial User, you must buy a license.
+If you've followed the project over the years, you'll have read about the difficulties that all open-source projects face in generating enough income to pay for the project, seen the requests for sponsorships, and attempts to generate income via a Udemy course. There was not enough income to cover the costs of running a business and, of course, wasn’t able to generate any income for our small team.  This isn’t a sustainable situation.
 
-<p align="center">
-    <img src="https://pysimplegui.net/images/pricing_summary.png">
-</p>
+## One Year Update PySimpleGUI 5 
 
-[Register Now](https://pricing.PySimpleGUI.com) and help support the PySimpleGUI community.
+It's been a little over a year since the release of PySimpleGUI 5.  Of the 100,000’s of users, 10,000's of which were large corporate users, only 600 people paid the $99 for a commercial license.  
 
-## Examples
+## End of PySimpleGUI Project
 
-PySimpleGUI users have created thousands of amazing desktop applications. Here are a few screen shots. For more examples, see the [PySimpleGUI gallery](https://gallery.PySimpleGUI.com/).
+The revenue generated was not enough to cover the basic costs, so we've made the difficult decision to end the PySimpleGUI project.
 
-<p align="center">
-    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery1.jpg" />
-    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery2.jpg" />
-    <img height="150" src="https://pysimplegui.net/images/for_readme/gallery3.jpg" />
-</p>
+## Support for Commercial Users 
 
-## Get Started at No Cost
+Unlike traditional software companies, where stopping business means support ends immediately, we thought it would be classier to go the extra mile by continuing to provide support to Commercial License users this year as a way of saying "thank you" for your help in trying to give the project a viable future.  Please provide your Priority Support code or your submission will be automatically blocked.  We'll do the best we can to help with the limited resources we've got.
 
-Whether you are a Hobbyist User or Commercial User, you can start using PySimpleGUI at no cost.
-To get started with a 30-day trial period, first install Python and then
+Your license doesn’t expire so you’ll be able to continue to run your applications at the end of the year we’re providing maintenance and beyond.  We’ll be distributing an offline version of the documentation so that you’ll have it for the future.
 
-    python -m pip install pysimplegui
+## Hobbyists
 
-and run some code, like
+Hobbyists can continue to use PySimpleGUI 5 until their keys expire.  After that you'll need to switch to version 4, which you'll find 1,000s of copies on GitHub with at least 1 being community supported.
 
-    import PySimpleGUI as sg
-    layout = [ [sg.Text('Hello, world!')] ]
-    window = sg.Window('Hello Example', layout)
-    while True:
-        event, values = window.read()
-        if event == sg.WIN_CLOSED:
-            break
-    window.close()
+If you wish to use PySimpleGUI without the key expiring or want support, then you can buy a Commercial License which is good perpetually.
 
-(You might need to use `python3` instead of `python`.)
+## Websites Availability
 
-You can try PySimpleGUI for 30 days, after which you will need to register. Hobbyist users register at no cost, and Commercial Users must buy a license. For more details, see [PySimpleGUI.com/pricing](https://pricing.PySimpleGUI.com).
+The PySimpleGUI registration and documentation websites will continue to operate for a couple of months to give commercial customers an opportunity to create distribution keys.  No new Hobbyist keys will be available.
+ 
+## Thank you to everyone 
 
-## Documentation
+PySimpleGUI has been an experience of a lifetime, and we’ve 
+enjoyed watching & helping people create incredible applications.  
 
-PySimpleGUI provides extensive documentation. Here are some starting points, depending on your needs and expertise:
+## Business Partnership Inquires 
+
+If you're a business with a serious partnership that you wish to discuss, email mike@PySimpleGUI.com. 
 
 
-* [FAQ](https://faq.pysimplegui.com/) - Frequently Asked Questions
-* [Documentation](https://docs.pysimplegui.com/) - Extensive PySimpleGUI documentation*
-* [Examples](https://examples.pysimplegui.com/) - Hundreds of sample PySimpleGUI applications.
-* [SDK Reference](https://sdk.pysimplegui.com/) - details for each PySimpleGUI element
-* [Home Website](https://PySimpleGUI.com) - New PySimpleGUI home page
-* [GitHub Repo](https://github.PySimpleGUI.com) - Informational only. Download from PyPi with pip.
-* [Updated Documentation](https://docs.PySimpleGUI.com) - Everything you need to know about the latest and best PySimpleGUI
-	* [Cookbook](https://cookbook.PySimpleGUI.com) - Hundreds of basic PySimpleGUI examples. Find a starting point that is close to what you need.
-	* [Call Reference](https://cookbook.PySimpleGUI.com) - Just the facts, Ma'am
-* [Udemy Course](https://www.udemy.com/course/pysimplegui/?couponCode=2B7B3757CA48ACB49EBF) - Become a PySimpleGUI expert in no time. Bundled with Commercial Developer License.
