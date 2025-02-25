@@ -61,6 +61,8 @@ If you wish to use PySimpleGUI without the key expiring or want support, then yo
 
 The PySimpleGUI registration and documentation websites will continue to operate for a couple of months to give commercial customers an opportunity to create distribution keys.  No new Hobbyist keys will be available.
  
+![](https://PySimpleGUI.net/images/emojis/pray_56.png)
+ 
 ## Thank you to everyone 
 
 PySimpleGUI has been an experience of a lifetime, and we’ve 
