@@ -10,7 +10,7 @@
  
   ![](https://PySimpleGUI.net/images/emojis/search_56.png)
  
- ## 1. New Package Location 
+## 1. New Package Location 
  
 We were recently informed by PyPI that PySimpleGUI does not meet updated PyPI Terms of Service, that it needs to be removed, and hosted on a private server.  As a result, you’ll need to add a parameter to your pip install commands in order to access the PySimpleGUI private PyPI server.
 The parameter to add is:  
@@ -39,7 +39,7 @@ If you've followed the project over the years, you'll have read about the diffic
 
 ## One Year Update PySimpleGUI 5 
 
-It's been a little over a year since the release of PySimpleGUI 5.  Of the 100,000’s of users, 10,000's of which were large corporate users, only 600 people paid the $99 for a commercial license.  
+It's been a little over a year since the release of PySimpleGUI 5.  Of the 100,000’s of Version 5 users, 10,000's of which were large corporate users, only 600 people paid the $99 for a commercial license.  
 
 ## End of PySimpleGUI Project
 
