@@ -9,7 +9,7 @@
 # Two Important updates about PySimpleGUI 
  
   ![](https://PySimpleGUI.net/images/emojis/search_56.png)
- 
+
 ## 1. New Package Location 
  
 We were recently informed by PyPI that PySimpleGUI does not meet updated PyPI Terms of Service, that it needs to be removed, and hosted on a private server.  As a result, you’ll need to add a parameter to your pip install commands in order to access the PySimpleGUI private PyPI server.
@@ -30,6 +30,15 @@ The **new command** with the new parameter is:
 `python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
 
   ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
+ 
+ ### Uninstall Needed If Error
+ 
+ If you installed the stub version 5.0.99. from PyPI, the only way we're able to show a message from PyPI, then you will need to uninstall PySimpleGUI and reinstall using the private PyPI server
+ 
+ `python -m pip uninstall PySimpleGUI`
+ 
+ `python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
+ 
  
 ## 2. PySimpleGUI Shutdown 
 
