@@ -29,8 +29,6 @@ The **new command** with the new parameter is:
 
 `python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
 
-  ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
- 
  ### Uninstall Needed If Error
  
  If you installed the stub version 5.0.99. from PyPI, the only way we're able to show a message from PyPI, then you will need to uninstall PySimpleGUI and reinstall using the private PyPI server
@@ -38,6 +36,9 @@ The **new command** with the new parameter is:
  `python -m pip uninstall PySimpleGUI`
  
  `python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
+ 
+ 
+  ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
  
  
 ## 2. PySimpleGUI Shutdown 
