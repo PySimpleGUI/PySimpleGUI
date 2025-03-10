@@ -1,7 +1,7 @@
 ---
 name: Issue Form - **Must fill in this form** PSG4 is no longer supported. You MUST supply your Priority Support Code to log an issue.
 about: This form contains the information needed to help you solve your problem
-title: "[ Enhancement/Bug/Question]  NOTE - you can also call sg.main() or sg.main_open_github_issue() to post an issue"
+title: "[ Enhancement/Bug/Question]  NOTE  You must supply your Priority Support Code in order to receive support- "
 labels: ''
 assignees: ''
 
@@ -41,8 +41,7 @@ Or you can print each version shown in ()
 #### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
 
 
-### Priority Support Code (Commercial License Users)
-Replace this text with your Priority Support Code
+### Priority Support Code - Only Commercially Licensed Users Receive Support as of Feb 2025
 
 
 ---------------------
