@@ -1,5 +1,5 @@
 ---
-name: Issue Form - **Must fill in this form** with every new issue submitted. PSG4 is no longer supported on this GitHub.
+name: Issue Form - **Must fill in this form** PSG4 is no longer supported. You MUST supply your Priority Support Code to log an issue.
 about: This form contains the information needed to help you solve your problem
 title: "[ Enhancement/Bug/Question]  NOTE - you can also call sg.main() or sg.main_open_github_issue() to post an issue"
 labels: ''
@@ -42,7 +42,7 @@ Or you can print each version shown in ()
 
 
 ### Priority Support Code (Commercial License Users)
-
+Replace this text with your Priority Support Code
 
 
 ---------------------
