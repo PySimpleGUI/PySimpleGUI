@@ -36,11 +36,11 @@ or for Linux/Mac
 
 The **new command** with the new parameter is:  
 
-`pip install --upgrade --extra-index-url https://PySimpleGUI.net/install  PySimpleGUI`
+`python -m pip install --upgrade --extra-index-url https://PySimpleGUI.net/install  PySimpleGUI`
 
 ### Uninstall Needed If Error
 
-
+If you're getting errors, please uninstall PySimpleGUI entirely and install again using the new parameter.
 
 ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
 
