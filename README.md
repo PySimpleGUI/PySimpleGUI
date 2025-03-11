@@ -15,9 +15,18 @@
 We were recently informed by PyPI that PySimpleGUI does not meet updated PyPI Terms of Service, that it needs to be removed, and hosted on a private server.  As a result, you’ll need to add a parameter to your pip install commands in order to access the PySimpleGUI private PyPI server.
 The parameter to add is:  
 
-`-i https://PySimpleGUI.net/install`
+`--extra-index-url https://PySimpleGUI.net/install `
 
-The basic install/upgrade command was: 
+### To force a reinstall of PySimpleGUI from new server
+
+`python -m pip install --force-reinstall --extra-index-url https://PySimpleGUI.net/install PySimpleGUI`
+
+
+### Performing an upgrade
+
+This command will also install needed modules like rsa from PyPI automatically
+
+The basic install/upgrade command **was**: 
 
 `python -m pip install –-upgrade PySimpleGUI`  
 
@@ -27,20 +36,15 @@ or for Linux/Mac
 
 The **new command** with the new parameter is:  
 
-`python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
+`pip install --upgrade --extra-index-url https://PySimpleGUI.net/install  PySimpleGUI`
 
- ### Uninstall Needed If Error
- 
- If you installed the stub version 5.0.99. from PyPI, the only way we're able to show a message from PyPI, then you will need to uninstall PySimpleGUI and reinstall using the private PyPI server
- 
- `python -m pip uninstall PySimpleGUI`
- 
- `python -m pip install --upgrade -i https://PySimpleGUI.net/install PySimpleGUI`
- 
- 
-  ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
- 
- 
+### Uninstall Needed If Error
+
+
+
+![](https://PySimpleGUI.net/images/emojis/wave_56.png)
+
+
 ## 2. PySimpleGUI Shutdown 
 
 We gave it our best shot…. After 7 years of attempting to make the PySimpleGUI project sustainable, we are stopping the PySimpleGUI project.  
