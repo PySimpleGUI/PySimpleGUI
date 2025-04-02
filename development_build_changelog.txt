@@ -3,4 +3,5 @@ Changelog since last major release
 5.0.9       Released 02-Mar-2025
 
 5.0.9.1     Added Table.disable_edit_for_cells.  Provide a list of (row, col) cells to not allowed to be edited
+5.0.9.2     Fixed bug that incorrectly flagged commercial keys as expired
             
