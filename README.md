@@ -4,14 +4,14 @@
   
 </p>
 
- ![](https://PySimpleGUI.net/images/emojis/news_112.png)
- 
+![](https://PySimpleGUI.net/images/emojis/news_112.png)
+
 # Two Important updates about PySimpleGUI 
- 
-  ![](https://PySimpleGUI.net/images/emojis/search_56.png)
+
+![](https://PySimpleGUI.net/images/emojis/search_56.png)
 
 ## 1. New Package Location 
- 
+
 We were recently informed by PyPI that PySimpleGUI does not meet updated PyPI Terms of Service, that it needs to be removed, and hosted on a private server.  As a result, you’ll need to add a parameter to your pip install commands in order to access the PySimpleGUI private PyPI server.
 The parameter to add is:  
 
@@ -38,9 +38,16 @@ The **new command** with the new parameter is:
 
 `python -m pip install --upgrade --extra-index-url https://PySimpleGUI.net/install  PySimpleGUI`
 
-### Uninstall Needed If Error
+### Uninstall May Be Needed If Error
 
 If you're getting errors, please uninstall PySimpleGUI entirely and install again using the new parameter.
+
+
+### BUG - Commercial Key Expiration - Upgrade to 5.0.10
+
+There is a bug in versions of PySimpleGUI older than 5.0.10 that causes an erroneous expired error when using a Commercial Developer key.  These keys do not expire and shouldn't not be generating the error.
+
+A fix was released in version 5.0.10 on 2-Apr-2025.  **Please upgrade to version 5.0.10** so that your key doesn't generate an expiration error.
 
 ![](https://PySimpleGUI.net/images/emojis/wave_56.png)
 
