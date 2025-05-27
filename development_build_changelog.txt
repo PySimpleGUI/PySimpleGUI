@@ -2,5 +2,5 @@ Changelog since last major release
 
 5.0.10      Released 02-Apr-2025
 
-
+5.0.10.3    Fix for a potential problem with trial periods
 
