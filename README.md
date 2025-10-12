@@ -24,7 +24,7 @@ The parameter to add is:
 
 ### Performing an upgrade
 
-This command will also install needed modules like rsa from PyPI automatically
+This command will also install needed modules like rsa from PyPI automatically!
 
 The basic install/upgrade command **was**: 
 
@@ -84,7 +84,7 @@ The PySimpleGUI registration and documentation websites will continue to operate
  
 ![](https://PySimpleGUI.net/images/emojis/pray_56.png)
  
-## Thank you to everyone 
+## Thankyou to everyone 
 
 PySimpleGUI has been an experience of a lifetime, and we’ve 
 enjoyed watching & helping people create incredible applications.  
