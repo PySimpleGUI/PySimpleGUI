@@ -6,7 +6,88 @@
 
 ![](https://PySimpleGUI.net/images/emojis/news_112.png)
 
-# Two Important updates about PySimpleGUI 
+# 2026 PySimpleGUI Closure in January 2026
+
+The PySimpleGUI project’s planned shutdown was first announced in February 2025. At that time, we committed to supporting our Commercial customers through the end of 2025. PySimpleGUI 5 remained a very stable product throughout the year, with no significant issues reported.
+
+Now that we’ve reached the end of that support period, the project is entering its final stage. During January 2026, the PySimpleGUI website, documentation, and PyPI servers will be taken offline as we officially close the project.
+
+## Private PyPI Server *** GOING OFFLINE JAN 2026 ***
+
+The private PyPI server will be shut down in **January 2026**
+.
+If you currently install PySimpleGUI 5 using `pip`, you’ll need to switch to installing from a local wheel file instead. You can do this using the command:
+
+`python -m pip install wheelfile.whl`
+
+
+### Downloading Wheels
+
+To prepare for the server shutdown please download the wheel file for the version of PySimpleGUI you're currently running.  The latest release is 5.0.10 and is located here:
+
+[PySimpleGUI 5.0.10](https://pysimplegui.net/install/pysimplegui/PySimpleGUI-5.0.10-py3-none-any.whl)
+
+Here are some older releases (but everyone should be on 5.0.10 now anyway):  
+
+[PySimpleGUI 5.0.9](https://pysimplegui.net/install/pysimplegui/PySimpleGUI-5.0.9-py3-none-any.whl)  
+[PySimpleGUI 5.0.8](https://pysimplegui.net/install/pysimplegui/PySimpleGUI-5.0.8-py3-none-any.whl)   
+[PySimpleGUI 5.0.7](https://pysimplegui.net/install/pysimplegui/PySimpleGUI-5.0.7-py3-none-any.whl)  
+[PySimpleGUI 5.0.6](https://pysimplegui.net/install/pysimplegui/PySimpleGUI-5.0.6-py3-none-any.whl)  
+
+### Installing a Wheel
+
+After you've downloaded the wheel file and saved it to your local machine, install it using this pip command:
+
+`python -m pip install PySimpleGUI-5.0.10-py3-none-any.whl`
+
+
+## Final Build of PySimpleGUI 5
+ 
+ 
+ ### Commercial Licensees
+
+A final version, **PySimpleGUI 5.0.2026.0**, has been produced for Commercial users. This release includes relaxed security and licensing restrictions to help ensure it will continue to run indefinitely, and to allow you to make fixes if ever needed.
+
+
+It will be available for download **soon** by logging into your account on [PySimpleGUI.com](https://pysimplegui.com).  After logging in, you’ll find a download link to the wheel file.  To install the downloaded wheel file, run the command:
+
+`python -m pip install PySimpleGUI-5.0.2026.0-py3-none-any.whl`
+
+**Important:**
+This final release is licensed for Commercial users only. Please do not share or post it publicly. 
+
+ 
+
+### Hobbyist users
+
+Please note that Hobbyist keys have been discontinued and will expire this year (if they haven’t already). If you wish to continue running your PySimpleGUI code, you have a few options:
+
+- Port your code to use PySimpleGUI 4 (or compatible projects such as *FreeSimpleGUI*).
+- Upgrade to a Commercial License to access version 5.0.2026.0, which does not include key restrictions.
+
+
+## PySimpleGUI 5 Documentation
+
+The PySimpleGUI 5 documentation hosted on ReadTheDocs will go offline this month.
+An archived copy of the final documentation will remain available on GitHub at:
+
+[https://pysimplegui.github.io/PSG5Docs/](https://pysimplegui.github.io/PSG5Docs/)
+
+The PySimpleGUI.com Documentation link will be pointed to the offline version once we shutdown the ReadTheDocs account.
+
+## PySimpleGUI GitHub Repos
+
+All PySimpleGUI GitHub repositories will be set to read-only mode but will remain publicly accessible for reference.
+
+# Thank you
+
+Thank you to everyone who used, supported, and contributed to PySimpleGUI over the years. It’s been a rewarding journey, and your enthusiasm made this project possible.
+ 
+ ---------------------------------
+ 
+ # Announcement from Feb 2025
+
+## Two Important updates about PySimpleGUI 
 
 ![](https://PySimpleGUI.net/images/emojis/search_56.png)
 
