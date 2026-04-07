@@ -93,7 +93,7 @@ def get_file_list_dict():
                 fname_full = os.path.join(dirname, filename)
                 if filename not in demo_files_dict.keys():
                     demo_files_dict[filename] = fname_full
-               else:
+                else:
                     # Allow up to 100 dupicated names. After that, give up
                     for i in range(1, 100):
                         new_filename = f'{filename}_{i}'
@@ -945,7 +945,7 @@ def main():
                                     break
                     except AttributeError:
                         sg.cprint('Your version of PySimpleGUI needs to be upgraded to fully use the "WAIT" feature.', c='white on red')
-        elif event.startswith('Edit Me'):d
+        elif event.startswith('Edit Me'):
             editor_program = get_editor()
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
