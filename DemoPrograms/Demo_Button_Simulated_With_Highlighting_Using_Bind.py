@@ -20,11 +20,9 @@ import PySimpleGUI as sg
     An element's bind method will make a tuple if the original key is a tuple.
         (('-B-', button_text), 'ENTER') will be the event when the mouse is moved over the "Button"
 
-    Copyright 2022-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 # sg.theme('dark red')

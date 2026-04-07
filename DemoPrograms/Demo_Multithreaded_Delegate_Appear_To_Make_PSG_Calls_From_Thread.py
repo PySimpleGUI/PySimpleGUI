@@ -21,11 +21,9 @@ import threading
     in the example below that the counter variable being passed to the popup will not appear to be counting correctly.  This is because the
     value shown will be the value at the time the popup is DISPLAYED, not the value when the make_delegate_call was made. 
     
-    Copyright 2022-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 

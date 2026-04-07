@@ -9,11 +9,9 @@ import PySimpleGUI as sg
     
     The function make_key returns a dictionary that's used as keyword parameters that are passed to the Input elements. Using this technique allows the Input elements in the layout to benefit from the docstrings provided by PySimpleGUI.  Another approach could be to use a function that returns an Input element, but that limits the flexibility for configuring Input elements.
 
-    Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 keys_to_save = ('-IN1-', '-IN2-', '-IN3-', '-IN4-')

@@ -12,11 +12,9 @@ import PySimpleGUI as sg
     Second parameter for windows is an entire key, for elements is something added onto a key.  This key or modified key is what is returned when you read the window.
     If the key modifier is text and the key is text, then the key returned from the read will be the 2 concatenated together.  Otherwise your event will be a tuple containing the key_modifier value you pass in and the key belonging to the element the event happened to.
     
-    Copyright 2021-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 sg.theme('Dark Blue 3')
 

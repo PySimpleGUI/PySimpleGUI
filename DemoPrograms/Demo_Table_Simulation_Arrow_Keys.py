@@ -6,11 +6,9 @@ import operator
     Another simple table created from Input Text Elements.  This demo adds the ability to "navigate" around the drawing using
     the arrow keys. The tab key works automatically, but the arrow keys are done in the code below.
     
-    Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 sg.theme('Dark Brown 2')  # No excuse for gray windows

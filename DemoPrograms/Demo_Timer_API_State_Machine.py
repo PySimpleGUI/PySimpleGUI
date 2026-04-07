@@ -23,7 +23,7 @@ import PySimpleGUI as sg
     for any of these states and have the threads communicate the state transitions using the same write_event_value used
     in this example.
 
-    Copyright 2024 PySimpleSoft Inc.
+    Copyright 2018-2026 PySimpleGUI.  All Rights Reserved.
 """
 
 

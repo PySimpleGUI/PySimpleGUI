@@ -19,11 +19,9 @@ import PySimpleGUI as sg
     For other ports of PySimpleGUI such as the Qt port, the position is remembered by Qt and as a
     result this technique using "pin" is not needed.
 
-    Copyright 2020-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 layout = [[sg.Text('Hide Button or Multiline. Buttons 1 & 2 hide Button 2')],

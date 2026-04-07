@@ -18,11 +18,9 @@ import PySimpleGUI as sg
     With this package, you can get a real system tray icon while using tkinter rather than a desktop-icon that this
         demo is demonstrating.  The Demo Program - Demo_psgtray_Tray_Icon_Tkinter - shows how to integrate it with PySimpleGUI 
     
-    Copyright 2022-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 

@@ -11,11 +11,9 @@ import PySimpleGUI as sg
     To "swap out" a portion of a window, use a Column element for that portion.  Add multiple Columns
     on the same row and make only 1 of them active at a time
     
-    Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 # ----------- Create the 3 layouts this Window will display -----------

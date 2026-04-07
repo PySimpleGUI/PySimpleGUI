@@ -11,11 +11,9 @@ import PySimpleGUI as sg
     There is one added line of code.  When the user attempts to close the window, that's when the position is saved.
     When the program starts, it reads the previously saved position as part of the window creation.  User Settings APIs rock!
 
-    Copyright 2021-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 layout = [[sg.Text('Window that Auto-saves position', font='_ 25')],

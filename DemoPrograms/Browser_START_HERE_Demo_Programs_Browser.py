@@ -1,10 +1,8 @@
 '''
-Copyright 2022-2024 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
 
-Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject
 to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
 
-You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant
 to the PySimpleGUI License Agreement.
 '''
 
@@ -14,7 +12,7 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
-version = '5.3.0'
+version = '6.0'
 __version__ = version.split()[0]
 
 
@@ -56,7 +54,7 @@ packages_with_weird_names = {'cv2':'opencv-python',
         5.2.0  14-Aug-2024  Fixed erronous import error (when import line started with "from")
                             Added a new "Path" input so that an arbitrary file can be executed easily (or edited)
         5.3.0  15-Aug-2024  One last change for the new path input... clear other fields if chars are entered
-    Copyright 2021, 2022, 2023, 2024 PySimpleSoft Inc.
+    Copyright 2018-2026 PySinpleGUI.  All rights reserved.
 """
 
 '''
@@ -95,7 +93,7 @@ def get_file_list_dict():
                 fname_full = os.path.join(dirname, filename)
                 if filename not in demo_files_dict.keys():
                     demo_files_dict[filename] = fname_full
-                else:
+               else:
                     # Allow up to 100 dupicated names. After that, give up
                     for i in range(1, 100):
                         new_filename = f'{filename}_{i}'
@@ -797,26 +795,7 @@ def pip_install_latest():
 
     window.close()
 
-def suggest_upgrade_gui():
-    layout = [[sg.Image(sg.EMOJI_BASE64_HAPPY_GASP), sg.Text(f'PySimpleGUI 5+ Required', font='_ 15 bold')],
-              [sg.Text(f'PySimpleGUI 5+ required for this program to function correctly.')],
-              [sg.Text(f'You are running PySimpleGUI {sg.version}')],
-              [sg.Text('Would you like to upgrade to the latest version of PySimpleGUI now?')],
-              [sg.Push(), sg.Button('Upgrade', size=8, k='-UPGRADE-'), sg.Button('Cancel', size=8)]]
 
-    window = sg.Window(title=f'Newer version of PySimpleGUI required', layout=layout, font='_ 12')
-
-    while True:
-        event, values = window.read()
-
-        if event in (sg.WIN_CLOSED, 'Cancel'):
-            window.close()
-            break
-        elif event == '-UPGRADE-':
-            window.close()
-            pip_install_latest()
-            sg.execute_command_subprocess(sys.executable, __file__, pipe_output=True, wait=False)
-            break
 
 
 def make_str_pre_38(package):
@@ -862,11 +841,6 @@ def show_package_version(package):
 
 
 
-def upgrade_check():
-    if not sg.version.startswith('5'):
-        suggest_upgrade_gui()
-        exit()
-
 
 
 '''
@@ -887,7 +861,6 @@ def main():
     """
 
     sg.user_settings_filename(filename='psgdemos.json')
-    upgrade_check()
 
     sg.user_settings_filename('psgdemos.json')
     sg.set_options(icon=sg.EMOJI_BASE64_HAPPY_IDEA)
@@ -972,7 +945,7 @@ def main():
                                     break
                     except AttributeError:
                         sg.cprint('Your version of PySimpleGUI needs to be upgraded to fully use the "WAIT" feature.', c='white on red')
-        elif event.startswith('Edit Me'):
+        elif event.startswith('Edit Me'):d
             editor_program = get_editor()
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')

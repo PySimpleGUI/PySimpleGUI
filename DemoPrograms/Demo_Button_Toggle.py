@@ -7,11 +7,9 @@ import PySimpleGUI as sg
     A HUGE thank you to the PySimpleGUI community memeber that donated his time and skill in creating the buttons!
     The text of the button toggles between Off and On
     
-    Copyright 2021-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 def main():

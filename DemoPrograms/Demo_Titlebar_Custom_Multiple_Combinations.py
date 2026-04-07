@@ -20,11 +20,9 @@ import PySimpleGUI as sg
         ['6 - Button Background & Slider', sg.theme_button_color()[1], sg.theme_slider_color()],
         ['7 - Slider & Button Text', sg.theme_slider_color(), sg.theme_button_color()[0]],
 
-    Copyright 2020-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 """
 
 

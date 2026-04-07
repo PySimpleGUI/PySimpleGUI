@@ -10,11 +10,9 @@ import PySimpleGUI as sg
     BUT, should you want to quickly convert some existing code that does use callback functions, then this
     is one way to do a "quick and dirty" port to PySimpleGUI.
     
-    Copyright 2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2018-2026 PySimpleGUI. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
 '''
 
 # The callback functions
