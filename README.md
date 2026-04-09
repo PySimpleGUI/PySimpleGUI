@@ -41,6 +41,19 @@ I don't have a firm grasp of the future beyond a few weeks at this point.  If th
 
 ## Installing
 
+You can install straight from this GitHub repo.
+
+### Quickest install using zipball
+
+`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`  
+
+if you invoke using `python3`:  
+
+`python3 -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`
+
+
+### If you have git installed
+
 You can pip install straight from this Repo using the command:  
 `python -m pip install git+https://github.com/PySimpleGUI/PySimpleGUI`
 

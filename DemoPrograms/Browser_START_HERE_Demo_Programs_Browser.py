@@ -1,9 +1,7 @@
 '''
     Copyright 2018-2026 PySimpleGUI. All rights reserved.
 
-to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
-
-to the PySimpleGUI License Agreement.
+    Licensed under LGPL3
 '''
 
 import os
