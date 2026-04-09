@@ -10,7 +10,7 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
-version = '6.0'
+version = '6.0.1'
 __version__ = version.split()[0]
 
 
@@ -52,6 +52,9 @@ packages_with_weird_names = {'cv2':'opencv-python',
         5.2.0  14-Aug-2024  Fixed erronous import error (when import line started with "from")
                             Added a new "Path" input so that an arbitrary file can be executed easily (or edited)
         5.3.0  15-Aug-2024  One last change for the new path input... clear other fields if chars are entered
+        6.0    8-Apr-2026   Major version bump to match the commercial to LGPL3 license change
+        6.0.1  9-Apr-2026   Set the likely location of the demo programs as the initial path in the settings window
+        
     Copyright 2018-2026 PySinpleGUI.  All rights reserved.
 """
 
@@ -230,7 +233,7 @@ def get_line_number(file_path, string, dupe_lines):
             if string.strip() == line.strip() and num not in dupe_lines:
                 lmn = num
     return lmn
-    
+
 def kill_ascii(s):
     return "".join([x if ord(x) < 128 else '?' for x in s])
 
@@ -502,7 +505,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                     list_of_matches.append(_match.strip())
                 file_array_old.append(file_array_new)
                 file_array_old.append(file_match_list)
-                
+
                 if tail in file_lines_dict:
                     for i in range(1, 100):
                         new_tail = f'{tail}_{i}'
@@ -589,10 +592,13 @@ def settings_window():
     except:
         global_theme = ''
 
+    # normally the demo programs are located in a folder in the same folder as the demo browser
+    default_demo_programs_path = os.path.join(os.path.dirname(__file__), 'demo_programs')
+
     layout = [[sg.T('Program Settings', font='DEFAULT 25')],
               [sg.T('Path to Tree',  font='_ 16')],
-               [sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
-               sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
+               [sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), auto_size_text=False,  key='-FOLDERNAME-'),
+               sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-', initial_folder=default_demo_programs_path), sg.B('Clear History')],
               [sg.T('Editor Program',  font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_editor)],
                 [ sg.In(sg.user_settings_get_entry('-editor program-', ''),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
