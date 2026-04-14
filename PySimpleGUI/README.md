@@ -13,7 +13,7 @@
 
 <div>
 
-![PySimpleGUI Logo](https://pysimplegui.net/images/emojis/question_56.png)  
+![PySimpleGUI Logo](https://pysimplegui.net/images/emojis/question_56.png?raw=true&v=1))  
 
 </div>
 
@@ -41,7 +41,7 @@ The applications `psgdemos`, `psgfiglet`, `psghotkey` have all been upgraded to 
 On Tues 14-Apr-2026 PSG Version 6 was posted to PyPI.  There were a LOT of changes that have been made over the years since version 4 was released.  Hoping that it all goes well!   Feel free to open an issue if you run into trouble. 
 <div>
 
-![PySimpleGUI Logo](https://pysimplegui.net/images/emojis/fingers_crossed_56.png)
+![PySimpleGUI Logo](https://pysimplegui.net/images/emojis/fingers_crossed_56.png?raw=true&v=1))
 
 </div>
 
