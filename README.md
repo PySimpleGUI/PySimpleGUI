@@ -11,7 +11,12 @@
 
 **Wait, what?**
 
+<div>
+
 ![PySimpleGUI Logo](http://pysimplegui.net/images/emojis/question_56.png)  
+
+</div>
+
 
 As we've been winding down the commercialization effort, shutting down servers and archiving materials, I saw this week that the PySimpleGUI repositories are going to be of little use.  Everything was switched over to using PySimpleGUI 5. The documentation is PySimpleGUI5 specific as well.  So, I made a decision a couple of days ago to get the project into a state where it's at least usable and hopefully even useful.  
 
@@ -34,7 +39,12 @@ The applications `psgdemos`, `psgfiglet`, `psghotkey` have all been upgraded to 
 ### Version 6 Uploaded to PyPI
 
 On Tues 14-Apr-2026 PSG Version 6 was posted to PyPI.  There were a LOT of changes that have been made over the years since version 4 was released.  Hoping that it all goes well!   Feel free to open an issue if you run into trouble. 
+<div>
+
 ![PySimpleGUI Logo](http://pysimplegui.net/images/emojis/fingers_crossed_56.png)
+
+</div>
+
 
 ### Maintenance & Support
 

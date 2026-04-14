@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0"
+version = "6.0.1"
 
 
 
@@ -62,7 +62,7 @@ version = "6.0"
 Changelog since last major release
 
 6.0         5-Apr-2026  Initial release
-
+6.0.1       8-Apr-2026  Emoji change to main window
 """
 
 
@@ -25275,7 +25275,7 @@ def _create_main_window():
     def VerLine(version, description, justification='r', size=(40, 1)):
         return [T(version, justification=justification, font='Any 10', text_color='yellow', size=size, pad=(0, 0)), T(description, font='Any 10', pad=(0, 0))]
 
-    security_emoji = EMOJI_BASE64_HAPPY_WINK
+    security_emoji = _random_happy_emoji()
 
 
 
