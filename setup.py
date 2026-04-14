@@ -10,7 +10,7 @@ def readme():
 
 
 setuptools.setup(
-    name="PySimpleGUI",
+    name="pysimplegui",
     version="6.0",
     author="PySimpleGUI",
     author_email="PySimpleGUI@PySimpleGUI.org",
