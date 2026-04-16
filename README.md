@@ -6,8 +6,13 @@
 
 
 # PySimpleGUI 6
+<div>
 
-6-Apr-2026
+
+<img src="https://pysimplegui.net/images/logos/psg6_logo_plain.png" height="100" alt="Alt text">
+
+</div>
+
 
 **Wait, what?**
 
@@ -18,11 +23,13 @@
 </div>
 
 
+6-Apr-2026
+
 As we've been winding down the commercialization effort, shutting down servers and archiving materials, I saw this week that the PySimpleGUI repositories are going to be of little use.  Everything was switched over to using PySimpleGUI 5. The documentation is PySimpleGUI5 specific as well.  So, I made a decision a couple of days ago to get the project into a state where it's at least usable and hopefully even useful.  
 
-## Version 4 on PyPI 4.60.5.0
+## Version 4 on PyPI 4.60.5.1
 
-A first step was to put version 4.60.5 up on PyPI.  Version 4.60.5.0 was posted this week so that `pip install PySimpleGUI` will provide a version of PySimpleGUI that's solid.
+A first step was to put version 4.60.5 up on PyPI.  Version 4.60.5.1 was posted this week so that `pip install PySimpleGUI` will provide a version of PySimpleGUI that's solid.
 
 ## PySimpleGUI 6 - Back to LGPL3
 
