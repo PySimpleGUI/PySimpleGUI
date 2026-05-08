@@ -17926,18 +17926,20 @@ def convert_args_to_single_string(*args):
 
     """
     max_line_total, width_used, total_lines, = 0, 0, 0
-    single_line_message = ''
+    message_parts = []
     # loop through args and built a SINGLE string from them
     for message in args:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
         message = str(message)
-        longest_line_len = max([len(l) for l in message.split('\n')])
+        message_lines = message.split('\n')
+        longest_line_len = max(len(l) for l in message_lines) if message_lines else 0
         width_used = max(longest_line_len, width_used)
         max_line_total = max(max_line_total, width_used)
         lines_needed = _GetNumLinesNeeded(message, width_used)
         total_lines += lines_needed
-        single_line_message += message + '\n'
+        message_parts.append(message)
+    single_line_message = '\n'.join(message_parts) + '\n' if message_parts else ''
     return single_line_message, width_used, total_lines
 
 
@@ -20467,19 +20469,21 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         else:
             layout += [[Image(data=image)]]
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
-    complete_output = ''
+    message_parts = []
     for message in args:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
         message = str(message)
-        longest_line_len = max([len(l) for l in message.split('\n')])
+        message_lines = message.split('\n')
+        longest_line_len = max(len(l) for l in message_lines) if message_lines else 0
         width_used = min(longest_line_len, width)
         max_line_total = max(max_line_total, width_used)
         max_line_width = width
         lines_needed = _GetNumLinesNeeded(message, width_used)
         height_computed += lines_needed + 1
-        complete_output += message + '\n'
+        message_parts.append(message)
         total_lines += lines_needed
+    complete_output = '\n'.join(message_parts) + '\n' if message_parts else ''
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
