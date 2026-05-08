@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.1"
+version = "6.0.2"
 
 
 
@@ -63,6 +63,9 @@ Changelog since last major release
 
 6.0         5-Apr-2026  Initial release
 6.0.1       8-Apr-2026  Emoji change to main window
+6.0.2       8-May-2026  Fixed buh in Window.settings_save.  If a window is closed using "X" or terminated in a
+                        similiar way, then the value None is written to the settings file for all keys.
+                        The fix is to check if all values are None.  If so, skip saving the values
 """
 
 
@@ -11095,12 +11098,17 @@ class Window:
     def settings_save(self, values):
         """
         Saves settings to settings file using the values dictionary that is passed in.
-
+        If all of the values in the dictionary are None, then it will not be saved
         :param values:  Dictionary of values to potentially save
         :type values:   (Dict)
         """
         if values is None:      # sometimes users may accidently pass in None, so just ignore it
             return
+        # if all values in the value dictionary are None, then assume the windows was closed
+        # and no values should be saved
+        if all(v is None for v in values.values()):
+            return
+
         for key, value in values.items():
             try:
                 element = self.find_element(key)
