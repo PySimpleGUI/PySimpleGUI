@@ -1,80 +1,60 @@
-<div align="center">
 
-![PySimpleGUI Logo](https://pysimplegui.net/images/logos/Logo_Full_Transparent_Cropped.png)
+<p align="center">
+    <img height="250" src="https://pysimplegui.net/images/logos/Logo_Full_Transparent_Cropped.png">
+  
+</p>
 
-</div>
+
+ 
+# Open Source Once Again...
+
+Hey, it's Mike....![](https://PySimpleGUI.net/images/emojis/wave_56.png?raw=true&v=1) 
+
+
+We gave commercialization a try. It was an incredible experience, but it didn’t generate the resources needed to sustain PySimpleGUI at the level we had hoped. In February 2025, we announced that PySimpleSoft would be shutting down, with support continuing through the end of 2025.
+
+That process is now complete. The next question was what to do with the code, documentation, and repositories. I always planned to keep the repos available for reference—so the decision came down to the software itself.
+
 
 
 # PySimpleGUI 6
+
 <div>
-
-
-<img src="https://pysimplegui.net/images/logos/psg6_logo_plain.png" height="100" alt="Alt text">
-
+<img src="https://pysimplegui.net/images/logos/psg6_logo_plain.png" height="80" alt="Alt text">
 </div>
 
 
-**Wait, what?**
+I’ve released the PySimpleGUI 5 code as open source. After removing licensing and security components, it’s now available under the LGPL3 license on GitHub and PyPI.
 
-<div>
+## Installing from PyPI
 
-![PySimpleGUI Emoji](https://pysimplegui.net/images/emojis/question_56.png?raw=true&v=1) 
+To install the latest version (v6):
 
-</div>
+`python -m pip install PySimpleGUI`
 
-
-6-Apr-2026
-
-As we've been winding down the commercialization effort, shutting down servers and archiving materials, I saw this week that the PySimpleGUI repositories are going to be of little use.  Everything was switched over to using PySimpleGUI 5. The documentation is PySimpleGUI5 specific as well.  So, I made a decision a couple of days ago to get the project into a state where it's at least usable and hopefully even useful.  
-
-## Version 4 on PyPI 4.60.5.1
-
-A first step was to put version 4.60.5 up on PyPI.  Version 4.60.5.1 was posted this week so that `pip install PySimpleGUI` will provide a version of PySimpleGUI that's solid.
-
-## PySimpleGUI 6 - Back to LGPL3
-
-There were several years of development that went into the PySimpleGUI 5 effort.  Rather than have those bug fixes and new features languish and be useless, I'm releasing them as Open Source.
-
-Not all of the Version 5 code is in 6.  Things like the upgrade mechanism and of course the licensing has been removed.  As far as functionality, it matches the SDK posted in the [Docs.PySimpleGUI.com](https://Docs.PySimpleGUI.com) documentation.  
-
-## What to expect ahead
-
-### Applications, Demo Programs, etc
-
-The applications `psgdemos`, `psgfiglet`, `psghotkey` have all been upgraded to 6 and posted on GitHub and PyPI.  The remaining applications are being updated as well. 
-
-### Version 6 Uploaded to PyPI
-
-On Tues 14-Apr-2026 PSG Version 6 was posted to PyPI.  There were a LOT of changes that have been made over the years since version 4 was released.  Hoping that it all goes well!   Feel free to open an issue if you run into trouble. 
-<div>
-
-![PySimpleGUI Emoji](https://pysimplegui.net/images/emojis/fingers_crossed_56.png?raw=true&v=1)
-
-</div>
+If you need the older version (4.60.5.1):
 
 
-### Maintenance & Support
+`python -m pip install PySimpleGUI==4.60.5.1`
 
-I don't have a firm grasp of the future beyond a few weeks at this point.  If the past 8 years is any indication, I'm not very good at making predictions.
+## Installing from Github
 
-## Installing
+The GitHub repo has the most up-to-date code. You can install directly without cloning:
 
-You can install the latest released version from PyPI with a simple:
 
-## PyPI
+`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`
 
-`python -m pip install PySimpleGUI`  
-
-## Github
-
-You can install the latest version straight from the PySimpleGUI GitHub repo without downloading the repo by running:
-
-`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`  
-
-If you want to download the repo then download/close and run in the downloaded folder:
+Or clone/download the repo and install locally:
 
 `python -m pip install .`
+ 
+## Longer Term Outlook
 
-## More updates coming...
+I’m still wrapping up the transition from version 5 to 6, including the docs. After that, I’m honestly not sure what the long-term future looks like—but if the past 8 years are any indication, I’m not great at predicting it.  
 
-Changes are rolling out onto GitHub and PyPI every few days.  They'll continue until everything gets switched over to Version 6.
+
+For now, I’m here and happy to help.
+
+## Thank you
+
+PySimpleGUI has been a once-in-a-lifetime experience. It’s been amazing to see what people have built and to be a small part of it. Thanks to everyone who supported the project over the years.
