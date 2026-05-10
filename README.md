@@ -58,3 +58,77 @@ For now, I’m here and happy to help.
 ## Thank you
 
 PySimpleGUI has been a once-in-a-lifetime experience. It’s been amazing to see what people have built and to be a small part of it. Thanks to everyone who supported the project over the years.
+
+---------------------------------
+
+
+# What is PySimpleGUI?
+
+PySimpleGUI is a wrapper for tkinter (and other GUI libraries) that transforms the GUI SDK into a simpler, more compact architecture while still providing detailed customization.  No prior GUI programming experience needed.
+
+This is an entire interactive application.
+
+```python
+import PySimpleGUI as sg
+
+# Define the window's contents
+layout = [[sg.Text("What's your name?")],
+          [sg.Input(key='-INPUT-')],
+          [sg.Text(size=(40,1), key='-OUTPUT-')],
+          [sg.Button('Ok'), sg.Button('Quit')]]
+
+# Create the window
+window = sg.Window('Window Title', layout)
+
+# Display and interact with the Window using an Event Loop
+while True:
+    event, values = window.read()
+    # See if user wants to quit or window was closed
+    if event == sg.WINDOW_CLOSED or event == 'Quit':
+        break
+    # Output a message to the window
+    window['-OUTPUT-'].update('Hello ' + values['-INPUT-'] + "! Thanks for trying PySimpleGUI")
+
+# Finish up by removing from the screen
+window.close()
+```
+
+This is the window that's created.
+
+![win1](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Example2-1.jpg)
+
+Here's the same window after some user interaction.
+
+![win2](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Example2-2.jpg)
+
+## Want to learn more?  Documentation
+
+
+You'll find **extensive** documentation at:
+
+https://Docs.PySimpleGUI.com
+
+## Contributing
+
+PySimpleGUI has always been developed more like a proprietary product than an open source project.  Pull requests aren't accepted.
+
+## AI....
+
+-sigh- 
+![](https://PySimpleGUI.net/images/emojis/weary_56.png?raw=true&v=1) 
+
+Seems most projects have something to say about AI usage now.  This is my **opinion** and how I've decided to use AI.  It's what's right for me.  It might not be right for you or anyone else.
+
+I use LLMs to search and summarize documentation, lookup errors, do research, get knowledge.  I don't use LLMs to write code.  My reason is very simple.  
+
+**I like to write code.**  
+
+I fell in love with programming 50 years ago.  Writing software is my happy place.  Why would I give that to a computer to do instead of getting the enjoyment I get from doing it?  AI can generate lots of things.  The feeling I get writing software is not one of those things it can generate.
+
+I'm not in a hurry.  If I wanted code written for me, I would have opened the project up to pull requests years ago, but I didn't because I wanted to write the code.  It's fun!
+
+## License & Copyright
+
+Copyright 2018-2026 PySimpleGUI.
+
+Licensed under LGPL3.
