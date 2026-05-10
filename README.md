@@ -101,7 +101,7 @@ Here's the same window after some user interaction.
 
 ![win2](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Example2-2.jpg)
 
-## Want to learn more?  Documentation
+##  Documentation - want to learn more? 
 
 
 You'll find **extensive** documentation at:
@@ -114,7 +114,6 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 ## AI....
 
--sigh- 
 ![](https://PySimpleGUI.net/images/emojis/weary_56.png?raw=true&v=1) 
 
 Seems most projects have something to say about AI usage now.  This is my **opinion** and how I've decided to use AI.  It's what's right for me.  It might not be right for you or anyone else.
@@ -127,8 +126,16 @@ I fell in love with programming 50 years ago.  Writing software is my happy plac
 
 I'm not in a hurry.  If I wanted code written for me, I would have opened the project up to pull requests years ago, but I didn't because I wanted to write the code.  It's fun!
 
+### PySimpleGUI in the AI era
+
+One question that it floating around about software, libraries, etc, is whether or not the library is relavent.  There are people discovering and installing PySimpleGUI every day.  Applicatsions are often build incrementally.  When new features are added to a GUI application the layouts can change.  Buttons need to move, etc.  It's a lot earier to do that if you understand the code, whether it's written by AI or by hand.  Modifying it will be necessary most likely.
+
+I use PySimpleGUI to write software frequently.  I can't imagine not using it to write a Windows application.  I've been building a 6502 breadboard computer.  So I can watch what's happening in the system, created a bus analyzer program using a couple of Raspberry Pi Pico's and a PySimpleGUI application that controls it all running on Windows.
+
+That's enough for me to make some effort to get the ecosystem cleaned up and operational.
+
 ## License & Copyright
 
-Copyright 2018-2026 PySimpleGUI.
+Copyright 2018-2026 PySimpleGUI.  All rights reserved.
 
 Licensed under LGPL3.
