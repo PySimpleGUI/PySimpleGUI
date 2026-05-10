@@ -121,9 +121,9 @@ Seems most projects have something to say about AI usage now.  This is my **opin
 
 I use LLMs to search and summarize documentation, lookup errors, do research, get knowledge.  I don't use LLMs to write code.  My reason is very simple.  
 
-**I like to write code.**  
+### **I like to write code.**  
 
-I fell in love with programming 50 years ago.  Writing software is my happy place.  Why would I give that to a computer to do instead of getting the enjoyment I get from doing it?  AI can generate lots of things.  The feeling I get writing software is not one of those things it can generate.
+I fell in love with programming 50 years ago.  Writing software is my happy place.  Why would I give that to a computer to do instead of getting the enjoyment I get from doing it?  AI can generate lots of things.  The feeling I get writing software is not one of the things AI can generate.
 
 I'm not in a hurry.  If I wanted code written for me, I would have opened the project up to pull requests years ago, but I didn't because I wanted to write the code.  It's fun!
 
