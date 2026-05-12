@@ -128,11 +128,11 @@ I'm not in a hurry.  If I wanted code written for me, I would have opened the pr
 
 ### PySimpleGUI in the AI era
 
-One question that it floating around about software, libraries, etc, is whether or not the library is relavent.  There are people discovering and installing PySimpleGUI every day.  Applicatsions are often build incrementally.  When new features are added to a GUI application the layouts can change.  Buttons need to move, etc.  It's a lot earier to do that if you understand the code, whether it's written by AI or by hand.  Modifying it will be necessary most likely.
+A common question in software today is whether a library is still relevant. The answer is yes, people discover and install PySimpleGUI every day.  GUI applications are often built incrementally. As features are added, layouts change, buttons move, and the code needs to evolve. That’s much easier when the code is understandable, whether it was written by a person or an AI initially.
 
-I use PySimpleGUI to write software frequently.  I can't imagine not using it to write a Windows application.  I've been building a 6502 breadboard computer.  So I can watch what's happening in the system, created a bus analyzer program using a couple of Raspberry Pi Pico's and a PySimpleGUI application that controls it all running on Windows.
+I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.I’ve recently been working on a 6502 breadboard computer, and I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.
 
-That's enough for me to make some effort to get the ecosystem cleaned up and operational.
+That’s reason enough for me to keep working to clean up the ecosystem and keep it running well.
 
 ## License & Copyright
 
