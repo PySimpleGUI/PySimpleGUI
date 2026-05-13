@@ -1,7 +1,7 @@
 ---
-name: Issue Form - **Must fill in this form** PSG4 is no longer supported. You MUST supply your Priority Support Code to log an issue.
+name: Issue Form - **Must fill in this form** PSG4 is no longer supported. Try PSG6 to see if your issue is fixed.
 about: This form contains the information needed to help you solve your problem
-title: "[ Enhancement/Bug/Question]  NOTE  You must supply your Priority Support Code in order to receive support- "
+title: "[ Enhancement/Bug/Question]  
 labels: ''
 assignees: ''
 
@@ -22,7 +22,9 @@ assignees: ''
 
 ----------------------------------------
 
-## Versions (NOTE - PSG4 is no longer supported)
+## Versions 
+
+### NOTE - PSG4 is no longer supported
 
 Version information can be obtained by calling `sg.main_get_debug_data()`
 Or you can print each version shown in ()
@@ -38,11 +40,6 @@ Or you can print each version shown in ()
 #### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
 
 
-#### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
-
-
-### Priority Support Code - Only Commercially Licensed Users Receive Support as of Feb 2025
-Replace this text with your Priority Support Code
 
 ---------------------
 
@@ -70,9 +67,8 @@ These items may solve your problem. Please check those you've done by changing -
 - [ ] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
 - [ ] Run your program outside of your debugger (from a command line)
 - [ ] Searched through Issues (open and closed) to see if already reported Issues.PySimpleGUI.com
-- [ ] Have upgraded to the latest release of PySimpleGUI on PyPI (lastest official version)
-- [ ] Tried running the Development Build.  Your problem may have already been fixed but not released. Check Home Window for release notes and upgrading capability
-- [ ] For licensing questions please email license@PySimpleGUI.com
+- [ ] Upgraded to the latest release of PySimpleGUI on PyPI (Version 6)
+
 
 #### Detailed Description
 
