@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.3"
+version = "6.0.4"
 
 
 
@@ -67,6 +67,7 @@ Changelog since last major release
                         similiar way, then the value None is written to the settings file for all keys.
                         The fix is to check if all values are None.  If so, skip saving the values
 6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"                        
+6.0.4       13-May-2026 Addded image_subsample parameter to the print functions/methods for multiline element                        
 """
 
 
@@ -3781,7 +3782,7 @@ class Multiline(Element):
         return
 
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
-               background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None, image=None):
+               background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None, image=None, image_subsample=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
@@ -3815,8 +3816,10 @@ class Multiline(Element):
         :type justification:               (str)
         :param font_for_value:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
         :type font_for_value:              str | (str, int)
-        :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
-        :type image:             (str | bytes)
+        :param image:                      Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
+        :type image:                       (str | bytes)
+        :param image_subsample:            amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:             (int)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -3842,6 +3845,7 @@ class Multiline(Element):
 
         starting_point = self.Widget.index(tk.INSERT)
         tag = None
+        # First insert the text
         if value is not None:
             value = str(value)
             if background_color_for_value is not None or text_color_for_value is not None or font_for_value is not None:
@@ -3874,13 +3878,15 @@ class Multiline(Element):
             if self.Disabled:
                 self.TKText.configure(state='disabled')
             self.DefaultText = value
-
+        # Insert an image
         if image is not None:
             try:
                 if isinstance(image, bytes):
                     self.tkimage = tk.PhotoImage(data=image)
                 elif isinstance(image, str):
                     self.tkimage = tk.PhotoImage(file=image)
+                if image_subsample is not None:
+                    self.tkimage = self.tkimage.subsample(image_subsample)
                 self.images_for_print.append(self.tkimage)
                 self.widget.image_create(tk.END, image=self.tkimage)
             except Exception as e:
@@ -3932,7 +3938,7 @@ class Multiline(Element):
         return value
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None, c=None,
-              autoscroll=True, image=None):
+              autoscroll=True, image=None, image_subsample=None):
         """
         Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -3976,6 +3982,8 @@ class Multiline(Element):
         :type autoscroll:        (bool)
         :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
         :type image:             (str | bytes)
+        :param image_subsample:  amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:   (int)
         """
 
         kw_text_color = text_color or t
@@ -3993,9 +4001,9 @@ class Multiline(Element):
                     kw_text_color = dual_color
         except Exception as e:
             print('* multiline print warning * you messed up with color formatting', e)
-
+        # NOTE - this is NOT calling a method, it's calling a function outside of this object
         _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification,
-                          autoscroll=autoscroll, font=font, image=image)
+                          autoscroll=autoscroll, font=font, image=image, image_subsample=image_subsample)
 
     def reroute_stdout_to_here(self):
         """
@@ -18472,7 +18480,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None,
-           justification=None, autoscroll=True, image=None, erase_all=False):
+           justification=None, autoscroll=True, image=None, image_subsample=None, erase_all=False):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -18531,6 +18539,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :type autoscroll:        (bool)
     :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
     :type image:             (str | bytes)
+    :param image_subsample:  amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+    :type image_subsample:   (int)
     :param erase_all         If True the contents of the element will be cleared before printing happens
     :type erase_all          (bool)
     """
@@ -18568,11 +18578,11 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
             mline.update('')
         if end is None:
             mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font,
-                        autoscroll=autoscroll, image=image)
+                        autoscroll=autoscroll, image=image, image_subsample=image_subsample)
             mline.print('', justification=justification, autoscroll=autoscroll)
         else:
             mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification, font=font,
-                        autoscroll=autoscroll, image=image)
+                        autoscroll=autoscroll, image=image, image_subsample=image_subsample)
     except Exception as e:
         print('** cprint error trying to print to the multiline. Printing to console instead **', e)
         print(*args, end=end, sep=sep)
@@ -18582,7 +18592,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None, image=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None, image=None, image_subsample=None):
     """
     Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -18602,6 +18612,10 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :type autoscroll:         (bool)
     :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
     :type font:               str | (str, int)
+    :param image:             Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
+    :type image:              (str | bytes)
+    :param image_subsample:   amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+    :type image_subsample:    (int)
     """
     end_str = str(end) if end is not None else '\n'
     sep_str = str(sep) if sep is not None else ' '
@@ -18615,7 +18629,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     outstring += end_str
 
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll,
-                             justification=justification, font_for_value=font, image=image)
+                             justification=justification, font_for_value=font, image=image, image_subsample=image_subsample)
 
     try:  # if the element is set to autorefresh, then refresh the parent window
         if multiline_element.AutoRefresh:
