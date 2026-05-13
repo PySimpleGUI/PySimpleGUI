@@ -1,7 +1,7 @@
 ---
 name: Issue Form - **Must fill in this form** PSG4 is no longer supported. Try PSG6 to see if your issue is fixed.
 about: This form contains the information needed to help you solve your problem
-title: "[ Enhancement/Bug/Question]  
+title: "[ Enhancement/Bug/Question] " 
 labels: ''
 assignees: ''
 
