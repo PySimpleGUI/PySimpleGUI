@@ -130,7 +130,7 @@ I'm not in a hurry.  If I wanted code written for me, I would have opened the pr
 
 A common question in software today is whether a library is still relevant. The answer is yes, people discover and install PySimpleGUI every day.  GUI applications are often built incrementally. As features are added, layouts change, buttons move, and the code needs to evolve. That’s much easier when the code is understandable, whether it was written by a person or an AI initially.
 
-I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.I’ve recently been working on a 6502 breadboard computer, and I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.
+I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.  I’ve recently been working on a 6502 breadboard computer. I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.  Coding up a windows application to be the front-end to my tools is very easy for me to do using PySimpleGUI.
 
 That’s reason enough for me to keep working to clean up the ecosystem and keep it running well.
 
