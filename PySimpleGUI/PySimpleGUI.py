@@ -63,7 +63,7 @@ Changelog since last major release
 
 6.0         5-Apr-2026  Initial release
 6.0.1       8-Apr-2026  Emoji change to main window
-6.0.2       8-May-2026  Fixed buh in Window.settings_save.  If a window is closed using "X" or terminated in a
+6.0.2       8-May-2026  Fixed bug in Window.settings_save.  If a window is closed using "X" or terminated in a
                         similiar way, then the value None is written to the settings file for all keys.
                         The fix is to check if all values are None.  If so, skip saving the values
 """
