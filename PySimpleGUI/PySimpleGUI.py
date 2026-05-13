@@ -66,6 +66,7 @@ Changelog since last major release
 6.0.2       8-May-2026  Fixed bug in Window.settings_save.  If a window is closed using "X" or terminated in a
                         similiar way, then the value None is written to the settings file for all keys.
                         The fix is to check if all values are None.  If so, skip saving the values
+6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"                        
 """
 
 
@@ -3769,6 +3770,7 @@ class Multiline(Element):
         self.hscrollbar = None      # The horizontal scrollbar
         self.auto_scroll_only_at_bottom = autoscroll_only_at_bottom
         sz = size if size != (None, None) else s
+        self.images_for_print = []        # holds a reference for images so that tkinter will render them correctly
         if setting is not None:
             self.setting = str(setting)
             self.DefaultText = user_settings_get_entry(key, self.setting)
@@ -3779,7 +3781,7 @@ class Multiline(Element):
         return
 
     def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
-               background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None):
+               background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None, image=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or set finalize=True when creating window.
 
@@ -3813,6 +3815,8 @@ class Multiline(Element):
         :type justification:               (str)
         :param font_for_value:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
         :type font_for_value:              str | (str, int)
+        :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
+        :type image:             (str | bytes)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -3871,6 +3875,17 @@ class Multiline(Element):
                 self.TKText.configure(state='disabled')
             self.DefaultText = value
 
+        if image is not None:
+            try:
+                if isinstance(image, bytes):
+                    self.tkimage = tk.PhotoImage(data=image)
+                elif isinstance(image, str):
+                    self.tkimage = tk.PhotoImage(file=image)
+                self.images_for_print.append(self.tkimage)
+                self.widget.image_create(tk.END, image=self.tkimage)
+            except Exception as e:
+                print("* Error updating multiline with an image *", e)
+
         # if self.Autoscroll:
         #     self.TKText.see(tk.END)
         if self.Autoscroll:
@@ -3917,7 +3932,7 @@ class Multiline(Element):
         return value
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None, c=None,
-              autoscroll=True):
+              autoscroll=True, image=None):
         """
         Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -3959,6 +3974,8 @@ class Multiline(Element):
         :type c:                 (str) or (str, str)
         :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
         :type autoscroll:        (bool)
+        :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
+        :type image:             (str | bytes)
         """
 
         kw_text_color = text_color or t
@@ -3978,7 +3995,7 @@ class Multiline(Element):
             print('* multiline print warning * you messed up with color formatting', e)
 
         _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification,
-                          autoscroll=autoscroll, font=font)
+                          autoscroll=autoscroll, font=font, image=image)
 
     def reroute_stdout_to_here(self):
         """
@@ -4409,6 +4426,8 @@ class Text(Element):
         :type c:                 (str) or (str, str)
         :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
         :type autoscroll:        (bool)
+        :param append:           If True the contents of the element will automatically scroll as more data added to the end
+        :type append:            (bool)
         """
 
         kw_text_color = text_color or t
@@ -9669,7 +9688,7 @@ VP = VPush
 class _TimerPeriodic:
     id_counter = 1
     # Dictionary containing the active timers.  Format is {id : _TimerPeriodic object}
-    active_timers = {}  # type: dict[int, _TimerPeriodic]
+    active_timers = {}  # type: dict[int:_TimerPeriodic]
 
     def __init__(self, window, frequency_ms, key=EVENT_TIMER, repeating=True):
         """
@@ -9773,10 +9792,10 @@ class Window:
     _user_defined_icon = None
     hidden_master_root = None  # type: tk.Tk
     _animated_popup_dict = {}  # type: Dict
-    _active_windows = {}  # type: Dict[Window, tk.Tk]
+    _active_windows = {}  # type: Dict[Window, tk.Tk()]
     _move_all_windows = False  # if one window moved, they will move
     _window_that_exited = None  # type: Window
-    _root_running_mainloop = None  # type: tk.Tk    # (may be the hidden root or a window's root)
+    _root_running_mainloop = None  # type: tk.Tk()    # (may be the hidden root or a window's root)
     _timeout_key = None
     _TKAfterID = None  # timer that is used to run reads with timeouts
     _window_running_mainloop = None  # The window that is running the mainloop
@@ -18453,7 +18472,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None,
-           justification=None, autoscroll=True, erase_all=False):
+           justification=None, autoscroll=True, image=None, erase_all=False):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -18510,6 +18529,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :type justification:     (str)
     :param autoscroll:       If True the contents of the element will automatically scroll as more data added to the end
     :type autoscroll:        (bool)
+    :param image:            Insert this image inline with text.  Can be Raw or Base64 representation of the image or filename of image
+    :type image:             (str | bytes)
     :param erase_all         If True the contents of the element will be cleared before printing happens
     :type erase_all          (bool)
     """
@@ -18547,11 +18568,11 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
             mline.update('')
         if end is None:
             mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font,
-                        autoscroll=autoscroll)
+                        autoscroll=autoscroll, image=image)
             mline.print('', justification=justification, autoscroll=autoscroll)
         else:
             mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification, font=font,
-                        autoscroll=autoscroll)
+                        autoscroll=autoscroll, image=image)
     except Exception as e:
         print('** cprint error trying to print to the multiline. Printing to console instead **', e)
         print(*args, end=end, sep=sep)
@@ -18561,7 +18582,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None, image=None):
     """
     Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -18594,7 +18615,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     outstring += end_str
 
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll,
-                             justification=justification, font_for_value=font)
+                             justification=justification, font_for_value=font, image=image)
 
     try:  # if the element is set to autorefresh, then refresh the parent window
         if multiline_element.AutoRefresh:
