@@ -9669,7 +9669,7 @@ VP = VPush
 class _TimerPeriodic:
     id_counter = 1
     # Dictionary containing the active timers.  Format is {id : _TimerPeriodic object}
-    active_timers = {}  # type: dict[int:_TimerPeriodic]
+    active_timers = {}  # type: dict[int, _TimerPeriodic]
 
     def __init__(self, window, frequency_ms, key=EVENT_TIMER, repeating=True):
         """
@@ -9773,10 +9773,10 @@ class Window:
     _user_defined_icon = None
     hidden_master_root = None  # type: tk.Tk
     _animated_popup_dict = {}  # type: Dict
-    _active_windows = {}  # type: Dict[Window, tk.Tk()]
+    _active_windows = {}  # type: Dict[Window, tk.Tk]
     _move_all_windows = False  # if one window moved, they will move
     _window_that_exited = None  # type: Window
-    _root_running_mainloop = None  # type: tk.Tk()    # (may be the hidden root or a window's root)
+    _root_running_mainloop = None  # type: tk.Tk    # (may be the hidden root or a window's root)
     _timeout_key = None
     _TKAfterID = None  # timer that is used to run reads with timeouts
     _window_running_mainloop = None  # The window that is running the mainloop
