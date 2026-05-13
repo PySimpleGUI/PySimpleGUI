@@ -1,5 +1,5 @@
 ---
-name: Issue Form - **Must fill in this form** PSG4 is no longer supported. Try PSG6 to see if your issue is fixed.
+name: Issue Form - **Must fill in this form** 
 about: This form contains the information needed to help you solve your problem
 title: "[ Enhancement/Bug/Question] " 
 labels: ''
@@ -25,6 +25,9 @@ assignees: ''
 ## Versions 
 
 ### NOTE - PSG4 is no longer supported
+
+Please try **Version 6** if you're running **Version 4**.
+
 
 Version information can be obtained by calling `sg.main_get_debug_data()`
 Or you can print each version shown in ()
