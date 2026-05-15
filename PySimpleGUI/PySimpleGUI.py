@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.4"
+version = "6.0.5"
 
 
 
@@ -66,8 +66,11 @@ Changelog since last major release
 6.0.2       8-May-2026  Fixed bug in Window.settings_save.  If a window is closed using "X" or terminated in a
                         similiar way, then the value None is written to the settings file for all keys.
                         The fix is to check if all values are None.  If so, skip saving the values
-6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"                        
-6.0.4       13-May-2026 Addded image_subsample parameter to the print functions/methods for multiline element                        
+6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"
+6.0.4       13-May-2026 Added image_subsample parameter to the print functions/methods for multiline element
+6.0.5       15-May-2026 Added "upgrade to maintainence release" capability. It's much like the PSG 5 feature
+                        but uses GitHub as the location of release.  Can be invoked from Home Window, or
+                        using the psgupgrade command.                       
 """
 
 
@@ -751,12 +754,12 @@ DEFAULT_TTK_PART_MAPPING_DICT = {TTK_SCROLLBAR_PART_TROUGH_COLOR: PSG_THEME_PART
 ttk_part_mapping_dict = copy.copy(DEFAULT_TTK_PART_MAPPING_DICT)
 
 
-
 # -------------------------  Web Destinations  ------------------------- #
-URL_PRIVACY = r'http://privacy.PySimpleGUI.com'
-URL_TERMS = r'http://terms.PySimpleGUI.com'
 URL_HOME = r'http://home.PySimpleGUI.com'
 URL_DOCS = r'http://docs.PySimpleGUI.com'
+URL_PSG_GITHUB_SOURCE = r'https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/refs/heads/master/PySimpleGUI/PySimpleGUI.py'
+URL_PSG_GITHUB_SETUP_FILE = r'https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/refs/heads/master/setup.py'
+URL_PSG_PIP_INSTALL_FROM_GITHUB = r'https://github.com/PySimpleGUI/PySimpleGUI/zipball/master'
 
 
 class TTKPartOverrides:
@@ -24762,32 +24765,111 @@ def __show_package_version(package, print_function, interpreter):
 
 
 '''
-MM'"""""`MM oo   dP   M""MMMMM""MM          dP       
-M' .mmm. `M      88   M  MMMMM  MM          88       
-M  MMMMMMMM dP d8888P M         `M dP    dP 88d888b. 
-M  MMM   `M 88   88   M  MMMMM  MM 88    88 88'  `88 
-M. `MMM' .M 88   88   M  MMMMM  MM 88.  .88 88.  .88 
-MM.     .MM dP   dP   M  MMMMM  MM `88888P' 88Y8888' 
-MMMMMMMMMMM           MMMMMMMMMMMM                   
 
-M""MMMMM""M                                           dP          
-M  MMMMM  M                                           88          
-M  MMMMM  M 88d888b. .d8888b. 88d888b. .d8888b. .d888b88 .d8888b. 
-M  MMMMM  M 88'  `88 88'  `88 88'  `88 88'  `88 88'  `88 88ooood8 
-M  `MMM'  M 88.  .88 88.  .88 88       88.  .88 88.  .88 88.  ... 
-Mb       dM 88Y888P' `8888P88 dP       `88888P8 `88888P8 `88888P' 
-MMMMMMMMMMM 88            .88                                     
+M""MMMMM""M                                           dP             MM'"""""`MM M""MMMMM""M M""M 
+M  MMMMM  M                                           88             M' .mmm. `M M  MMMMM  M M  M 
+M  MMMMM  M 88d888b. .d8888b. 88d888b. .d8888b. .d888b88 .d8888b.    M  MMMMMMMM M  MMMMM  M M  M 
+M  MMMMM  M 88'  `88 88'  `88 88'  `88 88'  `88 88'  `88 88ooood8    M  MMM   `M M  MMMMM  M M  M 
+M  `MMM'  M 88.  .88 88.  .88 88       88.  .88 88.  .88 88.  ...    M. `MMM' .M M  `MMM'  M M  M 
+Mb       dM 88Y888P' `8888P88 dP       `88888P8 `88888P8 `88888P'    MM.     .MM Mb       dM M  M 
+MMMMMMMMMMM 88            .88                                        MMMMMMMMMMM MMMMMMMMMMM MMMM 
             dP        d8888P
-
-M""""""""M dP                                        dP 
-Mmmm  mmmM 88                                        88 
-MMMM  MMMM 88d888b. 88d888b. .d8888b. .d8888b. .d888b88 
-MMMM  MMMM 88'  `88 88'  `88 88ooood8 88'  `88 88'  `88 
-MMMM  MMMM 88    88 88       88.  ... 88.  .88 88.  .88 
-MMMM  MMMM dP    dP dP       `88888P' `88888P8 `88888P8 
-MMMMMMMMMM
 '''
 
+
+def upgrade_PySimpleGUI_gui(no_gui=False):
+    # print('Upgrading PySimpleGUI....')
+    psg_source = net_download_file(URL_PSG_GITHUB_SOURCE)
+    if psg_source is None:
+        popup_error('Upgrade GUI - error downloading the PySimpleGUI.py file')
+        return
+    setup_py = net_download_file(URL_PSG_GITHUB_SETUP_FILE)
+    if setup_py is None:
+        popup_error('Upgrade GUI - error downloading the setup.py file')
+        return
+
+    lines = setup_py.splitlines()
+    new_ver = None
+    for line in lines:
+        if 'version=' in line:
+            version = line.split('=')[1]
+            start = version.find('"')
+            end = version.find('"', start + 1)
+            new_ver = version[start + 1:end]
+            # print(f'{new_ver}')
+            break
+    if not new_ver:
+        popup_error('Upgrade GUI - did not find version number is setup.py')
+        return
+
+    lines = psg_source.splitlines()
+    start = end = None
+    for i, line in enumerate(lines):
+        if 'Changelog since' in line:
+            start = i
+        elif start:
+            if '"""' in line:
+                end = i
+                break
+    if not start or not end:
+        popup_error('Upgrade GUI - error getting release notes')
+        return
+    else:
+        release_notes = []
+        for line in lines[start+1:end]:
+            if line:
+                release_notes.append(line)
+        release_notes = '\n'.join(release_notes)
+
+    try:
+        cur_ver = version[:version.index('\n')]
+    except:
+        cur_ver = version
+
+    pip_string=  URL_PSG_PIP_INSTALL_FROM_GITHUB
+    # if no_gui:
+    #     print(f'{cur_ver} is the version you are running now and will be overwritten')
+    #     print(f'{new_ver} is the version you are INSTALLING NOW....')
+    #     print(f'Wheel location = {pip_string}')
+    #     execute_pip_install_package(pip_string, force_reinstall=True, no_gui=True)
+    #     print('Install completed')
+    #     return
+
+    layout = [
+                [Text('* WARNING *')],
+                [Text('You are about to upgrade your PySimpleGUI package previously installed via pip')],
+                [Text('to the latest Maintenance Release of PySimpleGUI.')],
+                [Text(f'{cur_ver} is the version you are currently running',)],
+                [Text(f'{new_ver} is the version you will install',)],
+                [Text(f'{sys.executable } is location of python',)],
+                [Text(f'Are you sure you want to overwrite your {cur_ver} release?')],
+                [Push(), B('Yes', s=4), B('No', s=4), B('Show Release Notes', key='-REL NOTES-')],
+            ]
+
+    window = Window('Upgrade To Maintenance Release', layout, keep_on_top=True)
+
+    while True:
+        event, values = window.read()
+        if event in ('No', WIN_CLOSED):
+            popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
+            break
+        elif event == 'Yes':
+            execute_pip_install_package(pip_string, force_reinstall=True)
+            break
+        elif event == '-REL NOTES-':
+            if release_notes:
+                # print(release_notes)
+                notes_list = release_notes.split('\n')
+                max_len = max(map(len, notes_list))
+                # print(f'max_len = {max_len}, len = {len(notes_list)}')
+                popup_scrolled(release_notes, title=f'Release Notes {new_ver}', keep_on_top=True, size=(max_len, len(notes_list)), font='Courier 10', button_justification='r')
+
+    window.close()
+
+
+def upgrade_print_maint_releases():
+    release_notes = net_download_file(URL_DEV_BUILD_REL_NOTES)
+    print('Release notes:\n', release_notes)
 
 
 
@@ -25343,7 +25425,8 @@ def _create_main_window():
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, None)),
         VerLine(sys.executable, 'Python Executable'),
         VerLine(platform_name, 'Platform '),
-        VerLine(platform_ver, 'Platform Version')]
+        VerLine(platform_ver, 'Platform Version'),
+        [VPush(), Push(), B('Install Maint Release') ]]
 
     # versions_tab_layout = [vtop([Column(versions_left_col_layout), Column(versions_right_col_layout)])]
     versions_tab_layout = versions_left_col_layout
@@ -25505,6 +25588,10 @@ def main():
             scripts_folder = os.path.join(os.path.dirname(sys.executable), 'Scripts')
             util_full_path = os.path.join(scripts_folder, util_to_run)
             execute_command_subprocess(util_full_path, cwd=scripts_folder, wait=False)
+        elif event == 'Install Maint Release':
+            upgrade_PySimpleGUI_gui()
+
+
 
         i += 1
         # _refresh_debugger()
@@ -25830,11 +25917,6 @@ Window._watermark_temp_forced = False
 Window._watermark_user_text = ''
 
 
-# -------------------------  Web Destinations  ------------------------- #
-URL_HOME = r'http://home.PySimpleGUI.com'
-URL_DOCS = r'http://docs.PySimpleGUI.com'
-
-
 
 def _convert_window_to_tk(window):
     # """
@@ -25980,10 +26062,12 @@ if _mac_should_set_alpha_to_99():
 def main_command_line():
     # To execute the upgrade from command line, type:
     # python -m PySimpleGUI upgrade
-    # print(f'In main with argv={sys.argv}')
+    print(f'In main with argv={sys.argv}')
     if len(sys.argv) > 1:
         if 'version' in sys.argv:
             print(get_versions())
+        elif 'upgrade' in sys.argv:
+            upgrade_PySimpleGUI_gui()
         elif 'help' in sys.argv:
             print('PySimpleGUI command line options\n')
             print('python -m PySmpleGUI upgrade', '\n   Open GUI upgrade utility (same as psgupgrade)\n')

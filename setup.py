@@ -11,7 +11,7 @@ def readme():
 
 setuptools.setup(
     name="pysimplegui",
-    version="6.0.4",
+    version="6.0.5",
     author="PySimpleGUI",
     author_email="PySimpleGUI@PySimpleGUI.org",
     description="Python GUIs for Humans. Launched in 2018. NEW LGPL3 Version 6 released in 2026.",
@@ -45,5 +45,6 @@ setuptools.setup(
                                     'psghome=PySimpleGUI.PySimpleGUI:_main_entry_point',
                                     'psghelp=PySimpleGUI.PySimpleGUI:main_sdk_help',
                                     'psgver=PySimpleGUI.PySimpleGUI:main_get_debug_data',
+                                    "psgupgrade=PySimpleGUI.PySimpleGUI:_upgrade_entry_point",
                                     'psgsettings=PySimpleGUI.PySimpleGUI:main_global_pysimplegui_settings',], },
 )
