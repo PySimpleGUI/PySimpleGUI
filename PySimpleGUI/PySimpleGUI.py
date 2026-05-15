@@ -37,7 +37,7 @@
     April 2026
 
     This release of PSG 6 contains most of the features that were in version 5.  Some of the features
-    that were removed include the maintance upgrades, online documenation, and other features that
+    that were removed include the maintenance upgrades, online documenation, and other features that
     relied on infrastructure that is no longer available.  I'm planning on porting these back into
     version 6.
 
@@ -68,7 +68,7 @@ Changelog since last major release
                         The fix is to check if all values are None.  If so, skip saving the values
 6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"
 6.0.4       13-May-2026 Added image_subsample parameter to the print functions/methods for multiline element
-6.0.5       15-May-2026 Added "upgrade to maintainence release" capability. It's much like the PSG 5 feature
+6.0.5       15-May-2026 Added "upgrade to Maintenance Release" capability. It's much like the PSG 5 feature
                         but uses GitHub as the location of release.  Can be invoked from Home Window, or
                         using the psgupgrade command.                       
 """
@@ -26062,7 +26062,6 @@ if _mac_should_set_alpha_to_99():
 def main_command_line():
     # To execute the upgrade from command line, type:
     # python -m PySimpleGUI upgrade
-    print(f'In main with argv={sys.argv}')
     if len(sys.argv) > 1:
         if 'version' in sys.argv:
             print(get_versions())
