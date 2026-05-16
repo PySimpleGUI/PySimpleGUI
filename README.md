@@ -138,6 +138,19 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 <img width="771" height="356" alt="Image" src="https://github.com/user-attachments/assets/9b8aa416-eef4-48c8-aca6-df62673be6c0" />
 
+
+* PSGWeb - PySimpleGUI running in a browser window
+  * Works with most demo programs
+  * To try it, go to any PySimpleGUI application on GitHub, add `psgweb.us` onto the front of the url, press enter
+  * https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_All_Elements.py becomes https://psgweb.us/github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_All_Elements.py
+  * There are no plans to release or expand this prototype.  It was created as part of the larger PSG 5 effort, but not released.
+
+Here's that Demo Program running in browser:
+
+<img width="1087" height="1184" alt="Image" src="https://github.com/user-attachments/assets/63b68e32-4a9d-4399-b8a4-00503dbcc111" />
+
+
+
 ----
 
 
