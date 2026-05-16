@@ -112,6 +112,36 @@ https://Docs.PySimpleGUI.com
 
 PySimpleGUI has always been developed more like a proprietary product than an open source project.  Pull requests aren't accepted.
 
+
+---
+
+# Recently added features and activities
+
+## Documentation
+
+* The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
+* Removal of Version 5 specifics is done for the mostpart.  There may be a few spots that need cleanup
+* Work has started to include PSG 6 details.  The SDK Call Reference needs upating before the next PyPO release, preferably sooner so that the code on GitHub is in there prior to PyPO release.
+
+## Features & Fixes
+
+* 6.0.2 - Fixed bug in Window.settings_save
+* 6.0.3 - Added ability to "print" an image inline in a Multiline element
+
+<img width="1081" height="538" alt="Image" src="https://github.com/user-attachments/assets/e914e1dd-e363-4124-9cc9-a065abf8e6c1" />
+
+* 6.0.5 - The ability to upgrade to the latest Maint Release is once again built into PSG.  You can use the Home Window or the command line command`psgupgrade`.  You can see the release notes and install a new version.
+
+
+<img width="499" height="256" alt="Image" src="https://github.com/user-attachments/assets/b6c4b736-0f3b-4001-88bc-040ae62208ca" />
+
+
+<img width="771" height="356" alt="Image" src="https://github.com/user-attachments/assets/9b8aa416-eef4-48c8-aca6-df62673be6c0" />
+
+----
+
+
+
 ## AI....
 
 ![](https://PySimpleGUI.net/images/emojis/weary_56.png?raw=true&v=1) 
