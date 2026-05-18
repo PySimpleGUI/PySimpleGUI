@@ -112,6 +112,60 @@ https://Docs.PySimpleGUI.com
 
 PySimpleGUI has always been developed more like a proprietary product than an open source project.  Pull requests aren't accepted.
 
+
+---
+
+# What's new...
+
+## Recently added features and activities
+
+## Documentation
+
+* The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
+* Removal of Version 5 specifics is done for the mostpart.  There may be a few spots that need cleanup
+* Work has started to include PSG 6 details.  The SDK Call Reference needs upating before the next PyPO release, preferably sooner so that the code on GitHub is in there prior to PyPO release.
+
+
+## New rep - PSGMicroPython
+
+Created a new repo and added code for interfacing to a MicroPython-based microcontroller.  It works with Raspberry Pi Pico and ESP32.  It may work with other boards too.  Not meant to be robust or significant.  It's just some code I threw together that could maybe be useful to someone else... or not... 
+![](https://PySimpleGUI.net/images/emojis/guess_28.png?raw=true&v=1) 
+
+
+
+## Features & Fixes
+
+* 6.0.2 - Fixed bug in Window.settings_save
+* 6.0.3 - Added ability to "print" an image inline in a Multiline element
+
+<img width="1081" height="538" alt="Image" src="https://github.com/user-attachments/assets/e914e1dd-e363-4124-9cc9-a065abf8e6c1" />
+
+* 6.0.5 - The ability to upgrade to the latest Maint Release is once again built into PSG.  You can use the Home Window or the command line command`psgupgrade`.  You can see the release notes and install a new version.
+
+
+<img width="499" height="256" alt="Image" src="https://github.com/user-attachments/assets/b6c4b736-0f3b-4001-88bc-040ae62208ca" />
+
+
+<img width="771" height="356" alt="Image" src="https://github.com/user-attachments/assets/9b8aa416-eef4-48c8-aca6-df62673be6c0" />
+
+
+
+* PSGWeb - PySimpleGUI running in a browser window
+  * Works with most demo programs
+  * To try it, go to any PySimpleGUI application on GitHub, add `psgweb.us` onto the front of the url, press enter
+  * https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_All_Elements.py becomes https://psgweb.us/github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_All_Elements.py
+  * There are no plans to release or expand this prototype.  It was created as part of the larger PSG 5 effort, but not released.
+
+Here's that Demo Program running in browser:
+
+<img width="1087" height="1184" alt="Image" src="https://github.com/user-attachments/assets/63b68e32-4a9d-4399-b8a4-00503dbcc111" />
+
+
+
+----
+
+
+
 ## AI....
 
 ![](https://PySimpleGUI.net/images/emojis/weary_56.png?raw=true&v=1) 
@@ -128,7 +182,7 @@ I'm not in a hurry.  If I wanted code written for me, I would have opened the pr
 
 ### PySimpleGUI in the AI era
 
-A common question in software today is whether a library is still relevant. The answer is yes, people discover and install PySimpleGUI every day.  GUI applications are often built incrementally. As features are added, layouts change, buttons move, and the code needs to evolve. That’s much easier when the code is understandable, whether it was written by a person or an AI initially.
+A common question in software today is whether a library is still relevant. I think for PySimpleGUI the answer is yes.  People discover and install PySimpleGUI every day.  GUI applications are often built incrementally. As features are added, layouts change, buttons move, and the code needs to evolve. That’s much easier when the code is understandable, whether it was written by a person or an AI.
 
 I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.  I’ve recently been working on a 6502 breadboard computer. I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.  Coding up a windows application to be the front-end to my tools is very easy for me to do using PySimpleGUI.
 

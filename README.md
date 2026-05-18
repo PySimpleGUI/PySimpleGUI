@@ -115,13 +115,23 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 ---
 
-# Recently added features and activities
+# What's new...
+
+## Recently added features and activities
 
 ## Documentation
 
 * The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
 * Removal of Version 5 specifics is done for the mostpart.  There may be a few spots that need cleanup
 * Work has started to include PSG 6 details.  The SDK Call Reference needs upating before the next PyPO release, preferably sooner so that the code on GitHub is in there prior to PyPO release.
+
+
+## New rep - PSGMicroPython
+
+Created a new repo and added code for interfacing to a MicroPython-based microcontroller.  It works with Raspberry Pi Pico and ESP32.  It may work with other boards too.  Not meant to be robust or significant.  It's just some code I threw together that could maybe be useful to someone else... or not... 
+![](https://PySimpleGUI.net/images/emojis/guess_28.png?raw=true&v=1) 
+
+
 
 ## Features & Fixes
 
@@ -137,6 +147,7 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 
 <img width="771" height="356" alt="Image" src="https://github.com/user-attachments/assets/9b8aa416-eef4-48c8-aca6-df62673be6c0" />
+
 
 
 * PSGWeb - PySimpleGUI running in a browser window
