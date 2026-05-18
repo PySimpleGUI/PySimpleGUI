@@ -126,7 +126,7 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 * Work has started to include PSG 6 details.  The SDK Call Reference needs upating before the next PyPO release, preferably sooner so that the code on GitHub is in there prior to PyPO release.
 
 
-## New rep - PSGMicroPython
+## New repo - PSGMicroPython
 
 Created a new repo and added code for interfacing to a MicroPython-based microcontroller.  It works with Raspberry Pi Pico and ESP32.  It may work with other boards too.  Not meant to be robust or significant.  It's just some code I threw together that could maybe be useful to someone else... or not... 
 ![](https://PySimpleGUI.net/images/emojis/guess_28.png?raw=true&v=1) 
