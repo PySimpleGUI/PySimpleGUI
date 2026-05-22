@@ -15,6 +15,7 @@ We gave commercialization a try. It was an incredible experience, but it didn’
 
 That process is now complete. The next question was what to do with the code, documentation, and repositories. I always planned to keep the repos available for reference—so the decision came down to the software itself.
 
+See the **History** section below for a summary of the PySimpleGUI history.
 
 
 # PySimpleGUI 6
@@ -187,6 +188,92 @@ A common question in software today is whether a library is still relevant. I th
 I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.  I’ve recently been working on a 6502 breadboard computer. I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.  Coding up a windows application to be the front-end to my tools is very easy for me to do using PySimpleGUI.
 
 That’s reason enough for me to keep working to clean up the ecosystem and keep it running well.
+
+
+# History
+
+## Open Source v4 → Commercial v5 → Open Source v6
+
+PySimpleGUI’s journey has included plenty of ups and downs, good decisions and bad ones, a few surprises, and a lot of fun along the way.
+
+Hi, it’s Mike. I thought it might be useful to share the story from my perspective.
+
+PySimpleGUI began in 2018 as throwaway code. I needed a GUI for a media player prototype and had no experience building GUIs or working with object-oriented GUI frameworks. My goal was simple: wrap Tkinter in a way that felt more linear and straightforward so I could get something working quickly.
+
+There was no bigger plan. But as I used it, it started to feel genuinely useful, so I shared it.
+
+My background is in Silicon Valley startups—building products, shipping software, and later managing teams. I had no experience with Python or open source at the time. So when I put PySimpleGUI on GitHub, I approached it the way I knew how: like a startup. It became a full-time, self-funded effort rather than a traditional open source project.
+
+## Timeline
+
+- July 2018 – Version 1
+- June 2019 – Version 4
+- January 2020 – Funding becomes a major concern; commercialization mentioned
+- November 2020 – Udemy course announced; a public plea for help added
+- December 2021 – Course released
+- February 2024 – Version 5 (commercial launch)
+- April 2026 – Version 6
+
+There’s an [Announcements Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/142) on GitHub that I’ve used like a running blog. It has grown to over 1,700 entries documenting the project in detail.
+
+## Funding Reality
+
+Working full-time on an open source project creates immediate and ongoing financial pressure.
+
+I explored the common options:
+
+- Sponsorships and donations (GitHub Sponsors, Buy Me a Coffee). At peak, this brought in about \$150 per month.
+- Education. We built an 11.5-hour Udemy course with 61 lessons. It performed well initially, reaching around \$2,000 per month for a short time, but eventually dropped below \$100.
+
+Neither path was enough to sustain the project long term.
+
+## Commercialization
+
+Moving to a commercial model wasn’t a sudden decision. It had been discussed openly for years in the README and announcements.
+
+By early 2024, after exhausting other options, Version 5 launched as a paid product. Even then, the goal was to keep things accessible, not to put up barriers.
+
+## How Did It Go?
+
+If the metric is financial sustainability, it didn’t go well.
+
+If the metric is experience, learning, and relationships, it was absolutely worth it.
+
+We didn’t lose most users after commercialization. Many companies continued using PySimpleGUI. The challenge was getting them to purchase licenses.
+
+## The Hobbyist License
+
+We made a deliberate choice: hobbyists and students could use PySimpleGUI for free, while companies were expected to pay.
+
+It felt like the right balance.
+
+In practice, the vast majority of users identified as hobbyists. Tens of thousands of corporate users registered under the free tier. It wasn’t unusual to see large companies with hundreds of users and only a handful of paid licenses.
+
+I don’t regret the decision to offer a free option.
+
+## A Culture of Free
+
+My personal takeaway is that there’s a strong cultural expectation that Python tools & libraries should be free.
+
+The issue didn’t seem to be price or dissatisfaction. People kept using PySimpleGUI—they just didn’t feel obligated to pay for it. Even clear licensing terms didn’t consistently change that behavior.
+
+That’s my interpretation, based on what I saw. Others may see it differently.
+
+## Having Fun
+
+Startups fail more often than they succeed. This one didn’t achieve financial sustainability, and that’s part of the process.
+
+From the beginning, one of the stated goals of PySimpleGUI was: have fun.
+
+That part has held true. Writing code, building things, seeing what others create, and working with people along the way—that’s the part I’ve enjoyed the most.
+
+Business, on the other hand, has never been the fun part for me.
+
+## Thank You
+
+Thank you to everyone who has supported the project over the years.
+
+I don’t know exactly what comes next, but I’ve enjoyed the journey and I'm looking forward to whatever is ahead.
 
 ## License & Copyright
 
