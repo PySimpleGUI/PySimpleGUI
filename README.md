@@ -5,7 +5,15 @@
 </p>
 
 
- 
+# FREE Udemy Course
+
+The Udemy course makes $10's a month, usually less. I've decided to give away the course for a while.  This coupon is good for the next 2 days.  After that I'll create another that's good for 30 days.
+
+https://www.udemy.com/course/pysimplegui/?couponCode=85BCD636F9F53A834371
+
+Or use code:    85BCD636F9F53A834371
+
+
 # Open Source Once Again...
 
 Hey, it's Mike....![](https://PySimpleGUI.net/images/emojis/wave_56.png?raw=true&v=1) 
