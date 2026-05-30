@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.5"
+version = "6.0.6"
 
 
 
@@ -70,7 +70,10 @@ Changelog since last major release
 6.0.4       13-May-2026 Added image_subsample parameter to the print functions/methods for multiline element
 6.0.5       15-May-2026 Added "upgrade to Maintenance Release" capability. It's much like the PSG 5 feature
                         but uses GitHub as the location of release.  Can be invoked from Home Window, or
-                        using the psgupgrade command.                       
+                        using the psgupgrade command.
+6.0.6       30-May-2026 Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
+                        are received. Fix was to clear the realtime button flag. Potential for regression problems
+                        should be minimal since only the Graph element conditional was changed.                                             
 """
 
 
@@ -6806,6 +6809,7 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
+        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
         _exit_mainloop(self.ParentForm)
         if isinstance(self.ParentForm.LastButtonClicked, str):
             self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+UP'
@@ -6830,6 +6834,7 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
+        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
         _exit_mainloop(self.ParentForm)
         self.MouseButtonDown = True
 
@@ -6877,6 +6882,7 @@ class Graph(Element):
                 self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+MOVE'
             else:
                 self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+MOVE')
+        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
         _exit_mainloop(self.ParentForm)
 
     BringFigureToFront = bring_figure_to_front
@@ -10015,6 +10021,7 @@ class Window:
         self.DictionaryKeyCounter = 0
         self.LastButtonClicked = None
         self.LastButtonClickedWasRealtime = False
+        self.element_that_generated_event = None     # type:Element
         self.UseDictionary = False
         self.UseDefaultFocus = use_default_focus
         self.ReturnKeyboardEvents = return_keyboard_events
@@ -15015,6 +15022,9 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.SelectedRows
                 elif element.Type == ELEM_TYPE_GRAPH:
                     value = element.ClickPosition
+                    if top_level_form.element_that_generated_event == element:
+                        top_level_form.LastButtonClickedWasRealtime = False
+                        top_level_form.element_that_generated_event = None
                 elif element.Type == ELEM_TYPE_MENUBAR:
                     if element.MenuItemChosen is not None:
                         event = top_level_form.LastButtonClicked = element.MenuItemChosen
