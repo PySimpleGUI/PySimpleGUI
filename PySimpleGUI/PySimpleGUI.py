@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.6"
+version = "6.0.7"
 
 
 
@@ -73,7 +73,9 @@ Changelog since last major release
                         using the psgupgrade command.
 6.0.6       30-May-2026 Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
                         are received. Fix was to clear the realtime button flag. Potential for regression problems
-                        should be minimal since only the Graph element conditional was changed.                                             
+                        should be minimal since only the Graph element conditional was changed.                                           
+6.0.7       30-May-2026 Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
+                        in the tree to be programatically selected as if the user selected them.
 """
 
 
@@ -9428,7 +9430,7 @@ class Tree(Element):
         for node in node.children:
             self.add_treeview_data(node)
 
-    def update(self, values=None, key=None, value=None, text=None, icon=None, visible=None, expand_node=None):
+    def update(self, values=None, key=None, value=None, text=None, icon=None, visible=None, expand_node=None, select_node_keys=None):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9452,6 +9454,8 @@ class Tree(Element):
         :type visible:      (bool)
         :param expand_node: if True the node specified by key parameter will be expanded
         :type expand_node:  (bool)
+        :param select_node_keys: List of nodes to select as if user selected. You'll want to use Extended mode + control key to navigate to retain selection
+        :type select_node_keys:  List[str | int | tuple | object]
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -9498,6 +9502,20 @@ class Tree(Element):
                 except:
                     pass
             # item = self.TKTreeview.item(id)
+        if select_node_keys is not None:
+            select_node_ids = []
+            try:
+                for node_key in select_node_keys:
+                    node_id = self.KeyToID.get(node_key, None)
+                    if node_id is None:
+                        print(f'Node key {node_key} not found in Tree.update')
+                    else:
+                        select_node_ids.append(node_id)
+                self.TKTreeview.selection_set(select_node_ids)
+            except Exception as e:
+                _error_popup_with_traceback('Error trying to select nodes in Tree.update', e)
+
+
         if visible is False:
             self._pack_forget_save_settings(self.element_frame)
         elif visible is True:
@@ -9705,7 +9723,7 @@ VP = VPush
 class _TimerPeriodic:
     id_counter = 1
     # Dictionary containing the active timers.  Format is {id : _TimerPeriodic object}
-    active_timers = {}  # type: dict[int:_TimerPeriodic]
+    active_timers = {}  # type: dict[int , _TimerPeriodic]
 
     def __init__(self, window, frequency_ms, key=EVENT_TIMER, repeating=True):
         """
@@ -9809,7 +9827,7 @@ class Window:
     _user_defined_icon = None
     hidden_master_root = None  # type: tk.Tk
     _animated_popup_dict = {}  # type: Dict
-    _active_windows = {}  # type: Dict[Window, tk.Tk()]
+    _active_windows = {}  # type: Dict[Window, tk.Tk]
     _move_all_windows = False  # if one window moved, they will move
     _window_that_exited = None  # type: Window
     _root_running_mainloop = None  # type: tk.Tk()    # (may be the hidden root or a window's root)
@@ -24875,13 +24893,6 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
                 popup_scrolled(release_notes, title=f'Release Notes {new_ver}', keep_on_top=True, size=(max_len, len(notes_list)), font='Courier 10', button_justification='r')
 
     window.close()
-
-
-def upgrade_print_maint_releases():
-    release_notes = net_download_file(URL_DEV_BUILD_REL_NOTES)
-    print('Release notes:\n', release_notes)
-
-
 
 
 def _upgrade_entry_point():
