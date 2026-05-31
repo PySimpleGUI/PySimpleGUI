@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1"
+version = "6.1.1"
 
 
 
@@ -76,7 +76,11 @@ Changelog since last major release
                         should be minimal since only the Graph element conditional was changed.                                           
 6.0.7       30-May-2026 Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
                         in the tree to be programmatically selected as if the user selected them.
-6.1         30-May-2026 Preparing for release, first to GitHub as 6.1, then post on PyPI.                        
+6.1         30-May-2026 Preparing for release, first to GitHub as 6.1, then post on PyPI.    
+6.1.1       31-May-2026 Fix in upgrade using pip code. Was not displaying the correct version number for currently running PSG
+                        Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
+                            Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
+                            It will not do the reroute for you.                                          
 """
 
 
@@ -3697,7 +3701,7 @@ class Multiline(Element):
         :type reroute_stderr:                (bool)
         :param reroute_cprint:               If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination
         :type reroute_cprint:                (bool)
-        :param echo_stdout_stderr:           If True then output to stdout and stderr will be output to this element AND also to the normal console location
+        :param echo_stdout_stderr:           If True then output to stdout and stderr will be output to this element AND also to the normal sys.stdout location. Need to ALSO set reroute to True
         :type echo_stdout_stderr:            (bool)
         :param focus:                        if True initial focus will go to this element
         :type focus:                         (bool)
@@ -4052,16 +4056,13 @@ class Multiline(Element):
         :param txt: text of output
         :type txt:  (str)
         """
-        try:
-            self.update(txt, append=True)
-            # if need to echo, then send the same text to the destinatoin that isn't thesame as this one
-            if self.echo_stdout_stderr:
-                if sys.stdout != self:
-                    sys.stdout.write(txt)
-                elif sys.stderr != self:
-                    sys.stderr.write(txt)
-        except:
-            pass
+        self.update(txt, append=True)
+        # if need to echo, then send the same text to the saved stdout and stderr
+        if self.echo_stdout_stderr:
+            if Window._original_stdout is not None:
+                Window._original_stdout.write(txt)
+            elif Window._original_stderr is not None:
+                Window._original_stderr.write(txt)
 
     def flush(self):
         """
@@ -24821,10 +24822,10 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
     new_ver = None
     for line in lines:
         if 'version=' in line:
-            version = line.split('=')[1]
-            start = version.find('"')
-            end = version.find('"', start + 1)
-            new_ver = version[start + 1:end]
+            ver = line.split('=')[1]
+            start = ver.find('"')
+            end = ver.find('"', start + 1)
+            new_ver = ver[start + 1:end]
             # print(f'{new_ver}')
             break
     if not new_ver:
