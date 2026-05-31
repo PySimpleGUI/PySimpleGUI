@@ -54,7 +54,7 @@
 
 """
 
-version = "6.0.7"
+version = "6.1"
 
 
 
@@ -76,6 +76,7 @@ Changelog since last major release
                         should be minimal since only the Graph element conditional was changed.                                           
 6.0.7       30-May-2026 Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
                         in the tree to be programatically selected as if the user selected them.
+6.1         30-May-2026 Preparing for release, first to GitHub as 6.1, then post on PyPI.                        
 """
 
 
