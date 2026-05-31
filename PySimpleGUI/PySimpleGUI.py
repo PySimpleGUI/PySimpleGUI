@@ -64,7 +64,7 @@ Changelog since last major release
 6.0         5-Apr-2026  Initial release
 6.0.1       8-Apr-2026  Emoji change to main window
 6.0.2       8-May-2026  Fixed bug in Window.settings_save.  If a window is closed using "X" or terminated in a
-                        similiar way, then the value None is written to the settings file for all keys.
+                        similar way, then the value None is written to the settings file for all keys.
                         The fix is to check if all values are None.  If so, skip saving the values
 6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"
 6.0.4       13-May-2026 Added image_subsample parameter to the print functions/methods for multiline element
@@ -72,10 +72,10 @@ Changelog since last major release
                         but uses GitHub as the location of release.  Can be invoked from Home Window, or
                         using the psgupgrade command.
 6.0.6       30-May-2026 Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
-                        are received. Fix was to clear the realtime button flag. Potential for regression problems
+                        were received. Fix was to clear the realtime button flag. Potential for regression problems
                         should be minimal since only the Graph element conditional was changed.                                           
 6.0.7       30-May-2026 Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
-                        in the tree to be programatically selected as if the user selected them.
+                        in the tree to be programmatically selected as if the user selected them.
 6.1         30-May-2026 Preparing for release, first to GitHub as 6.1, then post on PyPI.                        
 """
 
