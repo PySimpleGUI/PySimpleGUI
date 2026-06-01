@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.2"
+version = "6.1.3"
 
 
 
@@ -83,6 +83,7 @@ Changelog since last major release
                             It will not do the reroute for you.                                          
 6.1.2        1-Jun-2026 Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
                         Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
+6.1.3        1-Jun-2026 Another try at fixing the upgrade from github bug that shows wrong installed version number. This time for sure.... 
 """
 
 
@@ -24831,11 +24832,10 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
     new_ver = None
     for line in lines:
         if 'version=' in line:
-            ver = line.split('=')[1]
-            start = ver.find('"')
-            end = ver.find('"', start + 1)
-            new_ver = ver[start + 1:end]
-            # print(f'{new_ver}')
+            running_ver = line.split('=')[1]
+            start = running_ver.find('"')
+            end = running_ver.find('"', start + 1)
+            new_ver = running_ver[start + 1:end]
             break
     if not new_ver:
         popup_error('Upgrade GUI - did not find version number is setup.py')
