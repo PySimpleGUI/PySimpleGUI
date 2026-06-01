@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.1"
+version = "6.1.2"
 
 
 
@@ -81,6 +81,8 @@ Changelog since last major release
                         Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
                             Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
                             It will not do the reroute for you.                                          
+6.1.2        1-Jun-2026 Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
+                        Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
 """
 
 
@@ -1247,7 +1249,7 @@ class Element:
         self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = self.MenuItemChosen
         self.ParentForm.FormRemainedOpen = True
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
         # Window._window_that_exited = self.ParentForm
         # self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
@@ -1341,7 +1343,7 @@ class Element:
             self.ParentForm.LastButtonClicked = alternative_to_key
         self.ParentForm.FormRemainedOpen = True
 
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     Window._window_that_exited = self.ParentForm
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -3586,7 +3588,7 @@ class Spin(Element):
         else:
             self.ParentForm.LastButtonClicked = ''
         self.ParentForm.FormRemainedOpen = True
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     Window._window_that_exited = self.ParentForm
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -5003,7 +5005,7 @@ class Button(Element):
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     Window._window_that_exited = self.ParentForm
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
 
     def _find_target(self):
         target = self.Target
@@ -5138,7 +5140,7 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             self.ParentForm._Close()
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
@@ -5152,7 +5154,7 @@ class Button(Element):
             else:
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
             self.ParentForm._Close(without_event=True)
             self.ParentForm.TKroot.destroy()  # close the window with tkinter
@@ -5162,12 +5164,12 @@ class Button(Element):
             self.ParentForm.LastButtonClicked = self.Key  # key should have been generated already if not set by user
             self.ParentForm.FormRemainedOpen = True
             should_submit_window = False
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
         return
 
@@ -5470,7 +5472,7 @@ class ButtonMenu(Element):
         self.ParentForm.FormRemainedOpen = True
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
 
     def update(self, menu_definition=None, visible=None, image_source=None, image_size=(None, None), image_subsample=None, image_zoom=None, button_text=None, button_color=None):
         """
@@ -6813,8 +6815,7 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = self.Key
         else:
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
-        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
         if isinstance(self.ParentForm.LastButtonClicked, str):
             self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+UP'
         else:
@@ -6838,8 +6839,7 @@ class Graph(Element):
             self.ParentForm.LastButtonClicked = '__GRAPH__'  # need to put something rather than None
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
-        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
         self.MouseButtonDown = True
 
     def _update_position_for_returned_values(self, event):
@@ -6886,8 +6886,7 @@ class Graph(Element):
                 self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+MOVE'
             else:
                 self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+MOVE')
-        self.ParentForm.element_that_generated_event = self     # Indicate this is the element that caused the event
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
 
     BringFigureToFront = bring_figure_to_front
     ButtonPressCallBack = button_press_call_back
@@ -8010,7 +8009,7 @@ class Slider(Element):
         self.ParentForm.FormRemainedOpen = True
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
 
     Update = update
 
@@ -8630,7 +8629,7 @@ class Menu(Element):
         self.ParentForm.FormRemainedOpen = True
         # if self.ParentForm.CurrentlyRunningMainloop:
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-        _exit_mainloop(self.ParentForm)
+        _exit_mainloop(self.ParentForm, self)
 
     def update(self, menu_definition=None, visible=None):
         """
@@ -9018,7 +9017,7 @@ class Table(Element):
             self.ParentForm.FormRemainedOpen = True
             # if self.ParentForm.CurrentlyRunningMainloop:
             #     self.ParentForm.TKroot.quit()
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
     def _treeview_double_click(self, event):
         """
@@ -9048,7 +9047,7 @@ class Table(Element):
             else:
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
         def on_escape(table, widget, event, item, column, value_type):
             if widget.entry:
@@ -9094,7 +9093,7 @@ class Table(Element):
             else:
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
     def _table_clicked(self, event):
         """
@@ -9149,7 +9148,7 @@ class Table(Element):
             else:
                 self.ParentForm.LastButtonClicked = ''
             self.ParentForm.FormRemainedOpen = True
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
 
     def disable_edit_for_cells(self, list_of_cells_to_disable=None):
@@ -9395,7 +9394,7 @@ class Tree(Element):
             self.ParentForm.FormRemainedOpen = True
             # if self.ParentForm.CurrentlyRunningMainloop:
             #     self.ParentForm.TKroot.quit()
-            _exit_mainloop(self.ParentForm)
+            _exit_mainloop(self.ParentForm, self)
 
     def add_treeview_data(self, node):
         """
@@ -11430,7 +11429,7 @@ class Window:
             self.LastButtonClicked = WINDOW_CONFIG_EVENT
             self.FormRemainedOpen = True
             self.user_bind_event = event
-            _exit_mainloop(self)
+            _exit_mainloop(self, None)
 
     def _move_callback(self, event):
         """
@@ -11514,7 +11513,7 @@ class Window:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
         # if not self.NonBlocking:
         #     _BuildResults(self, False, self)
-        _exit_mainloop(self)
+        _exit_mainloop(self, None)
 
     def _MouseWheelCallback(self, event):
         """
@@ -11529,7 +11528,7 @@ class Window:
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 or event.num == 5 else 'MouseWheel:Up'
         # if not self.NonBlocking:
         #     _BuildResults(self, False, self)
-        _exit_mainloop(self)
+        _exit_mainloop(self, None)
 
     @property
     def right_click_menu_element(self):
@@ -11651,7 +11650,7 @@ class Window:
             return
         self._auto_save_location()
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
-            _exit_mainloop(self)
+            _exit_mainloop(self, None)
             if self.close_destroys_window:
                 self.TKroot.destroy()  # destroy this window
                 self.TKrootDestroyed = True
@@ -11659,7 +11658,7 @@ class Window:
             else:
                 self.LastButtonClicked = WINDOW_CLOSE_ATTEMPTED_EVENT
         elif Window._root_running_mainloop == Window.hidden_master_root:
-            _exit_mainloop(self)
+            _exit_mainloop(self, None)
         else:
             if self.close_destroys_window:
                 self.TKroot.destroy()  # destroy this window
@@ -12034,7 +12033,7 @@ class Window:
         self.FormRemainedOpen = True
         # if self.CurrentlyRunningMainloop:
         #     self.TKroot.quit()
-        _exit_mainloop(self)
+        _exit_mainloop(self, None)
         return 'break' if propagate is not True else None
 
     def bind(self, bind_string, key, propagate=True):
@@ -12228,7 +12227,7 @@ class Window:
 
         if self._queued_thread_event_available():
             self.FormRemainedOpen = True
-            _exit_mainloop(self)
+            _exit_mainloop(self, None)
 
     def _create_thread_queue(self):
         """
@@ -12688,8 +12687,16 @@ def _long_func_thread(window, end_key, original_func):
         window.write_event_value(end_key, return_value)
 
 
-def _exit_mainloop(exiting_window):
+def _exit_mainloop(exiting_window, element_causing_event):
+    """
+    Used to break out of the tkinter mainloop.  Elements can call this to cause a Window.read function to return to use
+    :param exiting_window:        The window that wants to exit
+    :type exiting_window:         (Window)
+    :param element_causing_event: Element that's causing the exit. Will be None if not an element that's causing it (could be the window itself)
+    :type element_causing_event:  (Element|None)
+    """
     if exiting_window == Window._window_running_mainloop or Window._root_running_mainloop == Window.hidden_master_root:
+        exiting_window.element_that_generated_event = element_causing_event
         Window._window_that_exited = exiting_window
         if Window._root_running_mainloop is not None:
             Window._root_running_mainloop.quit()
@@ -14962,7 +14969,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        element.TKStringVar.set('')
+                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
+                            element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
                     value = (value != 0)
@@ -15024,7 +15032,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         if element.rstrip:
                             value = value.rstrip()
                         if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                            element.TKText.delete('1.0', tk.END)
+                            if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
+                                element.TKText.delete('1.0', tk.END)
                     except:
                         value = None
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
