@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.4"
+version = "6.1.5"
 
 
 
@@ -85,6 +85,7 @@ Changelog since last major release
                         Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
 6.1.3        1-Jun-2026 Another try at fixing the upgrade from github bug that shows wrong installed version number. This time for sure.... 
 6.1.4        2-Jun-2026 Display the Maint Release version number in the Home Window. Moved the install button
+6.1.5        2-Jun-2026 Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
 """
 
 
@@ -12512,22 +12513,49 @@ class Window:
             if not self.DisableClose:
                 self._OnClosingCallback()
 
+    def _parse_h_m_s(self, h_m_s):
+        """
+            Parses Hour:Minute:Seconds string into an int tuple (hour, min, sec)
+
+        :param h_m_s:   If True then repeat timer events until timer is explicitly stopped
+        :type h_m_s:    str
+        :return:        Timer ID for the timer or None if error
+        :rtype:         Tuple(int, int, int) | Tuple(None, None, None)
+        """
+
+        try:
+            hours, minutes, seconds = map(int, h_m_s.split(":"))
+        except:
+            return None, None, None
+        return hours, minutes, seconds
+
+
     def timer_start(self, frequency_ms, key=EVENT_TIMER, repeating=True):
         """
-        Starts a timer that gnerates Timer Events.  The default is to repeat the timer events until timer is stopped.
+        Starts a timer that gnerates Timer Events.
+        Time can be specified as an integer number of milliseconds or a string format "H:M:S"
+        The default is to repeat the timer events until timer is stopped.
         You can provide your own key or a default key will be used.  The default key is defined
         with the constants EVENT_TIMER or TIMER_KEY.  They both equal the same value.
         The values dictionary will contain the timer ID that is returned from this function.
 
-        :param frequency_ms:    How often to generate timer events in milliseconds
-        :type frequency_ms:     int
+        :param frequency_ms:    How often to generate timer events in milliseconds or a string "HH:MM:SS". HH, MM, SS each can be any length of chars
+        :type frequency_ms:     None | int | str
         :param key:             Key to be returned as the timer event
         :type key:              str | int | tuple | object
         :param repeating:       If True then repeat timer events until timer is explicitly stopped
         :type repeating:        bool
-        :return:                Timer ID for the timer
-        :rtype:                 int
+        :return:                Timer ID for the timer or None if error
+        :rtype:                 int | None
         """
+        if isinstance(frequency_ms, str):
+            try:
+                hour, min, sec = self._parse_h_m_s(frequency_ms)
+                frequency_ms = (hour * 3600 + min * 60 + sec) * 1000
+            except Exception as e:
+                popup_error_with_traceback('Error in H:M:S string', f'Error in H:M:S string = {frequency_ms}', e)
+                return None
+
         timer = _TimerPeriodic(self, frequency_ms=frequency_ms, key=key, repeating=repeating)
         return timer.id
 
