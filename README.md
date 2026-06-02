@@ -53,6 +53,10 @@ The GitHub repo has the most up-to-date code. You can install directly without c
 
 `python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`
 
+To install a specific release that's here on GitHub, change `master` to the release number.  To install version 6.1:
+
+`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/6.1`
+
 Or clone/download the repo and install locally:
 
 `python -m pip install .`
