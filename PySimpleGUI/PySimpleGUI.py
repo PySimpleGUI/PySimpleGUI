@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.3"
+version = "6.1.4"
 
 
 
@@ -84,6 +84,7 @@ Changelog since last major release
 6.1.2        1-Jun-2026 Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
                         Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
 6.1.3        1-Jun-2026 Another try at fixing the upgrade from github bug that shows wrong installed version number. This time for sure.... 
+6.1.4        2-Jun-2026 Display the Maint Release version number in the Home Window. Moved the install button
 """
 
 
@@ -24816,17 +24817,20 @@ MMMMMMMMMMM 88            .88                                        MMMMMMMMMMM
             dP        d8888P
 '''
 
+def upgrade_get_github_setuppy_version(silent_error=True):
+    """
+    Returns the version number found in the setup.py in the PySimpleGUI Github
 
-def upgrade_PySimpleGUI_gui(no_gui=False):
-    # print('Upgrading PySimpleGUI....')
-    psg_source = net_download_file(URL_PSG_GITHUB_SOURCE)
-    if psg_source is None:
-        popup_error('Upgrade GUI - error downloading the PySimpleGUI.py file')
-        return
+    :param silent_error:    If True then no error message displayed if error occurs
+    :type silent_error:     bool
+    :returns:               Version number as a string. Will be empty string if error
+    :rtype:                 str
+    """
     setup_py = net_download_file(URL_PSG_GITHUB_SETUP_FILE)
     if setup_py is None:
-        popup_error('Upgrade GUI - error downloading the setup.py file')
-        return
+        if not silent_error:
+            popup_error('Upgrade GUI - error downloading the setup.py file')
+        return ''
 
     lines = setup_py.splitlines()
     new_ver = None
@@ -24838,9 +24842,20 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
             new_ver = running_ver[start + 1:end]
             break
     if not new_ver:
-        popup_error('Upgrade GUI - did not find version number is setup.py')
-        return
+        if not silent_error:
+            popup_error('Upgrade GUI - did not find version number is setup.py')
+        return ''
+    return new_ver
 
+def upgrade_PySimpleGUI_gui(no_gui=False):
+    # print('Upgrading PySimpleGUI....')
+    new_ver = upgrade_get_github_setuppy_version(silent_error=False)
+    if not new_ver:
+        return
+    psg_source = net_download_file(URL_PSG_GITHUB_SOURCE)
+    if psg_source is None:
+        popup_error('Upgrade GUI - error downloading the PySimpleGUI.py file')
+        return
     lines = psg_source.splitlines()
     start = end = None
     for i, line in enumerate(lines):
@@ -25448,17 +25463,19 @@ def _create_main_window():
         platform_name= 'Unknown platorm'
 
     platform_ver = platform.platform()
-
+    maint_release_version = upgrade_get_github_setuppy_version()
     versions_left_col_layout = [
         [Push(), Text('2026 LGPL Version of PySimpleGUI', p=0, text_color='yellow', font='_ 16'), Push()],
         VerLine(version, 'PySimpleGUI Version'),
+        VerLine(upgrade_get_github_setuppy_version(), 'PySimpleGUI Maint Release'),
+        [Text(s=40), B('Install Maint Release')] if maint_release_version != version and maint_release_version != '' else [],
         VerLine('{}.{}.{}'.format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro,sys.version), 'Python Version', size=(40, 1)) + [Image(PYTHON_COLORED_HEARTS_BASE64, subsample=3, k='-PYTHON HEARTS-', enable_events=True, tooltip="Love Python? So do we!\nClick to be taken to the Python.org's download page.")],
         VerLine(tclversion_detailed, 'detailed tkinter version'),
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40, None)),
         VerLine(sys.executable, 'Python Executable'),
         VerLine(platform_name, 'Platform '),
         VerLine(platform_ver, 'Platform Version'),
-        [VPush(), Push(), B('Install Maint Release') ]]
+        ]
 
     # versions_tab_layout = [vtop([Column(versions_left_col_layout), Column(versions_right_col_layout)])]
     versions_tab_layout = versions_left_col_layout
