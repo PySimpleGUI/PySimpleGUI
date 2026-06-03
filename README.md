@@ -39,27 +39,40 @@ I’ve released the PySimpleGUI 5 code as open source. After removing licensing 
 
 To install the latest version (v6):
 
-`python -m pip install PySimpleGUI`
+```bash
+python -m pip install PySimpleGUI
+```
+
 
 If you need the older version (4.60.5.1):
 
 
-`python -m pip install PySimpleGUI==4.60.5.1`
+```bash
+python -m pip install PySimpleGUI==4.60.5.1
+```
 
 ## Installing from Github
 
 The GitHub repo has the most up-to-date code. You can install directly without cloning:
 
 
-`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master`
+```bash
+python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master
+```
 
 To install a specific release that's here on GitHub, change `master` to the release number.  To install version 6.1:
 
-`python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/6.1`
+```bash
+python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/6.1
+```
+
 
 Or clone/download the repo and install locally:
 
-`python -m pip install .`
+```bash
+python -m pip install .
+```
+
  
 ## Longer Term Outlook
 
