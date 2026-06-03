@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.5"
+version = "6.1.6"
 
 
 
@@ -86,6 +86,7 @@ Changelog since last major release
 6.1.3        1-Jun-2026 Another try at fixing the upgrade from github bug that shows wrong installed version number. This time for sure.... 
 6.1.4        2-Jun-2026 Display the Maint Release version number in the Home Window. Moved the install button
 6.1.5        2-Jun-2026 Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
+6.1.6        3-Jun-2026 Enhancement - support for horizontal scroll only for scrollable column element
 """
 
 
@@ -8061,7 +8062,7 @@ class TkScrollableFrame(tk.Frame):
     A frame with one or two scrollbars.  Used to make Columns with scrollbars
     """
 
-    def __init__(self, master, vertical_only, element, window, **kwargs):
+    def __init__(self, master, vertical_only, horizontal_only, element, window, **kwargs):
         """
         :param master:        The parent widget
         :type master:         (tk.Widget)
@@ -8077,26 +8078,23 @@ class TkScrollableFrame(tk.Frame):
         element.Widget = self.canvas
         # Okay, we're gonna make a list. Containing the y-min, x-min, y-max, and x-max of the frame
         element.element_frame = self
-        _make_ttk_scrollbar(element, 'v', window)
-        # element.vsb = tk.Scrollbar(self, orient=tk.VERTICAL)
-        element.vsb.pack(side='right', fill="y", expand="false")
+        if not horizontal_only:
+            _make_ttk_scrollbar(element, 'v', window)
+            element.vsb.pack(side='right', fill="y", expand="false")
+            self.canvas.config(yscrollcommand=element.vsb.set)
 
         if not vertical_only:
             _make_ttk_scrollbar(element, 'h', window)
-            # self.hscrollbar = tk.Scrollbar(self, orient=tk.HORIZONTAL)
             element.hsb.pack(side='bottom', fill="x", expand="false")
             self.canvas.config(xscrollcommand=element.hsb.set)
-            # self.canvas = tk.Canvas(self, )
-        # else:
-        #     self.canvas = tk.Canvas(self)
 
-        self.canvas.config(yscrollcommand=element.vsb.set)
         self.canvas.pack(side="left", fill="both", expand=True)
-        # element.vsb.config(command=self.canvas.yview)
-        element.vsb.config(command=self.yview_override)
+
         if not vertical_only:
-            # element.hsb.config(command=self.canvas.xview)
             element.hsb.config(command=self.xview_override)
+        if not horizontal_only:
+            element.vsb.config(command=self.yview_override)
+
 
         # reset the view
         self.canvas.xview_moveto(0)
@@ -8192,7 +8190,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), size_subsample_width=1, size_subsample_height=2, pad=None, p=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
+                 vertical_scroll_only=False, horizontal_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
                  vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
                  sbar_frame_color=None, sbar_relief=None):
@@ -8217,6 +8215,8 @@ class Column(Element):
         :type scrollable:                   (bool)
         :param vertical_scroll_only:        if True then no horizontal scrollbar will be shown if a scrollable column
         :type vertical_scroll_only:         (bool)
+        :param horizontal_scroll_only:      if True then no verticale scrollbar will be shown if a scrollable column
+        :type horizontal_scroll_only:       (bool)
         :param right_click_menu:            A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:             List[List[ List[str] | str ]]
         :param key:                         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -8267,6 +8267,7 @@ class Column(Element):
         self.TKColFrame = None  # type: tk.Frame
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
+        self.HorizontalScrollOnly = horizontal_scroll_only
 
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -15829,12 +15830,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Column
                 # ----------------------- SCROLLABLE Column ----------------------
                 if element.Scrollable:
-                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element, toplevel_form)  # do not use yet!  not working
+                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly, element.HorizontalScrollOnly, element, toplevel_form)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
-                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth() // element.size_subsample_width,
-                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // element.size_subsample_height)
+                        width = element.TKColFrame.TKFrame.winfo_reqwidth()
+                        if element.HorizontalScrollOnly:
+                            width = width  // element.size_subsample_width
+                        height = element.TKColFrame.TKFrame.winfo_reqheight()
+                        if  element.VerticalScrollOnly:
+                            height = height // element.size_subsample_height
+                        element.TKColFrame.canvas.config(width=width, height=height)
                     else:
                         element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth() // element.size_subsample_width,
                                                          height=element.TKColFrame.TKFrame.winfo_reqheight() // element.size_subsample_height)
