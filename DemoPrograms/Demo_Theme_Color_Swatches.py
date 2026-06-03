@@ -16,8 +16,7 @@ import PySimpleGUI as sg
       If you then select that menu item, it's copied to the clipbard.
     
     The code has several examples you may want to try out in your prgorams.  Everything from
-    using "Symbols" to make the swatches, so generating layouts, integrating (optionally) other
-    packages like pyperclip, moving a window based on the size of the window
+    using "Symbols" to make the swatches, so generating layouts, moving a window based on the size of the window
     
     This code's pattern is becoming more widespread lately:
     * Have a "create_window' function where the layout and Window is defined
@@ -28,19 +27,12 @@ import PySimpleGUI as sg
     
 """
 
-# Try and import pyperclip. Save if can be used or not.
-try:
-    import pyperclip
-    pyperclip_available=True
-except:
-    pyperclip_available=False
-
 
 def create_window():
     # Begin the layout with a header
     layout = [[sg.Text('Themes as color swatches', text_color='white', background_color='black', font='Default 25')],
               [sg.Text('Tooltip and right click a color to get the value', text_color='white', background_color='black', font='Default 15')],
-              [sg.Text('Left click a color to copy to clipboard (requires pyperclip)', text_color='white', background_color='black', font='Default 15')]]
+              [sg.Text('Left click a color to copy to clipboard', text_color='white', background_color='black', font='Default 15')]]
     layout =[[sg.Column(layout, element_justification='c', background_color='black')]]
     # Create the pain part, the rows of Text with color swatches
     for i, theme in enumerate(sg.theme_list()):
@@ -59,9 +51,9 @@ def create_window():
     # finish the layout by adding an exit button
     layout += [[sg.B('Exit')]]
     # place layout inside of a Column so that it's scrollable
-    layout = [[sg.Column(layout, scrollable=True,vertical_scroll_only=True,  background_color='black')]]
+    layout = [[sg.Column(layout, scrollable=True,vertical_scroll_only=True, background_color='black')]]
     # create and return Window that uses the layout
-    return sg.Window('Theme Color Swatches', layout, background_color='black', finalize=True)
+    return sg.Window('Theme Color Swatches', layout, background_color='black', finalize=True, resizable=True)
 
 
 
@@ -86,11 +78,8 @@ def main():
             else:
                 chosen_color = ''
 
-        if pyperclip_available:
-            pyperclip.copy(chosen_color)
-            sg.popup_auto_close(f'{chosen_color}\nColor copied to clipboard', auto_close_duration=1)
-        else:
-            sg.popup_auto_close(f'pyperclip not installed\nPlease install pyperclip', auto_close_duration=3)
+        sg.clipboard_set(chosen_color)
+        sg.popup_auto_close(f'{chosen_color}\nColor copied to clipboard', auto_close_duration=1)
 
     window.close()
 
