@@ -202,17 +202,18 @@ I use LLMs to search and summarize documentation, lookup errors, do research, ge
 
 ### **I like to write code.**  
 
-I fell in love with programming 50 years ago.  Writing software is my happy place.  Why would I give that to a computer to do instead of getting the enjoyment I get from doing it?  AI can generate lots of things.  The feeling I get writing software is not one of the things AI can generate.
+I fell in love with programming 50 years ago.  Writing software is my happy place.  It's an "I **get to** write software" thing.
+AI can generate lots of things.  The feeling I get writing software is not one of the things AI can generate.
 
 I'm not in a hurry.  If I wanted code written for me, I would have opened the project up to pull requests years ago, but I didn't because I wanted to write the code.  It's fun!
 
 ### PySimpleGUI in the AI era
 
-A common question in software today is whether a library is still relevant. I think for PySimpleGUI the answer is yes.  People discover and install PySimpleGUI every day.  GUI applications are often built incrementally. As features are added, layouts change, buttons move, and the code needs to evolve. That’s much easier when the code is understandable, whether it was written by a person or an AI.
+A common question in software today is whether a library is still relevant. I think for PySimpleGUI the answer is yes.  People discover and install PySimpleGUI every day. Doesn't matter **how many** people use it.  More than one is good enough.  It's a thrill that other programmers want to use what I create.  
 
-I use PySimpleGUI regularly, and I can’t imagine building a Windows app without it.  I’ve recently been working on a 6502 breadboard computer. I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.  Coding up a windows application to be the front-end to my tools is very easy for me to do using PySimpleGUI.
+I use PySimpleGUI regularly.  I can’t imagine building a Windows app without it.  I’ve recently been working on a 6502 breadboard computer. I built a bus analyzer using a couple of Raspberry Pi Picos and a PySimpleGUI app to control everything from Windows.  Coding up a windows application to be the front-end to my tools is very easy for me to do using PySimpleGUI.
 
-That’s reason enough for me to keep working to clean up the ecosystem and keep it running well.
+That’s reason enough for me to keep working to clean up the ecosystem and keep it running.
 
 ---------------------------
 
