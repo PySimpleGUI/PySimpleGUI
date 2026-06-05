@@ -176,6 +176,24 @@ Created a new repo and added code for interfacing to a MicroPython-based microco
 
 
 
+* 6.0.6 - Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
+                        were received. Fix was to clear the realtime button flag. Potential for regression problems
+                        should be minimal since only the Graph element conditional was changed.                                           
+* 6.0.7 - Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
+                        in the tree to be programmatically selected as if the user selected them.
+* 6.0.7 - Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
+                        Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
+                        It will not do the reroute for you.                                          
+* 6.1.2 - Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
+                        Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
+* 6.1.4 - Display the Maint Release version number in the Home Window. Moved the install button
+* 6.1.5 - Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
+* 6.1.6 - Enhancement - support for horizontal scroll only for scrollable column element
+
+------
+
+## PSGWeb
+
 * PSGWeb - PySimpleGUI running in a browser window
   * Works with most demo programs
   * To try it, go to any PySimpleGUI application on GitHub, add `psgweb.us` onto the front of the url, press enter

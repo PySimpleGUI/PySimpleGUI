@@ -10607,7 +10607,7 @@ class Window:
             if no other GUI events happen first.
 
         :param timeout:     Milliseconds to wait until the Read will return IF no other GUI events happen first
-        :type timeout:      int|None
+        :type timeout:      int | None
         :param timeout_key: The value that will be returned from the call if the timer expired
         :type timeout_key:  (Any)
         :param close:       if True the window will be closed prior to returning
@@ -11846,7 +11846,7 @@ class Window:
         :param without_titlebar: If True, return location of top left of main window area without the titlebar (may be OS dependent?)
         :type without_titlebar:  (bool)
         :return:                 The x and y location in tuple form (x,y)
-        :rtype:                  Tuple[(int | None), (int | None)]
+        :rtype:                  Tuple[int, int] | Tuple[None, None]
         """
 
         if not self._is_window_created('tried Window.current_location'):
