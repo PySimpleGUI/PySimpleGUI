@@ -150,8 +150,9 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 > [!NOTE]
 > Drag and Drop support on PySimpleGUI may soon be here
+> 
 > New experimental Demo Program - [Demo_Drag_and_Drop.py](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Drag_and_Drop.py)
-> Femo program is in the PySimpleGUI repo as well as the psgdemos repo
+> Demo program is in the PySimpleGUI repo as well as the psgdemos repo
 
 
 To pip install psgdemos with the new demo program:
