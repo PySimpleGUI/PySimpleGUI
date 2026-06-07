@@ -145,6 +145,28 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 ## Recently added features and activities
 
+
+## Drag and Drop!
+
+> [!NOTE]
+> Drag and Drop support on PySimpleGUI may soon be here
+> New experimental Demo Program - [Demo_Drag_and_Drop.py](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Drag_and_Drop.py)
+> Femo program is in the PySimpleGUI repo as well as the psgdemos repo
+
+
+To pip install psgdemos with the new demo program:
+
+```bash
+python -m pip install --upgrade https://github.com/PySimpleGUI/psgdemos/zipball/main
+```
+ 
+Drag and Drop support has been a wish for many years.  Finally may have found a way to do it such that the PySimpleGUI code is not changed.  All code is in the user code-space.
+
+
+![DragDrop](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/refs/heads/master/images/for_readme/DragDrop2.gif)
+
+
+
 ## Documentation
 
 * The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
