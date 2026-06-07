@@ -146,27 +146,21 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 ## Recently added features and activities
 
 
-## Drag and Drop!
+## Drag and Drop!  
 
-> [!NOTE]
-> Drag and Drop support on PySimpleGUI may soon be here
-> 
-> New experimental Demo Program - [Demo_Drag_and_Drop.py](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Drag_and_Drop.py)
-> Demo program is in the PySimpleGUI repo as well as the psgdemos repo
+Hard to believe, but drag and drop is working on PySimpleGUI.
 
 
-To pip install psgdemos with the new demo program:
+Drag and Drop support has been a wish for many years.  We finallyi may have found a way to do it such that the PySimpleGUI code is not changed.  All code is in the user code-space.
+
+
+[`psgdnd`](https://github.com/PySimpleGUI/psgdnd) is a new package posted on GitHub that adds drag and drop to PySimpleGUI.  You can pip install it and try drag and drop for yourself.  More information and examples can be found in that repo.
 
 ```bash
-python -m pip install --upgrade https://github.com/PySimpleGUI/psgdemos/zipball/main
+python -m pip install --upgrade https://github.com/PySimpleGUI/psgdnd/zipball/main
 ```
- 
-Drag and Drop support has been a wish for many years.  Finally may have found a way to do it such that the PySimpleGUI code is not changed.  All code is in the user code-space.
 
-
-![DragDrop](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/refs/heads/master/images/for_readme/DragDrop2.gif)
-
-
+![screenshot](https://raw.githubusercontent.com/PySimpleGUI/psgdnd/refs/heads/main/psgdnd_screenshot.gif)
 
 ## Documentation
 
