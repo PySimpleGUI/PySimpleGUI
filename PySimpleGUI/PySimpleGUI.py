@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.6"
+version = "6.1.7"
 
 
 
@@ -87,6 +87,7 @@ Changelog since last major release
 6.1.4        2-Jun-2026 Display the Maint Release version number in the Home Window. Moved the install button
 6.1.5        2-Jun-2026 Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
 6.1.6        3-Jun-2026 Enhancement - support for horizontal scroll only for scrollable column element
+6.1.7        12-Jun-2026 Added typing ElementType for better type support when looking up elements using window[key]
 """
 
 
@@ -725,6 +726,15 @@ ELEM_TYPE_PANE = 'pane'
 ELEM_TYPE_BUTTONMENU = 'buttonmenu'
 ELEM_TYPE_TITLEBAR = 'titlebar'
 ELEM_TYPE_SIZEGRIP = 'sizegrip'
+
+ElementType = Union[
+    Element, Input, Combo, OptionMenu, Listbox, Radio,
+    Checkbox, Spin, Multiline, Text, StatusBar, Output,
+    Button, ButtonMenu, ProgressBar, Image, Canvas, Graph,
+    Frame, VerticalSeparator, HorizontalSeparator, Tab,
+    TabGroup, Slider, Column, Pane, Menu, Table, Tree,
+    ErrorElement, None
+]
 
 # STRETCH == ERROR ELEMENT as a filler
 
@@ -12618,7 +12628,7 @@ class Window:
         :param key: The key to find
         :type key:  str | int | tuple | object
         :return:    The element found
-        :rtype:     Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
+        :rtype:     ElementType
         """
 
         return self.find_element(key)
