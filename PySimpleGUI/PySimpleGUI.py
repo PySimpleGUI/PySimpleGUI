@@ -727,14 +727,6 @@ ELEM_TYPE_BUTTONMENU = 'buttonmenu'
 ELEM_TYPE_TITLEBAR = 'titlebar'
 ELEM_TYPE_SIZEGRIP = 'sizegrip'
 
-ElementType = Union[
-    Element, Input, Combo, OptionMenu, Listbox, Radio,
-    Checkbox, Spin, Multiline, Text, StatusBar, Output,
-    Button, ButtonMenu, ProgressBar, Image, Canvas, Graph,
-    Frame, VerticalSeparator, HorizontalSeparator, Tab,
-    TabGroup, Slider, Column, Pane, Menu, Table, Tree,
-    ErrorElement, None
-]
 
 # STRETCH == ERROR ELEMENT as a filler
 
@@ -12709,6 +12701,15 @@ class Window:
 
 
 FlexForm = Window
+
+ElementType = Union[
+    Element, Input, Combo, OptionMenu, Listbox, Radio,
+    Checkbox, Spin, Multiline, Text, StatusBar, Output,
+    Button, ButtonMenu, ProgressBar, Image, Canvas, Graph,
+    Frame, VerticalSeparator, HorizontalSeparator, Tab,
+    TabGroup, Slider, Column, Pane, Menu, Table, Tree,
+    ErrorElement, None
+]
 
 
 def _long_func_thread(window, end_key, original_func):
