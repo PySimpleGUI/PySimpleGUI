@@ -9875,7 +9875,7 @@ class Window:
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
         :type title:                                 (str)
         :param layout:                               The layout for the window. Can also be specified in the Layout method
-        :type layout:                                List[List[Element]] | Tuple[Tuple[Element]]
+        :type layout:                                List[List[ElementType]] | Tuple[Tuple[ElementType]]
         :param default_element_size:                 size in characters (wide) and rows (high) for all elements in this window
         :type default_element_size:                  (int, int) - (width, height)
         :param default_button_element_size:          (width, height) size in characters (wide) and rows (high) for all Button elements in this window
