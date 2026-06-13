@@ -88,6 +88,7 @@ Changelog since last major release
 6.1.5        2-Jun-2026 Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
 6.1.6        3-Jun-2026 Enhancement - support for horizontal scroll only for scrollable column element
 6.1.7        12-Jun-2026 Added typing ElementType for better type support when looking up elements using window[key]
+6.1.8        13-Jun-2026 Removed the ElementType changes.  Code completion breaks when used with key lookups
 """
 
 
@@ -9875,7 +9876,7 @@ class Window:
         :param title:                                The title that will be displayed in the Titlebar and on the Taskbar
         :type title:                                 (str)
         :param layout:                               The layout for the window. Can also be specified in the Layout method
-        :type layout:                                List[List[ElementType]] | Tuple[Tuple[ElementType]]
+        :type layout:                                List[List[Element]] | Tuple[Tuple[Element]]
         :param default_element_size:                 size in characters (wide) and rows (high) for all elements in this window
         :type default_element_size:                  (int, int) - (width, height)
         :param default_button_element_size:          (width, height) size in characters (wide) and rows (high) for all Button elements in this window
@@ -12620,7 +12621,7 @@ class Window:
         :param key: The key to find
         :type key:  str | int | tuple | object
         :return:    The element found
-        :rtype:     ElementType
+        :rtype:     Element
         """
 
         return self.find_element(key)
@@ -12702,14 +12703,6 @@ class Window:
 
 FlexForm = Window
 
-ElementType = Union[
-    Element, Input, Combo, OptionMenu, Listbox, Radio,
-    Checkbox, Spin, Multiline, Text, StatusBar, Output,
-    Button, ButtonMenu, ProgressBar, Image, Canvas, Graph,
-    Frame, VerticalSeparator, HorizontalSeparator, Tab,
-    TabGroup, Slider, Column, Pane, Menu, Table, Tree,
-    ErrorElement, None
-]
 
 
 def _long_func_thread(window, end_key, original_func):
