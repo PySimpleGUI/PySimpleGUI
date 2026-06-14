@@ -17122,6 +17122,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(labelanchor=element.TitleLocation)
                 if element.BorderWidth is not None and element.BorderWidthNoRelief is None:
                     labeled_frame.configure(borderwidth=element.BorderWidth)
+                if element.BorderWidthNoRelief:         # if a non-zero no-relief border width, force borderwidth to zero
+                    labeled_frame.configure(borderwidth=0)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu_and_grab(element)
