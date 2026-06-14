@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.7"
+version = "6.1.9"
 
 
 
@@ -89,6 +89,7 @@ Changelog since last major release
 6.1.6        3-Jun-2026 Enhancement - support for horizontal scroll only for scrollable column element
 6.1.7        12-Jun-2026 Added typing ElementType for better type support when looking up elements using window[key]
 6.1.8        13-Jun-2026 Removed the ElementType changes.  Code completion breaks when used with key lookups
+6.1.9        14-Jun-2026 Enhancement - ability to set the Frame border color. Added border_color and border_width_no_relief parms to the Frame element
 """
 
 
@@ -6933,7 +6934,7 @@ class Frame(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, p=None, border_width=None, key=None, k=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, p=None, border_width=None, border_width_no_relief=None, border_color=None, key=None, k=None,
                  tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None, visible=True, element_justification='left', vertical_alignment=None,
                  metadata=None):
         """
@@ -6959,8 +6960,12 @@ class Frame(Element):
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param border_width:          width of border around element in pixels
+        :param border_width:          width of border around element in pixels (used with the frame's relief)
         :type border_width:           (int)
+        :param border_color:          Custom color of the border around frame.  Set by system if using a relief. Use border_width_no_relief with border_color to get a custom frame color
+        :type border_color:           (str)
+        :param border_width_no_relief: width of border around element in pixels. This is used without a relief. border_width should be 0 if this parm is non-zero
+        :type border_width_no_relief: (int)
         :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                    str | int | tuple | object
         :param k:                     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -6998,6 +7003,8 @@ class Frame(Element):
         self.Relief = relief
         self.TitleLocation = title_location
         self.BorderWidth = border_width
+        self.BorderColor = border_color
+        self.BorderWidthNoRelief = border_width_no_relief
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window._GetAContainerNumber()
@@ -17102,16 +17109,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
-                    labeled_frame.configure(background=element.BackgroundColor,
-                                            highlightbackground=element.BackgroundColor,
-                                            highlightcolor=element.BackgroundColor)
+                    labeled_frame.configure(background=element.BackgroundColor)
+                    if element.BorderColor != COLOR_SYSTEM_DEFAULT and element.BorderColor is not None:
+                        labeled_frame.configure( highlightcolor=element.BorderColor, highlightbackground=element.BorderColor)
+                if element.BorderWidthNoRelief is not None:
+                    labeled_frame.configure(highlightthickness=element.BorderWidthNoRelief)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     labeled_frame.configure(foreground=element.TextColor)
                 if font is not None:
                     labeled_frame.configure(font=font)
                 if element.TitleLocation is not None:
                     labeled_frame.configure(labelanchor=element.TitleLocation)
-                if element.BorderWidth is not None:
+                if element.BorderWidth is not None and element.BorderWidthNoRelief is None:
                     labeled_frame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
