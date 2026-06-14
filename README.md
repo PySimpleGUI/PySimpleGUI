@@ -162,6 +162,11 @@ python -m pip install --upgrade https://github.com/PySimpleGUI/psgdnd/zipball/ma
 
 ![screenshot](https://raw.githubusercontent.com/PySimpleGUI/psgdnd/refs/heads/main/psgdnd_screenshot.gif)
 
+`Demo_Drag_and_Drop_Onto_Icon.pyw` is a Drag and Drop program I've wanted to create using PySimpleGUI for a long time. It wasn't possible until `psgdnd` was released this month.  It has operations I frequently use such as image format conversions and translating to/from English and Spanish.
+
+
+https://github.com/user-attachments/assets/6919a166-2014-469b-8b4a-651413a8a12e
+
 ## Documentation
 
 * The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
