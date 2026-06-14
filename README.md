@@ -151,7 +151,7 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 Hard to believe, but drag and drop is working on PySimpleGUI.
 
 
-Drag and Drop support has been a wish for many years.  We finallyi may have found a way to do it such that the PySimpleGUI code is not changed.  All code is in the user code-space.
+Drag and Drop support has been a wish for many years.  We finally may have found a way to do it such that the PySimpleGUI code is not changed.  All code is in the user code-space.
 
 
 [`psgdnd`](https://github.com/PySimpleGUI/psgdnd) is a new package posted on GitHub that adds drag and drop to PySimpleGUI.  You can pip install it and try drag and drop for yourself.  More information and examples can be found in that repo.
