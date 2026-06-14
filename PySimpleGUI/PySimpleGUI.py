@@ -54,7 +54,7 @@
 
 """
 
-version = "6.1.10"
+version = "6.2"
 
 
 
@@ -91,6 +91,7 @@ Changelog since last major release
 6.1.8        13-Jun-2026 Removed the ElementType changes.  Code completion breaks when used with key lookups
 6.1.9        14-Jun-2026 Enhancement - ability to set the Frame border color. Added border_color and border_width_no_relief parms to the Frame element
 6.1.10       14-Jun-2026 Set Frame border color to default to the text element color if no color is set
+6.2          14-Jun-2026 released to GitHub... hopefully this one will make it to PyPI
 """
 
 
