@@ -139,7 +139,8 @@ https://Docs.PySimpleGUI.com
 PySimpleGUI has always been developed more like a proprietary product than an open source project.  Pull requests aren't accepted.
 
 
----
+-----
+
 
 # What's new...
 
@@ -164,8 +165,8 @@ python -m pip install --upgrade https://github.com/PySimpleGUI/psgdnd/zipball/ma
 
 `Demo_Drag_and_Drop_Onto_Icon.pyw` is a Drag and Drop program I've wanted to create using PySimpleGUI for a long time. It wasn't possible until `psgdnd` was released this month.  It has operations I frequently use such as image format conversions and translating to/from English and Spanish.
 
+![screen recording](https://github.com/user-attachments/assets/80a30c06-c14c-4da5-bad2-4dfe6b059b38)
 
-https://github.com/user-attachments/assets/6919a166-2014-469b-8b4a-651413a8a12e
 
 ## Documentation
 
