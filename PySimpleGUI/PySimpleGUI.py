@@ -61,37 +61,8 @@ version = "6.2"
 """
 Changelog since last major release
 
-6.0         5-Apr-2026  Initial release
-6.0.1       8-Apr-2026  Emoji change to main window
-6.0.2       8-May-2026  Fixed bug in Window.settings_save.  If a window is closed using "X" or terminated in a
-                        similar way, then the value None is written to the settings file for all keys.
-                        The fix is to check if all values are None.  If so, skip saving the values
-6.0.3       13-May-2026 Added ability to print or insert images into Multiline Element.  Use parameter "image"
-6.0.4       13-May-2026 Added image_subsample parameter to the print functions/methods for multiline element
-6.0.5       15-May-2026 Added "upgrade to Maintenance Release" capability. It's much like the PSG 5 feature
-                        but uses GitHub as the location of release.  Can be invoked from Home Window, or
-                        using the psgupgrade command.
-6.0.6       30-May-2026 Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
-                        were received. Fix was to clear the realtime button flag. Potential for regression problems
-                        should be minimal since only the Graph element conditional was changed.                                           
-6.0.7       30-May-2026 Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
-                        in the tree to be programmatically selected as if the user selected them.
-6.1         30-May-2026 Preparing for release, first to GitHub as 6.1, then post on PyPI.    
-6.1.1       31-May-2026 Fix in upgrade using pip code. Was not displaying the correct version number for currently running PSG
-                        Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
-                            Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
-                            It will not do the reroute for you.                                          
-6.1.2        1-Jun-2026 Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
-                        Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
-6.1.3        1-Jun-2026 Another try at fixing the upgrade from github bug that shows wrong installed version number. This time for sure.... 
-6.1.4        2-Jun-2026 Display the Maint Release version number in the Home Window. Moved the install button
-6.1.5        2-Jun-2026 Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
-6.1.6        3-Jun-2026 Enhancement - support for horizontal scroll only for scrollable column element
-6.1.7        12-Jun-2026 Added typing ElementType for better type support when looking up elements using window[key]
-6.1.8        13-Jun-2026 Removed the ElementType changes.  Code completion breaks when used with key lookups
-6.1.9        14-Jun-2026 Enhancement - ability to set the Frame border color. Added border_color and border_width_no_relief parms to the Frame element
-6.1.10       14-Jun-2026 Set Frame border color to default to the text element color if no color is set
-6.2          14-Jun-2026 released to GitHub... hopefully this one will make it to PyPI
+6.2         14-Jun-2026 released to GitHub
+
 """
 
 
