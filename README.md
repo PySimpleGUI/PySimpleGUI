@@ -144,8 +144,6 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 
 # What's new...
 
-## Recently added features and activities
-
 
 ## Features & Fixes in version 6.2
 
