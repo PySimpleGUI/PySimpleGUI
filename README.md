@@ -147,6 +147,31 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 ## Recently added features and activities
 
 
+## Features & Fixes in version 6.2
+
+* Fixed bug in Window.settings_save
+* Added ability to "print" an image inline in a Multiline element
+* The ability to upgrade to the latest Maint Release is once again built into PSG.  You can use the Home Window or the command line command`psgupgrade`.  You can see the release notes and install a new version.
+* Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
+                        were received. Fix was to clear the realtime button flag. Potential for regression problems
+                        should be minimal since only the Graph element conditional was changed.                                           
+* Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
+                        in the tree to be programmatically selected as if the user selected them.
+* Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
+                        Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
+                        It will not do the reroute for you.                                          
+* Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
+                        Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
+* Display the Maint Release version number in the Home Window. Moved the install button
+* Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
+* Enhancement - support for horizontal scroll only for scrollable column element
+* Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr. Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element. It will not do the reroute for you.
+* Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns. Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
+* Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
+* Enhancement - ability to set the Frame border color. Added border_color and border_width_no_relief parms to the Frame element
+  * Frame border color to default to the text element color if no color is set
+
+
 ## Drag and Drop!  
 
 Hard to believe, but drag and drop is working on PySimpleGUI.
@@ -161,57 +186,12 @@ Drag and Drop support has been a wish for many years.  We finally may have found
 python -m pip install --upgrade https://github.com/PySimpleGUI/psgdnd/zipball/main
 ```
 
-![screenshot](https://raw.githubusercontent.com/PySimpleGUI/psgdnd/refs/heads/main/psgdnd_screenshot.gif)
-
-`Demo_Drag_and_Drop_Onto_Icon.pyw` is a Drag and Drop program I've wanted to create using PySimpleGUI for a long time. It wasn't possible until `psgdnd` was released this month.  It has operations I frequently use such as image format conversions and translating to/from English and Spanish.
-
-![screen recording](https://github.com/user-attachments/assets/80a30c06-c14c-4da5-bad2-4dfe6b059b38)
-
-
-## Documentation
-
-* The move of the documentation from ReadTheDocs to GitHub pages is complete.  Users should notice no difference.
-* Removal of Version 5 specifics is done for the mostpart.  There may be a few spots that need cleanup
-* Work has started to include PSG 6 details.  The SDK Call Reference needs upating before the next PyPO release, preferably sooner so that the code on GitHub is in there prior to PyPO release.
-
 
 ## New repo - PSGMicroPython
 
 Created a new repo and added code for interfacing to a MicroPython-based microcontroller.  It works with Raspberry Pi Pico and ESP32.  It may work with other boards too.  Not meant to be robust or significant.  It's just some code I threw together that could maybe be useful to someone else... or not... 
 ![](https://PySimpleGUI.net/images/emojis/guess_28.png?raw=true&v=1) 
 
-
-
-## Features & Fixes
-
-* 6.0.2 - Fixed bug in Window.settings_save
-* 6.0.3 - Added ability to "print" an image inline in a Multiline element
-
-<img width="1081" height="538" alt="Image" src="https://github.com/user-attachments/assets/e914e1dd-e363-4124-9cc9-a065abf8e6c1" />
-
-* 6.0.5 - The ability to upgrade to the latest Maint Release is once again built into PSG.  You can use the Home Window or the command line command`psgupgrade`.  You can see the release notes and install a new version.
-
-
-<img width="499" height="256" alt="Image" src="https://github.com/user-attachments/assets/b6c4b736-0f3b-4001-88bc-040ae62208ca" />
-
-
-<img width="771" height="356" alt="Image" src="https://github.com/user-attachments/assets/9b8aa416-eef4-48c8-aca6-df62673be6c0" />
-
-
-
-* 6.0.6 - Fix for bug  #5750.  Graph events was going into an infinite loop when write_event_value events
-                        were received. Fix was to clear the realtime button flag. Potential for regression problems
-                        should be minimal since only the Graph element conditional was changed.                                           
-* 6.0.7 - Added Enhancement #6671.  Added parameter select select_node_keys to Tree.update. Enables nodes
-                        in the tree to be programmatically selected as if the user selected them.
-* 6.0.7 - Fixed Multiline echo_stdout_stderr feature/parameter.  Was not correctly echoing out to sys.stdout, stderr.
-                        Edited docstring to document the correct behavior. It will only echo if you've rerouted stdout or stderr to the element.
-                        It will not do the reroute for you.                                          
-* 6.1.2 - Fix for Issue #6686 - Calendar chooser button clearing fields that should only be cleared when window.read returns.
-                        Used the newly added element_that_generated_event variable from the Graph element fix above (already came in handy).
-* 6.1.4 - Display the Maint Release version number in the Home Window. Moved the install button
-* 6.1.5 - Added ability to specify timers using string "H:M:S" when calling Window.start_timer.
-* 6.1.6 - Enhancement - support for horizontal scroll only for scrollable column element
 
 ------
 
