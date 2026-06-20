@@ -76,10 +76,9 @@ python -m pip install .
  
 ## Longer Term Outlook
 
-I’m still wrapping up the transition from version 5 to 6, including the docs. After that, I’m honestly not sure what the long-term future looks like—but if the past 8 years are any indication, I’m not great at predicting it.  
+I’m honestly not sure what the long-term future looks like—but if the past 8 years are any indication, I’m not great at predicting it.  
 
-
-For now, I’m here and happy to help.
+For now, I’m here, having fun writing code, and happy to help.
 
 ## Thank you
 
@@ -169,6 +168,7 @@ PySimpleGUI has always been developed more like a proprietary product than an op
 * Enhancement - ability to set the Frame border color. Added border_color and border_width_no_relief parms to the Frame element
   * Frame border color to default to the text element color if no color is set
 
+The documentation has been updated.  The call ref section matches the version 6.2 release.
 
 ## Drag and Drop!  
 
@@ -180,10 +180,7 @@ Drag and Drop support has been a wish for many years.  We finally may have found
 
 [`psgdnd`](https://github.com/PySimpleGUI/psgdnd) is a new package posted on GitHub that adds drag and drop to PySimpleGUI.  You can pip install it and try drag and drop for yourself.  More information and examples can be found in that repo.
 
-```bash
-python -m pip install --upgrade https://github.com/PySimpleGUI/psgdnd/zipball/main
-```
-
+Version 6.0.1 was released to PyPI.  It's working on Windows.  Version 6.0.2 on GitHub has the fixes that were needed for Linux (so far... there could be more to come).  The Mac is still an unknown.
 
 ## New repo - PSGMicroPython
 
