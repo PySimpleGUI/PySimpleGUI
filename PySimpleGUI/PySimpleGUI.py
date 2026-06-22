@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2"
+version = "6.2.1"
 
 
 
@@ -62,7 +62,7 @@ version = "6.2"
 Changelog since last major release
 
 6.2         14-Jun-2026 released to GitHub
-
+6.2.1       22-Jun-2026 Added new feature - mouseover images for Buttons
 """
 
 
@@ -845,7 +845,7 @@ class ToolTip:
     This is an INTERNALLY USED only class.  Users should not refer to this class at all.
     """
 
-    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
+    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=False):
         """
         :param widget:  The tkinter widget
         :type widget:   widget type varies
@@ -853,6 +853,8 @@ class ToolTip:
         :type text:     str | None
         :param timeout: Time in milliseconds that mouse must remain still before tip is shown
         :type timeout:  (int)
+        :param skip_bind: If True then the widget will not be bound with enter/leave events
+        :type skip_bind:  (bool)
         """
         self.widget = widget
         self.text = text            # Set to None and tooltip will be not shown
@@ -861,8 +863,9 @@ class ToolTip:
         self.tipwindow = None
         self.id = None
         self.x = self.y = 0
-        self.widget.bind("<Enter>", self.enter)
-        self.widget.bind("<Leave>", self.leave)
+        if not skip_bind:
+            self.widget.bind("<Enter>", self.enter)
+            self.widget.bind("<Leave>", self.leave)
         self.widget.bind("<ButtonPress>", self.leave)
 
     def enter(self, event=None):
@@ -4780,7 +4783,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=FILE_TYPES_ALL_FILES, initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, image_zoom=None, image_source=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
+                 image_subsample=None, image_zoom=None, image_source=None, mouseover_image_source=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
                  highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None,
                  k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
@@ -4817,6 +4820,8 @@ class Button(Element):
         :type image_subsample:        (int)
         :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:             (int)
+        :param mouseover_image_source: Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
+        :type mouseover_image_source:  (str | bytes)
         :param border_width:          width of border around button in pixels
         :type border_width:           (int)
         :param size:                  (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -4872,13 +4877,24 @@ class Button(Element):
         self.ButtonText = str(button_text)
         self.RightClickMenu = right_click_menu
         self.ButtonColor = button_color_to_tuple(button_color)
-
         self.DisabledButtonColor = button_color_to_tuple(disabled_button_color) if disabled_button_color is not None else (None, None)
+
         if image_source is not None:
             if isinstance(image_source, bytes):
                 image_data = image_source
             elif isinstance(image_source, str):
                 image_filename = image_source
+
+        self.image_source = image_data or image_filename
+
+        self.mouseover_image_source = mouseover_image_source if self.image_source is not None else None
+        if mouseover_image_source is not None and self.image_source is not None:
+            if isinstance(mouseover_image_source, bytes):
+                self.mouseover_image_data = mouseover_image_source
+            elif isinstance(mouseover_image_source, str):
+                self.mouseover_image_filename = mouseover_image_source
+        if mouseover_image_source is not None and self.image_source is None:
+            print('** Button Warning - cannot use a mouseover image unless an image is also specified **')
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -5153,6 +5169,33 @@ class Button(Element):
             _exit_mainloop(self.ParentForm, self)
 
         return
+
+
+    def mouseover_enter(self, event=None):
+        """
+        Called by tkinter when mouse enters a Button.  Used for mouseover images
+        :param event: from tkinter.  Has x,y coordinates of mouse
+        :type event:
+
+        """
+        if self.mouseover_image_source:
+            self.update(image_source=self.mouseover_image_source)
+        if self.TooltipObject:
+            self.TooltipObject.enter(event)
+
+
+
+    def mouseover_leave(self, event=None):
+        """
+        Called by tktiner when mouse exits Button.  Used for mouseover images
+        :param event: from tkinter.  Event info that's not used by function.
+        :type event:
+
+        """
+        if self.image_source:
+            self.update(image_source=self.image_source)
+        if self.TooltipObject:
+            self.TooltipObject.leave(event)
 
     def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None,
                visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
@@ -16067,7 +16110,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 if elementpad[0] == 0 or elementpad[1] == 0:
                     tkbutton.config(highlightthickness=0)
-
                 ## -------------- TK Button With Image -------------- ##
                 if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
@@ -16108,10 +16150,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     'Buton element key: {}'.format(element.Key),
                                                     "Parent Window's Title: {}".format(toplevel_form.Title))
 
+                # Setup bindings if there's a mouseover image
+                if element.mouseover_image_source:
+                    tkbutton.bind('<Enter>', element.mouseover_enter)
+                    tkbutton.bind('<Leave>', element.mouseover_leave)
+
                 if width != 0:
                     wraplen = width * _char_width_in_pixels(font)
                     tkbutton.configure(wraplength=wraplen)  # set wrap to width of widget
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+
 
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
@@ -16135,8 +16183,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(activeforeground=element.MouseOverColors[0])
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
                 try:
                     if element.HighlightColors[1] != COLOR_SYSTEM_DEFAULT:
                         tkbutton.config(highlightbackground=element.HighlightColors[1])
@@ -16261,6 +16308,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # tkbutton.configure(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
 
+                # Setup bindings if there's a mouseover image
+                if element.mouseover_image_source:
+                    tkbutton.bind('<Enter>', element.mouseover_enter)
+                    tkbutton.bind('<Leave>', element.mouseover_leave)
+
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
@@ -16281,8 +16333,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 _add_right_click_menu_and_grab(element)
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
             # -------------------------  BUTTONMENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTONMENU:
                 element = element  # type: ButtonMenu
