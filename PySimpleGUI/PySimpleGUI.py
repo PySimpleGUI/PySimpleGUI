@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.2"
+version = "6.2.3"
 
 
 
@@ -65,6 +65,8 @@ Changelog since last major release
 6.2.1       22-Jun-2026 Added new feature - mouseover images for Buttons
 6.2.2       22-Jun-2026 Added mouseover_image_source to Button.update
 6.2.3       23-Jun-2026 Fixed overwriting the original image_source when Button.update called
+                        Added ability to add a mouseover image after window is created
+                        
 """
 
 
@@ -5180,10 +5182,9 @@ class Button(Element):
 
         """
         if self.mouseover_image_source:
-            self.update(image_source=self.mouseover_image_source)
+            self.update(image_source=self.mouseover_image_source, do_not_save_image=True)
         if self.TooltipObject:
             self.TooltipObject.enter(event)
-
 
 
     def mouseover_leave(self, event=None):
@@ -5194,13 +5195,13 @@ class Button(Element):
 
         """
         if self.image_source:
-            self.update(image_source=self.image_source)
+            self.update(image_source=self.image_source, do_not_save_image=True)
         if self.TooltipObject:
             self.TooltipObject.leave(event)
 
 
-    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None,
-               visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
+
+    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None, visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None, do_not_save_image=False):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5234,6 +5235,8 @@ class Button(Element):
         :type image_zoom:             (int)
         :param image_size:            Size of the image in pixels (width, height)
         :type image_size:             (int, int)
+        :param do_not_save_image:     Internally used parm. Users should not change. If True then changes to the button image will not be saved.
+        :type do_not_save_image:      (bool)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -5244,14 +5247,20 @@ class Button(Element):
             return
 
         if image_source is not None:
-            # Don't update the original image_source. Need to handling the mouseover image changes in another fix.
             if isinstance(image_source, bytes):
                 image_data = image_source
             elif isinstance(image_source, str):
                 image_filename = image_source
         if mouseover_image_source is not None:
+            # if haven't setup mouseover yet, then need to do the binds here
+            if self.mouseover_image_source is None:
+                self.TKButton.bind('<Enter>', self.mouseover_enter)
+                self.TKButton.bind('<Leave>', self.mouseover_leave)
             self.mouseover_image_source = mouseover_image_source
-
+        # see if should save the new image being requested. If the call is being made by mouseover code
+        # then the image_source should not be saved because it may be a mouseover image which should be temporary
+        if any((image_source, image_data, image_filename)) and not do_not_save_image:
+            self.image_source = image_source or image_data or image_filename
         if self.UseTtkButtons:
             style_name = self.ttk_style_name  # created when made initial window (in the pack)
             # style_name = str(self.Key) + 'custombutton.TButton'
@@ -5272,11 +5281,6 @@ class Button(Element):
             self.ButtonText = text
         if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
             bc = button_color_to_tuple(button_color, self.ButtonColor)
-            # if isinstance(button_color, str):
-            #     try:
-            #         button_color = button_color.split(' on ')
-            #     except Exception as e:
-            #         print('** Error in formatting your button color **', button_color, e)
             if self.UseTtkButtons:
                 if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
                     button_style.configure(style_name, foreground=bc[0])
