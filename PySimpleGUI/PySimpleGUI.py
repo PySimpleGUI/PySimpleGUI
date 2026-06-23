@@ -64,6 +64,7 @@ Changelog since last major release
 6.2         14-Jun-2026 released to GitHub
 6.2.1       22-Jun-2026 Added new feature - mouseover images for Buttons
 6.2.2       22-Jun-2026 Added mouseover_image_source to Button.update
+6.2.3       23-Jun-2026 Fixed overwriting the original image_source when Button.update called
 """
 
 
@@ -4879,7 +4880,6 @@ class Button(Element):
         self.RightClickMenu = right_click_menu
         self.ButtonColor = button_color_to_tuple(button_color)
         self.DisabledButtonColor = button_color_to_tuple(disabled_button_color) if disabled_button_color is not None else (None, None)
-
         if image_source is not None:
             if isinstance(image_source, bytes):
                 image_data = image_source
@@ -5198,6 +5198,7 @@ class Button(Element):
         if self.TooltipObject:
             self.TooltipObject.leave(event)
 
+
     def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None,
                visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
         """
@@ -5243,7 +5244,7 @@ class Button(Element):
             return
 
         if image_source is not None:
-            self.image_source = image_source
+            # Don't update the original image_source. Need to handling the mouseover image changes in another fix.
             if isinstance(image_source, bytes):
                 image_data = image_source
             elif isinstance(image_source, str):
