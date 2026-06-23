@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.1"
+version = "6.2.2"
 
 
 
@@ -63,6 +63,7 @@ Changelog since last major release
 
 6.2         14-Jun-2026 released to GitHub
 6.2.1       22-Jun-2026 Added new feature - mouseover images for Buttons
+6.2.2       22-Jun-2026 Added mouseover_image_source to Button.update
 """
 
 
@@ -5197,7 +5198,7 @@ class Button(Element):
         if self.TooltipObject:
             self.TooltipObject.leave(event)
 
-    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None,
+    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None,
                visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -5220,6 +5221,8 @@ class Button(Element):
         :type image_data:             bytes | str
         :param image_filename:        image filename if there is a button image. GIFs and PNGs only.
         :type image_filename:         (str)
+        :param mouseover_image_source: Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
+        :type mouseover_image_source:  (str | bytes)
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color:  (str, str)
         :param visible:               control visibility of element
@@ -5240,10 +5243,13 @@ class Button(Element):
             return
 
         if image_source is not None:
+            self.image_source = image_source
             if isinstance(image_source, bytes):
                 image_data = image_source
             elif isinstance(image_source, str):
                 image_filename = image_source
+        if mouseover_image_source is not None:
+            self.mouseover_image_source = mouseover_image_source
 
         if self.UseTtkButtons:
             style_name = self.ttk_style_name  # created when made initial window (in the pack)
