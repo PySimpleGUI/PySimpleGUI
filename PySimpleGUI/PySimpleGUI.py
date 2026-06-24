@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.4"
+version = "6.2.5"
 
 
 
@@ -69,7 +69,8 @@ Changelog since last major release
 6.2.4       23-Jun-2026 A bunch of refactoring of the Button.update and mouseover methods.  Removed the
                         hacky feeling do_not_save_image parameter from Button.update
                         Refactor was to pull out Button image manipulation into a couple of methods.
-                        Also fixed a few bugs in the same areas.                 
+                        Also fixed a few bugs in the same areas.   
+6.2.5       24-Jun-2026 Fix in Button.update. Wasn't setting the image correctly and also wasn't saving the subsample,etc.                                      
 """
 
 
@@ -5285,6 +5286,9 @@ class Button(Element):
             self.image_source = image_source or image_data or image_filename
             self.ImageFilename = image_filename
             self.ImageData = image_data
+            self.ImageSubsample = image_subsample
+            self.zoom = image_zoom
+            self.ImageSize = image_size
         if self.UseTtkButtons:
             style_name = self.ttk_style_name  # created when made initial window (in the pack)
             button_style = ttk.Style()
@@ -5325,7 +5329,7 @@ class Button(Element):
             self.TKButton['state'] = 'normal'
         self.Disabled = disabled if disabled is not None else self.Disabled
 
-        self._apply_image_to_button(image_filename=image_filename, image_data=image_filename, image_subsample=image_subsample, image_zoom=image_zoom, image_size=image_size, button_style=button_style, style_name=style_name)
+        self._apply_image_to_button(image_filename=image_filename, image_data=image_data, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize, button_style=button_style, style_name=style_name)
 
         if visible is False:
             self._pack_forget_save_settings()
