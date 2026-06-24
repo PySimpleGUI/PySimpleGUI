@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.3"
+version = "6.2.4"
 
 
 
@@ -66,7 +66,10 @@ Changelog since last major release
 6.2.2       22-Jun-2026 Added mouseover_image_source to Button.update
 6.2.3       23-Jun-2026 Fixed overwriting the original image_source when Button.update called
                         Added ability to add a mouseover image after window is created
-                        
+6.2.4       23-Jun-2026 A bunch of refactoring of the Button.update and mouseover methods.  Removed the
+                        hacky feeling do_not_save_image parameter from Button.update
+                        Refactor was to pull out Button image manipulation into a couple of methods.
+                        Also fixed a few bugs in the same areas.                 
 """
 
 
@@ -4891,6 +4894,7 @@ class Button(Element):
         self.image_source = image_data or image_filename
 
         self.mouseover_image_source = mouseover_image_source if self.image_source is not None else None
+        self.mouseover_image_filename = self.mouseover_image_data = None
         if mouseover_image_source is not None and self.image_source is not None:
             if isinstance(mouseover_image_source, bytes):
                 self.mouseover_image_data = mouseover_image_source
@@ -5182,7 +5186,7 @@ class Button(Element):
 
         """
         if self.mouseover_image_source:
-            self.update(image_source=self.mouseover_image_source, do_not_save_image=True)
+            self._apply_mouseover_image(image_filename=self.mouseover_image_filename, image_data=self.mouseover_image_data)
         if self.TooltipObject:
             self.TooltipObject.enter(event)
 
@@ -5195,13 +5199,30 @@ class Button(Element):
 
         """
         if self.image_source:
-            self.update(image_source=self.image_source, do_not_save_image=True)
+            self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
         if self.TooltipObject:
             self.TooltipObject.leave(event)
 
 
 
-    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None, visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None, do_not_save_image=False):
+    def _apply_mouseover_image(self, image_filename=None, image_data=None):
+        """
+        Changes the image on a Button due to mouseover.  Called when mouse enters or leaves a Button (means there's a mouseover image to apply).
+        :param image_filename:      Filename of the image
+        :type image_filename:       (str)
+        :param image_data:          Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:           bytes | str
+        """
+        if self.UseTtkButtons:
+            style_name = self.ttk_style_name  # created when made initial window (in the pack)
+            button_style = ttk.Style()
+        else:
+            style_name = button_style = None
+        self._apply_image_to_button(image_filename=image_filename, image_data=image_data, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize, button_style=button_style, style_name=style_name)
+
+
+
+    def update(self, text=None, button_color=(None, None), disabled=None, image_source=None, image_data=None, image_filename=None, mouseover_image_source=None, visible=None, image_subsample=None, image_zoom=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5235,8 +5256,6 @@ class Button(Element):
         :type image_zoom:             (int)
         :param image_size:            Size of the image in pixels (width, height)
         :type image_size:             (int, int)
-        :param do_not_save_image:     Internally used parm. Users should not change. If True then changes to the button image will not be saved.
-        :type do_not_save_image:      (bool)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -5257,14 +5276,20 @@ class Button(Element):
                 self.TKButton.bind('<Enter>', self.mouseover_enter)
                 self.TKButton.bind('<Leave>', self.mouseover_leave)
             self.mouseover_image_source = mouseover_image_source
-        # see if should save the new image being requested. If the call is being made by mouseover code
-        # then the image_source should not be saved because it may be a mouseover image which should be temporary
-        if any((image_source, image_data, image_filename)) and not do_not_save_image:
+            if mouseover_image_source is not None:
+                if isinstance(mouseover_image_source, bytes):
+                    self.mouseover_image_data = mouseover_image_source
+                elif isinstance(mouseover_image_source, str):
+                    self.mouseover_image_filename = mouseover_image_source
+        if any((image_source, image_data, image_filename)):
             self.image_source = image_source or image_data or image_filename
+            self.ImageFilename = image_filename
+            self.ImageData = image_data
         if self.UseTtkButtons:
             style_name = self.ttk_style_name  # created when made initial window (in the pack)
-            # style_name = str(self.Key) + 'custombutton.TButton'
             button_style = ttk.Style()
+        else:
+            style_name = button_style = None
         if text is not None:
             btext = text
             if DEFAULT_USE_BUTTON_SHORTCUTS is True:
@@ -5300,36 +5325,8 @@ class Button(Element):
             self.TKButton['state'] = 'normal'
         self.Disabled = disabled if disabled is not None else self.Disabled
 
-        if image_data is not None:
-            image = tk.PhotoImage(data=image_data)
-            if image_subsample:
-                image = image.subsample(image_subsample)
-            if image_zoom is not None:
-                image = image.zoom(int(image_zoom))
-            if image_size is not None:
-                width, height = image_size
-            else:
-                width, height = image.width(), image.height()
-            if self.UseTtkButtons:
-                button_style.configure(style_name, image=image, width=width, height=height)
-            else:
-                self.TKButton.config(image=image, width=width, height=height)
-            self.TKButton.image = image
-        if image_filename is not None:
-            image = tk.PhotoImage(file=image_filename)
-            if image_subsample:
-                image = image.subsample(image_subsample)
-            if image_zoom is not None:
-                image = image.zoom(int(image_zoom))
-            if image_size is not None:
-                width, height = image_size
-            else:
-                width, height = image.width(), image.height()
-            if self.UseTtkButtons:
-                button_style.configure(style_name, image=image, width=width, height=height)
-            else:
-                self.TKButton.config(highlightthickness=0, image=image, width=width, height=height)
-            self.TKButton.image = image
+        self._apply_image_to_button(image_filename=image_filename, image_data=image_filename, image_subsample=image_subsample, image_zoom=image_zoom, image_size=image_size, button_style=button_style, style_name=style_name)
+
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
@@ -5347,6 +5344,46 @@ class Button(Element):
 
         if visible is not None:
             self._visible = visible
+
+
+    def _apply_image_to_button(self, image_filename=None, image_data=None,  image_subsample=None, image_zoom=None, image_size=None, button_style=None, style_name=None):
+        """
+        Changes the image on a Button.  Called by update method and the mouseover methods.
+        :param image_data:              Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:               bytes | str
+        :param image_filename:          image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename:           (str)
+        :param image_subsample:         amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:          (int)
+        :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:               (int)
+        :param image_size:              Size of the image in pixels (width, height)
+        :type image_size:               (int, int)
+        :param button_style:            The ttk style object used to configure the button
+        :type button_style:             ttk.Style
+        :param style_name:              Style name set when Button was created
+        :type style_name:               (str)
+        """
+        if image_data is not None:
+            image = tk.PhotoImage(data=image_data)
+        elif image_filename is not None:
+            image = tk.PhotoImage(file=image_filename)
+        else:
+            return
+        if image_subsample:
+            image = image.subsample(image_subsample)
+        if image_zoom is not None:
+            image = image.zoom(int(image_zoom))
+        if image_size is not None:
+            width, height = image_size
+        else:
+            width, height = image.width(), image.height()
+        if self.UseTtkButtons:
+            button_style.configure(style_name, borderwidth=0, image=image, width=width, height=height)
+        else:
+            self.TKButton.config(highlightthickness=0, image=image, width=width, height=height)
+        self.TKButton.image = image         # Save a reference to the image so tktiner shows it on the Button
+
 
     def get_text(self):
         """
