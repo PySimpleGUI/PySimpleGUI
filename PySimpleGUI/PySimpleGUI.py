@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.5"
+version = "6.2.6"
 
 
 
@@ -71,6 +71,7 @@ Changelog since last major release
                         Refactor was to pull out Button image manipulation into a couple of methods.
                         Also fixed a few bugs in the same areas.   
 6.2.5       24-Jun-2026 Fix in Button.update. Wasn't setting the image correctly and also wasn't saving the subsample,etc.                                      
+6.2.6       26-Jun-2026 New Listbox method - get_active_index.  Returns the index of where the cursor is located.                                  
 """
 
 
@@ -2915,6 +2916,14 @@ class Listbox(Element):
         return value
 
 
+    def get_active_index(self):
+        """
+        Returns the index of the currently active item. Active means where the "cursor" is located when using arrow keys.
+
+        :return:    The index of the currently active item
+        :rtype:     int
+        """
+        return self.TKListbox.index(tk.ACTIVE)
 
 
     def select_index(self, index, highlight_text_color=None, highlight_background_color=None):
