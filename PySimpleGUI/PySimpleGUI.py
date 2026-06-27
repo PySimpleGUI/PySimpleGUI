@@ -10718,7 +10718,7 @@ class Window:
         :param close:       if True the window will be closed prior to returning
         :type close:        (bool)
         :return:            (event, values)
-        :rtype:             Tuple[(Any), Dict[Any, Any], List[Any], None]
+        :rtype:             Tuple[(Any), Dict[Any, Any] | List[Any] | None]
         """
 
         if Window._floating_debug_window_build_needed is True:
