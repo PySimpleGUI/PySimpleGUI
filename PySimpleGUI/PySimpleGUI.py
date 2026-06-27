@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.6"
+version = "6.2.7"
 
 
 
@@ -72,6 +72,9 @@ Changelog since last major release
                         Also fixed a few bugs in the same areas.   
 6.2.5       24-Jun-2026 Fix in Button.update. Wasn't setting the image correctly and also wasn't saving the subsample,etc.                                      
 6.2.6       26-Jun-2026 New Listbox method - get_active_index.  Returns the index of where the cursor is located.                                  
+6.2.7       26-Jun-2026 Two Window location changes to make centering Windows on top of each or centering on any point easier
+                        Added return_center parm to Window.current_location.  If True, will return the center of the window rather than upper corner
+                        Added center_on_location parm to Window.  If True, then the Window will be created with the center of the window located at the location parm                               
 """
 
 
@@ -9941,7 +9944,7 @@ class Window:
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), relative_location=(None, None), auto_save_location=False, size=(None, None),
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), center_on_location=False, relative_location=(None, None), auto_save_location=False, size=(None, None),
                  element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
@@ -9971,7 +9974,9 @@ class Window:
         :type auto_size_buttons:                     (bool)
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide
         :type location:                              (int, int) or (None, None) or None
-        :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
+        :param center_on_location:                   If True then center the window on the location specific instead of placing the upper left corner at the location.
+        :type center_on_location:                    (bool)
+        :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int)
         :param auto_save_location:                   If True the windows location will be automatically saved to a settings file and will be reloaded next time the program is run. Save happens when window close is detected
         :type auto_save_location:                    (bool)
@@ -10101,6 +10106,7 @@ class Window:
             self.Location = DEFAULT_WINDOW_LOCATION
         else:
             self.Location = location
+        self.center_on_location = center_on_location
         self.RelativeLoction = relative_location
         self.ButtonColor = button_color_to_tuple(button_color)
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -11918,7 +11924,7 @@ class Window:
         except Exception as e:
             warnings.warn('Problem in Window.keep_on_top_clear trying to clear wm_attributes topmost' + str(e), UserWarning)
 
-    def current_location(self, more_accurate=False, without_titlebar=False):
+    def current_location(self, more_accurate=False, without_titlebar=False, return_center=False):
         """
         Get the current location of the window's top left corner.
         Sometimes, depending on the environment, the value returned does not include the titlebar,etc
@@ -11932,6 +11938,8 @@ class Window:
         :type more_accurate:     (bool)
         :param without_titlebar: If True, return location of top left of main window area without the titlebar (may be OS dependent?)
         :type without_titlebar:  (bool)
+        :param return_center:    If True, return the location of the CENTER of the window instead of the upper left corner
+        :type return_center:     (bool)
         :return:                 The x and y location in tuple form (x,y)
         :rtype:                  Tuple[int, int] | Tuple[None, None]
         """
@@ -11947,6 +11955,9 @@ class Window:
                 x, y = int(location[0]), int(location[1])
             else:
                 x, y =  int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+            if return_center:
+                x += self.size[0]//2
+                y += self.size[1]//2
         except Exception as e:
             warnings.warn('Error in Window.current_location. Trouble getting x,y location\n' + str(e), UserWarning)
             x, y = (None, None)
@@ -26132,21 +26143,27 @@ def _convert_window_to_tk(window):
         master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
+    center_on_location = window.center_on_location
     if window.Location is not None:
         if window.Location != (None, None):
             x, y = window.Location
         elif DEFAULT_WINDOW_LOCATION != (None, None):
             x, y = DEFAULT_WINDOW_LOCATION
-        else:
-            master.update_idletasks()  # don't forget to do updates or values are bad
+        else:           # put center of window in center of screen
+            center_on_location = True               # force centering
+            # x,y = center of screen - 1/2 window size
+            x, y = screen_width/2, screen_height/2
+
+        if center_on_location:
+            master.update_idletasks()               # don't forget to do updates or values are bad
             win_width = master.winfo_width()
             win_height = master.winfo_height()
-            x = screen_width / 2 - win_width / 2
-            y = screen_height / 2 - win_height / 2
-            if y + win_height > screen_height:
-                y = screen_height - win_height
+            x = x - win_width/2
+            y = y - win_height/2
             if x + win_width > screen_width:
                 x = screen_width - win_width
+            if y + win_height > screen_height:
+                y = screen_height - win_height
 
         if window.RelativeLoction != (None, None):
             x += window.RelativeLoction[0]
