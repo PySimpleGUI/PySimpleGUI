@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.8"
+version = "6.2.9"
 
 
 
@@ -77,6 +77,8 @@ Changelog since last major release
                         Added center_on_location parm to Window.  If True, then the Window will be created with the center of the window located at the location parm                               
 6.2.8       27-Jun-2026 Changed the center_on_location feature into a more generalized location_anchor. Can specify which part of the window should be located at location when creating.
                         Also changed Window.current_location. Added parm anchor_location to specify a specific anchor point's location to be returned
+6.2.9       27-Jun-2026 Bug fix in Window.settings_restore. If a value was not yet set for an element, then should save the setting that was specified 
+                            in the element in the layout Was setting to '' previously.
 """
 
 
@@ -11291,7 +11293,7 @@ class Window:
             try:
                 element = self.find_element(key)
                 if element.setting is not None:
-                    value = user_settings_get_entry(key, '')
+                    value = user_settings_get_entry(key, element.setting)
                     element.update(value)
             except Exception as e:
                 _error_popup_with_traceback('Error restoring settings', e)
