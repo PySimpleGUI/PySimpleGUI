@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.7"
+version = "6.2.8"
 
 
 
@@ -75,6 +75,8 @@ Changelog since last major release
 6.2.7       26-Jun-2026 Two Window location changes to make centering Windows on top of each or centering on any point easier
                         Added return_center parm to Window.current_location.  If True, will return the center of the window rather than upper corner
                         Added center_on_location parm to Window.  If True, then the Window will be created with the center of the window located at the location parm                               
+6.2.8       27-Jun-2026 Changed the center_on_location feature into a more generalized location_anchor. Can specify which part of the window should be located at location when creating.
+                        Also changed Window.current_location. Added parm anchor_location to specify a specific anchor point's location to be returned
 """
 
 
@@ -572,6 +574,14 @@ CUSTOM_TITLEBAR_FONT = None
 TITLEBAR_METADATA_MARKER = 'This window has a titlebar'
 
 CUSTOM_MENUBAR_METADATA_MARKER = 'This is a custom menubar'
+
+# Position on a window to use as the anchor when creating / moving a window to a location
+WIN_ANCHOR_UPPER_LEFT = 'UL'
+WIN_ANCHOR_UPPER_RIGHT= 'UR'
+WIN_ANCHOR_LOWER_LEFT = 'LL'
+WIN_ANCHOR_LOWER_RIGHT = 'LR'
+WIN_ANCHOR_CENTER = 'C'
+
 
 SUPPRESS_ERROR_POPUPS = False
 SUPPRESS_RAISE_KEY_ERRORS = True
@@ -9944,7 +9954,7 @@ class Window:
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), center_on_location=False, relative_location=(None, None), auto_save_location=False, size=(None, None),
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), location_anchor=None, relative_location=(None, None), auto_save_location=False, size=(None, None),
                  element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
@@ -9974,8 +9984,8 @@ class Window:
         :type auto_size_buttons:                     (bool)
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide
         :type location:                              (int, int) or (None, None) or None
-        :param center_on_location:                   If True then center the window on the location specific instead of placing the upper left corner at the location.
-        :type center_on_location:                    (bool)
+        :param location_anchor:                      Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+        :type location_anchor:                       (str)
         :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int)
         :param auto_save_location:                   If True the windows location will be automatically saved to a settings file and will be reloaded next time the program is run. Save happens when window close is detected
@@ -10106,7 +10116,7 @@ class Window:
             self.Location = DEFAULT_WINDOW_LOCATION
         else:
             self.Location = location
-        self.center_on_location = center_on_location
+        self.location_anchor = location_anchor
         self.RelativeLoction = relative_location
         self.ButtonColor = button_color_to_tuple(button_color)
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
@@ -11924,7 +11934,7 @@ class Window:
         except Exception as e:
             warnings.warn('Problem in Window.keep_on_top_clear trying to clear wm_attributes topmost' + str(e), UserWarning)
 
-    def current_location(self, more_accurate=False, without_titlebar=False, return_center=False):
+    def current_location(self, more_accurate=False, without_titlebar=False, use_anchor=None):
         """
         Get the current location of the window's top left corner.
         Sometimes, depending on the environment, the value returned does not include the titlebar,etc
@@ -11938,8 +11948,8 @@ class Window:
         :type more_accurate:     (bool)
         :param without_titlebar: If True, return location of top left of main window area without the titlebar (may be OS dependent?)
         :type without_titlebar:  (bool)
-        :param return_center:    If True, return the location of the CENTER of the window instead of the upper left corner
-        :type return_center:     (bool)
+        :param use_anchor:       Return location of a specific anchor point on the window.  WIN_ANCHOR_UPPER_LEFT is default
+        :type use_anchor:        (str)
         :return:                 The x and y location in tuple form (x,y)
         :rtype:                  Tuple[int, int] | Tuple[None, None]
         """
@@ -11955,9 +11965,17 @@ class Window:
                 x, y = int(location[0]), int(location[1])
             else:
                 x, y =  int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
-            if return_center:
-                x += self.size[0]//2
-                y += self.size[1]//2
+            if use_anchor is not None:
+                if use_anchor == WIN_ANCHOR_UPPER_RIGHT:
+                    x += self.size[0]
+                elif use_anchor == WIN_ANCHOR_LOWER_LEFT:
+                    y += self.size[1]
+                elif use_anchor == WIN_ANCHOR_LOWER_RIGHT:
+                    x += self.size[0]
+                    y += self.size[1]
+                elif use_anchor == WIN_ANCHOR_CENTER:
+                    x += self.size[0]//2
+                    y += self.size[1]//2
         except Exception as e:
             warnings.warn('Error in Window.current_location. Trouble getting x,y location\n' + str(e), UserWarning)
             x, y = (None, None)
@@ -26143,27 +26161,47 @@ def _convert_window_to_tk(window):
         master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
-    center_on_location = window.center_on_location
+
+    location_anchor = window.location_anchor
     if window.Location is not None:
         if window.Location != (None, None):
             x, y = window.Location
         elif DEFAULT_WINDOW_LOCATION != (None, None):
             x, y = DEFAULT_WINDOW_LOCATION
         else:           # put center of window in center of screen
-            center_on_location = True               # force centering
             # x,y = center of screen - 1/2 window size
-            x, y = screen_width/2, screen_height/2
+            x, y = screen_width//2, screen_height//2
+            if location_anchor is None:
+                location_anchor = WIN_ANCHOR_CENTER
 
-        if center_on_location:
-            master.update_idletasks()               # don't forget to do updates or values are bad
-            win_width = master.winfo_width()
-            win_height = master.winfo_height()
-            x = x - win_width/2
-            y = y - win_height/2
+        master.update_idletasks()               # don't forget to do updates or values are bad
+        win_width = master.winfo_width()
+        win_height = master.winfo_height()
+
+        xoff = yoff = 0
+        if location_anchor == WIN_ANCHOR_CENTER:
+            xoff, yoff = win_width//2, win_height//2
+        elif location_anchor == WIN_ANCHOR_UPPER_LEFT:
+            xoff, yoff = 0, 0
+        elif location_anchor == WIN_ANCHOR_UPPER_RIGHT:
+            xoff, yoff = win_width, 0
+        elif location_anchor== WIN_ANCHOR_LOWER_LEFT:
+            xoff, yoff = 0, win_height
+        elif location_anchor == WIN_ANCHOR_LOWER_RIGHT:
+            xoff, yoff = win_width, win_height
+
+        # move the window to the correct anchor point
+        x -= xoff
+        y -= yoff
+
+        # keep the window from going off the screen if creating at the default location
+        if window.Location == (None, None) and DEFAULT_WINDOW_LOCATION == (None, None):
             if x + win_width > screen_width:
                 x = screen_width - win_width
             if y + win_height > screen_height:
                 y = screen_height - win_height
+
+
 
         if window.RelativeLoction != (None, None):
             x += window.RelativeLoction[0]
