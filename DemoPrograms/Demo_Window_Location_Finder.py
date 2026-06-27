@@ -12,8 +12,6 @@ import PySimpleGUI as sg
     The value in the center is the screen dimensions for the primary window.
 
     Copyright 2018-2026 PySimpleGUI. All rights reserved.
-    
-    
 """
 
 sg.theme('dark green 7')
@@ -27,10 +25,10 @@ layout = [
              sg.Text(size=(None,1), key='-OUT3-',  expand_x=True, expand_y=True, justification='r'), sg.T(sg.SYMBOL_DOWN_ARROWHEAD, justification='r')],
             ]
 
-window = sg.Window('Title not seen', layout, grab_anywhere=True, no_titlebar=True, margins=(0,0), element_padding=(0,0), right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, keep_on_top=True, font='_ 25', finalize=True, transparent_color=sg.theme_background_color())
+window = sg.Window('Title not seen', layout, grab_anywhere=True, no_titlebar=True, margins=(0,0), element_padding=(0,0), right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, keep_on_top=True, font='_ 25', finalize=True, transparent_color=sg.theme_background_color(), enable_window_config_events=True, auto_save_location=True)
 
 while True:
-    event, values = window.read(timeout=100)
+    event, values = window.read()
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == 'Edit Me':
