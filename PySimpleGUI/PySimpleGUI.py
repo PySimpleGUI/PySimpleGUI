@@ -5957,7 +5957,7 @@ class Image(Element):
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def update(self, source=None, filename=None, data=None, size=(None, None), subsample=None, zoom=None, visible=None):
+    def update(self, source=None, filename=None, data=None, mouseover_image_source=None, size=(None, None), subsample=None, zoom=None, visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
@@ -5975,6 +5975,8 @@ class Image(Element):
         :type filename:  (str)
         :param data:     Base64 encoded string OR a tk.PhotoImage object
         :type data:      str | tkPhotoImage
+        :param mouseover_image_source: Image to show when the button is moused over. Note - must have an image set to use a mouseover button image
+        :type mouseover_image_source:  (str | bytes)
         :param size:     (width, height) size of image in pixels
         :type size:      Tuple[int,int]
         :param subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
@@ -5991,6 +5993,18 @@ class Image(Element):
         if self._this_elements_window_closed():
             _error_popup_with_traceback('Error in Image.update - The window was closed')
             return
+
+        if mouseover_image_source is not None:
+            # if haven't setup mouseover yet, then need to do the binds here
+            if self.mouseover_image_source is None:
+                self.tktext_label.bind('<Enter>', self.mouseover_enter)
+                self.tktext_label.bind('<Leave>', self.mouseover_leave)
+            self.mouseover_image_source = mouseover_image_source
+            if mouseover_image_source is not None:
+                if isinstance(mouseover_image_source, bytes):
+                    self.mouseover_image_data = mouseover_image_source
+                elif isinstance(mouseover_image_source, str):
+                    self.mouseover_image_filename = mouseover_image_source
 
         if source is not None:
             self.ImageSource = source
@@ -6012,48 +6026,13 @@ class Image(Element):
         if any((source, data, filename)):
             self._apply_image_to_image_elem(image_filename=self.ImageFilename, image_data=self.ImageData, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize)
         # image = None
-        # if filename is not None:
-        #     try:
-        #         image = tk.PhotoImage(file=filename)
-        #         if subsample is not None:
-        #             image = image.subsample(subsample)
-        #         if zoom is not None:
-        #             image = image.zoom(int(zoom))
-        #     except Exception as e:
-        #         _error_popup_with_traceback('Exception updating Image element', e)
-
-        # elif data is not None:
-        #     # if type(data) is bytes:
-        #     try:
-        #         image = tk.PhotoImage(data=data)
-        #         if subsample is not None:
-        #             image = image.subsample(subsample)
-        #         if zoom is not None:
-        #             image = image.zoom(int(zoom))
-        #     except Exception as e:
-        #         image = data
-                # return  # an error likely means the window has closed so exit
-
-        # if image is not None:
-        #     self.tktext_label.configure(image='')  # clear previous image
-        #     if self.tktext_label.image is not None:
-        #         del self.tktext_label.image
-        #     if type(image) is not bytes:
-        #         width, height = size[0] if size[0] is not None else image.width(), size[1] if size[1] is not None else image.height()
-        #     else:
-        #         width, height = size
-        #     try:  # sometimes crashes if user closed with X
-        #         self.tktext_label.configure(image=image, width=width, height=height)
-        #     except Exception as e:
-        #         _error_popup_with_traceback('Exception updating Image element', e)
-        #     self.tktext_label.image = image
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
             self._pack_restore_settings()
 
         # if everything is set to None, then delete the image
-        if not any((source, filename, data, visible)) and size==(None, None):
+        if not any((source, filename, data, visible, mouseover_image_source)) and size==(None, None):
             # Using a try because the image may have been previously deleted and don't want an error if that's happened
             try:
                 self.tktext_label.configure(image='', width=1, height=1, bd=0)
