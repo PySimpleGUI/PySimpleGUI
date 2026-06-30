@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.9"
+version = "6.2.10"
 
 
 
@@ -79,6 +79,8 @@ Changelog since last major release
                         Also changed Window.current_location. Added parm anchor_location to specify a specific anchor point's location to be returned
 6.2.9       27-Jun-2026 Bug fix in Window.settings_restore. If a value was not yet set for an element, then should save the setting that was specified 
                             in the element in the layout Was setting to '' previously.
+6.2.10      29-Jun-2026 Added mouseover image to Image Element.  Used same technique as the Button element.
+                        Refactored some of the Button mouseover code and put into Element object.  
 """
 
 
@@ -1960,6 +1962,33 @@ class Element:
         widget = alternate_widget if alternate_widget is not None else self.Widget
         if widget is not None:
             widget.pack(**self.pack_settings)
+
+
+    def mouseover_enter(self, event=None):
+        """
+        Called by tkinter when mouse enters a Button.  Used for mouseover images
+        :param event: from tkinter.  Has x,y coordinates of mouse
+        :type event:
+
+        """
+        if self.mouseover_image_source:
+            self._apply_mouseover_image(image_filename=self.mouseover_image_filename, image_data=self.mouseover_image_data)
+        if self.TooltipObject:
+            self.TooltipObject.enter(event)
+
+
+    def mouseover_leave(self, event=None):
+        """
+        Called by tktiner when mouse exits Button.  Used for mouseover images
+        :param event: from tkinter.  Event info that's not used by function.
+        :type event:
+
+        """
+        if self.image_source:
+            self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
+        if self.TooltipObject:
+            self.TooltipObject.leave(event)
+
 
     def update(self, *args, **kwargs):
         """
@@ -5203,33 +5232,6 @@ class Button(Element):
         return
 
 
-    def mouseover_enter(self, event=None):
-        """
-        Called by tkinter when mouse enters a Button.  Used for mouseover images
-        :param event: from tkinter.  Has x,y coordinates of mouse
-        :type event:
-
-        """
-        if self.mouseover_image_source:
-            self._apply_mouseover_image(image_filename=self.mouseover_image_filename, image_data=self.mouseover_image_data)
-        if self.TooltipObject:
-            self.TooltipObject.enter(event)
-
-
-    def mouseover_leave(self, event=None):
-        """
-        Called by tktiner when mouse exits Button.  Used for mouseover images
-        :param event: from tkinter.  Event info that's not used by function.
-        :type event:
-
-        """
-        if self.image_source:
-            self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
-        if self.TooltipObject:
-            self.TooltipObject.leave(event)
-
-
-
     def _apply_mouseover_image(self, image_filename=None, image_data=None):
         """
         Changes the image on a Button due to mouseover.  Called when mouse enters or leaves a Button (means there's a mouseover image to apply).
@@ -5866,7 +5868,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None,
+    def __init__(self, source=None, filename=None, data=None, mouseover_image_source=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None,
                  subsample=None, zoom=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
         :param source:           A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
@@ -5875,6 +5877,8 @@ class Image(Element):
         :type filename:          str | None
         :param data:             Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type data:              bytes | str | None
+        :param mouseover_image_source: Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
+        :type mouseover_image_source:  (str | bytes)
         :param background_color: color of background
         :type background_color:
         :param size:             (width, height) size of image in pixels
@@ -5917,12 +5921,22 @@ class Image(Element):
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
-        self.Filename = filename
-        self.Data = data
+        self.ImageFilename = filename
+        self.ImageData = data
+        self.image_source = source
         self.Widget = self.tktext_label = None  # type: tk.Label
         self.BackgroundColor = background_color
         if data is None and filename is None:
-            self.Filename = ''
+            self.ImageFilename = ''
+
+        self.mouseover_image_source = mouseover_image_source
+        self.mouseover_image_filename = self.mouseover_image_data = None
+        if mouseover_image_source is not None:
+            if isinstance(mouseover_image_source, bytes):
+                self.mouseover_image_data = mouseover_image_source
+            elif isinstance(mouseover_image_source, str):
+                self.mouseover_image_filename = mouseover_image_source
+
         self.EnableEvents = enable_events
         self.RightClickMenu = right_click_menu
         self.AnimatedFrames = None
@@ -5934,12 +5948,12 @@ class Image(Element):
         self.frame_num = 0
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
-        sz = size if size != (None, None) else s
+        self.ImageSize = size if size != (None, None) else s
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
-        super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
+        super().__init__(ELEM_TYPE_IMAGE, size=self.ImageSize, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -5979,56 +5993,67 @@ class Image(Element):
             return
 
         if source is not None:
+            self.ImageSource = source
             if isinstance(source, bytes):
-                data = source
+                self.ImageData = data = source
             elif isinstance(source, str):
-                filename = source
+                self.Imagefilename = filename = source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
-        image = None
-        if filename is not None:
-            try:
-                image = tk.PhotoImage(file=filename)
-                if subsample is not None:
-                    image = image.subsample(subsample)
-                if zoom is not None:
-                    image = image.zoom(int(zoom))
-            except Exception as e:
-                _error_popup_with_traceback('Exception updating Image element', e)
+        if size is not None:
+            self.ImageSize = size
+        if zoom is not None:
+            self.zoom = zoom
+        if subsample is not None:
+            self.ImageSubsample = subsample
 
-        elif data is not None:
-            # if type(data) is bytes:
-            try:
-                image = tk.PhotoImage(data=data)
-                if subsample is not None:
-                    image = image.subsample(subsample)
-                if zoom is not None:
-                    image = image.zoom(int(zoom))
-            except Exception as e:
-                image = data
+
+        if any((source, data, filename)):
+            self._apply_image_to_image_elem(image_filename=self.ImageFilename, image_data=self.ImageData, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize)
+        # image = None
+        # if filename is not None:
+        #     try:
+        #         image = tk.PhotoImage(file=filename)
+        #         if subsample is not None:
+        #             image = image.subsample(subsample)
+        #         if zoom is not None:
+        #             image = image.zoom(int(zoom))
+        #     except Exception as e:
+        #         _error_popup_with_traceback('Exception updating Image element', e)
+
+        # elif data is not None:
+        #     # if type(data) is bytes:
+        #     try:
+        #         image = tk.PhotoImage(data=data)
+        #         if subsample is not None:
+        #             image = image.subsample(subsample)
+        #         if zoom is not None:
+        #             image = image.zoom(int(zoom))
+        #     except Exception as e:
+        #         image = data
                 # return  # an error likely means the window has closed so exit
 
-        if image is not None:
-            self.tktext_label.configure(image='')  # clear previous image
-            if self.tktext_label.image is not None:
-                del self.tktext_label.image
-            if type(image) is not bytes:
-                width, height = size[0] if size[0] is not None else image.width(), size[1] if size[1] is not None else image.height()
-            else:
-                width, height = size
-            try:  # sometimes crashes if user closed with X
-                self.tktext_label.configure(image=image, width=width, height=height)
-            except Exception as e:
-                _error_popup_with_traceback('Exception updating Image element', e)
-            self.tktext_label.image = image
+        # if image is not None:
+        #     self.tktext_label.configure(image='')  # clear previous image
+        #     if self.tktext_label.image is not None:
+        #         del self.tktext_label.image
+        #     if type(image) is not bytes:
+        #         width, height = size[0] if size[0] is not None else image.width(), size[1] if size[1] is not None else image.height()
+        #     else:
+        #         width, height = size
+        #     try:  # sometimes crashes if user closed with X
+        #         self.tktext_label.configure(image=image, width=width, height=height)
+        #     except Exception as e:
+        #         _error_popup_with_traceback('Exception updating Image element', e)
+        #     self.tktext_label.image = image
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
             self._pack_restore_settings()
 
         # if everything is set to None, then delete the image
-        if filename is None and image is None and visible is None and size == (None, None):
+        if not any((source, filename, data, visible)) and size==(None, None):
             # Using a try because the image may have been previously deleted and don't want an error if that's happened
             try:
                 self.tktext_label.configure(image='', width=1, height=1, bd=0)
@@ -6038,6 +6063,65 @@ class Image(Element):
 
         if visible is not None:
             self._visible = visible
+
+    def _apply_mouseover_image(self, image_filename=None, image_data=None):
+        """
+        Changes the image on an Image due to mouseover.  Called when mouse enters or leaves a Button (means there's a mouseover image to apply).
+        :param image_filename:      Filename of the image
+        :type image_filename:       (str)
+        :param image_data:          Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:           bytes | str
+        """
+
+        self._apply_image_to_image_elem(image_filename=image_filename, image_data=image_data, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize)
+
+
+
+    def _apply_image_to_image_elem(self, image_filename=None, image_data=None,  image_subsample=None, image_zoom=None, image_size=None):
+        """
+        Changes the image on a Button.  Called by update method and the mouseover methods.
+        :param image_data:              Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:               bytes | str
+        :param image_filename:          image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename:           (str)
+        :param image_subsample:         amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:          (int)
+        :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:               (int)
+        :param image_size:              Size of the image in pixels (width, height)
+        :type image_size:               (int, int)
+        :param button_style:            The ttk style object used to configure the button
+        :type button_style:             ttk.Style
+        :param style_name:              Style name set when Button was created
+        :type style_name:               (str)
+        """
+        if image_data is not None:
+            image = tk.PhotoImage(data=image_data)
+        elif image_filename is not None:
+            image = tk.PhotoImage(file=image_filename)
+        else:
+            return
+        if image_subsample:
+            image = image.subsample(image_subsample)
+        if image_zoom is not None:
+            image = image.zoom(int(image_zoom))
+        if image_size is not None:
+            width, height = image_size
+        else:
+            width, height = image.width(), image.height()
+
+
+        self.tktext_label.configure(image='')  # clear previous image
+        if self.tktext_label.image is not None:
+            del self.tktext_label.image
+
+        try:  # sometimes crashes if user closed with X
+            self.tktext_label.configure(image=image, width=width, height=height)
+        except Exception as e:
+            _error_popup_with_traceback('Exception updating Image element', e)
+        self.tktext_label.image = image             # save reference to image so tkinter will show it
+
+
 
     def update_animation(self, source, time_between_frames=0):
         """
@@ -17049,10 +17133,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
                 try:
-                    if element.Filename is not None:
-                        photo = tk.PhotoImage(file=element.Filename)
-                    elif element.Data is not None:
-                        photo = tk.PhotoImage(data=element.Data)
+                    if element.ImageFilename is not None:
+                        photo = tk.PhotoImage(file=element.ImageFilename)
+                    elif element.ImageData is not None:
+                        photo = tk.PhotoImage(data=element.ImageData)
                     else:
                         photo = None
 
@@ -17086,12 +17170,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
 
+                # Setup bindings if there's a mouseover image
+                if element.mouseover_image_source:
+                    element.tktext_label.bind('<Enter>', element.mouseover_enter)
+                    element.tktext_label.bind('<Leave>', element.mouseover_leave)
+
                 if element.visible is False:
                     element._pack_forget_save_settings()
                     # element.tktext_label.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
                 if element.EnableEvents and element.tktext_label is not None:
                     element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
 
