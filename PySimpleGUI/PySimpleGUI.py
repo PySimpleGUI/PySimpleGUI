@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.10"
+version = "6.2.13"
 
 
 
@@ -81,6 +81,13 @@ Changelog since last major release
                             in the element in the layout Was setting to '' previously.
 6.2.10      29-Jun-2026 Added mouseover image to Image Element.  Used same technique as the Button element.
                         Refactored some of the Button mouseover code and put into Element object.  
+6.2.11      29-Jun-2026 Begin working on Mouseover Images for Tabs
+6.2.12       3-Jul-2026 Added use_min_size parm to Window object. Setting to True will cause the window's minimum size to be set when Window created
+6.2.13       4-Jul-2026 Added automatic key creation for non-Input elements.  All Input-style elements get a key automatically assigned if one
+                            is not provided. Other static elements have no key unless explicitly set.  Now all those static elements will get a key with format "KeyID 41B56A4C50"
+                            if one is not specified.
+                        Removed dead-code from Window.add_row
+                        More code for Tab mouseover images.  What's there is not working so shouldn't be trying it out just yet. (I think) I know the approach I need to take.
 """
 
 
@@ -890,6 +897,7 @@ class ToolTip:
         self.id = None
         self.x = self.y = 0
         if not skip_bind:
+            print(f'Binding tooltip enter/leave for widget {widget}')
             self.widget.bind("<Enter>", self.enter)
             self.widget.bind("<Leave>", self.leave)
         self.widget.bind("<ButtonPress>", self.leave)
@@ -1518,7 +1526,7 @@ class Element:
         :param tooltip_text: the text to show in tooltip.  If None then no tip will be shown
         :type tooltip_text:  str | None
         """
-
+        # print(f'Setting tooltip for element {self.key}')
         if self.TooltipObject:
             try:
                 self.TooltipObject.leave()
@@ -1971,6 +1979,7 @@ class Element:
         :type event:
 
         """
+        print('mouesover enter')
         if self.mouseover_image_source:
             self._apply_mouseover_image(image_filename=self.mouseover_image_filename, image_data=self.mouseover_image_data)
         if self.TooltipObject:
@@ -7438,7 +7447,7 @@ class Tab(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, p=None, disabled=False,
                  border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left',
-                 image_source=None, image_subsample=None, image_zoom=None, metadata=None):
+                 image_source=None, image_subsample=None, image_zoom=None, mouseover_image_source=None, metadata=None):
         """
         :param title:                 text to show on the tab
         :type title:                  (str)
@@ -7480,6 +7489,8 @@ class Tab(Element):
         :type image_subsample:        (int)
         :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:             (int)
+        :param mouseover_image_source: Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
+        :type mouseover_image_source:  (str | bytes)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
@@ -7492,11 +7503,21 @@ class Tab(Element):
                 filename = image_source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(image_source)), UserWarning)
-
-        self.Filename = filename
-        self.Data = data
+        self.image_source = data or filename
+        self.ImageFilename = filename
+        self.ImageData = data
         self.ImageSubsample = image_subsample
+        self.ImageSize = None           # not a parm for this element
         self.zoom = int(image_zoom) if image_zoom is not None else None
+
+        self.mouseover_image_source = mouseover_image_source = mouseover_image_source if self.image_source else None
+        self.mouseover_image_filename = self.mouseover_image_data = None
+        if image_source is not None and mouseover_image_source is not None:
+            if isinstance(mouseover_image_source, bytes):
+                self.mouseover_image_data = mouseover_image_source
+            elif isinstance(mouseover_image_source, str):
+                self.mouseover_image_filename = mouseover_image_source
+
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -7645,6 +7666,65 @@ class Tab(Element):
         # elif visible is True:
         #     self.ParentNotebook.pack()
         return self
+
+
+
+    def _apply_mouseover_image(self, image_filename=None, image_data=None):
+        """
+        Changes the image on an Image due to mouseover.  Called when mouse enters or leaves a Button (means there's a mouseover image to apply).
+        :param image_filename:      Filename of the image
+        :type image_filename:       (str)
+        :param image_data:          Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:           bytes | str
+        """
+        self._apply_image_to_tab_elem(image_filename=image_filename, image_data=image_data, image_subsample=self.ImageSubsample, image_zoom=self.zoom, image_size=self.ImageSize)
+
+
+
+    def _apply_image_to_tab_elem(self, image_filename=None, image_data=None,  image_subsample=None, image_zoom=None, image_size=None):
+        """
+        Changes the image on a Tab.  Called by update method and the mouseover methods.
+        :param image_data:              Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data:               bytes | str
+        :param image_filename:          image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename:           (str)
+        :param image_subsample:         amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:          (int)
+        :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:               (int)
+        :param image_size:              Size of the image in pixels (width, height)
+        :type image_size:               (int, int)
+        :param button_style:            The ttk style object used to configure the button
+        :type button_style:             ttk.Style
+        :param style_name:              Style name set when Button was created
+        :type style_name:               (str)
+        """
+        if image_data is not None:
+            image = tk.PhotoImage(data=image_data)
+        elif image_filename is not None:
+            image = tk.PhotoImage(file=image_filename)
+        else:
+            return
+        if image_subsample:
+            image = image.subsample(image_subsample)
+        if image_zoom is not None:
+            image = image.zoom(int(image_zoom))
+        if image_size is not None:
+            width, height = image_size
+        else:
+            width, height = image.width(), image.height()
+
+
+        self.tktext_label.configure(image='')  # clear previous image
+        if self.tktext_label.image is not None:
+            del self.tktext_label.image
+
+        try:  # sometimes crashes if user closed with X
+            self.tktext_label.configure(image=image, width=width, height=height)
+        except Exception as e:
+            _error_popup_with_traceback('Exception updating Image element', e)
+        self.tktext_label.image = image             # save reference to image so tkinter will show it
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -7942,10 +8022,10 @@ class TabGroup(Element):
         # If there's an image in the tab, then do the imagey-stuff
         # ------------------- start of imagey-stuff -------------------
         try:
-            if tab_element.Filename is not None:
-                photo = tk.PhotoImage(file=tab_element.Filename)
-            elif tab_element.Data is not None:
-                photo = tk.PhotoImage(data=tab_element.Data)
+            if tab_element.ImageFilename is not None:
+                photo = tk.PhotoImage(file=tab_element.ImageFilename)
+            elif tab_element.ImageData is not None:
+                photo = tk.PhotoImage(data=tab_element.ImageData)
             else:
                 photo = None
 
@@ -10024,7 +10104,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=None, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, grab_anywhere_using_control=True, keep_on_top=None, resizable=False, disable_close=False,
+                 no_titlebar=False, grab_anywhere=False, grab_anywhere_using_control=True, keep_on_top=None, resizable=False, use_min_size=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=False,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None, right_click_menu_selected_colors=(None, None),
                  right_click_menu_font=None, right_click_menu_tearoff=False,
@@ -10097,6 +10177,8 @@ class Window:
         :type keep_on_top:                           (bool)
         :param resizable:                            If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
         :type resizable:                             (bool)
+        :param use_min_size:                         If True the window's minimum size will be set when the window is created
+        :type use_min_size:                          (bool)
         :param disable_close:                        If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users
         :type disable_close:                         (bool)
         :param disable_minimize:                     if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
@@ -10229,6 +10311,7 @@ class Window:
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
+        self.use_min_size = use_min_size
         self._AlphaChannel = alpha_channel if alpha_channel is not None else DEFAULT_ALPHA_CHANNEL
         self.Timeout = None
         self.TimeoutKey = TIMEOUT_KEY
@@ -10424,17 +10507,8 @@ class Window:
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
-
             if isinstance(element, tuple) or isinstance(element, list):
                 self.add_row(*element)
-                continue
-                _error_popup_with_traceback('Error creating Window layout',
-                                            'Layout has a LIST instead of an ELEMENT',
-                                            'This sometimes means you have a badly placed ]',
-                                            'The offensive list is:',
-                                            element,
-                                            'This list will be stripped from your layout'
-                                            )
                 continue
             elif callable(element) and not isinstance(element, Element):
                 _error_popup_with_traceback('Error creating Window layout',
@@ -11268,6 +11342,9 @@ class Window:
                                         ELEM_TYPE_TAB_GROUP, ELEM_TYPE_SEPARATOR):
                         element.Key = top_window.DictionaryKeyCounter
                         top_window.DictionaryKeyCounter += 1
+                    else:
+                        # wasn't an input element (could be a Text elem for example) and doesn't have a key so make one using the id
+                        element.Key = f'KeyID {hex(id(element)).upper()[2:]}'
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
                         if element.Type == ELEM_TYPE_BUTTON and WARN_DUPLICATE_BUTTON_KEY_ERRORS:  # for Buttons see if should complain
@@ -17154,11 +17231,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.bind('<Enter>', element.mouseover_enter)
                     element.tktext_label.bind('<Leave>', element.mouseover_leave)
 
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
+
+
                 if element.visible is False:
                     element._pack_forget_save_settings()
                     # element.tktext_label.pack_forget()
-                if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
+
                 if element.EnableEvents and element.tktext_label is not None:
                     element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
 
@@ -17324,10 +17404,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     state = 'hidden'
                 # this code will add an image to the tab. Use it when adding the image on a tab enhancement
                 try:
-                    if element.Filename is not None:
-                        photo = tk.PhotoImage(file=element.Filename)
-                    elif element.Data is not None:
-                        photo = tk.PhotoImage(data=element.Data)
+                    if element.ImageFilename is not None:
+                        photo = tk.PhotoImage(file=element.ImageFilename)
+                    elif element.ImageData is not None:
+                        photo = tk.PhotoImage(data=element.ImageData)
                     else:
                         photo = None
 
@@ -17350,15 +17430,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         width, height = element_size
                     element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=0)
+                    element.tktext_label.image = photo
                 else:
                     element.tktext_label = tk.Label(tk_row_frame, bd=0)
                 if photo is not None:
                     form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image=photo)
+                else:
+                    form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
 
                 # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
                 # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
 
-                form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
+                # form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
                 # July 28 2022 removing the expansion and pack as a test
                 # expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 # form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
@@ -17372,8 +17455,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # if element.BorderWidth is not None:
                 #     element.TKFrame.configure(borderwidth=element.BorderWidth)
-                if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
+                # Setup bindings if there's a mouseover image
+                # Have to set it up for the entire notebook
+                if element.mouseover_image_source:
+                    print(f'Binding mouseover events to {element.ParentNotebook=}')
+                    element.ParentNotebook.bind('<Enter>', element.mouseover_enter)
+                    element.ParentNotebook.bind('<Leave>', element.mouseover_leave)
+
+                # if element.Tooltip is not None:
+                    # element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
+                    # Set tooltip for the layout part of the Tab (not the Tab label though)
+                    # element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=False)
+
                 _add_right_click_menu_and_grab(element)
                 # row_should_expand = True
             # -------------------------  TabGroup placement element  ------------------------- #
@@ -26293,6 +26387,9 @@ def _convert_window_to_tk(window):
         window.TKroot.x = x
         window.TKroot.y = y
         window.starting_window_position = x,y
+    if window.use_min_size:
+        window.TKroot.minsize(master.winfo_width(), master.winfo_height())
+        window.TKroot.update_idletasks()
     _no_titlebar_setup(window)
 
     return
