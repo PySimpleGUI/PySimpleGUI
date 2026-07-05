@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.13"
+version = "6.2.14"
 
 
 
@@ -88,6 +88,9 @@ Changelog since last major release
                             if one is not specified.
                         Removed dead-code from Window.add_row
                         More code for Tab mouseover images.  What's there is not working so shouldn't be trying it out just yet. (I think) I know the approach I need to take.
+6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
+                        how update methods handle image deletes (if all parms are None, then the Element image is deleted).
+                        Added same image freeing of previous image that was in Image element code when applying images for Button element 
 """
 
 
@@ -897,7 +900,7 @@ class ToolTip:
         self.id = None
         self.x = self.y = 0
         if not skip_bind:
-            print(f'Binding tooltip enter/leave for widget {widget}')
+            # print(f'Binding tooltip enter/leave for widget {widget}')
             self.widget.bind("<Enter>", self.enter)
             self.widget.bind("<Leave>", self.leave)
         self.widget.bind("<ButtonPress>", self.leave)
@@ -1979,7 +1982,7 @@ class Element:
         :type event:
 
         """
-        print('mouesover enter')
+        # print('mouesover enter')
         if self.mouseover_image_source:
             self._apply_mouseover_image(image_filename=self.mouseover_image_filename, image_data=self.mouseover_image_data)
         if self.TooltipObject:
@@ -1997,6 +2000,32 @@ class Element:
             self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
         if self.TooltipObject:
             self.TooltipObject.leave(event)
+
+
+    def mouseover_image_set(self, image_source=None):
+        """
+        Used to set or clear the mouseover image for an element
+        TODO: need to check it's valid to set a mouseover image for this element and also need to protect against widget not set.
+        Also need to unhook the tooltip binding so it won't get stolen by tooltip.  Get for image already set too
+        :param image_source:    Image to show when the element is moused over. Element must already have an image set.
+        :type image_source:     (str | bytes)
+
+        """
+        if image_source is not None:
+            if self.image_source is not None:
+                self.widget.bind('<Enter>', self.mouseover_enter)
+                self.widget.bind('<Leave>', self.mouseover_leave)
+            self.mouseover_image_source = image_source
+            self.mouseover_image_data =  self.mouseover_image_filename = None
+            if isinstance(image_source, bytes):
+                self.mouseover_image_data = image_source
+            elif isinstance(image_source, str):
+                self.mouseover_image_filename = image_source
+            self.update(mouseover_image_source=image_source)
+        else:
+            self.mouseover_image_source = self.mouseover_image_data = self.mouseover_image_filename  = None
+            self.widget.unbind('<Enter>')
+            self.widget.unbind('<Leave>')
 
 
     def update(self, *args, **kwargs):
@@ -5417,9 +5446,14 @@ class Button(Element):
             width, height = image_size
         else:
             width, height = image.width(), image.height()
+
+        if self.TKButton.image is not None:
+            del self.TKButton.image
         if self.UseTtkButtons:
+            button_style.configure(style_name, borderwidth=0, image='', width=width, height=height)     # clear previous image
             button_style.configure(style_name, borderwidth=0, image=image, width=width, height=height)
         else:
+            self.TKButton.configure(image='')  # clear previous image
             self.TKButton.config(highlightthickness=0, image=image, width=width, height=height)
         self.TKButton.image = image         # Save a reference to the image so tktiner shows it on the Button
 
@@ -6004,16 +6038,14 @@ class Image(Element):
             return
 
         if mouseover_image_source is not None:
-            # if haven't setup mouseover yet, then need to do the binds here
-            if self.mouseover_image_source is None:
+            if self.mouseover_image_source is None:   # if haven't setup mouseover yet, then need to do the binds here
                 self.tktext_label.bind('<Enter>', self.mouseover_enter)
                 self.tktext_label.bind('<Leave>', self.mouseover_leave)
             self.mouseover_image_source = mouseover_image_source
-            if mouseover_image_source is not None:
-                if isinstance(mouseover_image_source, bytes):
-                    self.mouseover_image_data = mouseover_image_source
-                elif isinstance(mouseover_image_source, str):
-                    self.mouseover_image_filename = mouseover_image_source
+            if isinstance(mouseover_image_source, bytes):
+                self.mouseover_image_data = mouseover_image_source
+            elif isinstance(mouseover_image_source, str):
+                self.mouseover_image_filename = mouseover_image_source
 
         if source is not None:
             self.ImageSource = source
@@ -17459,7 +17491,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Setup bindings if there's a mouseover image
                 # Have to set it up for the entire notebook
                 if element.mouseover_image_source:
-                    print(f'Binding mouseover events to {element.ParentNotebook=}')
+                    # print(f'Binding mouseover events to {element.ParentNotebook=}')
                     element.ParentNotebook.bind('<Enter>', element.mouseover_enter)
                     element.ParentNotebook.bind('<Leave>', element.mouseover_leave)
 
