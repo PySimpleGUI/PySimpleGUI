@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.15"
+version = "6.2.16"
 
 
 
@@ -92,6 +92,7 @@ Changelog since last major release
                         how update methods handle image deletes (if all parms are None, then the Element image is deleted).
                         Added same image freeing of previous image that was in Image element code when applying images for Button element 
 6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
+6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
 """
 
 
@@ -1997,7 +1998,7 @@ class Element:
         :type event:
 
         """
-        if self.image_source:
+        if self.ImageSource:
             self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
         if self.TooltipObject:
             self.TooltipObject.leave(event)
@@ -2013,7 +2014,7 @@ class Element:
 
         """
         if image_source is not None:
-            if self.image_source is not None:
+            if self.ImageSource is not None:
                 self.widget.bind('<Enter>', self.mouseover_enter)
                 self.widget.bind('<Leave>', self.mouseover_leave)
             self.mouseover_image_source = image_source
@@ -4984,16 +4985,16 @@ class Button(Element):
             elif isinstance(image_source, str):
                 image_filename = image_source
 
-        self.image_source = image_data or image_filename
+        self.ImageSource = image_data or image_filename
 
-        self.mouseover_image_source = mouseover_image_source if self.image_source is not None else None
+        self.mouseover_image_source = mouseover_image_source if self.ImageSource is not None else None
         self.mouseover_image_filename = self.mouseover_image_data = None
-        if mouseover_image_source is not None and self.image_source is not None:
+        if mouseover_image_source is not None and self.ImageSource is not None:
             if isinstance(mouseover_image_source, bytes):
                 self.mouseover_image_data = mouseover_image_source
             elif isinstance(mouseover_image_source, str):
                 self.mouseover_image_filename = mouseover_image_source
-        if mouseover_image_source is not None and self.image_source is None:
+        if mouseover_image_source is not None and self.ImageSource is None:
             print('** Button Warning - cannot use a mouseover image unless an image is also specified **')
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -5348,7 +5349,7 @@ class Button(Element):
                 elif isinstance(mouseover_image_source, str):
                     self.mouseover_image_filename = mouseover_image_source
         if any((image_source, image_data, image_filename)):
-            self.image_source = image_source or image_data or image_filename
+            self.ImageSource = image_source or image_data or image_filename
             self.ImageFilename = image_filename
             self.ImageData = image_data
             self.ImageSubsample = image_subsample
@@ -5967,7 +5968,7 @@ class Image(Element):
 
         self.ImageFilename = filename
         self.ImageData = data
-        self.image_source = source
+        self.ImageSource = source
         self.Widget = self.tktext_label = None  # type: tk.Label
         self.BackgroundColor = background_color
         if data is None and filename is None:
@@ -6051,6 +6052,7 @@ class Image(Element):
         if any((source, data, filename)):
             source = source or data or filename
             self.ImageSource = source
+            self.ImageFilename = self.ImageData = None
             if isinstance(source, bytes):
                 self.ImageData = data = source
             elif isinstance(source, str):
@@ -6142,7 +6144,6 @@ class Image(Element):
         except Exception as e:
             _error_popup_with_traceback('Exception updating Image element', e)
         self.tktext_label.image = image             # save reference to image so tkinter will show it
-
 
 
     def update_animation(self, source, time_between_frames=0):
@@ -7537,14 +7538,14 @@ class Tab(Element):
                 filename = image_source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(image_source)), UserWarning)
-        self.image_source = data or filename
+        self.ImageSource = data or filename
         self.ImageFilename = filename
         self.ImageData = data
         self.ImageSubsample = image_subsample
         self.ImageSize = None           # not a parm for this element
         self.zoom = int(image_zoom) if image_zoom is not None else None
 
-        self.mouseover_image_source = mouseover_image_source = mouseover_image_source if self.image_source else None
+        self.mouseover_image_source = mouseover_image_source = mouseover_image_source if self.ImageSource else None
         self.mouseover_image_filename = self.mouseover_image_data = None
         if image_source is not None and mouseover_image_source is not None:
             if isinstance(mouseover_image_source, bytes):
