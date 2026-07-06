@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.14"
+version = "6.2.15"
 
 
 
@@ -91,6 +91,7 @@ Changelog since last major release
 6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
                         how update methods handle image deletes (if all parms are None, then the Element image is deleted).
                         Added same image freeing of previous image that was in Image element code when applying images for Button element 
+6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
 """
 
 
@@ -6047,7 +6048,8 @@ class Image(Element):
             elif isinstance(mouseover_image_source, str):
                 self.mouseover_image_filename = mouseover_image_source
 
-        if source is not None:
+        if any((source, data, filename)):
+            source = source or data or filename
             self.ImageSource = source
             if isinstance(source, bytes):
                 self.ImageData = data = source
