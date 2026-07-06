@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.16"
+version = "6.2.17"
 
 
 
@@ -93,6 +93,7 @@ Changelog since last major release
                         Added same image freeing of previous image that was in Image element code when applying images for Button element 
 6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
 6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
+6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
 """
 
 
@@ -5968,7 +5969,7 @@ class Image(Element):
 
         self.ImageFilename = filename
         self.ImageData = data
-        self.ImageSource = source
+        self.ImageSource = source or data or filename
         self.Widget = self.tktext_label = None  # type: tk.Label
         self.BackgroundColor = background_color
         if data is None and filename is None:
@@ -6052,7 +6053,7 @@ class Image(Element):
         if any((source, data, filename)):
             source = source or data or filename
             self.ImageSource = source
-            self.ImageFilename = self.ImageData = None
+            self.ImageFilename = self.ImageData =None
             if isinstance(source, bytes):
                 self.ImageData = data = source
             elif isinstance(source, str):
