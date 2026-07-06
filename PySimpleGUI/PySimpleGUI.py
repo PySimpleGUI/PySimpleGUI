@@ -6052,7 +6052,7 @@ class Image(Element):
             if isinstance(source, bytes):
                 self.ImageData = data = source
             elif isinstance(source, str):
-                self.Imagefilename = filename = source
+                self.ImageFilename = filename = source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
