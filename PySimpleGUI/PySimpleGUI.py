@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.18"
+version = "6.2.19"
 
 
 
@@ -95,6 +95,7 @@ Changelog since last major release
 6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
 6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
 6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
+6.2.19       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button   
 """
 
 
@@ -15298,7 +15299,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
+                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.Type == ELEM_TYPE_BUTTON and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
                             element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
