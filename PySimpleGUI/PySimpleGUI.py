@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.15"
+version = "6.2.18"
 
 
 
@@ -91,7 +91,10 @@ Changelog since last major release
 6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
                         how update methods handle image deletes (if all parms are None, then the Element image is deleted).
                         Added same image freeing of previous image that was in Image element code when applying images for Button element 
-6.2.15       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button                        
+6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
+6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
+6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
+6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
 """
 
 
@@ -1997,7 +2000,7 @@ class Element:
         :type event:
 
         """
-        if self.image_source:
+        if self.ImageSource:
             self._apply_mouseover_image(image_filename=self.ImageFilename, image_data=self.ImageData)
         if self.TooltipObject:
             self.TooltipObject.leave(event)
@@ -2013,7 +2016,7 @@ class Element:
 
         """
         if image_source is not None:
-            if self.image_source is not None:
+            if self.ImageSource is not None:
                 self.widget.bind('<Enter>', self.mouseover_enter)
                 self.widget.bind('<Leave>', self.mouseover_leave)
             self.mouseover_image_source = image_source
@@ -4984,16 +4987,16 @@ class Button(Element):
             elif isinstance(image_source, str):
                 image_filename = image_source
 
-        self.image_source = image_data or image_filename
+        self.ImageSource = image_data or image_filename
 
-        self.mouseover_image_source = mouseover_image_source if self.image_source is not None else None
+        self.mouseover_image_source = mouseover_image_source if self.ImageSource is not None else None
         self.mouseover_image_filename = self.mouseover_image_data = None
-        if mouseover_image_source is not None and self.image_source is not None:
+        if mouseover_image_source is not None and self.ImageSource is not None:
             if isinstance(mouseover_image_source, bytes):
                 self.mouseover_image_data = mouseover_image_source
             elif isinstance(mouseover_image_source, str):
                 self.mouseover_image_filename = mouseover_image_source
-        if mouseover_image_source is not None and self.image_source is None:
+        if mouseover_image_source is not None and self.ImageSource is None:
             print('** Button Warning - cannot use a mouseover image unless an image is also specified **')
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -5348,7 +5351,7 @@ class Button(Element):
                 elif isinstance(mouseover_image_source, str):
                     self.mouseover_image_filename = mouseover_image_source
         if any((image_source, image_data, image_filename)):
-            self.image_source = image_source or image_data or image_filename
+            self.ImageSource = image_source or image_data or image_filename
             self.ImageFilename = image_filename
             self.ImageData = image_data
             self.ImageSubsample = image_subsample
@@ -5967,7 +5970,7 @@ class Image(Element):
 
         self.ImageFilename = filename
         self.ImageData = data
-        self.image_source = source
+        self.ImageSource = source or data or filename
         self.Widget = self.tktext_label = None  # type: tk.Label
         self.BackgroundColor = background_color
         if data is None and filename is None:
@@ -6048,12 +6051,14 @@ class Image(Element):
             elif isinstance(mouseover_image_source, str):
                 self.mouseover_image_filename = mouseover_image_source
 
-        if source is not None:
+        if any((source, data, filename)):
+            source = source or data or filename
             self.ImageSource = source
+            self.ImageFilename = self.ImageData =None
             if isinstance(source, bytes):
                 self.ImageData = data = source
             elif isinstance(source, str):
-                self.Imagefilename = filename = source
+                self.ImageFilename = filename = source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
@@ -6141,7 +6146,6 @@ class Image(Element):
         except Exception as e:
             _error_popup_with_traceback('Exception updating Image element', e)
         self.tktext_label.image = image             # save reference to image so tkinter will show it
-
 
 
     def update_animation(self, source, time_between_frames=0):
@@ -7536,14 +7540,14 @@ class Tab(Element):
                 filename = image_source
             else:
                 warnings.warn('Image element - source is not a valid type: {}'.format(type(image_source)), UserWarning)
-        self.image_source = data or filename
+        self.ImageSource = data or filename
         self.ImageFilename = filename
         self.ImageData = data
         self.ImageSubsample = image_subsample
         self.ImageSize = None           # not a parm for this element
         self.zoom = int(image_zoom) if image_zoom is not None else None
 
-        self.mouseover_image_source = mouseover_image_source = mouseover_image_source if self.image_source else None
+        self.mouseover_image_source = mouseover_image_source = mouseover_image_source if self.ImageSource else None
         self.mouseover_image_filename = self.mouseover_image_data = None
         if image_source is not None and mouseover_image_source is not None:
             if isinstance(mouseover_image_source, bytes):
@@ -8489,7 +8493,7 @@ class Column(Element):
         :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also
+        :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call window.refresh and Column.contents_changed
         :type scrollable:                   (bool)
         :param vertical_scroll_only:        if True then no horizontal scrollbar will be shown if a scrollable column
         :type vertical_scroll_only:         (bool)
@@ -8707,6 +8711,8 @@ class Column(Element):
         When a scrollable column has part of its layout changed by making elements visible or invisible or the
         layout is extended for the Column, then this method needs to be called so that the new scroll area
         is computed to match the new contents.
+        Call window.refresh before calling column.contents_changed so that the window is fully updated with
+        visible changes.  This ensures the Column will update the scrollbars to match
         """
         self.TKColFrame.canvas.config(scrollregion=self.TKColFrame.canvas.bbox('all'))
 
@@ -15292,7 +15298,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.Type == ELEM_TYPE_BUTTON and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
+                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
                             element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
