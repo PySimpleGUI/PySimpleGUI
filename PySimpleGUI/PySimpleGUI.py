@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.17"
+version = "6.2.18"
 
 
 
@@ -94,6 +94,7 @@ Changelog since last major release
 6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
 6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
 6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
+6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
 """
 
 
@@ -8492,7 +8493,7 @@ class Column(Element):
         :type pad:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
         :type p:                            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call Column.contents_changed also
+        :param scrollable:                  if True then scrollbars will be added to the column. If you update the contents of a scrollable column, be sure and call window.refresh and Column.contents_changed
         :type scrollable:                   (bool)
         :param vertical_scroll_only:        if True then no horizontal scrollbar will be shown if a scrollable column
         :type vertical_scroll_only:         (bool)
@@ -8710,6 +8711,8 @@ class Column(Element):
         When a scrollable column has part of its layout changed by making elements visible or invisible or the
         layout is extended for the Column, then this method needs to be called so that the new scroll area
         is computed to match the new contents.
+        Call window.refresh before calling column.contents_changed so that the window is fully updated with
+        visible changes.  This ensures the Column will update the scrollbars to match
         """
         self.TKColFrame.canvas.config(scrollregion=self.TKColFrame.canvas.bbox('all'))
 
