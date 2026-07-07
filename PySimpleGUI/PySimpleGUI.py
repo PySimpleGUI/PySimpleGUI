@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.14"
+version = "6.2.15"
 
 
 
@@ -91,6 +91,7 @@ Changelog since last major release
 6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
                         how update methods handle image deletes (if all parms are None, then the Element image is deleted).
                         Added same image freeing of previous image that was in Image element code when applying images for Button element 
+6.2.15       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button                        
 """
 
 
@@ -15291,7 +15292,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
-                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
+                        if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.Type == ELEM_TYPE_BUTTON and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
                             element.TKStringVar.set('')
                 elif element.Type == ELEM_TYPE_INPUT_CHECKBOX:
                     value = element.TKIntVar.get()
