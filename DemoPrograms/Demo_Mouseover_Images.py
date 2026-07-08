@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import os
 import shutil
 from pathlib import Path
+from packaging.version import Version
 
 """
     Demo Mouseover Images - Using mouseover images with Button and Image elements.
@@ -94,4 +95,13 @@ def del_image_files():
 
 
 if __name__ == '__main__':
+    required_psg_version = '6.2.17'
+    if Version(sg.version) < Version(required_psg_version):
+        if sg.popup_yes_no(f'ERROR - PySimpleGUI version is {sg.version}', f'PySimpleGUI version {required_psg_version} or greater is required to run this program.', 'To pip install it, execute the command:', r'python -m pip install --upgrade https://github.com/PySimpleGUI/PySimpleGUI/zipball/master', 'Would you like to upgrade to latest from GitHub?', line_width=100) == 'Yes':
+            sg.execute_pip_install_package(r'https://github.com/PySimpleGUI/PySimpleGUI/zipball/master')
+            sg.popup_auto_close('Please restart the application to use the newly installed PySimpleGUI package.', auto_close_duration=3)
+            exit()
+        else:
+            print('Exiting')
+            exit()
     main()
