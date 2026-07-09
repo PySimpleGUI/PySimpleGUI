@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.19"
+version = "6.2.20"
 
 
 
@@ -96,6 +96,7 @@ Changelog since last major release
 6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
 6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
 6.2.19       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button   
+6.2.20       9-Jul-2026 Added placeholder feature to Input element.  Still need to make changes to update to enable changing placeholder after initially set 
 """
 
 
@@ -2067,15 +2068,16 @@ class Input(Element):
     Display a single text input field.  Based on the tkinter Widget `Entry`
     """
 
-    def __init__(self, default_text='', size=(None, None), s=(None, None), disabled=False, password_char='', setting=None,
-                 justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
-                 change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None,
-                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, selected_text_color=None,
-                 selected_background_color=None, expand_x=False, expand_y=False,
-                 right_click_menu=None, visible=True, metadata=None):
+    def __init__(self, default_text='',placeholder=None, placeholder_text_color=None, placeholder_background_color=None, size=(None, None), s=(None, None), disabled=False, password_char='', setting=None, justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None, use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, selected_text_color=None, selected_background_color=None, expand_x=False, expand_y=False, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
         :type default_text:                        (Any)
+        :param placeholder:                        The placeholder text
+        :type placeholder:                         str
+        :param placeholder_text_color:             Color of the placeholder text. Uses input element disabled text color of nothing set
+        :type placeholder_text_color:              str
+        :param placeholder_background_color        Background color for placeholder text.  Uses input element disabled background color of nothing set
+        :type placeholder_background_color         str
         :param size:                               w=characters-wide, h=rows-high. If an int is supplied rather than a tuple, then a tuple is created width=int supplied and heigh=1
         :type size:                                (int, int) |  (int, None) | int
         :param s:                                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
@@ -2144,6 +2146,11 @@ class Input(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.selected_text_color = selected_text_color
         self.selected_background_color = selected_background_color
+        self.placeholder = placeholder
+        self.placeholder_text_color = placeholder_text_color or disabled_readonly_text_color
+        self.placeholder_background_color = placeholder_background_color or disabled_readonly_background_color
+        self.mouse_over = self.has_focus = False            # flags used by placeholder code
+        self.showing_placeholder = False                    # True when currently showing the placeholder value
         self.Focus = focus
         self.do_not_clear = do_not_clear
         self.Justification = justification
@@ -2275,6 +2282,43 @@ class Input(Element):
         if font is not None:
             self.TKEntry.configure(font=font)
 
+
+    def update_placeholder(self):
+        entry_widget = self.widget
+        text = entry_widget.get()
+        if not self.mouse_over and not self.has_focus and text == '':
+            entry_widget.insert(0, self.placeholder)
+            entry_widget.config(fg=self.placeholder_text_color)
+            entry_widget.config(bg=self.placeholder_background_color)
+            self.showing_placeholder = True
+        elif text == self.placeholder and (self.mouse_over or self.has_focus):
+            entry_widget.delete(0, 'end')
+            entry_widget.config(fg=self.TextColor)
+            entry_widget.config(bg=self.BackgroundColor)
+            self.showing_placeholder = False
+
+
+    def on_mouse_or_focus(self, event):
+        if event.type == tk.EventType.Enter:           # Mouse enter
+            # print(f'{"Mouse enter:<15"}')
+            self.mouse_over = True
+            self.update_placeholder()
+            if self.TooltipObject:
+                self.TooltipObject.enter(event)
+        elif event.type == tk.EventType.Leave:         # Mouse leave
+            # print(f'{"Mouse leave:<15"}')
+            self.mouse_over = False
+            self.update_placeholder()
+            if self.TooltipObject:
+                self.TooltipObject.leave(event)
+        elif event.type == tk.EventType.FocusIn:       # Focus in
+            # print(f'{"Focus in:<15"}')
+            self.has_focus = True
+            self.update_placeholder()
+        elif event.type == tk.EventType.FocusOut:      # Focus out
+            # print(f'{"Focus out:<15"}')
+            self.has_focus = False
+            self.update_placeholder()
 
 
     def set_ibeam_color(self, ibeam_color=None):
@@ -15298,6 +15342,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = element.TKStringVar.get()
                     except:
                         value = ''
+                    if element.showing_placeholder:             # if showing the placeholder then set value returned to ''
+                        value = ''
                     if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                         if top_level_form.element_that_generated_event is not None and top_level_form.element_that_generated_event.Type == ELEM_TYPE_BUTTON and top_level_form.element_that_generated_event.BType != BUTTON_TYPE_CALENDAR_CHOOSER:
                             element.TKStringVar.set('')
@@ -16756,8 +16802,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry['state'] = 'readonly'
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.placeholder is not None)
                 _add_right_click_menu_and_grab(element)
+
+                if element.placeholder:
+                    element.TKEntry.bind('<Enter>', element.on_mouse_or_focus)
+                    element.TKEntry.bind('<Leave>', element.on_mouse_or_focus)
+                    element.TKEntry.bind('<FocusIn>', element.on_mouse_or_focus)
+                    element.TKEntry.bind('<FocusOut>', element.on_mouse_or_focus)
+                    element.update_placeholder()
 
                 # row_should_expand = True
 
@@ -17302,8 +17355,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu_and_grab(element)
 
                 # -------------------------  Graph placement element  ------------------------- #
