@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.20"
+version = "6.2.21"
 
 
 
@@ -97,6 +97,8 @@ Changelog since last major release
 6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
 6.2.19       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button   
 6.2.20       9-Jul-2026 Added placeholder feature to Input element.  Still need to make changes to update to enable changing placeholder after initially set 
+6.2.21       9-Jul-2026 Changed Input.update to trigger a placeholder update anytime the value is changed via update. 
+                            Important for when a Window.settings_restore call happens
 """
 
 
@@ -2147,7 +2149,7 @@ class Input(Element):
         self.selected_text_color = selected_text_color
         self.selected_background_color = selected_background_color
         self.placeholder = placeholder
-        self.placeholder_text_color = placeholder_text_color or disabled_readonly_text_color
+        self.placeholder_text_color = placeholder_text_color or disabled_readonly_text_color or fg
         self.placeholder_background_color = placeholder_background_color or disabled_readonly_background_color
         self.mouse_over = self.has_focus = False            # flags used by placeholder code
         self.showing_placeholder = False                    # True when currently showing the placeholder value
@@ -2263,17 +2265,17 @@ class Input(Element):
                 self.TKEntry.icursor(tk.END)
             elif move_cursor_to is not None:
                 self.TKEntry.icursor(move_cursor_to)
+            # since value changed, update the placeholder
+            self.showing_placeholder = False                    # set to not showing so it'll get set up again if needed
+            self.update_placeholder()
         if select is True:
             self.TKEntry.select_range(0, 'end')
         elif select is False:
             self.TKEntry.select_clear()
         if visible is False:
             self._pack_forget_save_settings()
-            # self.TKEntry.pack_forget()
         elif visible is True:
             self._pack_restore_settings()
-            # self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-            # self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1], in_=self.ParentRowFrame)
         if visible is not None:
             self._visible = visible
         if password_char is not None:
@@ -2284,15 +2286,19 @@ class Input(Element):
 
 
     def update_placeholder(self):
+        if self.placeholder is None:
+            return
         entry_widget = self.widget
-        text = entry_widget.get()
-        if not self.mouse_over and not self.has_focus and text == '':
-            entry_widget.insert(0, self.placeholder)
+        text = self.TKStringVar.get()
+        if not self.mouse_over and not self.has_focus and text == '' and not self.showing_placeholder:
+            # print(f'Showing placeholder. {text=} {self.placeholder=} {self.placeholder_text_color=}')
+            self.TKStringVar.set(self.placeholder)
             entry_widget.config(fg=self.placeholder_text_color)
             entry_widget.config(bg=self.placeholder_background_color)
             self.showing_placeholder = True
-        elif text == self.placeholder and (self.mouse_over or self.has_focus):
-            entry_widget.delete(0, 'end')
+        elif self.showing_placeholder and (self.mouse_over or self.has_focus):
+            # print('Hiding placeholder')
+            self.TKStringVar.set('')
             entry_widget.config(fg=self.TextColor)
             entry_widget.config(bg=self.BackgroundColor)
             self.showing_placeholder = False
@@ -16762,9 +16768,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification.startswith('l') else tk.CENTER if justification.startswith('c') else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-                element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0],
-                                                            textvariable=element.TKStringVar, bd=bd,
-                                                            font=font, show=show, justify=justify)
+                element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0], textvariable=element.TKStringVar, bd=bd, font=font, show=show, justify=justify)
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
                 element.TKEntry.bind('<Return>', element._ReturnKeyHandler)
