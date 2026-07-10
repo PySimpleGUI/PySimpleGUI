@@ -2270,6 +2270,7 @@ class Input(Element):
             self.showing_placeholder = False                    # set to not showing so it'll get set up again if needed
             self.TKEntry.config(fg=self.TextColor)
             self.TKEntry.config(bg=self.BackgroundColor)
+            self.TKEntry.config(justify=self.tk_justify)
             self.update_placeholder()
         if select is True:
             self.TKEntry.select_range(0, 'end')
