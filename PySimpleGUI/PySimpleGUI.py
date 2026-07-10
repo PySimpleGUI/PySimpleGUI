@@ -2264,7 +2264,9 @@ class Input(Element):
                 self.TKEntry.icursor(move_cursor_to)
             # since value changed, update the placeholder
             self.showing_placeholder = False                    # set to not showing so it'll get set up again if needed
-            self.update_placeholder()
+            self.TKEntry.config(fg=self.TextColor)
+            self.TKEntry.config(bg=self.BackgroundColor)
+            # self.update_placeholder()
         if select is True:
             self.TKEntry.select_range(0, 'end')
         elif select is False:
@@ -2347,10 +2349,13 @@ class Input(Element):
         :return: current value of Input field or '' if error encountered
         :rtype:  (str)
         """
-        try:
-            text = self.TKStringVar.get()
-        except:
+        if self.showing_placeholder:            # if showing a placeholder, then the actual value should be ''
             text = ''
+        else:
+            try:
+                text = self.TKStringVar.get()
+            except:
+                text = ''
         return text
 
     Get = get
