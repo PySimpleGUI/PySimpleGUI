@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.21"
+version = "6.2.22"
 
 
 
@@ -99,6 +99,7 @@ Changelog since last major release
 6.2.20       9-Jul-2026 Added placeholder feature to Input element.  Still need to make changes to update to enable changing placeholder after initially set 
 6.2.21       9-Jul-2026 Changed Input.update to trigger a placeholder update anytime the value is changed via update. 
                             Important for when a Window.settings_restore call happens
+6.2.22      10-Jul-2026 Added placeholder_justification to Input element.  The placeholder justification can be different than the normal data.
 """
 
 
@@ -2070,12 +2071,14 @@ class Input(Element):
     Display a single text input field.  Based on the tkinter Widget `Entry`
     """
 
-    def __init__(self, default_text='',placeholder=None, placeholder_text_color=None, placeholder_background_color=None, size=(None, None), s=(None, None), disabled=False, password_char='', setting=None, justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None, use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, selected_text_color=None, selected_background_color=None, expand_x=False, expand_y=False, right_click_menu=None, visible=True, metadata=None):
+    def __init__(self, default_text='',placeholder=None, placeholder_text_color=None, placeholder_background_color=None, placeholder_justification=None, size=(None, None), s=(None, None), disabled=False, password_char='', setting=None, justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None, use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, selected_text_color=None, selected_background_color=None, expand_x=False, expand_y=False, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
         :type default_text:                        (Any)
         :param placeholder:                        The placeholder text
         :type placeholder:                         str
+        :param placeholder_justification:          justification for placeholder. Valid choices - left, right, center ("l", "r", "c")
+        :type placeholder_justification:           (str)
         :param placeholder_text_color:             Color of the placeholder text. Uses input element disabled text color of nothing set
         :type placeholder_text_color:              str
         :param placeholder_background_color        Background color for placeholder text.  Uses input element disabled background color of nothing set
@@ -2165,6 +2168,8 @@ class Input(Element):
         self.ReadOnly = readonly
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TKEntry = self.Widget = None  # type: tk.Entry
+        self.tk_justify = None if justification is None else tk.LEFT if justification.startswith('l') else tk.CENTER if justification.startswith('c') else tk.RIGHT
+        self.tk_justify_placeholder = None if placeholder_justification is None else tk.LEFT if placeholder_justification.startswith('l') else tk.CENTER if placeholder_justification.startswith('c') else tk.RIGHT
         key = key if key is not None else k
         sz = size if size != (None, None) else s
         pad = pad if pad is not None else p
@@ -2177,8 +2182,7 @@ class Input(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, font=None, move_cursor_to='end', password_char=None, paste=None,
-               readonly=None):
+    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, font=None, move_cursor_to='end', password_char=None, paste=None, readonly=None):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior.
         Changes will not be visible in your window until you call window.read or window.refresh.
@@ -2293,11 +2297,13 @@ class Input(Element):
             self.TKStringVar.set(self.placeholder)
             entry_widget.config(fg=self.placeholder_text_color)
             entry_widget.config(bg=self.placeholder_background_color)
+            entry_widget.config(justify=self.tk_justify_placeholder)
             self.showing_placeholder = True
         elif self.showing_placeholder and (self.mouse_over or self.has_focus):
             self.TKStringVar.set('')
             entry_widget.config(fg=self.TextColor)
             entry_widget.config(bg=self.BackgroundColor)
+            entry_widget.config(justify=self.tk_justify)
             self.showing_placeholder = False
 
 
