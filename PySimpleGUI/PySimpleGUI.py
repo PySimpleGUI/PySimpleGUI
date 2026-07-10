@@ -2245,9 +2245,6 @@ class Input(Element):
         elif readonly is False:
             self.TKEntry['state'] = 'normal'
 
-
-
-
         if value is not None:
             if paste is not True:
                 try:
@@ -2291,13 +2288,11 @@ class Input(Element):
         entry_widget = self.widget
         text = self.TKStringVar.get()
         if not self.mouse_over and not self.has_focus and text == '' and not self.showing_placeholder:
-            # print(f'Showing placeholder. {text=} {self.placeholder=} {self.placeholder_text_color=}')
             self.TKStringVar.set(self.placeholder)
             entry_widget.config(fg=self.placeholder_text_color)
             entry_widget.config(bg=self.placeholder_background_color)
             self.showing_placeholder = True
         elif self.showing_placeholder and (self.mouse_over or self.has_focus):
-            # print('Hiding placeholder')
             self.TKStringVar.set('')
             entry_widget.config(fg=self.TextColor)
             entry_widget.config(bg=self.BackgroundColor)
@@ -2306,23 +2301,19 @@ class Input(Element):
 
     def on_mouse_or_focus(self, event):
         if event.type == tk.EventType.Enter:           # Mouse enter
-            # print(f'{"Mouse enter:<15"}')
             self.mouse_over = True
             self.update_placeholder()
             if self.TooltipObject:
                 self.TooltipObject.enter(event)
         elif event.type == tk.EventType.Leave:         # Mouse leave
-            # print(f'{"Mouse leave:<15"}')
             self.mouse_over = False
             self.update_placeholder()
             if self.TooltipObject:
                 self.TooltipObject.leave(event)
         elif event.type == tk.EventType.FocusIn:       # Focus in
-            # print(f'{"Focus in:<15"}')
             self.has_focus = True
             self.update_placeholder()
         elif event.type == tk.EventType.FocusOut:      # Focus out
-            # print(f'{"Focus out:<15"}')
             self.has_focus = False
             self.update_placeholder()
 

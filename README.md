@@ -214,14 +214,16 @@ Here's that Demo Program running in browser:
 
 Seems most projects have something to say about AI usage now.  This is my **opinion** and how I've decided to use AI.  It's what's right for me.  It might not be right for you or anyone else.
 
-I use LLMs to search and summarize documentation, lookup errors, do research, get knowledge.  I don't use LLMs to write code.  My reason is very simple.  
+I use LLMs to search and summarize documentation, lookup errors, do research, get knowledge, analyze data, and prototype. I don't use LLMs to write PySimpleGUI code.  My reason is very simple.  
 
 ### **I like to write code.**  
 
 I fell in love with programming 50 years ago.  Writing software is my happy place.  It's an "I **get to** write software" thing.
-AI can generate lots of things.  The feeling I get writing software is not one of the things AI can generate.
+AI can generate lots of things.  The feeling I get writing software is not one of the things AI can generate. I'm not in a hurry and can take time to enjoy the process.
 
-I'm not in a hurry.  If I wanted code written for me, I would have opened the project up to pull requests years ago, but I didn't because I wanted to write the code.  It's fun!
+I've heard several software engineers talk about the addictive pull that they feel when using LLMs to write code.  One side effect in particular I want to avoid... lack of engagement with the product being developed.  When LLMs are used to write large amounts of code, some engineers have reported they don't feel as committed, don't a sense of ownership, and lack the passion they normally feel for projects they've devloped in the past.  That doesn't sound like fun to me,
+
+
 
 ### PySimpleGUI in the AI era
 
