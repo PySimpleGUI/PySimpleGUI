@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.22"
+version = "6.2.23"
 
 
 
@@ -100,6 +100,7 @@ Changelog since last major release
 6.2.21       9-Jul-2026 Changed Input.update to trigger a placeholder update anytime the value is changed via update. 
                             Important for when a Window.settings_restore call happens
 6.2.22      10-Jul-2026 Added placeholder_justification to Input element.  The placeholder justification can be different than the normal data.
+6.2.23      10-Jul-2026 Added gear and degree symbols.
 """
 
 
@@ -643,6 +644,8 @@ SYMBOL_RIGHT_ARROWHEAD = '⮞'
 SYMBOL_UP_ARROWHEAD = '⮝'
 SYMBOL_DOWN_ARROWHEAD = '⮟'
 SYMBOL_HOURGLASS = '⌛' if running_windows() or running_mac() else ''
+SYMBOL_GEAR = '⛭'
+SYMBOL_DEGREE= '°'
 
 if sum([int(i) for i in tclversion_detailed.split('.')]) > 19:
     SYMBOL_TITLEBAR_MINIMIZE = '_'
