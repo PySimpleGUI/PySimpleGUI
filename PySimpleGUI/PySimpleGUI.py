@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.23"
+version = "6.2.24"
 
 
 
@@ -101,6 +101,7 @@ Changelog since last major release
                             Important for when a Window.settings_restore call happens
 6.2.22      10-Jul-2026 Added placeholder_justification to Input element.  The placeholder justification can be different than the normal data.
 6.2.23      10-Jul-2026 Added gear and degree symbols.
+6.2.24      11-Jul-2026 Added propogate_to_window param to Element.  This could go really badly.  The right click code is weird and quirky.  Hoping this will make it more dynamic
 """
 
 
@@ -1231,7 +1232,6 @@ class Element:
         :type event:
 
         """
-
         if self.Type == ELEM_TYPE_TAB_GROUP:
             try:
                 index = self.Widget.index('@{},{}'.format(event.x, event.y))
@@ -1848,12 +1848,14 @@ class Element:
         self.ParentForm._grab_anywhere_include_these_list.append(self.Widget)
 
 
-    def set_right_click_menu(self, menu=None):
+    def set_right_click_menu(self, menu=None, propogate_to_window=False):
         """
         Sets a right click menu for an element.
         If a menu is already set for the element, it will call the tkinter destroy method to remove it
         :param menu:                   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type menu:                    List[List[ List[str] | str ]]
+        :param propogate_to_window     If true, then the window's right click menu will also be modified
+        :type propogate_to_window:     bool
         """
         if menu == MENU_RIGHT_CLICK_DISABLED:
             return
@@ -1862,40 +1864,43 @@ class Element:
             if menu is None:
                 return
         if menu:
-            # If previously had a menu destroy it
-            if self.TKRightClickMenu:
-                try:
-                    self.TKRightClickMenu.destroy()     # just in case there's a problem let's not crash
-                except:
-                    pass
-            top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
-
-            if self.ParentForm.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(bg=self.ParentForm.right_click_menu_background_color)
-            if self.ParentForm.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(fg=self.ParentForm.right_click_menu_text_color)
-            if self.ParentForm.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(disabledforeground=self.ParentForm.right_click_menu_disabled_text_color)
-            if self.ParentForm.right_click_menu_font is not None:
-                top_menu.config(font=self.ParentForm.right_click_menu_font)
-
-            if self.ParentForm.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(activeforeground=self.ParentForm.right_click_menu_selected_colors[0])
-            if self.ParentForm.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(activebackground=self.ParentForm.right_click_menu_selected_colors[1])
-            AddMenuItem(top_menu, menu[1], self, right_click_menu=True)
-            self.TKRightClickMenu = top_menu
-            if self.ParentForm.RightClickMenu:            # if the top level has a right click menu, then setup a callback for the Window itself
+            # If previously had a menu destroy it if no longer needed
+            if self.TKRightClickMenu is not None:
+                if (self.TKRightClickMenu != self.ParentForm.TKRightClickMenu) or propogate_to_window:
+                    # print(f'set menu - destroying {id(self.TKRightClickMenu)=}')
+                    try:
+                        self.TKRightClickMenu.destroy()     # just in case there's a problem let's not crash
+                    except:
+                        pass
+        top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
+        # Style the meny
+        if self.ParentForm.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(bg=self.ParentForm.right_click_menu_background_color)
+        if self.ParentForm.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(fg=self.ParentForm.right_click_menu_text_color)
+        if self.ParentForm.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(disabledforeground=self.ParentForm.right_click_menu_disabled_text_color)
+        if self.ParentForm.right_click_menu_font is not None:
+            top_menu.config(font=self.ParentForm.right_click_menu_font)
+        if self.ParentForm.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activeforeground=self.ParentForm.right_click_menu_selected_colors[0])
+        if self.ParentForm.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activebackground=self.ParentForm.right_click_menu_selected_colors[1])
+        AddMenuItem(top_menu, menu[1], self, right_click_menu=True)
+        self.TKRightClickMenu = top_menu
+        if propogate_to_window:
+            if self.ParentForm.RightClickMenu:
+                self.ParentForm.TKRightClickMenu = top_menu
+                self.ParentForm.RightClickMenu = menu
                 if self.ParentForm.TKRightClickMenu is None:
-                    self.ParentForm.TKRightClickMenu = top_menu
-                    if (running_mac()):
+                    if running_mac():
                         self.ParentForm.TKroot.bind('<ButtonRelease-2>', self.ParentForm._RightClickMenuCallback)
                     else:
                         self.ParentForm.TKroot.bind('<ButtonRelease-3>', self.ParentForm._RightClickMenuCallback)
-            if (running_mac()):
-                self.Widget.bind('<ButtonRelease-2>', self._RightClickMenuCallback)
-            else:
-                self.Widget.bind('<ButtonRelease-3>', self._RightClickMenuCallback)
+        if running_mac():
+            self.Widget.bind('<ButtonRelease-2>', self._RightClickMenuCallback)
+        else:
+            self.Widget.bind('<ButtonRelease-3>', self._RightClickMenuCallback)
 
 
     def save_element_screenshot_to_disk(self, filename=None):
