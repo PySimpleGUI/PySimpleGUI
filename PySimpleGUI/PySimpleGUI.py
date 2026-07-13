@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.24"
+version = "6.2.25"
 
 
 
@@ -102,6 +102,7 @@ Changelog since last major release
 6.2.22      10-Jul-2026 Added placeholder_justification to Input element.  The placeholder justification can be different than the normal data.
 6.2.23      10-Jul-2026 Added gear and degree symbols.
 6.2.24      11-Jul-2026 Added propogate_to_window param to Element.  This could go really badly.  The right click code is weird and quirky.  Hoping this will make it more dynamic
+6.2.25      13-Jul-2026 Added Bug fix for applying images via update to Image, Button and Tab elements that was introduced with the mouseover code.
 """
 
 
@@ -5508,7 +5509,7 @@ class Button(Element):
             image = image.subsample(image_subsample)
         if image_zoom is not None:
             image = image.zoom(int(image_zoom))
-        if image_size is not None:
+        if image_size is not None and image_size != (None, None):
             width, height = image_size
         else:
             width, height = image.width(), image.height()
@@ -6193,11 +6194,10 @@ class Image(Element):
             image = image.subsample(image_subsample)
         if image_zoom is not None:
             image = image.zoom(int(image_zoom))
-        if image_size is not None:
+        if image_size is not None and image_size != (None, None):
             width, height = image_size
         else:
             width, height = image.width(), image.height()
-
 
         self.tktext_label.configure(image='')  # clear previous image
         if self.tktext_label.image is not None:
@@ -7808,7 +7808,7 @@ class Tab(Element):
             image = image.subsample(image_subsample)
         if image_zoom is not None:
             image = image.zoom(int(image_zoom))
-        if image_size is not None:
+        if image_size is not None and image_size != (None, None):
             width, height = image_size
         else:
             width, height = image.width(), image.height()
