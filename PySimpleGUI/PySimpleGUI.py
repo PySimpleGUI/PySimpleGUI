@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.25"
+version = "6.2.26"
 
 
 
@@ -103,6 +103,7 @@ Changelog since last major release
 6.2.23      10-Jul-2026 Added gear and degree symbols.
 6.2.24      11-Jul-2026 Added propogate_to_window param to Element.  This could go really badly.  The right click code is weird and quirky.  Hoping this will make it more dynamic
 6.2.25      13-Jul-2026 Added Bug fix for applying images via update to Image, Button and Tab elements that was introduced with the mouseover code.
+6.2.26      17-Jul-2026 Automatically restart user's program after upgrading to the PySimpleGUI maint release. REALLY hoping I didn't screw this one up since it'll require manually reinstalling most likely 😬.  Also adding restarts to applications that are upgrading PySimpleGUI.  sg.execute_restart(sys.argv[0]) is the recommended call for users to make to restart.
 """
 
 
@@ -23854,18 +23855,17 @@ def execute_restart(your_filename, parms=''):
     Restarts your program.  The currently running process is exited and a new one is started.
     NOTE - this function calls exit and thus will not return
 
-    :param your_filename:       Set this parm to __file__
+    :param your_filename:       Normally set this parm to sys.argv[0]
     :type your_filename:        str
     :param parms:               Parameters to pass to your program when it's restarted
     :type parms:                str
 
     """
-
     try:
         execute_py_file(your_filename, parms, pipe_output=False, wait=False)  # restart this program
         exit()      # Exit instead of returning
     except Exception as e:
-        print(f'ERROR restarting your program: {your_filename}')
+        print(f'ERROR restarting your program: {your_filename}', e)
         exit()
 
 
@@ -25342,6 +25342,8 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
             break
         elif event == 'Yes':
             execute_pip_install_package(pip_string, force_reinstall=True)
+            # Restart the user's program after pip install completes
+            execute_restart(sys.argv[0])
             break
         elif event == '-REL NOTES-':
             if release_notes:
@@ -26074,7 +26076,6 @@ def main():
             upgrade_PySimpleGUI_gui()
 
 
-
         i += 1
         # _refresh_debugger()
     print('event = ', event)
@@ -26578,6 +26579,7 @@ def main_command_line():
             print(get_versions())
         elif 'upgrade' in sys.argv:
             upgrade_PySimpleGUI_gui()
+            execute_restart(sys.argv[1:])
         elif 'help' in sys.argv:
             print('PySimpleGUI command line options\n')
             print('python -m PySmpleGUI upgrade', '\n   Open GUI upgrade utility (same as psgupgrade)\n')
