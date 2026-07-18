@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.29"
+version = "6.2.30"
 
 
 
@@ -84,8 +84,8 @@ Changelog since last major release
 6.2.11      29-Jun-2026 Begin working on Mouseover Images for Tabs
 6.2.12       3-Jul-2026 Added use_min_size parm to Window object. Setting to True will cause the window's minimum size to be set when Window created
 6.2.13       4-Jul-2026 Added automatic key creation for non-Input elements.  All Input-style elements get a key automatically assigned if one
-                            is not provided. Other static elements have no key unless explicitly set.  Now all those static elements will get a key with format "KeyID 41B56A4C50"
-                            if one is not specified.
+                            is not provided. Other static elements have no key unless explicitly set.  Now all those static elements will 
+                            get a key with format "KeyID 41B56A4C50" if a key is not specified.
                         Removed dead-code from Window.add_row
                         More code for Tab mouseover images.  What's there is not working so shouldn't be trying it out just yet. (I think) I know the approach I need to take.
 6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
@@ -111,6 +111,7 @@ Changelog since last major release
                         This helps with changing right click menus on the fly.                     
 6.2.29      18-Jul-2026 Fixed right click problem of both a window and an element getting the click event. Learned can return 'break' from the
                             element's right click and it will stop propogation of the click to the window
+6.2.30      18-Jul-2026 Added location_anchor parameter to all of the popups.
 """
 
 
@@ -20758,7 +20759,7 @@ def clipboard_get():
 
 def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
           auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=None, location=(None, None), relative_location=(None, None), any_key_closes=False, image=None, modal=True, button_justification=None, drop_whitespace=True):
+          keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, any_key_closes=False, image=None, modal=True, button_justification=None, drop_whitespace=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -20801,6 +20802,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type location:               (int, int)
     :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:      (int, int)
+    :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:        (str)
     :param keep_on_top:           If True the window will remain above all current windows
     :type keep_on_top:            (bool)
     :param any_key_closes:        If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
@@ -20899,7 +20902,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
 
     window = Window(_title, layout, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor,
                     return_keyboard_events=any_key_closes,
                     modal=modal)
 
@@ -20931,7 +20934,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, no_buttons=False, button_justification='l', auto_close=False,
-                   auto_close_duration=None, size=(None, None), location=(None, None), relative_location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False,
+                   auto_close_duration=None, size=(None, None), location=(None, None), relative_location=(None, None), location_anchor=None, non_blocking=False, no_titlebar=False, grab_anywhere=False,
                    keep_on_top=None, font=None, image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -20959,6 +20962,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type location:               (int, int)
     :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:      (int, int)
+    :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:        (str)
     :param non_blocking:          if True the call will immediately return rather than waiting on user input
     :type non_blocking:           (bool)
     :param background_color:      color of background
@@ -21038,7 +21043,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         layout[-1] += [Sizegrip()]
 
     window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                    auto_close_duration=auto_close_duration, location=location, relative_location=relative_location, resizable=True, font=font, background_color=background_color,
+                    auto_close_duration=auto_close_duration, location=location, relative_location=relative_location, location_anchor=location_anchor, resizable=True, font=font, background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal, icon=icon)
     if non_blocking:
         button, values = window.read(timeout=0)
@@ -21061,7 +21066,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
 # --------------------------- popup_no_buttons ---------------------------
 def popup_no_buttons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                      auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                     no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                     no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), location_anchor=None, relative_location=(None, None), image=None, modal=True):
     """Show a Popup but without any buttons
 
     :param *args:               Variable number of items to display
@@ -21092,6 +21097,8 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21102,14 +21109,14 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_non_blocking ---------------------------
 def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                        text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
                        line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                       location=(None, None), relative_location=(None, None), image=None, modal=False):
+                       location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=False):
     """
     Show Popup window and immediately return (does not block)
 
@@ -21145,6 +21152,8 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -21157,13 +21166,13 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_quick - a NonBlocking, Self-closing Popup  ---------------------------
 def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                 text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=False):
+                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=False):
     """
     Show Popup box that doesn't block and closes itself
 
@@ -21201,6 +21210,8 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -21213,13 +21224,13 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_quick_message - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                         text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=True, location=(None, None), relative_location=(None, None), image=None, modal=False):
+                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=True, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=False):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -21257,6 +21268,8 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -21268,13 +21281,13 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
 def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                       text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
-                      line_width=None, font=None, grab_anywhere=True, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                      line_width=None, font=None, grab_anywhere=True, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -21310,6 +21323,8 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21321,14 +21336,14 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- PopupAutoClose ---------------------------
 def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                      auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                     location=(None, None), relative_location=(None, None), image=None, modal=True):
+                     location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """Popup that closes itself after some time period
 
     :param *args:               Variable number of items to display
@@ -21365,6 +21380,8 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21377,13 +21394,13 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
-                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_error ---------------------------
 def popup_error(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Popup with colored button and 'Error' as button text
 
@@ -21419,6 +21436,8 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21431,13 +21450,13 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
                  auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_cancel ---------------------------
 def popup_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Display Popup with "cancelled" button text
 
@@ -21473,6 +21492,8 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21484,13 +21505,13 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_ok ---------------------------
 def popup_ok(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
              auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-             no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+             no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Display Popup with OK button only
 
@@ -21526,6 +21547,8 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21536,13 +21559,13 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     return popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_ok_cancel ---------------------------
 def popup_ok_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                     auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
-                    no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                    no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Display popup with OK and Cancel buttons
 
@@ -21578,6 +21601,8 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21589,13 +21614,13 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 # --------------------------- popup_yes_no ---------------------------
 def popup_yes_no(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, modal=True):
     """
     Display Popup with Yes and No buttons
 
@@ -21631,6 +21656,8 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param modal:               If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -21642,7 +21669,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, image=image, modal=modal)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, image=image, modal=modal)
 
 
 ##############################################################################
@@ -21654,7 +21681,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
 
 def popup_get_folder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                      background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                     grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), initial_folder=None, image=None, modal=True, history=False,
+                     grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, initial_folder=None, image=None, modal=True, history=False,
                      history_setting_filename=None):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
@@ -21689,6 +21716,8 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :type location:                  (int, int)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:         (int, int)
+    :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:           (str)
     :param initial_folder:           location in filesystem to begin browsing
     :type initial_folder:            (str)
     :param image:                    Image to include at the top of the popup window
@@ -21763,7 +21792,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location, relative_location=relative_location, modal=modal)
+                    location=location, relative_location=relative_location, location_anchor=location_anchor, modal=modal)
 
     while True:
         event, values = window.read()
@@ -21797,7 +21826,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                    file_types=FILE_TYPES_ALL_FILES,
                    no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                    icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                   location=(None, None), relative_location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
+                   location=(None, None), relative_location=(None, None), location_anchor=None, initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
                    history_setting_filename=None):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -21840,6 +21869,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type location:                  (int, int)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:         (int, int)
+    :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:           (str)
     :param initial_folder:           location in filesystem to begin browsing
     :type initial_folder:            (str)
     :param image:                    Image to include at the top of the popup window
@@ -21999,7 +22030,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
-                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, modal=modal, finalize=True)
+                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, modal=modal, finalize=True)
 
     if running_linux() and show_hidden is True:
         window.TKroot.tk.eval('catch {tk_getOpenFile -badoption}')  # dirty hack to force autoloading of Tk's file dialog code
@@ -22036,7 +22067,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
 def popup_get_text(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), image=None, history=False, history_setting_filename=None, modal=True):
+                   grab_anywhere=False, keep_on_top=None, location=(None, None), relative_location=(None, None), location_anchor=None, image=None, history=False, history_setting_filename=None, modal=True):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
@@ -22070,6 +22101,8 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :type location:                  (int, int)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:         (int, int)
+    :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:           (str)
     :param image:                    Image to include at the top of the popup window
     :type image:                     (str) or (bytes)
     :param history:                  If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided
@@ -22119,7 +22152,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, finalize=True, modal=modal, font=font)
+                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, relative_location=relative_location, location_anchor=location_anchor, finalize=True, modal=modal, font=font)
     window.force_focus()
     window['-INPUT-'].set_focus()
 
@@ -22151,7 +22184,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
 
 
 def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True,
-                   location=(None, None), relative_location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, day_font = 'TkFixedFont 9', mon_year_font = 'TkFixedFont 10', arrow_font = 'TkFixedFont 7', modal=True):
+                   location=(None, None), relative_location=(None, None), location_anchor=None, close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, day_font = 'TkFixedFont 9', mon_year_font = 'TkFixedFont 10', arrow_font = 'TkFixedFont 7', modal=True):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -22169,6 +22202,8 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type location:              (int, int)
     :param relative_location:    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:     (int, int)
+    :param location_anchor:      Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:       (str)
     :param title:                Title that will be shown on the window
     :type title:                 (str)
     :param close_when_chosen:    If True, the window will close and function return when a day is clicked
@@ -22266,7 +22301,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
         layout += [[Button('Ok', border_width=0, font='TkFixedFont 8'), Button('Cancel', border_width=0, font='TkFixedFont 8')]]
 
     window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False,
-                    location=location, relative_location=relative_location, finalize=True, icon=icon)
+                    location=location, relative_location=relative_location, location_anchor=location_anchor, finalize=True, icon=icon)
 
     update_days(window, cur_month, cur_year, begin_at_sunday_plus)
 
@@ -22322,7 +22357,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
 # --------------------------- PopupAnimated ---------------------------
 
 def popup_animated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True,
-                   location=(None, None), relative_location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None, no_buffering=False):
+                   location=(None, None), relative_location=(None, None), location_anchor=None, alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None, no_buffering=False):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -22349,6 +22384,8 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type location:             (int, int)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
     :type relative_location:    (int, int)
+    :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:      (str)
     :param alpha_channel:       Window transparency 0 = invisible 1 = completely visible. Values between are see through
     :type alpha_channel:        (float)
     :param time_between_frames: Amount of time in milliseconds between each frame
@@ -22382,7 +22419,7 @@ def popup_animated(image_source, message=None, background_color=None, text_color
         window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
-                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon, relative_location=relative_location)
+                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon, relative_location=relative_location, location_anchor=location_anchor)
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
