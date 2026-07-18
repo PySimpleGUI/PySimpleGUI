@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.27"
+version = "6.2.28"
 
 
 
@@ -107,6 +107,8 @@ Changelog since last major release
                         since it'll require manually reinstalling most likely 😬.  Also adding restarts to applications that are upgrading PySimpleGUI.  
                         sg.execute_restart(sys.argv[0]) is the recommended call for users to make to restart.
 6.2.27      17-Jul-2026 Added an autoclose popup before the pip restart happens                        
+6.2.28      18-Jul-2026 Added setting element's right click menu definition if the element gets a right click menu through the window's menu definition.
+                        This helps with changing right click menus on the fly.                     
 """
 
 
@@ -15820,6 +15822,7 @@ def _add_right_click_menu(element, toplevel_form):
             top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
         AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
         element.TKRightClickMenu = top_menu
+        element.RightClickMenu = menu                   # Store the menu in the element in case the window was the source
         if (running_mac()):
             element.Widget.bind('<ButtonRelease-2>', element._RightClickMenuCallback)
         else:
@@ -16094,6 +16097,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
             AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
             element.TKRightClickMenu = top_menu
+            element.RightClickMenu = menu  # Store the menu in the element in case the window was the source
             if toplevel_form.RightClickMenu:  # if the top level has a right click menu, then setup a callback for the Window itself
                 if toplevel_form.TKRightClickMenu is None:
                     toplevel_form.TKRightClickMenu = top_menu

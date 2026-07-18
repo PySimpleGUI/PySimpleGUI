@@ -11,7 +11,7 @@ def readme():
 
 setuptools.setup(
     name="pysimplegui",
-    version="6.2.27",
+    version="6.2.28",
     author="PySimpleGUI",
     author_email="PySimpleGUI@PySimpleGUI.org",
     description="Python GUIs for Humans. Launched in 2018. NEW LGPL3 Version 6 released in 2026.",
