@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.26"
+version = "6.2.27"
 
 
 
@@ -103,7 +103,10 @@ Changelog since last major release
 6.2.23      10-Jul-2026 Added gear and degree symbols.
 6.2.24      11-Jul-2026 Added propogate_to_window param to Element.  This could go really badly.  The right click code is weird and quirky.  Hoping this will make it more dynamic
 6.2.25      13-Jul-2026 Added Bug fix for applying images via update to Image, Button and Tab elements that was introduced with the mouseover code.
-6.2.26      17-Jul-2026 Automatically restart user's program after upgrading to the PySimpleGUI maint release. REALLY hoping I didn't screw this one up since it'll require manually reinstalling most likely 😬.  Also adding restarts to applications that are upgrading PySimpleGUI.  sg.execute_restart(sys.argv[0]) is the recommended call for users to make to restart.
+6.2.26      17-Jul-2026 Automatically restart user's program after upgrading to the PySimpleGUI maint release. REALLY hoping I didn't screw this one up
+                        since it'll require manually reinstalling most likely 😬.  Also adding restarts to applications that are upgrading PySimpleGUI.  
+                        sg.execute_restart(sys.argv[0]) is the recommended call for users to make to restart.
+6.2.27      17-Jul-2026 Added an autoclose popup before the pip restart happens                        
 """
 
 
@@ -25343,6 +25346,7 @@ def upgrade_PySimpleGUI_gui(no_gui=False):
         elif event == 'Yes':
             execute_pip_install_package(pip_string, force_reinstall=True)
             # Restart the user's program after pip install completes
+            popup_auto_close('Restarting your application following the pip install...\nThis window closes in 3 seconds', auto_close_duration=3)
             execute_restart(sys.argv[0])
             break
         elif event == '-REL NOTES-':
