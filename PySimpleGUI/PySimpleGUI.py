@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.28"
+version = "6.2.29"
 
 
 
@@ -109,6 +109,8 @@ Changelog since last major release
 6.2.27      17-Jul-2026 Added an autoclose popup before the pip restart happens                        
 6.2.28      18-Jul-2026 Added setting element's right click menu definition if the element gets a right click menu through the window's menu definition.
                         This helps with changing right click menus on the fly.                     
+6.2.29      18-Jul-2026 Fixed right click problem of both a window and an element getting the click event. Learned can return 'break' from the
+                            element's right click and it will stop propogation of the click to the window
 """
 
 
@@ -1257,6 +1259,7 @@ class Element:
         if self.Type == ELEM_TYPE_GRAPH:
             self._update_position_for_returned_values(event)
         self.ParentForm._right_click_menu_element = self
+        return 'break'                                      # Tell tkinter no to call the window's right click menu
 
     def _tearoff_menu_callback(self, parent, menu):
         """
