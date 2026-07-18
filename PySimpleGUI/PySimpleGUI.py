@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.30"
+version = "6.2.31"
 
 
 
@@ -112,6 +112,8 @@ Changelog since last major release
 6.2.29      18-Jul-2026 Fixed right click problem of both a window and an element getting the click event. Learned can return 'break' from the
                             element's right click and it will stop propogation of the click to the window
 6.2.30      18-Jul-2026 Added location_anchor parameter to all of the popups.
+6.2.31      18-Jul-2026 Changed a LOT of docstrings for parms that are location and size type of parameters.  Added (None, None) to valid types.
+                        Added window_anchor parameter easy_print and the debug window.
 """
 
 
@@ -1650,7 +1652,7 @@ class Element:
         It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
 
         :param size: The size in characters, rows typically. In some cases they are pixels
-        :type size:  (int, int)
+        :type size:  (int, int) | (None, None)
         """
         try:
             if size[0] != None:
@@ -2522,7 +2524,7 @@ class Combo(Element):
         :param visible:          control visibility of element
         :type visible:           (bool)
         :param size:             width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
-        :type size:              (int, int)
+        :type size:              (int, int) | (None, None)
         :param select:           if True, then the text will be selected, if False then selection will be cleared
         :type select:            (bool)
         :param background_color: color of background
@@ -2761,7 +2763,7 @@ class OptionMenu(Element):
         :param visible:  control visibility of element
         :type visible:   (bool)
         :param size:     (width, height) size in characters (wide), height is ignored and present to be consistent with other elements
-        :type size:      (int, int) (width, UNUSED)
+        :type size:      (int, int) | (width, None) | (None, None)
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
@@ -4969,7 +4971,7 @@ class Button(Element):
         :param button_type:           You  should NOT be setting this directly. ONLY the shortcut functions set this
         :type button_type:            (int)
         :param target:                key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
-        :type target:                 str | (int, int)
+        :type target:                 str | (int, int) | (None, None)
         :param tooltip:               text, that will appear when mouse hovers over the element
         :type tooltip:                (str)
         :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).
@@ -4991,7 +4993,7 @@ class Button(Element):
         :param image_data:            Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data:             bytes | str
         :param image_size:            Size of the image in pixels (width, height)
-        :type image_size:             (int, int)
+        :type image_size:             (int, int) | (None, None)
         :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:        (int)
         :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
@@ -5397,7 +5399,7 @@ class Button(Element):
         :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:             (int)
         :param image_size:            Size of the image in pixels (width, height)
-        :type image_size:             (int, int)
+        :type image_size:             (int, int) | (None, None)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -5503,7 +5505,7 @@ class Button(Element):
         :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:               (int)
         :param image_size:              Size of the image in pixels (width, height)
-        :type image_size:               (int, int)
+        :type image_size:               (int, int) | (None, None)
         :param button_style:            The ttk style object used to configure the button
         :type button_style:             ttk.Style
         :param style_name:              Style name set when Button was created
@@ -5593,7 +5595,7 @@ class ButtonMenu(Element):
         :param image_data:                Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data:                 bytes | str
         :param image_size:                Size of the image in pixels (width, height)
-        :type image_size:                 (int, int)
+        :type image_size:                 (int, int) | (None, None)
         :param image_subsample:           amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:            (int)
         :param image_zoom:                amount to increase the size of the image. 2=twice size, 3=3 times, etc
@@ -5713,7 +5715,7 @@ class ButtonMenu(Element):
         :param image_source:    new image if image is to be changed. Can be a filename or a base64 encoded byte-string
         :type image_source:     (str | bytes)
         :param image_size:      Size of the image in pixels (width, height)
-        :type image_size:       (int, int)
+        :type image_size:       (int, int) | (None, None)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample:  (int)
         :param image_zoom:      amount to increase the size of the image. 2=twice size, 3=3 times, etc
@@ -6002,7 +6004,7 @@ class Image(Element):
         :param background_color: color of background
         :type background_color:
         :param size:             (width, height) size of image in pixels
-        :type size:              (int, int)
+        :type size:              (int, int) | (None, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
@@ -6188,7 +6190,7 @@ class Image(Element):
         :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:               (int)
         :param image_size:              Size of the image in pixels (width, height)
-        :type image_size:               (int, int)
+        :type image_size:               (int, int) | (None, None) | None
         :param button_style:            The ttk style object used to configure the button
         :type button_style:             ttk.Style
         :param style_name:              Style name set when Button was created
@@ -6455,11 +6457,11 @@ class Graph(Element):
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, float_values=False, border_width=0, metadata=None):
         """
         :param canvas_size:       size of the canvas area in pixels
-        :type canvas_size:        (int, int)
+        :type canvas_size:        (int, int) | (None, None)
         :param graph_bottom_left: (x,y) The bottoms left corner of your coordinate system
-        :type graph_bottom_left:  (int, int)
+        :type graph_bottom_left:  (int, int) | (None, None)
         :param graph_top_right:   (x,y) The top right corner of  your coordinate system
-        :type graph_top_right:    (int, int)
+        :type graph_top_right:    (int, int) | (None, None)
         :param background_color:  background color of the drawing area
         :type background_color:   (str)
         :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
@@ -7224,7 +7226,7 @@ class Frame(Element):
         :param relief:                relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief:                 (str)
         :param size:                  (width, height) Sets an initial hard-coded size for the Frame. This used to be a problem, but was fixed in 4.53.0 and works better than Columns when using the size paramter
-        :type size:                   (int, int)
+        :type size:                   (int, int) | (None, None)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int)  | (None, None) | int
         :param font:                  specifies the  font family, size, etc. for the TITLE. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -7802,7 +7804,7 @@ class Tab(Element):
         :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
         :type image_zoom:               (int)
         :param image_size:              Size of the image in pixels (width, height)
-        :type image_size:               (int, int)
+        :type image_size:               (int, int) | (None, None)
         :param button_style:            The ttk style object used to configure the button
         :type button_style:             ttk.Style
         :param style_name:              Style name set when Button was created
@@ -8245,7 +8247,7 @@ class Slider(Element):
         :param disabled:               set disable state for element
         :type disabled:                (bool)
         :param size:                   (l=length chars/rows, w=width pixels)
-        :type size:                    (int, int)
+        :type size:                    (int, int) | (None, None)
         :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                       (int, int)  | (None, None)
         :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -8317,7 +8319,7 @@ class Slider(Element):
         :param value:    sets current slider value
         :type value:     int | float
         :param range:    Sets a new range for slider
-        :type range:     (int, int) | Tuple[float, float
+        :type range:     (int, int) | (float, float) | (None, None)
         :param disabled: disable or enable state of the element
         :type disabled:  (bool)
         :param visible:  control visibility of element
@@ -8812,7 +8814,7 @@ class Pane(Element):
         :param background_color: color of background
         :type background_color:  (str)
         :param size:             (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
-        :type size:              (int, int)
+        :type size:              (int, int) | (None, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None)
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
@@ -8936,7 +8938,7 @@ class Menu(Element):
         :param disabled_text_color:       color to use for text when item in submenu, not the menubar itself, is disabled. Can be in #RRGGBB format or a color name "black"
         :type disabled_text_color:        (str)
         :param size:                      Not used in the tkinter port
-        :type size:                       (int, int)
+        :type size:                       (int, int) | (None, None)
         :param s:                         Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                          (int, int)  | (None, None)
         :param tearoff:                   if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
@@ -9156,7 +9158,7 @@ class Table(Element):
         :param sbar_relief:                 Scrollbar relief that will be used for the "thumb" of the scrollbar (the thing you grab that slides). Should be a constant that is defined at starting with "RELIEF_" - RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID
         :type sbar_relief:                  (str)
         :param size:                    DO NOT USE! Use num_rows instead
-        :type size:                     (int, int)
+        :type size:                     (int, int) | (None, None)
         :param change_submits:          DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :type change_submits:           (bool)
         :param enable_events:           Turns on the element specific events. Table events happen when row is clicked
@@ -10233,7 +10235,7 @@ class Window:
         :param default_element_size:                 size in characters (wide) and rows (high) for all elements in this window
         :type default_element_size:                  (int, int) - (width, height)
         :param default_button_element_size:          (width, height) size in characters (wide) and rows (high) for all Button elements in this window
-        :type default_button_element_size:           (int, int)
+        :type default_button_element_size:           (int, int) | (None, None)
         :param auto_size_text:                       True if Elements in Window should be sized to exactly fir the length of text
         :type auto_size_text:                        (bool)
         :param auto_size_buttons:                    True if Buttons in this Window should be sized to exactly fit the text on this.
@@ -10243,15 +10245,15 @@ class Window:
         :param location_anchor:                      Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
         :type location_anchor:                       (str)
         :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. This location is relative to the location the window would be created. Note they can be negative.
-        :type relative_location:                     (int, int)
+        :type relative_location:                     (int, int) | (None, None)
         :param auto_save_location:                   If True the windows location will be automatically saved to a settings file and will be reloaded next time the program is run. Save happens when window close is detected
         :type auto_save_location:                    (bool)
         :param size:                                 (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead
-        :type size:                                  (int, int)
+        :type size:                                  (int, int) | (None, None)
         :param element_padding:                      Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int)
         :type element_padding:                       (int, int) or ((int, int),(int,int)) or int
         :param margins:                              (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
-        :type margins:                               (int, int)
+        :type margins:                               (int, int) | (None, None)
         :param button_color:                         Default button colors for all buttons in the window
         :type button_color:                          (str, str) | str
         :param font:                                 specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -13450,7 +13452,7 @@ class SystemTray:
         :param alpha:                  Alpha channel. 0 - invisible 1 - fully visible
         :type alpha:                   (float)
         :param location:               Location on the screen to display the window
-        :type location:                (int, int)
+        :type location:                (int, int) | None
         :return:                       (int) reason for returning
         :rtype:                        (int)
         """
@@ -13472,7 +13474,7 @@ class SystemTray:
         layout = [[Graph(canvas_size=(win_width, win_height), graph_bottom_left=(0, win_height), graph_top_right=(win_width, 0), key="-GRAPH-",
                          background_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR, enable_events=True)]]
 
-        win_location = location if location is not None else (screen_res_x - win_width - win_margin[0], screen_res_y - win_height - win_margin[1])
+        win_location = location if location not in (None, (None, None)) else (screen_res_x - win_width - win_margin[0], screen_res_y - win_height - win_margin[1])
         window = Window(title, layout, background_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR, no_titlebar=True,
                         location=win_location, keep_on_top=True, alpha_channel=0, margins=(0, 0), element_padding=(0, 0), grab_anywhere=True, finalize=True)
 
@@ -13784,7 +13786,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -13843,7 +13845,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPES
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -13904,7 +13906,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=FILE_TYPE
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -13968,7 +13970,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_T
     :param tooltip:           text, that will appear when mouse hovers over the element
     :type tooltip:            (str)
     :param size:              (w,h) w=characters-wide, h=rows-high
-    :type size:               (int, int)
+    :type size:               (int, int) | (None, None) | int
     :param s:                 Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                  (int, int)  | (None, None) | int
     :param auto_size_button:  True if button size is determined by button text
@@ -14027,7 +14029,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=FILE_TYPES
     :param tooltip:           text, that will appear when mouse hovers over the element
     :type tooltip:            (str)
     :param size:              (w,h) w=characters-wide, h=rows-high
-    :type size:               (int, int)
+    :type size:               (int, int) | (None, None) | int
     :param s:                 Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                  (int, int)  | (None, None) | int
     :param auto_size_button:  True if button size is determined by button text
@@ -14072,7 +14074,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param button_text:      text in the button (Default value = 'Save')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14171,7 +14173,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param button_text:      text in the button (Default value = 'Open')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14220,7 +14222,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param button_text:      text in the button (Default value = 'OK')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14269,7 +14271,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param button_text:      text in the button (Default value = 'Ok')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14318,7 +14320,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param button_text:      text in the button (Default value = 'Cancel')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14367,7 +14369,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param button_text:      text in the button (Default value = 'Quit')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14416,7 +14418,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param button_text:      text in the button (Default value = 'Exit')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14465,7 +14467,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param button_text:      text in the button (Default value = 'Yes')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14514,7 +14516,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param button_text:      text in the button (Default value = 'No')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14563,7 +14565,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param button_text:      text in the button (Default value = 'Help')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14615,7 +14617,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param button_text:      text in the button (Default value = '')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14682,7 +14684,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14744,7 +14746,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14804,7 +14806,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -14871,7 +14873,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -15012,7 +15014,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param border_width:           width of border around element
     :type border_width:            width of border around element
     :param size:                   (w,h) w=characters-wide, h=rows-high
-    :type size:                    (int, int)
+    :type size:                    (int, int) | (None, None) | int
     :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                       (int, int)  | (None, None) | int
     :param auto_size_button:       True if button size is determined by button text
@@ -15050,7 +15052,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param no_titlebar:            if True no titlebar will be shown on the date chooser window
     :type no_titlebar:             bool
     :param location:               Location on the screen (x,y) to show the calendar popup window
-    :type location:                (int, int)
+    :type location:                (int, int) | (None, None)
     :param visible:                set initial visibility state of the Button
     :type visible:                 (bool)
     :param metadata:               Anything you want to store along with this button
@@ -15098,7 +15100,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param image_data:       Raw or Base64 representation of the image to put on button. Choose either filename or data
     :type image_data:        bytes | str
     :param image_size:       Size of the image in pixels (width, height)
-    :type image_size:        (int, int)
+    :type image_size:        (int, int) | (None, None)
     :param image_subsample:  amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
     :type image_subsample:   (int)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -15106,7 +15108,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param border_width:     width of border around element
     :type border_width:      (int)
     :param size:             (w,h) w=characters-wide, h=rows-high
-    :type size:              (int, int)
+    :type size:              (int, int) | (None, None) | int
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
     :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
@@ -18497,7 +18499,7 @@ class _QuickMeter(object):
         :param button_color:  button color (foreground, background)
         :type button_color:   (str, str) | str
         :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
-        :type size:           (int, int)
+        :type size:           (int, int) | (None, None)
         :param border_width:  width of border around element
         :type border_width:   (int)
         :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
@@ -18621,7 +18623,7 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     :param button_color:  button color (foreground, background)
     :type button_color:   (str, str) | str
     :param size:          (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
-    :type size:           (int, int)
+    :type size:           (int, int) | (None, None)
     :param border_width:  width of border around element
     :type border_width:   (int)
     :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
@@ -18693,16 +18695,18 @@ def get_complimentary_hex(color):
 class _DebugWin():
     debug_window = None
 
-    def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), font=None, no_titlebar=False, no_button=False,
+    def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), location_anchor=None, font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True, blocking=False):
         """
 
         :param size:                  (w,h) w=characters-wide, h=rows-high
-        :type size:                   (int, int)
+        :type size:                   (int, int) | (None, None)
         :param location:              Location of upper left corner of the window
-        :type location:               (int, int)
+        :type location:               (int, int) | (None, None)
         :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-        :type relative_location:      (int, int)
+        :type relative_location:      (int, int) | (None, None)
+        :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+        :type location_anchor:        (str)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param no_titlebar:           If True no titlebar will be shown
@@ -18711,8 +18715,6 @@ class _DebugWin():
         :type no_button:              (bool)
         :param grab_anywhere:         If True: can grab anywhere to move the window (Default = False)
         :type grab_anywhere:          (bool)
-        :param location:              Location of upper left corner of the window
-        :type location:               (int, int)
         :param do_not_reroute_stdout: bool value
         :type do_not_reroute_stdout:  (bool)
         :param echo_stdout:           If True stdout is sent to both the console and the debug window
@@ -18720,13 +18722,14 @@ class _DebugWin():
         :param resizable:             if True, makes the window resizble
         :type resizable:              (bool)
         :param blocking:              if True, makes the window block instead of returning immediately
-        :type blocking:               (bool)
+        :type blocking:               bool | None
         """
 
         # Show a form that's a running counter
         self.size = size
         self.location = location
         self.relative_location = relative_location
+        self.location_anchor = location_anchor
         self.font = font
         self.no_titlebar = no_titlebar
         self.no_button = no_button
@@ -18754,14 +18757,12 @@ class _DebugWin():
         self.layout[-1] += [Sizegrip()]
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location, relative_location=relative_location,
-                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True, resizable=resizable)
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True, resizable=resizable, location_anchor=location_anchor)
         return
 
     def reopen_window(self):
         if self.window is None or (self.window is not None and self.window.is_closed()):
-            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, font=self.font, no_titlebar=self.no_titlebar,
-                          no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
+            self.__init__(size=self.size, location=self.location, relative_location=self.relative_location, location_anchor=self.location_anchor, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None, blocking=None):
         global SUPPRESS_WIDGET_NOT_FINALIZED_WARNINGS
@@ -18851,7 +18852,7 @@ class _DebugWin():
         self.window = None
 
 
-def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), font=None, no_titlebar=False,
+def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), relative_location=(None, None), location_anchor=None, font=None, no_titlebar=False,
                no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
                erase_all=False, resizable=True, blocking=None, wait=None):
     """
@@ -18867,15 +18868,17 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :param *args:                 stuff to output
     :type *args:                  (Any)
     :param size:                  (w,h) w=characters-wide, h=rows-high
-    :type size:                   (int, int)
+    :type size:                   (int, int) | (None, None)
     :param end:                   end character
     :type end:                    (str)
     :param sep:                   separator character
     :type sep:                    (str)
     :param location:              Location of upper left corner of the window
-    :type location:               (int, int)
+    :type location:               (int, int) | (None, None)
     :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:      (int, int)
+    :type relative_location:      (int, int) | (None, None)
+    :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
+    :type location_anchor:        (str)
     :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                   (str or (str, int[, str]) or None)
     :param no_titlebar:           If True no titlebar will be shown
@@ -18890,8 +18893,6 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type text_color:             (str)
     :param keep_on_top:           If True the window will remain above all current windows
     :type keep_on_top:            (bool)
-    :param location:              Location of upper left corner of the window
-    :type location:               (int, int)
     :param do_not_reroute_stdout: do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here
     :type do_not_reroute_stdout:  (bool)
     :param echo_stdout:           If True stdout is sent to both the console and the debug window
@@ -18912,11 +18913,10 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :rtype:
     """
 
-    blocking = blocking or wait
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable, blocking=blocking)
+                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable, blocking=blocking or wait)
     txt_color, bg_color = _parse_colors_parm(c or colors)
     _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color,
                                  erase_all=erase_all, font=font, blocking=blocking)
@@ -20363,11 +20363,11 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     :param scrollable:       If True then scrollbars will be added
     :type scrollable:        bool
     :param scroll_area_size: Size of the scrollable area (The Column Element used to make scrollable)
-    :type scroll_area_size:  (int, int)
+    :type scroll_area_size:  (int, int) | (None, None)
     :param search_string:    If specified then only themes containing this string will be shown
     :type search_string:     str
     :param location:         Location on the screen to place the window. Defaults to the center like all windows
-    :type location:          (int, int)
+    :type location:          (int, int) | (None, None)
     """
 
     current_theme = theme()
@@ -20799,9 +20799,9 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param grab_anywhere:         If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
     :type grab_anywhere:          (bool)
     :param location:              Location on screen to display the top left corner of window. Defaults to window centered on screen
-    :type location:               (int, int)
+    :type location:               (int, int)  | (None, None)
     :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:      (int, int)
+    :type relative_location:      (int, int) | (None, None)
     :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:        (str)
     :param keep_on_top:           If True the window will remain above all current windows
@@ -20957,11 +20957,11 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :param auto_close_duration:   Older versions only accept int. Time in seconds until window will close
     :type auto_close_duration:    int | float
     :param size:                  (w,h) w=characters-wide, h=rows-high
-    :type size:                   (int, int)
+    :type size:                   (int, int) | (None, None)
     :param location:              Location on the screen to place the upper left corner of the window
-    :type location:               (int, int)
+    :type location:               (int, int) | (None, None)
     :param relative_location:     (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:      (int, int)
+    :type relative_location:      (int, int) | (None, None)
     :param location_anchor:       Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:        (str)
     :param non_blocking:          if True the call will immediately return rather than waiting on user input
@@ -21094,9 +21094,9 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :param grab_anywhere:       If True, than can grab anywhere to move the window (Default = False)
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int)  | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21149,9 +21149,9 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21207,9 +21207,9 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21265,9 +21265,9 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere:        (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21320,9 +21320,9 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21377,9 +21377,9 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21433,9 +21433,9 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21489,9 +21489,9 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21544,9 +21544,9 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21598,9 +21598,9 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21653,9 +21653,9 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param location:            Location of upper left corner of the window
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param image:               Image to include at the top of the popup window
@@ -21695,7 +21695,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param no_window:                if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:                 (bool)
     :param size:                     (width, height) of the InputText Element
-    :type size:                      (int, int)
+    :type size:                      (int, int) | (None, None)
     :param button_color:             button color (foreground, background)
     :type button_color:              (str, str) | str
     :param background_color:         color of background
@@ -21713,9 +21713,9 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param keep_on_top:              If True the window will remain above all current windows
     :type keep_on_top:               (bool)
     :param location:                 Location of upper left corner of the window
-    :type location:                  (int, int)
+    :type location:                  (int, int) | (None, None)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:         (int, int)
+    :type relative_location:         (int, int) | (None, None)
     :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:           (str)
     :param initial_folder:           location in filesystem to begin browsing
@@ -21848,7 +21848,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param no_window:                if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:                 (bool)
     :param size:                     (width, height) of the InputText Element or Combo element if using history feature
-    :type size:                      (int, int)
+    :type size:                      (int, int) | (None, None)
     :param button_color:             Color of the button (text, background)
     :type button_color:              (str, str) | str
     :param background_color:         background color of the entire window
@@ -21866,9 +21866,9 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param keep_on_top:              If True the window will remain above all current windows
     :type keep_on_top:               (bool)
     :param location:                 Location of upper left corner of the window
-    :type location:                  (int, int)
+    :type location:                  (int, int) | (None, None)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:         (int, int)
+    :type relative_location:         (int, int) | (None, None)
     :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:           (str)
     :param initial_folder:           location in filesystem to begin browsing
@@ -22080,7 +22080,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param password_char:            character to be shown instead of actually typed characters. WARNING - if history=True then can't hide passwords
     :type password_char:             (str)
     :param size:                     (width, height) of the input. If not specied a single line Input element used. If height >1 a Mulitline is shown
-    :type size:                      (int, int)
+    :type size:                      (int, int) | (None, None)
     :param button_color:             Color of the button (text, background)
     :type button_color:              (str, str) | str
     :param background_color:         background color of the entire window
@@ -22098,9 +22098,9 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param keep_on_top:              If True the window will remain above all current windows
     :type keep_on_top:               (bool)
     :param location:                 (x,y) Location on screen to display the upper left corner of window
-    :type location:                  (int, int)
+    :type location:                  (int, int) | (None, None)
     :param relative_location:        (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:         (int, int)
+    :type relative_location:         (int, int) | (None, None)
     :param location_anchor:          Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:           (str)
     :param image:                    Image to include at the top of the popup window
@@ -22199,9 +22199,9 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :param icon:                 Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon:                  (str | bytes)
     :param location:             (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
-    :type location:              (int, int)
+    :type location:              (int, int) | (None, None)
     :param relative_location:    (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:     (int, int)
+    :type relative_location:     (int, int) | (None, None)
     :param location_anchor:      Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:       (str)
     :param title:                Title that will be shown on the window
@@ -22381,9 +22381,9 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :param keep_on_top:         If True then Window will remain on top of all other windows currently shownn
     :type keep_on_top:          (bool)
     :param location:            (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param relative_location:   (x,y) location relative to the default location of the window, in pixels. Normally the window centers.  This location is relative to the location the window would be created. Note they can be negative.
-    :type relative_location:    (int, int)
+    :type relative_location:    (int, int) | (None, None)
     :param location_anchor:     Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
     :type location_anchor:      (str)
     :param alpha_channel:       Window transparency 0 = invisible 1 = completely visible. Values between are see through
@@ -22457,7 +22457,7 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
     :param alpha:                  Alpha channel. 0 - invisible 1 - fully visible
     :type alpha:                   (float)
     :param location:               Location on the screen to display the window
-    :type location:                (int, int)
+    :type location:                (int, int) | (None, None)
     :return:                       reason for returning
     :rtype:                        (int)
     """
@@ -22690,7 +22690,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     :param keep_on_top:         If True then Window will remain on top of all other windows currently shownn
     :type keep_on_top:          (bool)
     :param location:            (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
-    :type location:             (int, int)
+    :type location:             (int, int) | (None, None)
     :param alpha_channel:       Window transparency 0 = invisible 1 = completely visible. Values between are see through
     :type alpha_channel:        (float)
     :param time_between_frames: Amount of time in milliseconds between each frame
@@ -24634,7 +24634,7 @@ def show_debugger_window(location=(None, None), *args):
     """
     Shows the large main debugger window
     :param location: Locations (x,y) on the screen to place upper left corner of the window
-    :type location:  (int, int)
+    :type location:  (int, int) | (None, None)
     :return:         None
     :rtype:          None
     """
@@ -24660,7 +24660,7 @@ def show_debugger_popout_window(location=(None, None), *args):
     Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
     :param location: Locations (x,y) on the screen to place upper left corner of the window
-    :type location:  (int, int)
+    :type location:  (int, int) | (None, None)
     :return:         None
     :rtype:          None
     """
