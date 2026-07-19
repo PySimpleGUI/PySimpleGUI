@@ -2106,8 +2106,8 @@ class Input(Element):
         :type placeholder_justification:           (str)
         :param placeholder_text_color:             Color of the placeholder text. Uses input element disabled text color of nothing set
         :type placeholder_text_color:              str
-        :param placeholder_background_color        Background color for placeholder text.  Uses input element disabled background color of nothing set
-        :type placeholder_background_color         str
+        :param placeholder_background_color:       Background color for placeholder text.  Uses input element disabled background color of nothing set
+        :type placeholder_background_color:        str
         :param size:                               w=characters-wide, h=rows-high. If an int is supplied rather than a tuple, then a tuple is created width=int supplied and heigh=1
         :type size:                                (int, int) |  (int, None) | int
         :param s:                                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
