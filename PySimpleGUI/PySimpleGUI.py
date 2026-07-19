@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.32"
+version = "6.2.33"
 
 
 
@@ -115,6 +115,8 @@ Changelog since last major release
 6.2.31      18-Jul-2026 Changed a LOT of docstrings for parms that are location and size type of parameters.  Added (None, None) to valid types.
                         Added window_anchor parameter easy_print and the debug window.
 6.2.32      19-Jul-2026 Added ⟳ as SYMBOL_REFRESH
+6.2.33      19-Jul-2026 Updated Window.move to use anchors when moving. The anchor used when window created can be overridden using anchor parameter 
+                        FINALLY got the rtype docstring right for Window. __getitem__.  It fixed the type warnings and improved the autocomplete
 """
 
 
@@ -10301,7 +10303,7 @@ class Window:
         :param right_click_menu:                     A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:                      List[List[ List[str] | str ]]
         :param transparent_color:                    Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
-        :type transparent_color:                     (str)
+        :type transparent_color:                     str | None
         :param debugger_enabled:                     If True then the internal debugger will be enabled.  Also controllable via the global settings.  If global settings is true then will be enabled for all windows
         :type debugger_enabled:                      (bool)
         :param right_click_menu_background_color:    Background color for right click menus
@@ -11602,14 +11604,40 @@ class Window:
         screen_height = self.TKroot.winfo_screenheight()
         return screen_width, screen_height
 
-    def move(self, x, y):
+
+    def move(self, x, y, anchor=None):
         """
-        Move the upper left corner of this window to the x,y coordinates provided
-        :param x: x coordinate in pixels
-        :type x:  (int)
-        :param y: y coordinate in pixels
-        :type y:  (int)
+        Move the upper left corner of this window to the x,y coordinates provided.
+        If a window has an anchor set, then use the anchor.  Override the window's anchor
+        using the optional anchor parameter
+        :param x:           x coordinate in pixels
+        :type x:            int
+        :param y:           y coordinate in pixels
+        :type y:            int
+        :param anchor:      Optional anchor override
+        :type anchor:       str | None
         """
+
+        anchor = anchor or self.location_anchor
+        if anchor != WIN_ANCHOR_UPPER_LEFT:
+            win_width, win_height = self.size
+
+            xoff = yoff = 0
+            if anchor == WIN_ANCHOR_CENTER:
+                xoff, yoff = win_width // 2, win_height // 2
+            elif anchor == WIN_ANCHOR_UPPER_LEFT:
+                xoff, yoff = 0, 0
+            elif anchor == WIN_ANCHOR_UPPER_RIGHT:
+                xoff, yoff = win_width, 0
+            elif anchor == WIN_ANCHOR_LOWER_LEFT:
+                xoff, yoff = 0, win_height
+            elif anchor == WIN_ANCHOR_LOWER_RIGHT:
+                xoff, yoff = win_width, win_height
+
+            # move the window to the correct anchor point
+            x -= xoff
+            y -= yoff
+
         try:
             self.TKroot.geometry("+%s+%s" % (x, y))
             self.config_last_location = (int(x), (int(y)))
@@ -12991,7 +13019,7 @@ class Window:
         :param key: The key to find
         :type key:  str | int | tuple | object
         :return:    The element found
-        :rtype:     Element
+        :rtype:     Element | Text | Input | Multiline | Output | Combo | OptionMenu | Checkbox | Radio | Spin | Button | ButtonMenu | Slider | Listbox | Image | Graph | Canvas | ProgressBar | Table | Tree | Frame | Column | Tab | TabGroup | Pane | Push | VPush | Sizer | StatusBar | HorizontalSeparator | VerticalSeparator | Sizegrip | Menu | MenuBar | Titlebar
         """
 
         return self.find_element(key)
