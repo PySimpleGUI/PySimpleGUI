@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.31"
+version = "6.2.32"
 
 
 
@@ -114,6 +114,7 @@ Changelog since last major release
 6.2.30      18-Jul-2026 Added location_anchor parameter to all of the popups.
 6.2.31      18-Jul-2026 Changed a LOT of docstrings for parms that are location and size type of parameters.  Added (None, None) to valid types.
                         Added window_anchor parameter easy_print and the debug window.
+6.2.32      19-Jul-2026 Added ⟳ as SYMBOL_REFRESH
 """
 
 
@@ -658,7 +659,8 @@ SYMBOL_UP_ARROWHEAD = '⮝'
 SYMBOL_DOWN_ARROWHEAD = '⮟'
 SYMBOL_HOURGLASS = '⌛' if running_windows() or running_mac() else ''
 SYMBOL_GEAR = '⛭'
-SYMBOL_DEGREE= '°'
+SYMBOL_DEGREE = '°'
+SYMBOL_REFRESH = '⟳'
 
 if sum([int(i) for i in tclversion_detailed.split('.')]) > 19:
     SYMBOL_TITLEBAR_MINIMIZE = '_'
