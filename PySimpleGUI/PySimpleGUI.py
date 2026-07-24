@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.33"
+version = "6.2.34"
 
 
 
@@ -117,6 +117,8 @@ Changelog since last major release
 6.2.32      19-Jul-2026 Added ⟳ as SYMBOL_REFRESH
 6.2.33      19-Jul-2026 Updated Window.move to use anchors when moving. The anchor used when window created can be overridden using anchor parameter 
                         FINALLY got the rtype docstring right for Window. __getitem__.  It fixed the type warnings and improved the autocomplete
+6.2.34      21-Jul-2026 Expanded the set_tooltip method's parameters to include the text/background colors, tooltip time, tooltip offset, skip bind   
+                        Expanded ToolTip object to include the above parameters                     
 """
 
 
@@ -435,6 +437,7 @@ DEFAULT_SCALING = None
 DEFAULT_ALPHA_CHANNEL = 1.0
 DEFAULT_HIDE_WINDOW_WHEN_CREATING = True
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
+TOOLTIP_TEXT_COLOR = '#000000'          # Black
 TOOLTIP_FONT = None
 DEFAULT_USE_BUTTON_SHORTCUTS = False
 DEFAULT_DICT_TO_STRING_WIDTH = 80
@@ -910,7 +913,7 @@ class ToolTip:
     This is an INTERNALLY USED only class.  Users should not refer to this class at all.
     """
 
-    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=False):
+    def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=False, offset = DEFAULT_TOOLTIP_OFFSET, background_color=None, text_color=None):
         """
         :param widget:  The tkinter widget
         :type widget:   widget type varies
@@ -933,6 +936,9 @@ class ToolTip:
             self.widget.bind("<Enter>", self.enter)
             self.widget.bind("<Leave>", self.leave)
         self.widget.bind("<ButtonPress>", self.leave)
+        self.text_color = text_color or TOOLTIP_TEXT_COLOR
+        self.background_color = background_color or TOOLTIP_BACKGROUND_COLOR
+        self.offset = offset
 
     def enter(self, event=None):
         """
@@ -978,8 +984,8 @@ class ToolTip:
         """
         if self.tipwindow:
             return
-        x = self.widget.winfo_rootx() + self.x + DEFAULT_TOOLTIP_OFFSET[0]
-        y = self.widget.winfo_rooty() + self.y + DEFAULT_TOOLTIP_OFFSET[1]
+        x = self.widget.winfo_rootx() + self.x + self.offset[0]
+        y = self.widget.winfo_rooty() + self.y + self.offset[1]
         self.tipwindow = tk.Toplevel(self.widget)
         # if not sys.platform.startswith('darwin'):
         try:
@@ -992,8 +998,7 @@ class ToolTip:
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
         self.tipwindow.wm_attributes("-topmost", 1)
 
-        label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
-                          background=TOOLTIP_BACKGROUND_COLOR, relief=tk.SOLID, borderwidth=1)
+        label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT, background=self.background_color, foreground=self.text_color, relief=tk.SOLID, borderwidth=1)
         if TOOLTIP_FONT is not None:
             label.config(font=TOOLTIP_FONT)
         label.pack()
@@ -1551,21 +1556,35 @@ class Element:
         self.Widget.unbind(bind_string)
         self.user_bind_dict.pop(bind_string, None)
 
-    def set_tooltip(self, tooltip_text):
-        """
-        Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
-        :param tooltip_text: the text to show in tooltip.  If None then no tip will be shown
-        :type tooltip_text:  str | None
+    def set_tooltip(self, tooltip_text=None, text_color=None, background_color=None, tooltip_time=DEFAULT_TOOLTIP_TIME, offset=DEFAULT_TOOLTIP_OFFSET, skip_bind=None):
         """
-        # print(f'Setting tooltip for element {self.key}')
+        Called by application to change the tooltip text for an Element or customize the text/background colors, tooltip time, and tooltip offset.
+        Normally invoked using the Element Object such as: window['key'].set_tooltip('New tip').
+
+        :param tooltip_text:            Text to display in tooltip
+        :type tooltip_text:             str
+        :param text_color:              Text color as a string (tkinter format) to use as text color
+        :type text_color:               str
+        :param background_color:        Text color as a string (tkinter format) to use as text color
+        :type background_color:         str
+        :param tooltip_time:            Milliseconds to show the tooltip
+        :type tooltip_time:             int
+        :param offset:                  The x,y offset from the element's location (in pixels) marking where to show the tooltip
+        :type offset:                   (int, int)
+        :param skip_bind:               If True tooltip will not register binding for enter/leave for the element
+        :type skip_bind:                bool
+        """
+
         if self.TooltipObject:
             try:
                 self.TooltipObject.leave()
             except:
                 pass
 
-        self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
+        tooltip_text = tooltip_text or self.TooltipObject.text
+
+        self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, offset=offset, timeout=DEFAULT_TOOLTIP_TIME, text_color=text_color, background_color=background_color, skip_bind=skip_bind)
 
 
     def remove_tooltip(self):
@@ -12900,7 +12919,6 @@ class Window:
         """
         One of the Custom Titlbar buttons was clicked
         :param key:
-        :return:
         """
         if key == TITLEBAR_MINIMIZE_KEY:
             if not self.DisableMinimize:
