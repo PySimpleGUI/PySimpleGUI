@@ -25,6 +25,7 @@ from packaging.version import Version
 #   ██║ ╚═╝ ██║██║██║ ╚████║██║    ╚███╔███╔╝██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝
 #   ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝
 
+# noinspection PyPep8Naming
 def MiniWindow(title: str, layout: List, **kwargs: Any) -> sg.Window:
     """
     A function that returns a Window object. The snake case MiniWindow name means we're acting like an object. An object is returned so the use won't notice

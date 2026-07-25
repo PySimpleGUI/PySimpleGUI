@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.34"
+version = "6.2.35"
 
 
 
@@ -118,7 +118,8 @@ Changelog since last major release
 6.2.33      19-Jul-2026 Updated Window.move to use anchors when moving. The anchor used when window created can be overridden using anchor parameter 
                         FINALLY got the rtype docstring right for Window. __getitem__.  It fixed the type warnings and improved the autocomplete
 6.2.34      21-Jul-2026 Expanded the set_tooltip method's parameters to include the text/background colors, tooltip time, tooltip offset, skip bind   
-                        Expanded ToolTip object to include the above parameters                     
+                        Expanded ToolTip object to include the above parameters    
+6.2.35      25-Jul-2026 Added border_color parm to the Frame.update method so that the border color can be changed dynamically
 """
 
 
@@ -7233,7 +7234,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, p=None, border_width=None, border_width_no_relief=None, border_color=None, key=None, k=None,
-                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None, visible=True, element_justification='left', vertical_alignment=None,
+                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None, visible=True, element_justification='left', vertical_alignment=None, enable_events=None,
                  metadata=None):
         """
         :param title:                 text that is displayed as the Frame's "label" or title
@@ -7284,6 +7285,8 @@ class Frame(Element):
         :type element_justification:  (str)
         :param vertical_alignment:    Place the Frame at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
         :type vertical_alignment:     (str)
+        :param enable_events:         If True then clicking anywhere in the Frame element will generate an event
+        :type enable_events:          (bool)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
@@ -7310,6 +7313,7 @@ class Frame(Element):
         self.VerticalAlignment = vertical_alignment
         self.Widget = None  # type: tk.LabelFrame
         self.Grab = grab
+        self.enable_events = enable_events
         self.Layout(layout)
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -7417,7 +7421,7 @@ class Frame(Element):
         element = row[col_num]
         return element
 
-    def update(self, value=None, visible=None):
+    def update(self, value=None, visible=None, border_color=None):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7427,10 +7431,12 @@ class Frame(Element):
         function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
         when made visible.
 
-        :param value:   New text value (Title) to show on frame
-        :type value:    (Any)
-        :param visible: control visibility of element
-        :type visible:  (bool)
+        :param value:           New text value (Title) to show on frame
+        :type value:            (Any)
+        :param visible:         control visibility of element
+        :type visible:          (bool)
+        :param border_color:    control visibility of element
+        :type border_color:     (bool)
         """
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
@@ -7449,6 +7455,9 @@ class Frame(Element):
             self.TKFrame.config(text=str(value))
         if visible is not None:
             self._visible = visible
+        if border_color is not None:
+            self.Widget.configure(highlightcolor=border_color , highlightbackground=border_color)
+            self.BorderColor = border_color
 
     AddRow = add_row
     Layout = layout
@@ -8570,7 +8579,7 @@ class Column(Element):
 
     def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), size_subsample_width=1, size_subsample_height=2, pad=None, p=None, scrollable=False,
                  vertical_scroll_only=False, horizontal_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
-                 vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None,
+                 vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None, enable_events=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None,
                  sbar_frame_color=None, sbar_relief=None):
         """
@@ -8618,6 +8627,8 @@ class Column(Element):
         :type expand_y:                     (bool)
         :param metadata:                    User metadata that can be set to ANYTHING
         :type metadata:                     (Any)
+        :param enable_events:               If True then clicking anywhere in the Column element will generate an event
+        :type enable_events:                (bool)
         :param sbar_trough_color:           Scrollbar color of the trough
         :type sbar_trough_color:            (str)
         :param sbar_background_color:       Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
@@ -8654,6 +8665,7 @@ class Column(Element):
         self.ElementJustification = element_justification
         self.Justification = justification
         self.VerticalAlignment = vertical_alignment
+        self.enable_events = enable_events
         key = key if key is not None else k
         self.Grab = grab
         self.expand_x = expand_x
