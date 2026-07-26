@@ -10,7 +10,7 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
-version = '6.0.1'
+version = '6.0.2'
 __version__ = version.split()[0]
 
 
@@ -54,6 +54,7 @@ packages_with_weird_names = {'cv2':'opencv-python',
         5.3.0  15-Aug-2024  One last change for the new path input... clear other fields if chars are entered
         6.0    8-Apr-2026   Major version bump to match the commercial to LGPL3 license change
         6.0.1  9-Apr-2026   Set the likely location of the demo programs as the initial path in the settings window
+        6.0.2  26-Jul-2026  Temp removed line number. PyCharm 2026.2 doesn't launch when using line number. Will change back in the future
         
     Copyright 2018-2026 PySinpleGUI.  All rights reserved.
 """
@@ -909,7 +910,8 @@ def main():
                             sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
                         else:
                             try:
-                                sg.execute_editor(full_filename, line_number=int(line))
+                                sg.execute_editor(full_filename)            # 26-Jul-2026 - Temp removed line number. PyCharm 2026.2 doesn't launch when using line number
+                                # sg.execute_editor(full_filename, line_number=int(line))
                             except:
                                 sg.execute_command_subprocess(editor_program, f'"{full_filename}"')
                 else:
