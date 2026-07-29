@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.36"
+version = "6.2.37"
 
 
 
@@ -121,6 +121,10 @@ Changelog since last major release
                         Expanded ToolTip object to include the above parameters    
 6.2.35      25-Jul-2026 Added border_color parm to the Frame.update method so that the border color can be changed dynamically
 6.2.36      25-Jul-2026 Added font parm to element.set_tooltip. Now all aspects of the tooltip are controllable through this interface.
+6.2.37      29-Jul-2026 Added 'thickness' paramter to HorizontalSeparator and VerticalSeparator elements.  If no thickness is specified, then the
+                        current Separator elements are used which as based on TTK Line widgets.  If a thickness is specified, then a Frame widget is
+                        used to draw the line.  The added benefit of this addition is that the color of the Frame based lines will match the color
+                        used in Frame Elements. 
 """
 
 
@@ -7500,18 +7504,20 @@ class VerticalSeparator(Element):
     Column Element if extra height is needed
     """
 
-    def __init__(self, color=None, pad=None, p=None, key=None, k=None):
+    def __init__(self, color=None, thickness=None, pad=None, p=None, key=None, k=None):
         """
-        :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
-        :type color:  (str)
-        :param pad:   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key:    str | int | tuple | object
-        :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:      str | int | tuple | object
+        :param color:       Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
+        :type color:        (str)
+        :param thickness:   Line thickness in pixels
+        :type thickness:    int | None
+        :param pad:         Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param key:         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:          str | int | tuple | object
+        :param k:           Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:            str | int | tuple | object
         """
         key = key if key is not None else k
         pad = pad if pad is not None else p
@@ -7519,6 +7525,7 @@ class VerticalSeparator(Element):
         self.expand_y = None
         self.Orientation = 'vertical'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
+        self.thickness = thickness
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
@@ -7537,22 +7544,25 @@ class HorizontalSeparator(Element):
     Horizontal Separator Element draws a Horizontal line at the given location.
     """
 
-    def __init__(self, color=None, pad=None, p=None, key=None, k=None):
+    def __init__(self, color=None, thickness=None, pad=None, p=None, key=None, k=None):
         """
         :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
-        :type color:  (str)
-        :param pad:   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key:    str | int | tuple | object
-        :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:      str | int | tuple | object
+        :type color:        (str)
+        :param thickness:   Line thickness in pixels
+        :type thickness:    int | None
+        :param pad:         Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:           Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:            (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param key:         Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:          str | int | tuple | object
+        :param k:           Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:            str | int | tuple | object
         """
 
         self.Orientation = 'horizontal'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
+        self.thickness = thickness
         self.expand_x = True
         self.expand_y = None
         key = key if key is not None else k
@@ -11410,7 +11420,7 @@ class Window:
         :param supress_raise:    Override for the global setting that determines if a key error should raise an exception
         :type supress_raise:     (bool | None)
         :return:                 Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True
-        :rtype:                  Element | ErrorElement | None
+        :rtype:                  Text | Input | Multiline | Output | Combo | OptionMenu | Checkbox | Radio | Spin | Button | ButtonMenu | Slider | Listbox | Image | Graph | Canvas | ProgressBar | Table | Tree | Frame | Column | Tab | TabGroup | Pane | Push | VPush | Sizer | StatusBar | HorizontalSeparator | VerticalSeparator | Sizegrip | Menu | MenuBar | Titlebar | ErrorElement | None
         """
 
         key_error = False
@@ -13073,7 +13083,7 @@ class Window:
         :param key: The key to find
         :type key:  str | int | tuple | object
         :return:    The element found
-        :rtype:     Element | Text | Input | Multiline | Output | Combo | OptionMenu | Checkbox | Radio | Spin | Button | ButtonMenu | Slider | Listbox | Image | Graph | Canvas | ProgressBar | Table | Tree | Frame | Column | Tab | TabGroup | Pane | Push | VPush | Sizer | StatusBar | HorizontalSeparator | VerticalSeparator | Sizegrip | Menu | MenuBar | Titlebar
+        :rtype:     Text | Input | Multiline | Output | Combo | OptionMenu | Checkbox | Radio | Spin | Button | ButtonMenu | Slider | Listbox | Image | Graph | Canvas | ProgressBar | Table | Tree | Frame | Column | Tab | TabGroup | Pane | Push | VPush | Sizer | StatusBar | HorizontalSeparator | VerticalSeparator | Sizegrip | Menu | MenuBar | Titlebar
         """
 
         return self.find_element(key)
@@ -18127,23 +18137,42 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
-                # style_name = str(element.Key) + "Line.TSeparator"
-                style_name = _make_ttk_style_name(".Line.TSeparator", element, primary_style=True)
-                style = ttk.Style()
+                if element.thickness is not None:
+                    separator = element.Widget = tk.Frame(tk_row_frame)
+                    if element.Orientation.lower() in ('h', 'horizontal'):
+                        separator.configure(height=element.thickness or 1)
+                    else:
+                        separator.configure(width=element.thickness or 1)
+                    if element.color not in (None, COLOR_SYSTEM_DEFAULT):
+                        separator.configure(bg=element.color)
+                    separator.configure(highlightthickness=0, bd=0, relief='flat')
 
-                _change_ttk_theme(style, toplevel_form.TtkTheme)
+                    expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
 
-                if element.color not in (None, COLOR_SYSTEM_DEFAULT):
-                    style.configure(style_name, background=element.color)
-                separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
-
-                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
-
-                if element.Orientation.startswith('h'):
-                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
+                    if element.Orientation.startswith('h'):
+                        separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
+                    else:
+                        separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=False)
                 else:
-                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=False)
-                element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
+                    style_name = _make_ttk_style_name(".Line.TSeparator", element, primary_style=True)
+                    style = ttk.Style()
+
+                    _change_ttk_theme(style, toplevel_form.TtkTheme)
+
+                    if element.color not in (None, COLOR_SYSTEM_DEFAULT):
+                        style.configure(style_name, background=element.color)
+                    if element.thickness is not None:
+                        style.configure(style_name, thickness=element.thickness)
+
+                    separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
+
+                    expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+
+                    if element.Orientation.startswith('h'):
+                        separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
+                    else:
+                        separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=False)
+                    element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
             # -------------------------  SizeGrip placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SIZEGRIP:
                 element = element  # type: Sizegrip
@@ -23837,7 +23866,7 @@ def execute_editor(file_to_edit, line_number=None):
             sp = execute_command_subprocess(editor_program, file_to_edit)
         else:
             command = _create_full_editor_command(file_to_edit, line_number, format_string)
-            # print('final command line = ', command)
+            # print(f'final command line = {editor_program} {command}')
             sp = execute_command_subprocess(editor_program, command)
     else:
         print('No editor has been configured in the global settings')
