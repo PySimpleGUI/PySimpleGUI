@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.37"
+version = "6.2.38"
 
 
 
@@ -125,6 +125,8 @@ Changelog since last major release
                         current Separator elements are used which as based on TTK Line widgets.  If a thickness is specified, then a Frame widget is
                         used to draw the line.  The added benefit of this addition is that the color of the Frame based lines will match the color
                         used in Frame Elements. 
+6.2.38      30-Jul-2026 Added parameters tooltip_text_color, tooltip_background_color, tooltip_font, tooltip_time, tooltip_offset to Window object.
+                        Sets the tooltip settings for this window. Once set, an individual element's color, font, etc, can be set using set_tooltip            
 """
 
 
@@ -1613,7 +1615,7 @@ class Element:
 
         tooltip_text = tooltip_text or self.TooltipObject.text
 
-        self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, offset=offset, timeout=DEFAULT_TOOLTIP_TIME, text_color=text_color, background_color=background_color, font=font, skip_bind=skip_bind)
+        self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, offset=offset, timeout=tooltip_time, text_color=text_color, background_color=background_color, font=font, skip_bind=skip_bind)
 
 
     def remove_tooltip(self):
@@ -8244,7 +8246,7 @@ class TabGroup(Element):
         if tab_element.BorderWidth is not None:
             tab_element.TKFrame.configure(borderwidth=tab_element.BorderWidth)
         if tab_element.Tooltip is not None:
-            tab_element.TooltipObject = ToolTip(tab_element.TKFrame, text=tab_element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+            tab_element.TooltipObject = ToolTip(tab_element.TKFrame, text=tab_element.Tooltip, timeout=self.ParentForm.tooltip_time, offset=self.ParentForm.tooltip_offset, background_color=self.ParentForm.tooltip_background_color, text_color=self.ParentForm.tooltip_text_color, font=self.ParentForm.tooltip_font)
         _add_right_click_menu(tab_element, form)
 
     def update(self, visible=None):
@@ -10292,8 +10294,9 @@ class Window:
                  right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
                  enable_window_config_events=False, repeating_timer_ms=None,
-                 titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
-                 use_custom_titlebar=None, scaling=None,
+                 titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, use_custom_titlebar=None,
+                 tooltip_text_color=None, tooltip_background_color=None, tooltip_font=None, tooltip_time=DEFAULT_TOOLTIP_TIME, tooltip_offset=DEFAULT_TOOLTIP_OFFSET,
+                 scaling=None,
                  sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, watermark=None, print_event_values=None,
                  metadata=None):
         """
@@ -10407,6 +10410,22 @@ class Window:
         :type titlebar_font:                         (str or (str, int[, str]) or None)
         :param titlebar_icon:                        If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
         :type titlebar_icon:                         (bytes | str)
+        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
+        :type tooltip_text_color:                    str
+        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
+        :type tooltip_background_color:              Text color as a string (tkinter format) to use as text color
+        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
+        :type tooltip_background_color:              str
+        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
+        :type tooltip_font:                          Font to use
+        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
+        :type tooltip_font:                          str
+        :param tooltip_time:                         Milliseconds to show the tooltip
+        :type tooltip_time:                          int
+        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
+        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
+        :param tooltip_offset:                       The x,y offset from the element's location (in pixels) marking where to show the tooltip
+        :type tooltip_offset:                        (int, int)
         :param use_custom_titlebar:                  If True, then a custom titlebar will be used instead of the normal titlebar
         :type use_custom_titlebar:                   bool
         :param scaling:                              Apply scaling to the elements in the window. Can be set on a global basis using set_options
@@ -10580,7 +10599,11 @@ class Window:
         self._mouse_offset_x = self._mouse_offset_y = 0
         self.watermark = watermark
         self.repeating_timer_ms = repeating_timer_ms
-
+        self.tooltip_text_color = tooltip_text_color
+        self.tooltip_background_color = tooltip_background_color
+        self.tooltip_font = tooltip_font
+        self.tooltip_time = tooltip_time
+        self.tooltip_offset = tooltip_offset
         # use the print event values setting if explicitly turned on or disable if explicitly turned off in this window
         if print_event_values is True or (pysimplegui_user_settings.get('-print event values-', False) and print_event_values is not False):
             self.print_event_values = True
@@ -16481,7 +16504,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
                 if element.Grab:
                     element._grab_anywhere_on()
@@ -16626,7 +16649,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(activeforeground=element.MouseOverColors[0])
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font, skip_bind=element.mouseover_image_source is not None)
                 try:
                     if element.HighlightColors[1] != COLOR_SYSTEM_DEFAULT:
                         tkbutton.config(highlightbackground=element.HighlightColors[1])
@@ -16776,7 +16799,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 _add_right_click_menu_and_grab(element)
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font, skip_bind=element.mouseover_image_source is not None)
             # -------------------------  BUTTONMENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTONMENU:
                 element = element  # type: ButtonMenu
@@ -16871,7 +16894,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
 
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
@@ -16925,7 +16948,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry['state'] = 'readonly'
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.placeholder is not None)
+                    element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font, skip_bind=element.placeholder is not None)
                 _add_right_click_menu_and_grab(element)
 
                 if element.placeholder:
@@ -17033,7 +17056,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled is True:  # note overrides readonly if disabled
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
             # -------------------------  OPTIONMENU placement Element (Like ComboBox but different) element  ------------------------- #
@@ -17067,8 +17090,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKOptionMenu['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
             # -------------------------  LISTBOX placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 element = element  # type: Listbox
@@ -17143,8 +17165,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled is True:
                     element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -17230,7 +17251,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled is True:
                     element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
 
                 if element.reroute_cprint:
                     cprint_set_output_destination(toplevel_form, element.Key)
@@ -17278,8 +17299,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # element.TKCheckbutton.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
             # -------------------------  PROGRESS placement element  ------------------------- #
@@ -17360,7 +17380,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 # -------------------------  SPIN placement element  ------------------------- #
@@ -17397,7 +17417,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled is True:  # note overrides readonly if disabled
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 if element.BindReturnKey:
                     element.TKSpinBox.bind('<Return>', element._SpinboxSelectHandler)
                 _add_right_click_menu_and_grab(element)
@@ -17448,8 +17468,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.bind('<Leave>', element.mouseover_leave)
 
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
-
+                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font, skip_bind=element.mouseover_image_source is not None)
 
                 if element.visible is False:
                     element._pack_forget_save_settings()
@@ -17478,7 +17497,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 # -------------------------  Graph placement element  ------------------------- #
@@ -17503,8 +17522,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings()
                     # element._TKCanvas2.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element._TKCanvas2, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element._TKCanvas2, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 if element.ChangeSubmits:
                     element._TKCanvas2.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
@@ -17603,7 +17621,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BorderWidthNoRelief:         # if a non-zero no-relief border width, force borderwidth to zero
                     labeled_frame.configure(borderwidth=0)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
@@ -17735,7 +17753,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKNotebook.bind('<<NotebookTabChanged>>', element._TabGroupSelectHandler)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 if element.Size != (None, None):
                     element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
                 _add_right_click_menu_and_grab(element)
@@ -17783,7 +17801,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
             # -------------------------  TABLE placement element  ------------------------- #
@@ -17966,8 +17984,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._pack_forget_save_settings(alternate_widget=element.element_frame)       # seems like it should be the frame if following other elements conventions
                     # element.TKTreeview.pack_forget()
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
@@ -18124,8 +18141,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # element.TKTreeview.pack_forget()
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
-                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = tooltip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
@@ -18250,7 +18266,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ClickSubmits:
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
