@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.38"
+version = "6.2.40"
 
 
 
@@ -127,6 +127,10 @@ Changelog since last major release
                         used in Frame Elements. 
 6.2.38      30-Jul-2026 Added parameters tooltip_text_color, tooltip_background_color, tooltip_font, tooltip_time, tooltip_offset to Window object.
                         Sets the tooltip settings for this window. Once set, an individual element's color, font, etc, can be set using set_tooltip            
+6.2.39      31-Jul-2026 Fixed Window docstring for tooltip parameters recently added
+6.2.40      31-Jul-2026 Native support for tuples in UserSettings files (json).  They're now automatically serialized.
+                        Converted global settings that were manually serializing into saving the tuples via the settings save.
+                        Fixed docstrings for Window tooltips parm
 """
 
 
@@ -143,7 +147,7 @@ port = 'PySimpleGUI'
 
 import os
 import sys
-
+import ast
 
 # all of the tkinter involved imports
 import tkinter as tk
@@ -10410,20 +10414,14 @@ class Window:
         :type titlebar_font:                         (str or (str, int[, str]) or None)
         :param titlebar_icon:                        If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
         :type titlebar_icon:                         (bytes | str)
-        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
+        :param tooltip_text_color:                   Text color to use for tooltips in this window
         :type tooltip_text_color:                    str
-        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
-        :type tooltip_background_color:              Text color as a string (tkinter format) to use as text color
-        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
+        :param tooltip_background_color:             Text background color to use for tooltips in this window
         :type tooltip_background_color:              str
-        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
-        :type tooltip_font:                          Font to use
-        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
-        :type tooltip_font:                          str
+        :param tooltip_font:                         Font to use for tooltips in this window
+        :type tooltip_font:                          str or (str, int[, str]) or None)
         :param tooltip_time:                         Milliseconds to show the tooltip
         :type tooltip_time:                          int
-        :param tooltip_text_color:                   Text color as a string (tkinter format) to use as text color
-        :type tooltip_text_color:                    Text color as a string (tkinter format) to use as text color
         :param tooltip_offset:                       The x,y offset from the element's location (in pixels) marking where to show the tooltip
         :type tooltip_offset:                        (int, int)
         :param use_custom_titlebar:                  If True, then a custom titlebar will be used instead of the normal titlebar
@@ -23239,7 +23237,9 @@ class UserSettings:
                 os.makedirs(self.path)
             with open(self.full_filename, 'w') as f:
                 if not self.use_config_file:
-                    json.dump(self.dict, f)
+                    # json.dump(self.dict, f)                                   # Previously, the dictionary was simply saved
+                    serializable = {json.dumps(k) if isinstance(k, tuple) else k: v for k, v in self.dict.items()}      # But now, tuples are being serialized first
+                    json.dump(serializable, f)
                 else:
                     self.config.write(f)
         except Exception as e:
@@ -23316,7 +23316,16 @@ class UserSettings:
             if os.path.exists(self.full_filename):
                 with open(self.full_filename, 'r') as f:
                     if not self.use_config_file:  # if using json
-                        self.dict = json.load(f)
+                        # self.dict = json.load(f)                                      # Used to be able to simple read the json
+                        loaded = json.load(f)
+                        self.dict = {}
+                        for k, v in loaded.items():                                     # But more complex now since tuples are being converted to
+                            try:
+                                parsed = json.loads(k)                                  # Deserialize the key and try to convert to a tuple
+                                key = tuple(parsed) if isinstance(parsed, list) else k
+                            except (json.JSONDecodeError, TypeError):                   # If error, then not a tuple
+                                key = k
+                            self.dict[key] = v
                     else:  # if using a config file
                         self.config.read_file(f)
                         # Make a dictionary of SectionDict classses. Keys are the config.sections().
@@ -25631,7 +25640,7 @@ def _global_settings_get_ttk_scrollbar_info():
     """
     global ttk_part_mapping_dict, DEFAULT_TTK_THEME
     for ttk_part in TTK_SCROLLBAR_PART_LIST:
-        value = pysimplegui_user_settings.get(json.dumps(('-ttk scroll-', ttk_part)), ttk_part_mapping_dict[ttk_part])
+        value = pysimplegui_user_settings.get(('-ttk scroll-', ttk_part), ttk_part_mapping_dict[ttk_part])
         ttk_part_mapping_dict[ttk_part] = value
 
     DEFAULT_TTK_THEME = pysimplegui_user_settings.get('-ttk theme-', DEFAULT_TTK_THEME)
@@ -25648,7 +25657,7 @@ def main_global_get_screen_snapshot_symcode():
 
     screenshot_keysym = ''
     for i in range(4):
-        keysym = settings.get(json.dumps(('-snapshot keysym-', i)), '')
+        keysym = settings.get(('-snapshot keysym-', i), '')
         if keysym:
             screenshot_keysym += "<{}>".format(keysym)
 
@@ -26437,7 +26446,7 @@ def main_global_pysimplegui_settings():
     # ------------------------- Snapshots Tab -------------------------
 
     snapshots_tab = Tab('Window Snapshots',
-              [[Combo(('',)+key_choices, default_value=settings.get(json.dumps(('-snapshot keysym-', i)), ''), readonly=True, k=('-SNAPSHOT KEYSYM-', i), s=(None, 30)) for i in range(4)],
+              [[Combo(('',)+key_choices, default_value=settings.get(('-snapshot keysym-', i), ''), readonly=True, k=('-SNAPSHOT KEYSYM-', i), s=(None, 30)) for i in range(4)],
               [T('Manually Entered Bind String:'), Input(settings.get('-snapshot keysym manual-', ''),k='-SNAPSHOT KEYSYM MANUAL-')],
               [T('Folder to store screenshots:'), Push(), In(settings.get('-screenshots folder-', ''), k='-SCREENSHOTS FOLDER-'), FolderBrowse()],
               [T('Screenshots Filename or Prefix:'), Push(), In(settings.get('-screenshots filename-', ''), k='-SCREENSHOTS FILENAME-'), FileBrowse()],
@@ -26518,7 +26527,7 @@ def main_global_pysimplegui_settings():
             pysimplegui_user_settings.set('-snapshot keysym manual-', values['-SNAPSHOT KEYSYM MANUAL-'])
             screenshot_keysym = ''
             for i in range(4):
-                pysimplegui_user_settings.set(json.dumps(('-snapshot keysym-',i)), values[('-SNAPSHOT KEYSYM-', i)])
+                pysimplegui_user_settings.set(('-snapshot keysym-',i), values[('-SNAPSHOT KEYSYM-', i)])
                 if values[('-SNAPSHOT KEYSYM-', i)]:
                     screenshot_keysym += "<{}>".format(values[('-SNAPSHOT KEYSYM-', i)])
             if screenshot_keysym_manual:
@@ -26533,7 +26542,7 @@ def main_global_pysimplegui_settings():
             for key, value in values.items():
                 if isinstance(key, tuple):
                     if key[0] == '-TTK SCROLL-':
-                        pysimplegui_user_settings.set(json.dumps(('-ttk scroll-', key[1])), value)
+                        pysimplegui_user_settings.set(('-ttk scroll-', key[1]), value)
 
             theme(new_theme)
 
