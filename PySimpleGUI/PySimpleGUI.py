@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.40"
+version = "6.2.41"
 
 
 
@@ -131,6 +131,9 @@ Changelog since last major release
 6.2.40      31-Jul-2026 Native support for tuples in UserSettings files (json).  They're now automatically serialized.
                         Converted global settings that were manually serializing into saving the tuples via the settings save.
                         Fixed docstrings for Window tooltips parm
+6.2.41       1-Aug-2026 Fixed Graph.draw_arc docstring. It incorrectly stated the available styles.  Should have been 'pieslice', 'chord', 'arc'
+                        Graph.draw_line - added capstyle which determines how the end of the line should appear
+                        Graph.draw_lines - added arrow, arrow_shape, joinstyle, capstype parameters.  
 """
 
 
@@ -147,7 +150,6 @@ port = 'PySimpleGUI'
 
 import os
 import sys
-import ast
 
 # all of the tkinter involved imports
 import tkinter as tk
@@ -6624,23 +6626,25 @@ class Graph(Element):
         else:
             return floor(new_x), floor(new_y)
 
-    def draw_line(self, point_from, point_to, color='black', width=1, arrow=None, arrow_shape=None):
+    def draw_line(self, point_from, point_to, color='black', width=1, arrow=None, arrow_shape=None, capstyle=None):
         """
         Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
         :param point_from: Starting point for line
-        :type point_from:  (int, int) | Tuple[float, float]
-        :param point_to:   Ending point for line
-        :type point_to:    (int, int) | Tuple[float, float]
-        :param color:      Color of the line
-        :type color:       (str)
-        :param width:      width of line in pixels
-        :type width:       (int)
-        :param arrow:      Determines if an arrowhead will be added to the line. Literal string "first", "last", "both"
-        :type arrow:       (str)
-        :param arrow_shape: Defines the shape of the arrowhead using a tuple with (length, width, thickness)
-        :type arrow_shape:  Tuple[float, float, float]
-        :return:           id returned from tktiner or None if user closed the window. id is used when you
-        :rtype:            int | None
+        :type point_from:       (int, int) | Tuple[float, float]
+        :param point_to:        Ending point for line
+        :type point_to:         (int, int) | Tuple[float, float]
+        :param color:           Color of the line
+        :type color:            (str)
+        :param width:           width of line in pixels
+        :type width:            (int)
+        :param arrow:           Arrow Style - Determines if an arrowhead will be added to the line. Literal string: first, last, both
+        :type arrow:            (str)
+        :param arrow_shape:     Defines the shape of the arrowhead using a tuple with (length, width, thickness)
+        :type arrow_shape:      Tuple[float, float, float]
+        :param capstyle:        Eetermines if an arrowhead will be added to the line. Literal string: butt, projecting, round
+        :type capstyle:         (str)
+        :return:                id returned from tktiner or None if user closed the window. id is used when you
+        :rtype:                 int | None
         """
         if point_from == (None, None):
             return
@@ -6651,30 +6655,38 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         try:  # in case window was closed with an X
-            id = self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color, arrow=arrow, arrowshape=arrow_shape)
+            id = self._TKCanvas2.create_line(converted_point_from, converted_point_to, width=width, fill=color, arrow=arrow, arrowshape=arrow_shape, capstyle=capstyle)
         except Exception as e:
             # print(e)
             id = None
         return id
 
 
-    def draw_lines(self, points, color='black', width=1):
+    def draw_lines(self, points, color='black', width=1, arrow=None, arrow_shape=None, joinstyle=None, capstyle=None):
         """
         Draw a series of lines given list of points
 
-        :param points: list of points that define the polygon
-        :type points:  List[(int, int) | Tuple[float, float]]
-        :param color:  Color of the line
-        :type color:   (str)
-        :param width:  width of line in pixels
-        :type width:   (int)
-        :return:       id returned from tktiner or None if user closed the window. id is used when you
-        :rtype:        int | None
+        :param points:          list of points that define the polygon
+        :type points:           List[(int, int) | Tuple[float, float]]
+        :param color:           Color of the line
+        :type color:            (str)
+        :param width:           width of line in pixels
+        :type width:            (int)
+        :param arrow:           Arrow Style - Determines if an arrowhead will be added to the line. Literal string: first, last, both
+        :type arrow:            (str)
+        :param arrow_shape:     Defines the shape of the arrowhead using a tuple with (length, width, thickness)
+        :type arrow_shape:      Tuple[float, float, float]
+        :param joinstyle:       Determines if an arrowhead will be added to the line. Literal string: bevel, miter, round
+        :type joinstyle:        (str)
+        :param capstyle:        Eetermines if an arrowhead will be added to the line. Literal string: butt, projecting, round
+        :type capstyle:         (str)
+        :return:                id returned from tktiner or None if user closed the window. id is used when you
+        :rtype:                 int | None
         """
         converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
 
         try:  # in case window was closed with an X
-            id = self._TKCanvas2.create_line(*converted_points, width=width, fill=color)
+            id = self._TKCanvas2.create_line(*converted_points, width=width, fill=color, arrow=arrow, arrowshape=arrow_shape, joinstyle=joinstyle, capstyle=capstyle)
         except:
             if self._TKCanvas2 is None:
                 print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -6792,7 +6804,7 @@ class Graph(Element):
         :type extent:        (float)
         :param start_angle:  Angle to begin drawing. Used in conjunction with extent
         :type start_angle:   (float)
-        :param style:        Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter'
+        :param style:        Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc'
         :type style:         (str)
         :param arc_color:    color to draw arc with
         :type arc_color:     (str)
@@ -18139,7 +18151,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # element.TKTreeview.pack_forget()
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
-                    element.TooltipObject = tooltip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
+                    element.TooltipObject = Tooltip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
