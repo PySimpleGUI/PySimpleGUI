@@ -7331,7 +7331,7 @@ class Frame(Element):
         :type element_justification:  (str)
         :param vertical_alignment:    Place the Frame at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
         :type vertical_alignment:     (str)
-        :param enable_events:         If True then clicking anywhere in the Frame element will generate an event
+        :param enable_events:         NOT YET IMPLEMENTED - If True then clicking anywhere in the Frame element will generate an event
         :type enable_events:          (bool)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
@@ -7644,50 +7644,50 @@ class Tab(Element):
                  border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left',
                  image_source=None, image_subsample=None, image_zoom=None, mouseover_image_source=None, metadata=None):
         """
-        :param title:                 text to show on the tab
-        :type title:                  (str)
-        :param layout:                The element layout that will be shown in the tab
-        :type layout:                 List[List[Element]]
-        :param title_color:           color of the tab text (note not currently working on tkinter)
-        :type title_color:            (str)
-        :param background_color:      color of background of the entire layout
-        :type background_color:       (str)
-        :param font:                  NOT USED in the tkinter port
-        :type font:                   (str or (str, int[, str]) or None)
-        :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
-        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param disabled:              If True button will be created disabled
-        :type disabled:               (bool)
-        :param border_width:          NOT USED in tkinter port
-        :type border_width:           (int)
-        :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key:                    str | int | tuple | object
-        :param k:                     Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k:                      str | int | tuple | object
-        :param tooltip:               text, that will appear when mouse hovers over the element
-        :type tooltip:                (str)
-        :param right_click_menu:      A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :type right_click_menu:       List[List[ List[str] | str ]]
-        :param expand_x:              If True the element will automatically expand in the X direction to fill available space
-        :type expand_x:               (bool)
-        :param expand_y:              If True the element will automatically expand in the Y direction to fill available space
-        :type expand_y:               (bool)
-        :param visible:               set visibility state of the element
-        :type visible:                (bool)
-        :param element_justification: All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
-        :type element_justification:  (str)
-        :param image_source:          A filename or a base64 bytes of an image to place on the Tab
-        :type image_source:            str | bytes | None
-        :param image_subsample:       amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :type image_subsample:        (int)
-        :param image_zoom:            amount to increase the size of the image. 2=twice size, 3=3 times, etc
-        :type image_zoom:             (int)
-        :param mouseover_image_source: Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
-        :type mouseover_image_source:  (str | bytes)
-        :param metadata:              User metadata that can be set to ANYTHING
-        :type metadata:               (Any)
+        :param title:                   text to show on the tab
+        :type title:                    (str)
+        :param layout:                  The element layout that will be shown in the tab
+        :type layout:                   List[List[Element]]
+        :param title_color:             color of the tab text (note not currently working on tkinter)
+        :type title_color:              (str)
+        :param background_color:        color of background of the entire layout
+        :type background_color:         (str)
+        :param font:                    NOT USED in the tkinter port
+        :type font:                     (str or (str, int[, str]) or None)
+        :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
+        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param disabled:                If True button will be created disabled
+        :type disabled:                 (bool)
+        :param border_width:            NOT USED in tkinter port
+        :type border_width:             (int)
+        :param key:                     Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key:                      str | int | tuple | object
+        :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                        str | int | tuple | object
+        :param tooltip:                 text, that will appear when mouse hovers over the element
+        :type tooltip:                  (str)
+        :param right_click_menu:        A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:         List[List[ List[str] | str ]]
+        :param expand_x:                If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                 (bool)
+        :param expand_y:                If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                 (bool)
+        :param visible:                 set visibility state of the element
+        :type visible:                  (bool)
+        :param element_justification:   All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification:    (str)
+        :param image_source:            A filename or a base64 bytes of an image to place on the Tab
+        :type image_source:             str | bytes | None
+        :param image_subsample:         amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample:          (int)
+        :param image_zoom:              amount to increase the size of the image. 2=twice size, 3=3 times, etc
+        :type image_zoom:               (int)
+        :param mouseover_image_source:  NOT YET IMPLEMENTED - Image to show when the button is moused over. Note - must have a button image set to use a mouseover button image
+        :type mouseover_image_source:   (str | bytes)
+        :param metadata:                User metadata that can be set to ANYTHING
+        :type metadata:                 (Any)
         """
 
         filename = data = None
@@ -8679,7 +8679,7 @@ class Column(Element):
         :type expand_y:                     (bool)
         :param metadata:                    User metadata that can be set to ANYTHING
         :type metadata:                     (Any)
-        :param enable_events:               If True then clicking anywhere in the Column element will generate an event
+        :param enable_events:               NOT YET IMPLEMENTED - If True then clicking anywhere in the Column element will generate an event
         :type enable_events:                (bool)
         :param sbar_trough_color:           Scrollbar color of the trough
         :type sbar_trough_color:            (str)
