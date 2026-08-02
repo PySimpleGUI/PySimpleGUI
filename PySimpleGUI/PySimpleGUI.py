@@ -54,7 +54,7 @@
 
 """
 
-version = "6.2.41"
+version = "6.2.42"
 
 
 
@@ -134,6 +134,7 @@ Changelog since last major release
 6.2.41       1-Aug-2026 Fixed Graph.draw_arc docstring. It incorrectly stated the available styles.  Should have been 'pieslice', 'chord', 'arc'
                         Graph.draw_line - added capstyle which determines how the end of the line should appear
                         Graph.draw_lines - added arrow, arrow_shape, joinstyle, capstype parameters.  
+6.2.42       2-Aug-2026 Renamed the mouseover enter and leave methods for elements (prepended _).  Needed so they don't get included in call ref docs. 
 """
 
 
@@ -2065,7 +2066,7 @@ class Element:
             widget.pack(**self.pack_settings)
 
 
-    def mouseover_enter(self, event=None):
+    def _mouseover_enter(self, event=None):
         """
         Called by tkinter when mouse enters a Button.  Used for mouseover images
         :param event: from tkinter.  Has x,y coordinates of mouse
@@ -2079,7 +2080,7 @@ class Element:
             self.TooltipObject.enter(event)
 
 
-    def mouseover_leave(self, event=None):
+    def _mouseover_leave(self, event=None):
         """
         Called by tktiner when mouse exits Button.  Used for mouseover images
         :param event: from tkinter.  Event info that's not used by function.
@@ -2103,8 +2104,8 @@ class Element:
         """
         if image_source is not None:
             if self.ImageSource is not None:
-                self.widget.bind('<Enter>', self.mouseover_enter)
-                self.widget.bind('<Leave>', self.mouseover_leave)
+                self.widget.bind('<Enter>', self._mouseover_enter)
+                self.widget.bind('<Leave>', self._mouseover_leave)
             self.mouseover_image_source = image_source
             self.mouseover_image_data =  self.mouseover_image_filename = None
             if isinstance(image_source, bytes):
@@ -2377,14 +2378,14 @@ class Input(Element):
         text = self.TKStringVar.get()
         if not self.mouse_over and not self.has_focus and text == '' and not self.showing_placeholder:
             self.TKStringVar.set(self.placeholder)
-            entry_widget.config(fg=self.placeholder_text_color)
-            entry_widget.config(bg=self.placeholder_background_color)
+            entry_widget.config(fg=self.placeholder_text_color if self.placeholder_text_color != COLOR_SYSTEM_DEFAULT else None)
+            entry_widget.config(bg=self.placeholder_background_color if self.placeholder_background_color != COLOR_SYSTEM_DEFAULT else None)
             entry_widget.config(justify=self.tk_justify_placeholder)
             self.showing_placeholder = True
         elif self.showing_placeholder and (self.mouse_over or self.has_focus):
             self.TKStringVar.set('')
-            entry_widget.config(fg=self.TextColor)
-            entry_widget.config(bg=self.BackgroundColor)
+            entry_widget.config(fg=self.TextColor if self.TextColor != COLOR_SYSTEM_DEFAULT else None)
+            entry_widget.config(bg=self.BackgroundColor if self.TextColor != COLOR_SYSTEM_DEFAULT else None)
             entry_widget.config(justify=self.tk_justify)
             self.showing_placeholder = False
 
@@ -5477,8 +5478,8 @@ class Button(Element):
         if mouseover_image_source is not None:
             # if haven't setup mouseover yet, then need to do the binds here
             if self.mouseover_image_source is None:
-                self.TKButton.bind('<Enter>', self.mouseover_enter)
-                self.TKButton.bind('<Leave>', self.mouseover_leave)
+                self.TKButton.bind('<Enter>', self._mouseover_enter)
+                self.TKButton.bind('<Leave>', self._mouseover_leave)
             self.mouseover_image_source = mouseover_image_source
             if mouseover_image_source is not None:
                 if isinstance(mouseover_image_source, bytes):
@@ -6178,8 +6179,8 @@ class Image(Element):
 
         if mouseover_image_source is not None:
             if self.mouseover_image_source is None:   # if haven't setup mouseover yet, then need to do the binds here
-                self.tktext_label.bind('<Enter>', self.mouseover_enter)
-                self.tktext_label.bind('<Leave>', self.mouseover_leave)
+                self.tktext_label.bind('<Enter>', self._mouseover_enter)
+                self.tktext_label.bind('<Leave>', self._mouseover_leave)
             self.mouseover_image_source = mouseover_image_source
             if isinstance(mouseover_image_source, bytes):
                 self.mouseover_image_data = mouseover_image_source
@@ -16628,8 +16629,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # Setup bindings if there's a mouseover image
                 if element.mouseover_image_source:
-                    tkbutton.bind('<Enter>', element.mouseover_enter)
-                    tkbutton.bind('<Leave>', element.mouseover_leave)
+                    tkbutton.bind('<Enter>', element._mouseover_enter)
+                    tkbutton.bind('<Leave>', element._mouseover_leave)
 
                 if width != 0:
                     wraplen = width * _char_width_in_pixels(font)
@@ -16786,8 +16787,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # Setup bindings if there's a mouseover image
                 if element.mouseover_image_source:
-                    tkbutton.bind('<Enter>', element.mouseover_enter)
-                    tkbutton.bind('<Leave>', element.mouseover_leave)
+                    tkbutton.bind('<Enter>', element._mouseover_enter)
+                    tkbutton.bind('<Leave>', element._mouseover_leave)
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
@@ -17474,8 +17475,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 # Setup bindings if there's a mouseover image
                 if element.mouseover_image_source:
-                    element.tktext_label.bind('<Enter>', element.mouseover_enter)
-                    element.tktext_label.bind('<Leave>', element.mouseover_leave)
+                    element.tktext_label.bind('<Enter>', element._mouseover_enter)
+                    element.tktext_label.bind('<Leave>', element._mouseover_leave)
 
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font, skip_bind=element.mouseover_image_source is not None)
@@ -17703,8 +17704,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Have to set it up for the entire notebook
                 if element.mouseover_image_source:
                     # print(f'Binding mouseover events to {element.ParentNotebook=}')
-                    element.ParentNotebook.bind('<Enter>', element.mouseover_enter)
-                    element.ParentNotebook.bind('<Leave>', element.mouseover_leave)
+                    element.ParentNotebook.bind('<Enter>', element._mouseover_enter)
+                    element.ParentNotebook.bind('<Leave>', element._mouseover_leave)
 
                 # if element.Tooltip is not None:
                     # element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME, skip_bind=element.mouseover_image_source is not None)
@@ -20826,7 +20827,7 @@ def dict_to_string(dict_var, sort_keys=True, compact=False, indent=10, width=Non
     :param indent:     Number of spaces to indent (passed to pprint directly)
     :type indent:      (int)
     :param width:      specifies the desired maximum number of characters per line in the output. Defaults to 1 (sounds weird but it works best). Settablein PySimpleGUI Settings window
-    :type width:       (int)
+    :type width:       int | None
     :return:           Formatted output of the dictionary's values
     :rtype:            (str)
     """
