@@ -2390,7 +2390,7 @@ class Input(Element):
             self.showing_placeholder = False
 
 
-    def on_mouse_or_focus(self, event):
+    def _on_mouse_or_focus(self, event):
         if event.type == tk.EventType.Enter:           # Mouse enter
             self.mouse_over = True
             self.update_placeholder()
@@ -16963,10 +16963,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 _add_right_click_menu_and_grab(element)
 
                 if element.placeholder:
-                    element.TKEntry.bind('<Enter>', element.on_mouse_or_focus)
-                    element.TKEntry.bind('<Leave>', element.on_mouse_or_focus)
-                    element.TKEntry.bind('<FocusIn>', element.on_mouse_or_focus)
-                    element.TKEntry.bind('<FocusOut>', element.on_mouse_or_focus)
+                    element.TKEntry.bind('<Enter>', element._on_mouse_or_focus)
+                    element.TKEntry.bind('<Leave>', element._on_mouse_or_focus)
+                    element.TKEntry.bind('<FocusIn>', element._on_mouse_or_focus)
+                    element.TKEntry.bind('<FocusOut>', element._on_mouse_or_focus)
                     element.update_placeholder()
 
                 # row_should_expand = True
@@ -18835,8 +18835,7 @@ def get_complimentary_hex(color):
 class _DebugWin():
     debug_window = None
 
-    def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), location_anchor=None, font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True, blocking=False):
+    def __init__(self, size=(None, None), location=(None, None), relative_location=(None, None), location_anchor=None, font=None, no_titlebar=False, no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True, blocking=False):
         """
 
         :param size:                  (w,h) w=characters-wide, h=rows-high
@@ -19054,12 +19053,9 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     """
 
     if _DebugWin.debug_window is None:
-        _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar,
-                                           no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable, blocking=blocking or wait)
+        _DebugWin.debug_window = _DebugWin(size=size, location=location, relative_location=relative_location, font=font, no_titlebar=no_titlebar, no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable, blocking=blocking or wait, location_anchor=location_anchor)
     txt_color, bg_color = _parse_colors_parm(c or colors)
-    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color,
-                                 erase_all=erase_all, font=font, blocking=blocking)
+    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color, erase_all=erase_all, font=font, blocking=blocking)
 
 
 def easy_print_close():
