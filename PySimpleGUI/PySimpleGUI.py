@@ -54,87 +54,14 @@
 
 """
 
-version = "6.2.42"
+version = "6.3"
 
 
 
 """
 Changelog since last major release
 
-6.2         14-Jun-2026 released to GitHub
-6.2.1       22-Jun-2026 Added new feature - mouseover images for Buttons
-6.2.2       22-Jun-2026 Added mouseover_image_source to Button.update
-6.2.3       23-Jun-2026 Fixed overwriting the original image_source when Button.update called
-                        Added ability to add a mouseover image after window is created
-6.2.4       23-Jun-2026 A bunch of refactoring of the Button.update and mouseover methods.  Removed the
-                        hacky feeling do_not_save_image parameter from Button.update
-                        Refactor was to pull out Button image manipulation into a couple of methods.
-                        Also fixed a few bugs in the same areas.   
-6.2.5       24-Jun-2026 Fix in Button.update. Wasn't setting the image correctly and also wasn't saving the subsample,etc.                                      
-6.2.6       26-Jun-2026 New Listbox method - get_active_index.  Returns the index of where the cursor is located.                                  
-6.2.7       26-Jun-2026 Two Window location changes to make centering Windows on top of each or centering on any point easier
-                        Added return_center parm to Window.current_location.  If True, will return the center of the window rather than upper corner
-                        Added center_on_location parm to Window.  If True, then the Window will be created with the center of the window located at the location parm                               
-6.2.8       27-Jun-2026 Changed the center_on_location feature into a more generalized location_anchor. Can specify which part of the window should be located at location when creating.
-                        Also changed Window.current_location. Added parm anchor_location to specify a specific anchor point's location to be returned
-6.2.9       27-Jun-2026 Bug fix in Window.settings_restore. If a value was not yet set for an element, then should save the setting that was specified 
-                            in the element in the layout Was setting to '' previously.
-6.2.10      29-Jun-2026 Added mouseover image to Image Element.  Used same technique as the Button element.
-                        Refactored some of the Button mouseover code and put into Element object.  
-6.2.11      29-Jun-2026 Begin working on Mouseover Images for Tabs
-6.2.12       3-Jul-2026 Added use_min_size parm to Window object. Setting to True will cause the window's minimum size to be set when Window created
-6.2.13       4-Jul-2026 Added automatic key creation for non-Input elements.  All Input-style elements get a key automatically assigned if one
-                            is not provided. Other static elements have no key unless explicitly set.  Now all those static elements will 
-                            get a key with format "KeyID 41B56A4C50" if a key is not specified.
-                        Removed dead-code from Window.add_row
-                        More code for Tab mouseover images.  What's there is not working so shouldn't be trying it out just yet. (I think) I know the approach I need to take.
-6.2.14       5-Jul-2026 Added Element.mouseover_image_set so that mouseover images can be removed.  Needed because of
-                        how update methods handle image deletes (if all parms are None, then the Element image is deleted).
-                        Added same image freeing of previous image that was in Image element code when applying images for Button element 
-6.2.15       6-Jul-2026 Fixed Image.update bug with not updating image
-6.2.16       6-Jul-2026 This time actually fixed not updating image bug in Image.update.  Renamed image_source member variables to match the other image names
-6.2.17       6-Jul-2026 Fixed mouseover image for Image element.  Not sure exactly when it broke but had to be recently.
-6.2.18       7-Jul-2026 Updated docstring for Column.contents_changed to inform that Window.refresh should be called prior to Column.contents_changed.
-6.2.19       7-Jul-2026 Fixed bug 6896 (Tree object has no attribute BType).  Needed to check the element type is a Button before checking the type of button   
-6.2.20       9-Jul-2026 Added placeholder feature to Input element.  Still need to make changes to update to enable changing placeholder after initially set 
-6.2.21       9-Jul-2026 Changed Input.update to trigger a placeholder update anytime the value is changed via update. 
-                            Important for when a Window.settings_restore call happens
-6.2.22      10-Jul-2026 Added placeholder_justification to Input element.  The placeholder justification can be different than the normal data.
-6.2.23      10-Jul-2026 Added gear and degree symbols.
-6.2.24      11-Jul-2026 Added propogate_to_window param to Element.  This could go really badly.  The right click code is weird and quirky.  Hoping this will make it more dynamic
-6.2.25      13-Jul-2026 Added Bug fix for applying images via update to Image, Button and Tab elements that was introduced with the mouseover code.
-6.2.26      17-Jul-2026 Automatically restart user's program after upgrading to the PySimpleGUI maint release. REALLY hoping I didn't screw this one up
-                        since it'll require manually reinstalling most likely 😬.  Also adding restarts to applications that are upgrading PySimpleGUI.  
-                        sg.execute_restart(sys.argv[0]) is the recommended call for users to make to restart.
-6.2.27      17-Jul-2026 Added an autoclose popup before the pip restart happens                        
-6.2.28      18-Jul-2026 Added setting element's right click menu definition if the element gets a right click menu through the window's menu definition.
-                        This helps with changing right click menus on the fly.                     
-6.2.29      18-Jul-2026 Fixed right click problem of both a window and an element getting the click event. Learned can return 'break' from the
-                            element's right click and it will stop propogation of the click to the window
-6.2.30      18-Jul-2026 Added location_anchor parameter to all of the popups.
-6.2.31      18-Jul-2026 Changed a LOT of docstrings for parms that are location and size type of parameters.  Added (None, None) to valid types.
-                        Added window_anchor parameter easy_print and the debug window.
-6.2.32      19-Jul-2026 Added ⟳ as SYMBOL_REFRESH
-6.2.33      19-Jul-2026 Updated Window.move to use anchors when moving. The anchor used when window created can be overridden using anchor parameter 
-                        FINALLY got the rtype docstring right for Window. __getitem__.  It fixed the type warnings and improved the autocomplete
-6.2.34      21-Jul-2026 Expanded the set_tooltip method's parameters to include the text/background colors, tooltip time, tooltip offset, skip bind   
-                        Expanded ToolTip object to include the above parameters    
-6.2.35      25-Jul-2026 Added border_color parm to the Frame.update method so that the border color can be changed dynamically
-6.2.36      25-Jul-2026 Added font parm to element.set_tooltip. Now all aspects of the tooltip are controllable through this interface.
-6.2.37      29-Jul-2026 Added 'thickness' paramter to HorizontalSeparator and VerticalSeparator elements.  If no thickness is specified, then the
-                        current Separator elements are used which as based on TTK Line widgets.  If a thickness is specified, then a Frame widget is
-                        used to draw the line.  The added benefit of this addition is that the color of the Frame based lines will match the color
-                        used in Frame Elements. 
-6.2.38      30-Jul-2026 Added parameters tooltip_text_color, tooltip_background_color, tooltip_font, tooltip_time, tooltip_offset to Window object.
-                        Sets the tooltip settings for this window. Once set, an individual element's color, font, etc, can be set using set_tooltip            
-6.2.39      31-Jul-2026 Fixed Window docstring for tooltip parameters recently added
-6.2.40      31-Jul-2026 Native support for tuples in UserSettings files (json).  They're now automatically serialized.
-                        Converted global settings that were manually serializing into saving the tuples via the settings save.
-                        Fixed docstrings for Window tooltips parm
-6.2.41       1-Aug-2026 Fixed Graph.draw_arc docstring. It incorrectly stated the available styles.  Should have been 'pieslice', 'chord', 'arc'
-                        Graph.draw_line - added capstyle which determines how the end of the line should appear
-                        Graph.draw_lines - added arrow, arrow_shape, joinstyle, capstype parameters.  
-6.2.42       2-Aug-2026 Renamed the mouseover enter and leave methods for elements (prepended _).  Needed so they don't get included in call ref docs. 
+6.3          2-Aug-2026 Released to GitHub
 """
 
 
