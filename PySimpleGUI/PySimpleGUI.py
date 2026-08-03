@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3"
+version = "6.3.1"
 
 
 
@@ -62,6 +62,8 @@ version = "6.3"
 Changelog since last major release
 
 6.3          2-Aug-2026 Released to GitHub
+
+6.3.1        3-Aug-2026 Fixed a COLOR_SYSTEM_DEFAULT bug in Input.update.  
 """
 
 
@@ -2277,9 +2279,11 @@ class Input(Element):
                 self.TKEntry.icursor(move_cursor_to)
             # since value changed, update the placeholder
             self.showing_placeholder = False                    # set to not showing so it'll get set up again if needed
-            self.TKEntry.config(fg=self.TextColor)
-            self.TKEntry.config(bg=self.BackgroundColor)
+            _widget_set_fg_color(self.TKEntry, self.TextColor)
+            _widget_set_bg_color(self.TKEntry, self.BackgroundColor)
             self.TKEntry.config(justify=self.tk_justify)
+            # self.TKEntry.config(fg=self.TextColor)
+            # self.TKEntry.config(bg=self.BackgroundColor)
             self.update_placeholder()
         if select is True:
             self.TKEntry.select_range(0, 'end')
