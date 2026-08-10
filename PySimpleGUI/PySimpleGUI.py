@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.1"
+version = "6.3.3"
 
 
 
@@ -63,7 +63,15 @@ Changelog since last major release
 
 6.3          2-Aug-2026 Released to GitHub
 
-6.3.1        3-Aug-2026 Fixed a COLOR_SYSTEM_DEFAULT bug in Input.update.  
+6.3.1        3-Aug-2026 Fixed a COLOR_SYSTEM_DEFAULT bug in Input.update
+6.3.2        3-Aug-2026 Changed editor format string for PyCharm to "<editor> <file> --line <line>".  The file should be before the line number parms
+6.3.3        8-Aug-2026 Changed a LOT of checks for valid colors when setting tkinter widget colors.... more to go
+             9-Aug-2026 More color check changes.  Added _is_valid_color that calls tkinter to check the color string when checking colors
+                        Removed _widget_set_fg_color and _widget_set_bg_color funcitons that used to check for valid colors
+                        Changed popup_error_with_traceback to now show the full traceback in a mulitiline in the error window
+                        Changed keyword paramters foreground to fg and background to bg for tkitner config calls
+                        Made a TON of changes, broke lots of things, reverted 1/2 a ton of changes.  
+                        Ran automated regressions on this release flush out problems in the Element creation paramters
 """
 
 
@@ -1877,18 +1885,12 @@ class Element:
                         pass
         top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
         # Style the meny
-        if self.ParentForm.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(bg=self.ParentForm.right_click_menu_background_color)
-        if self.ParentForm.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(fg=self.ParentForm.right_click_menu_text_color)
-        if self.ParentForm.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(disabledforeground=self.ParentForm.right_click_menu_disabled_text_color)
-        if self.ParentForm.right_click_menu_font is not None:
-            top_menu.config(font=self.ParentForm.right_click_menu_font)
-        if self.ParentForm.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(activeforeground=self.ParentForm.right_click_menu_selected_colors[0])
-        if self.ParentForm.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(activebackground=self.ParentForm.right_click_menu_selected_colors[1])
+        top_menu.config(bg=color_check(self.ParentForm.right_click_menu_background_color))
+        top_menu.config(fg=color_check(self.ParentForm.right_click_menu_text_color))
+        top_menu.config(disabledforeground=color_check_blank(self.ParentForm.right_click_menu_disabled_text_color))
+        top_menu.config(activeforeground=color_check(self.ParentForm.right_click_menu_selected_colors[0]))
+        top_menu.config(activebackground=color_check(self.ParentForm.right_click_menu_selected_colors[1]))
+        top_menu.config(font=self.ParentForm.right_click_menu_font)
         AddMenuItem(top_menu, menu[1], self, right_click_menu=True)
         self.TKRightClickMenu = top_menu
         if propogate_to_window:
@@ -2233,25 +2235,24 @@ class Input(Element):
             return
 
         if background_color is not None:
-            if _widget_set_bg_color(self.TKEntry, background_color):      # set background using refactored function to check for errors, etc.
-                self.BackgroundColor = background_color
+            self.TKEntry.config(bg=color_check(background_color))      # set background using refactored function to check for errors, etc.
+            self.BackgroundColor = background_color
         if text_color is not None:
-            # self.TKEntry.configure(fg=text_color)
-            if _widget_set_fg_color(self.TKEntry, text_color):      # set foreground using refactored function to check for errors, etc.
-                self.TextColor = text_color                         # save new color if all is OK
+            self.TKEntry.configure(fg=color_check(text_color))
+            self.TextColor = text_color                         # save new color if all is OK
 
         if disabled is True:
             if self.UseReadonlyForDisable:
-                _widget_set_fg_color(self.TKEntry, self.disabled_readonly_text_color)
-                _widget_set_bg_color(self.TKEntry, self.disabled_readonly_background_color)
+                self.TKEntry.config(fg=color_check(self.disabled_readonly_text_color))
+                self.TKEntry.config(bg=color_check(self.disabled_readonly_background_color))
                 self.TKEntry['state'] = 'readonly'
             else:
                 self.TKEntry['state'] = 'disabled'
             self.Disabled = True
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
-            _widget_set_fg_color(self.TKEntry, self.TextColor)
-            _widget_set_bg_color(self.TKEntry, self.BackgroundColor)
+            self.TKEntry.config(fg=color_check(self.TextColor))
+            self.TKEntry.config(bg=color_check(self.BackgroundColor))
             # self.TKEntry.configure(fg=self.TextColor)
             self.Disabled = False
 
@@ -2279,8 +2280,8 @@ class Input(Element):
                 self.TKEntry.icursor(move_cursor_to)
             # since value changed, update the placeholder
             self.showing_placeholder = False                    # set to not showing so it'll get set up again if needed
-            _widget_set_fg_color(self.TKEntry, self.TextColor)
-            _widget_set_bg_color(self.TKEntry, self.BackgroundColor)
+            self.TKEntry.config(fg=color_check(self.TextColor))
+            self.TKEntry.config(bg=color_check(self.BackgroundColor))
             self.TKEntry.config(justify=self.tk_justify)
             # self.TKEntry.config(fg=self.TextColor)
             # self.TKEntry.config(bg=self.BackgroundColor)
@@ -2309,14 +2310,14 @@ class Input(Element):
         text = self.TKStringVar.get()
         if not self.mouse_over and not self.has_focus and text == '' and not self.showing_placeholder:
             self.TKStringVar.set(self.placeholder)
-            entry_widget.config(fg=self.placeholder_text_color if self.placeholder_text_color != COLOR_SYSTEM_DEFAULT else None)
-            entry_widget.config(bg=self.placeholder_background_color if self.placeholder_background_color != COLOR_SYSTEM_DEFAULT else None)
+            entry_widget.config(fg=color_check(self.placeholder_text_color))
+            entry_widget.config(bg=color_check(self.placeholder_background_color))
             entry_widget.config(justify=self.tk_justify_placeholder)
             self.showing_placeholder = True
         elif self.showing_placeholder and (self.mouse_over or self.has_focus):
             self.TKStringVar.set('')
-            entry_widget.config(fg=self.TextColor if self.TextColor != COLOR_SYSTEM_DEFAULT else None)
-            entry_widget.config(bg=self.BackgroundColor if self.TextColor != COLOR_SYSTEM_DEFAULT else None)
+            entry_widget.config(fg=color_check(self.TextColor))
+            entry_widget.config(bg=color_check(self.BackgroundColor))
             entry_widget.config(justify=self.tk_justify)
             self.showing_placeholder = False
 
@@ -3138,13 +3139,13 @@ class Listbox(Element):
             return
 
         if text_color is not None:
-            self.widget.itemconfig(index, fg=text_color)
+            self.widget.itemconfig(index, fg=color_check(text_color))
         if background_color is not None:
-            self.widget.itemconfig(index, bg=background_color)
+            self.widget.itemconfig(index, bg=color_check(background_color))
         if highlight_text_color is not None:
-            self.widget.itemconfig(index, selectforeground=highlight_text_color)
+            self.widget.itemconfig(index, selectforeground=color_check(highlight_text_color))
         if highlight_background_color is not None:
-            self.widget.itemconfig(index, selectbackground=highlight_background_color)
+            self.widget.itemconfig(index, selectbackground=color_check(highlight_background_color))
 
 
 
@@ -3309,11 +3310,11 @@ class Radio(Element):
         if text is not None:
             self.Text = str(text)
             self.TKRadio.configure(text=self.Text)
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKRadio.configure(background=background_color)
+        if background_color is not None:
+            self.TKRadio.configure(bg=color_check(background_color))
             self.BackgroundColor = background_color
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKRadio.configure(fg=text_color)
+        if text_color is not None:
+            self.TKRadio.configure(fg=color_check(text_color))
             self.TextColor = text_color
 
         if circle_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -3528,16 +3529,16 @@ class Checkbox(Element):
         if text is not None:
             self.Text = str(text)
             self.TKCheckbutton.configure(text=self.Text)
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKCheckbutton.configure(background=background_color)
+        if background_color is not None:
+            self.TKCheckbutton.configure(bg=color_check(background_color))
             self.BackgroundColor = background_color
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKCheckbutton.configure(fg=text_color)
+        if text_color is not None:
+            self.TKCheckbutton.configure(fg=color_check(text_color))
             self.TextColor = text_color
         # Color the checkbox itself
         if checkbox_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.CheckboxBackgroundColor = checkbox_color
-            self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
+            self.TKCheckbutton.configure(selectcolor=color_check(self.CheckboxBackgroundColor))  # The background of the checkbox
         elif text_color or background_color:
             if self.CheckboxBackgroundColor is not None and self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith(
                     '#') and self.BackgroundColor.startswith('#'):
@@ -3550,7 +3551,7 @@ class Checkbox(Element):
                 else:
                     bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2] + l_delta)
                 self.CheckboxBackgroundColor = rgb(*bg_rbg)
-                self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
+                self.TKCheckbutton.configure(selectcolor=color_check(self.CheckboxBackgroundColor))  # The background of the checkbox
 
         if visible is False:
             self._pack_forget_save_settings()
@@ -4023,9 +4024,9 @@ class Multiline(Element):
                     if tag not in self.tags:
                         self.tags.add(tag)
                     if background_color_for_value is not None:
-                        self.TKText.tag_configure(tag, background=background_color_for_value)
+                        self.TKText.tag_configure(tag, background=color_check(background_color_for_value))
                     if text_color_for_value is not None:
-                        self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                        self.TKText.tag_configure(tag, foreground=color_check(text_color_for_value))
                     if font_for_value is not None:
                         self.TKText.tag_configure(tag, font=font_for_value)
                 except Exception as e:
@@ -4072,9 +4073,9 @@ class Multiline(Element):
             self.TKText.configure(state='normal')
         self.Disabled = disabled if disabled is not None else self.Disabled
 
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKText.configure(background=background_color)
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
+        if background_color is not None:
+            self.TKText.configure(bg=color_check(background_color))
+        if text_color is not None:
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
@@ -4248,7 +4249,7 @@ class Multiline(Element):
             return
         if ibeam_color is not None:
             try:
-                self.Widget.config(insertbackground=ibeam_color)
+                self.Widget.config(insertbackground=color_check(ibeam_color))
             except Exception as e:
                 _error_popup_with_traceback('Error setting I-Beam color in set_ibeam_color',
                            'The element has a key:', self.Key,
@@ -4399,10 +4400,10 @@ class Text(Element):
         if value is not None:
             self.DisplayText = str(value)
             self.TKStringVar.set(str(value))
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKText.configure(background=background_color)
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKText.configure(fg=text_color)
+        if background_color is not None:
+            self.TKText.configure(bg=color_check(background_color))
+        if text_color is not None:
+            self.TKText.configure(fg=color_check(text_color))
         if font is not None:
             self.TKText.configure(font=font)
         if visible is False:
@@ -4744,10 +4745,10 @@ class StatusBar(Element):
             self.DisplayText = value
             stringvar = self.TKStringVar
             stringvar.set(value)
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKText.configure(background=background_color)
-        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self.TKText.configure(fg=text_color)
+        if background_color is not None:
+            self.TKText.configure(bg=color_check(background_color))
+        if text_color is not None:
+            self.TKText.configure(fg=color_check(text_color))
         if font is not None:
             self.TKText.configure(font=font)
         if visible is False:
@@ -5443,18 +5444,14 @@ class Button(Element):
                     self.TKButton.config(underline=pos)
             self.TKButton.configure(text=btext)
             self.ButtonText = text
-        if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
+        if button_color != (None, None):
             bc = button_color_to_tuple(button_color, self.ButtonColor)
             if self.UseTtkButtons:
-                if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
-                    button_style.configure(style_name, foreground=bc[0])
-                if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
-                    button_style.configure(style_name, background=bc[1])
+                button_style.configure(style_name, fg=color_check(bc[0]))
+                button_style.configure(style_name, bg=color_check(bc[1]))
             else:
-                if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
-                    self.TKButton.config(foreground=bc[0], activebackground=bc[0])
-                if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
-                    self.TKButton.config(background=bc[1], activeforeground=bc[1])
+                self.TKButton.config(fg=color_check(bc[0]), activebackground=color_check(bc[0]))
+                self.TKButton.config(bg=color_check(bc[1]), activeforeground=color_check(bc[1]))
             self.ButtonColor = bc
         if disabled is True:
             self.TKButton['state'] = 'disabled'
@@ -5728,15 +5725,10 @@ class ButtonMenu(Element):
         if menu_definition is not None:
             self.MenuDefinition = copy.deepcopy(menu_definition)
             top_menu = self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff, font=self.ItemFont, tearoffcommand=self._tearoff_menu_callback)
-
-            if self.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(bg=self.BackgroundColor)
-            if self.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(fg=self.TextColor)
-            if self.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(disabledforeground=self.DisabledTextColor)
-            if self.ItemFont is not None:
-                top_menu.config(font=self.ItemFont)
+            top_menu.config(bg=color_check(self.BackgroundColor))
+            top_menu.config(fg=color_check(self.TextColor))
+            top_menu.config(disabledforeground=color_check_blank(self.DisabledTextColor))
+            top_menu.config(font=self.ItemFont)
             AddMenuItem(self.TKMenu, self.MenuDefinition[1], self)
             self.TKButtonMenu.configure(menu=self.TKMenu)
         if image_source is not None:
@@ -5785,10 +5777,8 @@ class ButtonMenu(Element):
             self._visible = visible
         if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
             bc = button_color_to_tuple(button_color, self.ButtonColor)
-            if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
-                self.TKButtonMenu.config(foreground=bc[0], activeforeground=bc[0])
-            if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
-                self.TKButtonMenu.config(background=bc[1], activebackground=bc[1])
+            self.TKButtonMenu.config(fg=color_check(bc[0]), activeforeground=color_check(bc[0]))
+            self.TKButtonMenu.config(bg=color_check(bc[1]), activebackground=color_check(bc[1]))
             self.ButtonColor = bc
 
     def click(self):
@@ -5953,7 +5943,7 @@ class ProgressBar(Element):
             bar_color = _simplified_dual_color_to_tuple(bar_color, default=DEFAULT_PROGRESS_BAR_COLOR)
             self.BarColor = bar_color
             style = ttk.Style()
-            style.configure(self.ttk_style_name, background=bar_color[0], troughcolor=bar_color[1])
+            style.configure(self.ttk_style_name, background=color_check(bar_color[0]), troughcolor=color_check(bar_color[1]))
         if current_count is not None:
             self.TKProgressBar.Update(current_count, max=max)
 
@@ -6403,8 +6393,7 @@ class Canvas(Element):
             _error_popup_with_traceback('Error in Canvas.update - The window was closed')
             return
 
-        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
-            self._TKCanvas.configure(background=background_color)
+        self._TKCanvas.configure(bg=color_check(background_color))
         if visible is False:
             self._pack_forget_save_settings()
         elif visible is True:
@@ -6942,8 +6931,7 @@ class Graph(Element):
             _error_popup_with_traceback('Error in Graph.update - The window was closed')
             return
 
-        if background_color is not None and background_color != COLOR_SYSTEM_DEFAULT:
-            self._TKCanvas2.configure(background=background_color)
+        self._TKCanvas2.configure(bg=color_check(background_color))
 
         if visible is False:
             self._pack_forget_save_settings()
@@ -7434,7 +7422,7 @@ class Frame(Element):
         if visible is not None:
             self._visible = visible
         if border_color is not None:
-            self.Widget.configure(highlightcolor=border_color , highlightbackground=border_color)
+            self.Widget.configure(highlightcolor=color_check(border_color) , highlightbackground=color_check(border_color))
             self.BorderColor = border_color
 
     AddRow = add_row
@@ -8188,9 +8176,7 @@ class TabGroup(Element):
         tab_element.TabID = self.TabCount
         tab_element.ParentForm = self.ParentForm
         self.TabCount += 1
-        if tab_element.BackgroundColor != COLOR_SYSTEM_DEFAULT and tab_element.BackgroundColor is not None:
-            tab_element.TKFrame.configure(background=tab_element.BackgroundColor, highlightbackground=tab_element.BackgroundColor,
-                                          highlightcolor=tab_element.BackgroundColor)
+        tab_element.TKFrame.configure(bg=color_check(tab_element.BackgroundColor), highlightbackground=color_check(tab_element.BackgroundColor), highlightcolor=color_check(tab_element.BackgroundColor))
         if tab_element.BorderWidth is not None:
             tab_element.TKFrame.configure(borderwidth=tab_element.BorderWidth)
         if tab_element.Tooltip is not None:
@@ -8991,7 +8977,6 @@ class Menu(Element):
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=self.BackgroundColor, text_color=self.TextColor, size=sz, pad=pad, key=key, visible=visible,
                          font=font, metadata=metadata)
-        # super().__init__(ELEM_TYPE_MENUBAR, background_color=COLOR_SYSTEM_DEFAULT, text_color=COLOR_SYSTEM_DEFAULT, size=sz, pad=pad, key=key, visible=visible, font=None, metadata=metadata)
 
         self.Tearoff = tearoff
 
@@ -9045,17 +9030,11 @@ class Menu(Element):
             for menu_entry in self.MenuDefinition:
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)
 
-                if self.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
-                    baritem.config(bg=self.BackgroundColor)
-                if self.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                    baritem.config(fg=self.TextColor)
-                if self.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                    baritem.config(disabledforeground=self.DisabledTextColor)
-                if self.Font is not None:
-                    baritem.config(font=self.Font)
+                baritem.config(bg=color_check(self.BackgroundColor))
+                baritem.config(fg=color_check(self.TextColor))
+                baritem.config(disabledforeground=color_check_blank(self.DisabledTextColor))
+                baritem.config(font=color_check(self.Font))
 
-                if self.Font is not None:
-                    baritem.config(font=self.Font)
                 pos = menu_entry[0].find(MENU_SHORTCUT_CHARACTER)
                 # print(pos)
                 if pos != -1:
@@ -9368,14 +9347,14 @@ class Table(Element):
 
         if self.AlternatingRowColor is not None:
             for row in range(0, len(self.Values), 2):
-                self.TKTreeview.tag_configure(row, background=self.AlternatingRowColor)
+                self.TKTreeview.tag_configure(row, background=color_check(self.AlternatingRowColor))
         if row_colors is not None:  # individual row colors
             self.RowColors = row_colors
             for row_def in self.RowColors:
                 if len(row_def) == 2:  # only background is specified
-                    self.TKTreeview.tag_configure(row_def[0], background=row_def[1])
+                    self.TKTreeview.tag_configure(row_def[0], background=color_check(row_def[1]))
                 else:
-                    self.TKTreeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
+                    self.TKTreeview.tag_configure(row_def[0], background=color_check(row_def[2]), foreground=color_check(row_def[1]))
         if visible is not None:
             self._visible = visible
 
@@ -15708,37 +15687,27 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
                     # if a right click menu, then get styling from the top-level window
                     if right_click_menu:
                         window = element.ParentForm
-                        if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(bg=window.right_click_menu_background_color)
-                            new_menu.config(activeforeground=window.right_click_menu_background_color)
-                        if window.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(fg=window.right_click_menu_text_color)
-                            new_menu.config(activebackground=window.right_click_menu_text_color)
-                        if window.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
-                        if window.right_click_menu_font is not None:
-                            new_menu.config(font=window.right_click_menu_font)
+                        new_menu.config(bg=color_check(window.right_click_menu_background_color))
+                        new_menu.config(activeforeground=color_check(window.right_click_menu_background_color))
+                        new_menu.config(fg=color_check(window.right_click_menu_text_color))
+                        new_menu.config(activebackground=color_check(window.right_click_menu_text_color))
+                        new_menu.config(disabledforeground=color_check_blank(window.right_click_menu_disabled_text_color))
+                        new_menu.config(font=window.right_click_menu_font)
                     else:
-                        if element.Font is not None:
-                            new_menu.config(font=element.Font)
-                        if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(bg=element.BackgroundColor)
-                            new_menu.config(activeforeground=element.BackgroundColor)
-                        if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(fg=element.TextColor)
-                            new_menu.config(activebackground=element.TextColor)
-                        if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                            new_menu.config(disabledforeground=element.DisabledTextColor)
-                        if element.ItemFont is not None:
-                            new_menu.config(font=element.ItemFont)
+                        new_menu.config(font=element.Font)
+                        new_menu.config(bg=color_check(element.BackgroundColor))
+                        new_menu.config(activeforeground=color_check(element.BackgroundColor))
+                        new_menu.config(fg=color_check(element.TextColor))
+                        new_menu.config(activebackground=color_check(element.TextColor))
+                        new_menu.config(disabledforeground=color_check_blank(element.DisabledTextColor))
+                        new_menu.config(font=element.ItemFont)
                     return_val = new_menu
                     pos = sub_menu_info[i].find(MENU_SHORTCUT_CHARACTER)
                     if pos != -1:
                         if pos < len(MENU_SHORTCUT_CHARACTER) or sub_menu_info[i][pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
                             sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + len(MENU_SHORTCUT_CHARACTER):]
                     if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
-                        top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu,
-                                             underline=pos, state='disabled')
+                        top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu, underline=pos, state='disabled')
                     else:
                         top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
                     AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True, right_click_menu=right_click_menu)
@@ -15775,6 +15744,57 @@ class VarHolder(object):
 
 # ========================   TK CODE STARTS HERE ========================================= #
 
+def _is_valid_color(color):
+    """
+    Checks with tkinter to see if the color is a valid color.  Will show an error if invalid and return False
+    :param color:   The color to test.  Color string with name or #RRGGBB
+    :type color:    str
+    :return:        If tkinter says color is valid
+    :rtype:         cool
+    """
+    root = _get_hidden_master_root()
+    try:
+        root.winfo_rgb(color)
+    except tk.TclError:
+        popup_error_with_traceback(f'tkinter returned an error validating the color "{color}"')
+        return False
+    return True
+
+
+def color_check(color):
+    """
+    Checks a color for system default sentinel before sending to tkinter.
+    If color is COLOR_SYSTEM_DEFAULT then can't send it to tkinter and need to
+    instead send None. In some cases "" needs to be used instead of None (e.g. selectforeground)
+
+    :param color:   The color to test.  Color string with name or #RRGGBB
+    :type color:    str
+    :return:        The corrected color. Normally will be the same as color passed in
+    :rtype:         str | None
+    """
+    if color in (None, COLOR_SYSTEM_DEFAULT) or not _is_valid_color(color):
+        return None
+    else:
+        return color
+
+
+def color_check_blank(color):
+    """
+    Checks a color for system default sentinel before sending to tkinter.
+    If color is COLOR_SYSTEM_DEFAULT, returns "" instead, for options like
+    selectforeground where Tk expects an empty string (not None) to mean default.
+
+    :param color:   The color to test.  Color string with name or #RRGGBB
+    :type color:    str
+    :return:        The corrected color. Normally will be the same as color passed in
+    :rtype:         str
+    """
+    if color in (COLOR_SYSTEM_DEFAULT, None) or not _is_valid_color(color):
+        return ""
+    else:
+        return color
+
+
 def _widget_was_created(widget):
     """
     Determines if a Widget was created.
@@ -15799,56 +15819,56 @@ def _widget_was_created(widget):
         return False
 
 
-def _widget_set_fg_color(widget, fg_color=None):
-    """
-    Sets the foreground color for a tkinter widget.
-    :param widget:          The tkinter widget (should be non-ttk) to change
-    :type  widget:          tk.Widget
-    :param fg_color:        The new color. Note that the magic number COLOR_SYSTEM_DEFAULT means no color will be changed/set. Should be a color name or hex string
-    :type  fg_color:        str
-    :return:                Returns True is the color was able to be changed (False returns on any kind of error)
-    :rtype:                 bool
-    """
-
-    if fg_color is None or fg_color == COLOR_SYSTEM_DEFAULT:
-        return False
-
-    if not _widget_was_created(widget):
-        return False
-
-    try:
-        widget.configure(fg=fg_color)
-    except Exception as e:
-        popup_error_with_traceback('Error setting tkinter widget foreground color',f'tkinter returned an error while attempting to set foreground color to "{fg_color}"',e)
-        return False
-    return True
-
-
-def _widget_set_bg_color(widget, bg_color=None):
-    """
-    Sets the background color for a tkinter widget.
-    :param widget:          The tkinter widget (should be non-ttk) to change
-    :type  widget:          tk.Widget
-    :param bg_color:       The new color. Note that the magic number COLOR_SYSTEM_DEFAULT means no color will be changed/set
-    :type  bg_color:       str
-    :return:                Returns True is the color was able to be changed (False returns on any kind of error)
-    :rtype:                 bool
-    """
-
-
-    if bg_color is None or bg_color == COLOR_SYSTEM_DEFAULT:
-        return False
-
-    if not _widget_was_created(widget):
-        return False
-
-    try:
-        widget.configure(bg=bg_color)
-    except Exception as e:
-        popup_error_with_traceback('Error setting tkinter widget background color',f'tkinter returned an error while attempting to set background color to "{bg_color}"', e)
-        return False
-
-    return True
+# def _widget_set_fg_color(widget, fg_color=None):
+#     """
+#     Sets the foreground color for a tkinter widget.
+#     :param widget:          The tkinter widget (should be non-ttk) to change
+#     :type  widget:          tk.Widget
+#     :param fg_color:        The new color. Note that the magic number COLOR_SYSTEM_DEFAULT means no color will be changed/set. Should be a color name or hex string
+#     :type  fg_color:        str
+#     :return:                Returns True is the color was able to be changed (False returns on any kind of error)
+#     :rtype:                 bool
+#     """
+#
+#     if fg_color is None or fg_color == COLOR_SYSTEM_DEFAULT:
+#         return False
+#
+#     if not _widget_was_created(widget):
+#         return False
+#
+#     try:
+#         widget.configure(fg=fg_color)
+#     except Exception as e:
+#         popup_error_with_traceback('Error setting tkinter widget foreground color',f'tkinter returned an error while attempting to set foreground color to "{fg_color}"',e)
+#         return False
+#     return True
+#
+#
+# def _widget_set_bg_color(widget, bg_color=None):
+#     """
+#     Sets the background color for a tkinter widget.
+#     :param widget:          The tkinter widget (should be non-ttk) to change
+#     :type  widget:          tk.Widget
+#     :param bg_color:       The new color. Note that the magic number COLOR_SYSTEM_DEFAULT means no color will be changed/set
+#     :type  bg_color:       str
+#     :return:                Returns True is the color was able to be changed (False returns on any kind of error)
+#     :rtype:                 bool
+#     """
+#
+#
+#     if bg_color is None or bg_color == COLOR_SYSTEM_DEFAULT:
+#         return False
+#
+#     if not _widget_was_created(widget):
+#         return False
+#
+#     try:
+#         widget.configure(bg=bg_color)
+#     except Exception as e:
+#         popup_error_with_traceback('Error setting tkinter widget background color',f'tkinter returned an error while attempting to set background color to "{bg_color}"', e)
+#         return False
+#
+#     return True
 
 
 def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
@@ -15872,19 +15892,13 @@ def _add_right_click_menu(element, toplevel_form):
         menu = element.RightClickMenu or toplevel_form.RightClickMenu
         top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
 
-        if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(bg=toplevel_form.right_click_menu_background_color)
-        if toplevel_form.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(fg=toplevel_form.right_click_menu_text_color)
-        if toplevel_form.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(disabledforeground=toplevel_form.right_click_menu_disabled_text_color)
-        if toplevel_form.right_click_menu_font is not None:
-            top_menu.config(font=toplevel_form.right_click_menu_font)
+        top_menu.config(bg=color_check(toplevel_form.right_click_menu_background_color))
+        top_menu.config(fg=color_check(toplevel_form.right_click_menu_text_color))
+        top_menu.config(disabledforeground=color_check_blank(toplevel_form.right_click_menu_disabled_text_color))
+        top_menu.config(font=toplevel_form.right_click_menu_font)
 
-        if toplevel_form.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
-        if toplevel_form.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
-            top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
+        top_menu.config(activeforeground=color_check(toplevel_form.right_click_menu_selected_colors[0]))
+        top_menu.config(activebackground=color_check(toplevel_form.right_click_menu_selected_colors[1]))
         AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
         element.TKRightClickMenu = top_menu
         element.RightClickMenu = menu                   # Store the menu in the element in case the window was the source
@@ -16147,19 +16161,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         if menu:
             top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
 
-            if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(bg=toplevel_form.right_click_menu_background_color)
-            if toplevel_form.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(fg=toplevel_form.right_click_menu_text_color)
-            if toplevel_form.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(disabledforeground=toplevel_form.right_click_menu_disabled_text_color)
-            if toplevel_form.right_click_menu_font is not None:
-                top_menu.config(font=toplevel_form.right_click_menu_font)
+            top_menu.config(bg=color_check(toplevel_form.right_click_menu_background_color))
+            top_menu.config(fg=color_check(toplevel_form.right_click_menu_text_color))
+            top_menu.config(disabledforeground=color_check_blank(toplevel_form.right_click_menu_disabled_text_color))
+            top_menu.config(font=toplevel_form.right_click_menu_font)
 
-            if toplevel_form.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
-            if toplevel_form.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
-                top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
+            top_menu.config(activeforeground=color_check(toplevel_form.right_click_menu_selected_colors[0]))
+            top_menu.config(activebackground=color_check(toplevel_form.right_click_menu_selected_colors[1]))
             AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
             element.TKRightClickMenu = top_menu
             element.RightClickMenu = menu  # Store the menu in the element in case the window was the source
@@ -16319,12 +16327,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     row_justify = 'c'
                 elif element.Justification.lower().startswith('r'):
                     row_justify = 'r'
-
-                # anchor=tk.NW
-                # side = tk.LEFT
-                # row_justify = element.Justification
-
-                # element.Widget = element.TKColFrame
 
                 expand = True
                 if element.expand_x and element.expand_y:
@@ -16861,7 +16863,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor, selectforeground=element.BackgroundColor)
 
                 if text_color not in (None, COLOR_SYSTEM_DEFAULT):
-                    _widget_set_fg_color(element.TKEntry, text_color)               # trying out the refactored color function... many places to change still
+                    element.TKEntry.config(fg=text_color)               # trying out the refactored color function... many places to change still
                     element.TKEntry.configure(selectbackground=text_color)
                     element.TKEntry.config(insertbackground=text_color)
                 if element.selected_background_color not in (None, COLOR_SYSTEM_DEFAULT):
@@ -17206,7 +17208,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.reroute_stderr_to_here()
 
                 # row_should_expand = True
-            # -------------------------  CHECKBOX pleacement element  ------------------------- #
+            # -------------------------  CHECKBOX placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element  # type: Checkbox
                 width = 0 if auto_size_text else element_size[0]
@@ -18083,7 +18085,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # element.TKTreeview.pack_forget()
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
-                    element.TooltipObject = Tooltip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
+                    element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip, timeout=toplevel_form.tooltip_time, offset=toplevel_form.tooltip_offset, background_color=toplevel_form.tooltip_background_color, text_color=toplevel_form.tooltip_text_color, font=toplevel_form.tooltip_font)
                 _add_right_click_menu_and_grab(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
@@ -22580,18 +22582,12 @@ def popup_menu(window, element, menu_def, title=None, location=(None, None)):
 
     element._popup_menu_location = location
     top_menu = tk.Menu(window.TKroot, tearoff=True, tearoffcommand=element._tearoff_menu_callback)
-    if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
-        top_menu.config(bg=window.right_click_menu_background_color)
-    if window.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-        top_menu.config(fg=window.right_click_menu_text_color)
-    if window.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
-        top_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
-    if window.right_click_menu_font is not None:
-        top_menu.config(font=window.right_click_menu_font)
-    if window.right_click_menu_selected_colors[0] != COLOR_SYSTEM_DEFAULT:
-        top_menu.config(activeforeground=window.right_click_menu_selected_colors[0])
-    if window.right_click_menu_selected_colors[1] != COLOR_SYSTEM_DEFAULT:
-        top_menu.config(activebackground=window.right_click_menu_selected_colors[1])
+    top_menu.config(bg=color_check(window.right_click_menu_background_color))
+    top_menu.config(fg=color_check(window.right_click_menu_text_color))
+    top_menu.config(disabledforeground=color_check_blank(window.right_click_menu_disabled_text_color))
+    top_menu.config(font=window.right_click_menu_font)
+    top_menu.config(activeforeground=color_check(window.right_click_menu_selected_colors[0]))
+    top_menu.config(activebackground=color_check(window.right_click_menu_selected_colors[1]))
     top_menu.config(title=window.Title if title is None else title)
     AddMenuItem(top_menu, menu_def[1], element, right_click_menu=True)
     # element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
@@ -22637,7 +22633,7 @@ def _error_popup_with_traceback(title, *args, emoji=None):
             error_message = line
             break
     if file_info_pysimplegui is None:
-        _error_popup_with_code(title, None, None, 'Did not find your traceback info', *args, emoji=emoji)
+        _error_popup_with_code(title, None, None, 'Did not find your traceback info', *args, trace_details=trace_details, emoji=emoji)
         _PopupErrorGlobals.showing_error = False
         return
 
@@ -22653,24 +22649,26 @@ def _error_popup_with_traceback(title, *args, emoji=None):
         return
     filename = error_parts[0][error_parts[0].index('File ') + 5:]
     line_num = error_parts[1][error_parts[1].index('line ') + 5:]
-    _error_popup_with_code(title, filename, line_num, error_message, *args, emoji=emoji)
+    _error_popup_with_code(title, filename, line_num, error_message, *args, trace_details=trace_details, emoji=emoji)
     _PopupErrorGlobals.showing_error = False
 
 
-def _error_popup_with_code(title, filename, line_num, *args, emoji=None):
+def _error_popup_with_code(title, filename, line_num, *args, trace_details=None, emoji=None):
     """
     Makes the error popup window
 
-    :param title:     The title that will be shown in the popup's titlebar and in the first line of the window
-    :type title:      str
-    :param filename:  The filename to show.. may not be the filename that actually encountered the exception!
-    :type filename:   str
-    :param line_num:  Line number within file with the error
-    :type line_num:   int | str
-    :param args:      A variable number of lines of messages
-    :type args:       *Any
-    :param emoji:     An optional BASE64 Encoded image to shows in the error window. If set to '' (empty string) then no emoji will be shown
-    :type emoji:      bytes | str
+    :param title:           The title that will be shown in the popup's titlebar and in the first line of the window
+    :type title:            str
+    :param filename:        The filename to show.. may not be the filename that actually encountered the exception!
+    :type filename:         str
+    :param line_num:        Line number within file with the error
+    :type line_num:         int | str
+    :param args:            A variable number of lines of messages
+    :type args:             *Any
+    :param trace_details:   A variable number of lines of messages
+    :type trace_details:    List[str]
+    :param emoji:           An optional BASE64 Encoded image to shows in the error window. If set to '' (empty string) then no emoji will be shown
+    :type emoji:            bytes | str
     """
     editor_filename = execute_get_editor()
     if emoji is None:
@@ -22694,7 +22692,9 @@ def _error_popup_with_code(title, filename, line_num, *args, emoji=None):
         max_line_len = max(max_line_len, max([len(s) for s in line]))
 
     layout += [[Text(''.join(line), size=(min(max_line_len, 90), None))] for line in lines]
-    layout += [[Button('Close'), Button('Take me to error', disabled=True if not editor_filename else False), Button('Kill Application', button_color='white on red')]]
+    if trace_details is not None:
+        layout += [[Multiline('\n'.join(trace_details), size=(100,20))]]
+    layout += [[Button('Close and keep running', k='Close'), Button('Take me to error', disabled=True if not editor_filename else False), Button('Kill Application', button_color='white on red')]]
     if not editor_filename:
         layout += [[Text('Configure editor in the Global settings to enable "Take me to error" feature')]]
     window = Window(title, layout, keep_on_top=True)
@@ -26292,7 +26292,7 @@ def main_global_pysimplegui_settings():
     settings = pysimplegui_user_settings.read()
 
     editor_format_dict = {
-        'pycharm': '<editor> --line <line> <file>',
+        'pycharm': '<editor> <file> --line <line>',
         'notepad++': '<editor> -n<line> <file>',
         'sublime': '<editor> <file>:<line>',
         'vim': '<editor> +<line> <file>',
@@ -26305,7 +26305,7 @@ def main_global_pysimplegui_settings():
         'idle': '<editor> <file>'}
 
     tooltip = 'Format strings for some popular editors/IDEs:\n' + \
-              'PyCharm - <editor> --line <line> <file>\n' + \
+              'PyCharm - <editor> <file> --line <line> \n' + \
               'Notepad++ - <editor> -n<line> <file>\n' + \
               'Sublime - <editor> <file>:<line>\n' + \
               'vim -  <editor> +<line> <file>\n' + \
