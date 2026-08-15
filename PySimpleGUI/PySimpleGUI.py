@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.3"
+version = "6.3.5"
 
 
 
@@ -72,6 +72,9 @@ Changelog since last major release
                         Changed keyword paramters foreground to fg and background to bg for tkitner config calls
                         Made a TON of changes, broke lots of things, reverted 1/2 a ton of changes.  
                         Ran automated regressions on this release flush out problems in the Element creation paramters
+6.3.4       12-Aug-2026 Fixed bug when applying images in an element's update method. Was crashing when looking for widget.image. Needed to check attr exists first
+6.3.5       14-Aud-2026 New feature for window resizing.  Added ability to set resizable parameter when creating the window to the normal True/False as well as taking a tuple
+                            that indicates the directions the window can be resized (e.g. resizable=(False, True) means only allow resizing in the Y direction. 
 """
 
 
@@ -5515,7 +5518,8 @@ class Button(Element):
         else:
             width, height = image.width(), image.height()
 
-        if self.TKButton.image is not None:
+        # if self.TKButton.image is not None:
+        if hasattr(self.TKButton, 'image') and self.TKButton.image is not None:
             del self.TKButton.image
         if self.UseTtkButtons:
             button_style.configure(style_name, borderwidth=0, image='', width=width, height=height)     # clear previous image
@@ -6073,22 +6077,22 @@ class Image(Element):
         function "pin" to ensure your element is "pinned" to that location in your layout so that it returns there
         when made visible.
 
-        :param source:   A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
-        :type source:    str | bytes | None
-        :param filename: filename to the new image to display.
-        :type filename:  (str)
-        :param data:     Base64 encoded string OR a tk.PhotoImage object
-        :type data:      str | tkPhotoImage
-        :param mouseover_image_source: Image to show when the button is moused over. Note - must have an image set to use a mouseover button image
-        :type mouseover_image_source:  (str | bytes)
-        :param size:     (width, height) size of image in pixels
-        :type size:      Tuple[int,int]
-        :param subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :type subsample: (int)
-        :param zoom:     amount to increase the size of the image
-        :type zoom:      (int)
-        :param visible:  control visibility of element
-        :type visible:   (bool)
+        :param source:                  A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
+        :type source:                   str | bytes | None
+        :param filename:                filename to the new image to display.
+        :type filename:                 (str)
+        :param data:                    Base64 encoded string OR a tk.PhotoImage object
+        :type data:                     str | tkPhotoImage
+        :param mouseover_image_source:  Image to show when the button is moused over. Note - must have an image set to use a mouseover button image
+        :type mouseover_image_source:   (str | bytes)
+        :param size:                    (width, height) size of image in pixels
+        :type size:                     Tuple[int,int]
+        :param subsample:               Amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type subsample:                (int)
+        :param zoom:                    Amount to increase the size of the image
+        :type zoom:                     (int)
+        :param visible:                 Controls visibility of element
+        :type visible:                  (bool)
         """
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
@@ -6194,9 +6198,9 @@ class Image(Element):
             width, height = image.width(), image.height()
 
         self.tktext_label.configure(image='')  # clear previous image
-        if self.tktext_label.image is not None:
-            del self.tktext_label.image
 
+        if hasattr(self.tktext_label, 'image') and self.tktext_label.image is not None:
+            del self.tktext_label.image
         try:  # sometimes crashes if user closed with X
             self.tktext_label.configure(image=image, width=width, height=height)
         except Exception as e:
@@ -7831,7 +7835,7 @@ class Tab(Element):
 
 
         self.tktext_label.configure(image='')  # clear previous image
-        if self.tktext_label.image is not None:
+        if hasattr(self.tktext_label, 'image') and self.tktext_label.image is not None:
             del self.tktext_label.image
 
         try:  # sometimes crashes if user closed with X
@@ -9033,7 +9037,7 @@ class Menu(Element):
                 baritem.config(bg=color_check(self.BackgroundColor))
                 baritem.config(fg=color_check(self.TextColor))
                 baritem.config(disabledforeground=color_check_blank(self.DisabledTextColor))
-                baritem.config(font=color_check(self.Font))
+                baritem.config(font=self.Font)
 
                 pos = menu_entry[0].find(MENU_SHORTCUT_CHARACTER)
                 # print(pos)
@@ -10242,7 +10246,7 @@ class Window:
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. None will not set any location meaning the OS will decide
         :type location:                              (int, int) or (None, None) or None
         :param location_anchor:                      Position on a window that is used to achnor the widow to a location. Default = WIN_ANCHOR_UPPER_LEFT if location is specified
-        :type location_anchor:                       (str)
+        :type location_anchor:                       str | None
         :param relative_location:                    (x,y) location relative to the default location of the window, in pixels. This location is relative to the location the window would be created. Note they can be negative.
         :type relative_location:                     (int, int) | (None, None)
         :param auto_save_location:                   If True the windows location will be automatically saved to a settings file and will be reloaded next time the program is run. Save happens when window close is detected
@@ -10287,8 +10291,8 @@ class Window:
         :type grab_anywhere_using_control:           (bool)
         :param keep_on_top:                          If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm
         :type keep_on_top:                           (bool)
-        :param resizable:                            If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
-        :type resizable:                             (bool)
+        :param resizable:                            If True, allows the user to resize the window. If a (bool, bool) TUPLE - resizing can be controlled for each direction (x, y) Expansion parameter for elements determine how they resize.
+        :type resizable:                             bool | (str, str)
         :param use_min_size:                         If True the window's minimum size will be set when the window is created
         :type use_min_size:                          (bool)
         :param disable_close:                        If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users
@@ -18338,7 +18342,9 @@ def StartupTK(window):
     if not running_mac():
         _no_titlebar_setup(window)
 
-    if not window.Resizable:
+    if isinstance(window.Resizable, tuple):
+        root.resizable(window.Resizable[0], window.Resizable[1])
+    elif not window.Resizable:
         root.resizable(False, False)
 
     if window.DisableMinimize:
