@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.5"
+version = "6.3.6"
 
 
 
@@ -73,8 +73,9 @@ Changelog since last major release
                         Made a TON of changes, broke lots of things, reverted 1/2 a ton of changes.  
                         Ran automated regressions on this release flush out problems in the Element creation paramters
 6.3.4       12-Aug-2026 Fixed bug when applying images in an element's update method. Was crashing when looking for widget.image. Needed to check attr exists first
-6.3.5       14-Aud-2026 New feature for window resizing.  Added ability to set resizable parameter when creating the window to the normal True/False as well as taking a tuple
+6.3.5       14-Aug-2026 New feature for window resizing.  Added ability to set resizable parameter when creating the window to the normal True/False as well as taking a tuple
                             that indicates the directions the window can be resized (e.g. resizable=(False, True) means only allow resizing in the Y direction. 
+6.3.6       15-Aug-2026 Changed _error_popup_with_code to add the text at the top of the error window into the Multiline so that a user can copy the entire error using the Multiline                         
 """
 
 
@@ -22697,9 +22698,12 @@ def _error_popup_with_code(title, filename, line_num, *args, trace_details=None,
     for line in lines:
         max_line_len = max(max_line_len, max([len(s) for s in line]))
 
-    layout += [[Text(''.join(line), size=(min(max_line_len, 90), None))] for line in lines]
+    multiline_contents = '\n'.join(['\n'.join(line) for line in lines])
     if trace_details is not None:
-        layout += [[Multiline('\n'.join(trace_details), size=(100,20))]]
+        multiline_contents += '\n'.join(trace_details)
+
+    layout += [[Text(''.join(line), size=(min(max_line_len, 90), None))] for line in lines]
+    layout += [[Multiline(multiline_contents, size=(100,20))]]
     layout += [[Button('Close and keep running', k='Close'), Button('Take me to error', disabled=True if not editor_filename else False), Button('Kill Application', button_color='white on red')]]
     if not editor_filename:
         layout += [[Text('Configure editor in the Global settings to enable "Take me to error" feature')]]
