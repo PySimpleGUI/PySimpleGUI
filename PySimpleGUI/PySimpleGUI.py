@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.6"
+version = "6.3.7"
 
 
 
@@ -75,7 +75,8 @@ Changelog since last major release
 6.3.4       12-Aug-2026 Fixed bug when applying images in an element's update method. Was crashing when looking for widget.image. Needed to check attr exists first
 6.3.5       14-Aug-2026 New feature for window resizing.  Added ability to set resizable parameter when creating the window to the normal True/False as well as taking a tuple
                             that indicates the directions the window can be resized (e.g. resizable=(False, True) means only allow resizing in the Y direction. 
-6.3.6       15-Aug-2026 Changed _error_popup_with_code to add the text at the top of the error window into the Multiline so that a user can copy the entire error using the Multiline                         
+6.3.6       15-Aug-2026 Changed _error_popup_with_code to add the text at the top of the error window into the Multiline so that a user can copy the entire error using the Multiline                       
+6.3.7       18-Aug-2026 New debugging aid - "set tooltip to element's key" is enabled by calling set_options(set_tooltip_to_element_key=True)  
 """
 
 
@@ -397,6 +398,7 @@ TOOLTIP_TEXT_COLOR = '#000000'          # Black
 TOOLTIP_FONT = None
 DEFAULT_USE_BUTTON_SHORTCUTS = False
 DEFAULT_DICT_TO_STRING_WIDTH = 80
+DEFAULT_SET_TOOLTIP_TO_ELEMENT_KEY = False  # If true, then the tooltip will be set = to the element's key for all elements
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -1050,6 +1052,9 @@ class Element:
         :type sbar_relief:                  (str)
         """
 
+        if key is None:
+            key = f'KeyID {hex(id(self)).upper()[2:]}'
+
         if size is not None and size != (None, None):
             if isinstance(size, int):
                 size = (size, 1)
@@ -1086,6 +1091,8 @@ class Element:
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
         self.Key = key  # dictionary key for return values
+        if Window._set_tooltip_to_element_key and key:
+            tooltip = key
         self.Tooltip = tooltip
         self.TooltipObject = None       # type: ToolTip | None
         self._visible = visible
@@ -10211,7 +10218,7 @@ class Window:
     _rerouted_stderr_stack = []  # type: List[Tuple[Window, Element]]
     _original_stdout = None
     _original_stderr = None
-
+    _set_tooltip_to_element_key = DEFAULT_SET_TOOLTIP_TO_ELEMENT_KEY
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
@@ -19267,7 +19274,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
-                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None):
+                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -19686,6 +19693,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if watermark_text is not None:
         Window._watermark_user_text = watermark_text
 
+    if set_tooltip_to_element_key is not None:
+        Window._set_tooltip_to_element_key = set_tooltip_to_element_key
 
     if win_app_id is not None:
         # Enables the correct application icon to be shown on the Windows taskbar

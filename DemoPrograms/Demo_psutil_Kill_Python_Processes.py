@@ -99,8 +99,7 @@ def show_list_by_cpu(python_only=False):
 
 
 def make_window():
-    layout = [[sg.Text('Python Process Killer - Choose one or more processes',
-                       size=(45, 1), font=('Helvetica', 15), text_color='yellow')],
+    layout = [[sg.Text('Python Process Killer - Choose one or more processes', size=(45, 1), font=('Helvetica', 15), text_color='yellow')],
               [sg.Listbox(values=[' '], size=(130, 30), select_mode=sg.SELECT_MODE_EXTENDED, font=('Courier', 10), key='-PROCESSES-', expand_x=True, expand_y=True)],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15, 1), font='any 14', key='-FILTER-', enable_events=True),
