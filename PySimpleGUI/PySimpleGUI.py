@@ -79,6 +79,7 @@ Changelog since last major release
 6.3.7       18-Aug-2026 New debugging aid - "set tooltip to element's key" is enabled by calling set_options(set_tooltip_to_element_key=True)  
 6.3.8       21-Aug-2026 Added kwargs to set_options. Used to soak up options that are not recognized.  This keeps bad options from crashing the program.  It won't help the 
                             older versions of PySimpleGUI that don't recognize a new option, but it will help from this version of PySimpleGUI onward  
+                        Added tooltip_text_color and tooltip_background_color to set_options so that they can be set on an application-wide basis
 """
 
 
@@ -919,7 +920,7 @@ class ToolTip:
         self.text_color = text_color or TOOLTIP_TEXT_COLOR
         self.background_color = background_color or TOOLTIP_BACKGROUND_COLOR
         self.offset = offset
-        self.font = font
+        self.font = font or TOOLTIP_FONT
 
     def enter(self, event=None):
         """
@@ -19261,22 +19262,7 @@ def set_global_icon(icon):
 # ============================== set_options ========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None),
-                margins=(None, None),
-                element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
-                slider_border_width=None, slider_relief=None, slider_orientation=None,
-                autoclose_time=None, message_box_line_width=None,
-                progress_meter_border_depth=None, progress_meter_style=None,
-                progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None,
-                text_justification=None, background_color=None, element_background_color=None,
-                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
-                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-                window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
-                suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
-                enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
-                sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
-                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None, **kwargs):
+def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None), margins=(None, None), element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None, slider_border_width=None, slider_relief=None, slider_orientation=None, autoclose_time=None, message_box_line_width=None, progress_meter_border_depth=None, progress_meter_style=None, progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None, text_justification=None, background_color=None, element_background_color=None, text_element_background_color=None, input_elements_background_color=None, input_text_color=None, scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None), window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, tooltip_offset=(None, None), tooltip_background_color=None, tooltip_text_color=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None, hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None, **kwargs):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -19346,6 +19332,12 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type tooltip_time:                     (int)
     :param tooltip_font:                    font to use for all tooltips
     :type tooltip_font:                     str or Tuple[str, int] or Tuple[str, int, str]
+    :param tooltip_offset:                  Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered.
+    :type tooltip_offset:                   ((None, None) | (int, int))
+    :param tooltip_text_color:              Text color to use as the default for tooltips
+    :type tooltip_text_color:               str
+    :param tooltip_background_color:        Text background color to use as the default for tooltips
+    :type tooltip_background_color:         str
     :param use_ttk_buttons:                 if True will cause all buttons to be ttk buttons
     :type use_ttk_buttons:                  (bool)
     :param ttk_theme:                       Theme to use with ttk widgets.  Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
@@ -19388,8 +19380,6 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type disable_modal_windows:            (bool)
     :param force_modal_windows:             If True then all windows will be modal (the disable option will be ignored... all windows will be forced to be modal)
     :type force_modal_windows:              (bool)
-    :param tooltip_offset:                  Offset to use for tooltips as a tuple. These values will be added to the mouse location when the widget was entered.
-    :type tooltip_offset:                   ((None, None) | (int, int))
     :param sbar_trough_color:               Scrollbar color of the trough
     :type sbar_trough_color:                (str)
     :param sbar_background_color:           Scrollbar color of the background of the arrow buttons at the ends AND the color of the "thumb" (the thing you grab and slide). Switches to arrow color when mouse is over
@@ -19448,11 +19438,14 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_WINDOW_LOCATION
     global DEFAULT_ELEMENT_TEXT_COLOR
     global DEFAULT_INPUT_TEXT_COLOR
+    global TOOLTIP_FONT
+    global DEFAULT_TOOLTIP_OFFSET
     global DEFAULT_TOOLTIP_TIME
+    global TOOLTIP_BACKGROUND_COLOR
+    global TOOLTIP_TEXT_COLOR
     global DEFAULT_ERROR_BUTTON_COLOR
     global DEFAULT_TTK_THEME
     global USE_TTK_BUTTONS
-    global TOOLTIP_FONT
     global SUPPRESS_ERROR_POPUPS
     global SUPPRESS_RAISE_KEY_ERRORS
     global SUPPRESS_KEY_GUESSING
@@ -19471,7 +19464,6 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_SCALING
     global DEFAULT_MODAL_WINDOWS_ENABLED
     global DEFAULT_MODAL_WINDOWS_FORCED
-    global DEFAULT_TOOLTIP_OFFSET
     global DEFAULT_ALPHA_CHANNEL
     global _pysimplegui_user_settings
     global ttk_part_overrides_from_options
@@ -19580,6 +19572,18 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if tooltip_time is not None:
         DEFAULT_TOOLTIP_TIME = tooltip_time
 
+    if tooltip_font is not None:
+        TOOLTIP_FONT = tooltip_font
+
+    if tooltip_background_color is not None:
+        TOOLTIP_BACKGROUND_COLOR = tooltip_background_color
+
+    if tooltip_text_color is not None:
+        TOOLTIP_TEXT_COLOR = tooltip_text_color
+
+    if tooltip_offset != (None, None):
+        DEFAULT_TOOLTIP_OFFSET = tooltip_offset
+
     if error_button_color != (None, None):
         DEFAULT_ERROR_BUTTON_COLOR = error_button_color
 
@@ -19589,8 +19593,6 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if use_ttk_buttons is not None:
         USE_TTK_BUTTONS = use_ttk_buttons
 
-    if tooltip_font is not None:
-        TOOLTIP_FONT = tooltip_font
 
     if suppress_error_popups is not None:
         SUPPRESS_ERROR_POPUPS = suppress_error_popups
@@ -19657,10 +19659,6 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if force_modal_windows is not None:
         DEFAULT_MODAL_WINDOWS_FORCED = force_modal_windows
 
-    if tooltip_offset != (None, None):
-        DEFAULT_TOOLTIP_OFFSET = tooltip_offset
-
-
     if alpha_channel is not None:
         DEFAULT_ALPHA_CHANNEL = alpha_channel
 
@@ -19697,6 +19695,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if set_tooltip_to_element_key is not None:
         Window._set_tooltip_to_element_key = set_tooltip_to_element_key
+
 
     if win_app_id is not None:
         # Enables the correct application icon to be shown on the Windows taskbar
