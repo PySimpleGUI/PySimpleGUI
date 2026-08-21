@@ -1095,7 +1095,7 @@ class Element:
         self.TextColor = text_color if text_color is not None else DEFAULT_ELEMENT_TEXT_COLOR
         self.Key = key  # dictionary key for return values
         if Window._set_tooltip_to_element_key and key:
-            tooltip = key
+            tooltip = f'{key}'
         self.Tooltip = tooltip
         self.TooltipObject = None       # type: ToolTip | None
         self._visible = visible
@@ -19262,7 +19262,7 @@ def set_global_icon(icon):
 # ============================== set_options ========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None), margins=(None, None), element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None, slider_border_width=None, slider_relief=None, slider_orientation=None, autoclose_time=None, message_box_line_width=None, progress_meter_border_depth=None, progress_meter_style=None, progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None, text_justification=None, background_color=None, element_background_color=None, text_element_background_color=None, input_elements_background_color=None, input_text_color=None, scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None), window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, tooltip_offset=(None, None), tooltip_background_color=None, tooltip_text_color=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None, hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None, **kwargs):
+def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None), margins=(None, None), element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None, slider_border_width=None, slider_relief=None, slider_orientation=None, autoclose_time=None, message_box_line_width=None, progress_meter_border_depth=None, progress_meter_style=None, progress_meter_relief=None, progress_meter_color=None, progress_meter_size=None, text_justification=None, background_color=None, element_background_color=None, text_element_background_color=None, input_elements_background_color=None, input_text_color=None, scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None), window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, tooltip_offset=(None, None), tooltip_background_color=None, tooltip_text_color=None, set_tooltip_to_element_key=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None, hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, **kwargs):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -19338,6 +19338,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type tooltip_text_color:               str
     :param tooltip_background_color:        Text background color to use as the default for tooltips
     :type tooltip_background_color:         str
+    :param set_tooltip_to_element_key:      If True then all elements' tooltips will be set to the element's key.  Useful for debugging
+    :type set_tooltip_to_element_key:       bool
     :param use_ttk_buttons:                 if True will cause all buttons to be ttk buttons
     :type use_ttk_buttons:                  (bool)
     :param ttk_theme:                       Theme to use with ttk widgets.  Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
@@ -26002,7 +26004,7 @@ def _create_main_window():
 
     tab_elem_layout = [[Push(), Text('These sample controls show what\'s possible with PySimpleGUI'), Push()],
                         [TabGroup([[tab_elem_graph, tab_elem_basic, tab_elem_table_tree, tab_elem_mline_sliders, tab_elem_popups]], key='-TAB_GROUP-', expand_x=True, expand_y=True)]]
-    
+
     tab_elem = Tab('Elements\n', tab_elem_layout, key='-TAB ELEMENTS-', expand_x=True, expand_y=True)
 
     # ------------------------- Settings Tab -------------------------
@@ -26011,7 +26013,7 @@ def _create_main_window():
                            [B('Global\nSettings', size=(8,2), k='-GLOBAL SETTINGS-', tooltip='Settings across all PySimpleGUI programs'),]]
 
     tab_settings = Tab('Settings\n', tab_settings_layout, key='-TAB SETTINGS-', expand_x=True, expand_y=True)
-    
+
 
 
     # ------------------------- VERSIONS Tab -------------------------
