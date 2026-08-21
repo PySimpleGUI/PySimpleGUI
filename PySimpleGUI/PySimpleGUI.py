@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.7"
+version = "6.3.8"
 
 
 
@@ -77,6 +77,8 @@ Changelog since last major release
                             that indicates the directions the window can be resized (e.g. resizable=(False, True) means only allow resizing in the Y direction. 
 6.3.6       15-Aug-2026 Changed _error_popup_with_code to add the text at the top of the error window into the Multiline so that a user can copy the entire error using the Multiline                       
 6.3.7       18-Aug-2026 New debugging aid - "set tooltip to element's key" is enabled by calling set_options(set_tooltip_to_element_key=True)  
+6.3.8       21-Aug-2026 Added kwargs to set_options. Used to soak up options that are not recognized.  This keeps bad options from crashing the program.  It won't help the 
+                            older versions of PySimpleGUI that don't recognize a new option, but it will help from this version of PySimpleGUI onward  
 """
 
 
@@ -19274,7 +19276,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None, dpi_awareness=None, scaling=None, disable_modal_windows=None, force_modal_windows=None, tooltip_offset=(None, None),
                 sbar_trough_color=None, sbar_background_color=None, sbar_arrow_color=None, sbar_width=None, sbar_arrow_width=None, sbar_frame_color=None, sbar_relief=None, alpha_channel=None,
-                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None):
+                hide_window_when_creating=None, use_button_shortcuts=None, watermark_text=None, win_app_id=None, set_tooltip_to_element_key=None, **kwargs):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -19412,8 +19414,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type watermark_text:                   (str)
     :param win_app_id:                      For Windows only. Sets string that's passed to Windows to control combining icons on taskbar. Default is " mycompany.myproduct.subproduct.version". Windows with same ID combine on taskbar. Change before creating a window to set that window's ID.
     :type win_app_id:                       (str)
-    :return:                                None
-    :rtype:                                 None
+    :param **kwargs:                        The keyword args
+    :type **kwargs:                         (Any)
     """
 
     global DEFAULT_ELEMENT_SIZE
@@ -19704,8 +19706,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
             except Exception as e:
                 print('Error setting App ID', e)
 
-    return True
-
+    if len(kwargs) != 0:
+        print('set_options - bad parameter set', 'The parameter(s) used in set_options were not recognized options:\n', *[f'        {key}={value}\n' for key, value in kwargs.items()])
 # ----------------------------------------------------------------- #
 
 # .########.##.....##.########.##.....##.########..######.
