@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.8"
+version = "6.3.9"
 
 
 
@@ -80,6 +80,8 @@ Changelog since last major release
 6.3.8       21-Aug-2026 Added kwargs to set_options. Used to soak up options that are not recognized.  This keeps bad options from crashing the program.  It won't help the 
                             older versions of PySimpleGUI that don't recognize a new option, but it will help from this version of PySimpleGUI onward  
                         Added tooltip_text_color and tooltip_background_color to set_options so that they can be set on an application-wide basis
+6.3.9       24-Aug-2026 Added try around call to tkinter mainloop in read_all_windows.  It looks specifically for a KeyboardInterrupt.  If caught, it'll print a message
+                            and call sys.exit to exit the application                
 """
 
 
@@ -13230,7 +13232,11 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
         Window._TKAfterID = Window.hidden_master_root.after(timeout, _timeout_alarm_callback_hidden)
 
     # ------------ Call Mainloop ------------
-    Window._root_running_mainloop.mainloop()
+    try:
+        Window._root_running_mainloop.mainloop()
+    except KeyboardInterrupt:
+        print('KeyboardInterrupt detected in read_all_windows... exiting application')
+        sys.exit()
 
     try:
         Window.hidden_master_root.after_cancel(Window._TKAfterID)
@@ -19708,7 +19714,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 print('Error setting App ID', e)
 
     if len(kwargs) != 0:
-        print('set_options - bad parameter set', 'The parameter(s) used in set_options were not recognized options:\n', *[f'        {key}={value}\n' for key, value in kwargs.items()])
+        print('set_options - bad parameter set.', 'The parameter(s) used in set_options were not recognized options:\n', *[f'        {key}={value}\n' for key, value in kwargs.items()])
 # ----------------------------------------------------------------- #
 
 # .########.##.....##.########.##.....##.########..######.
