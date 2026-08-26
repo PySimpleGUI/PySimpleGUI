@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.10"
+version = "6.3.11"
 
 
 
@@ -83,6 +83,10 @@ Changelog since last major release
 6.3.9       24-Aug-2026 Added try around call to tkinter mainloop in read_all_windows.  It looks specifically for a KeyboardInterrupt.  If caught, it'll print a message
                             and call sys.exit to exit the application                
 6.3.10      26-Aug-2026 Fix for bug 6904. Was crashing when reading a location of [None, None] from settings file. Fix was to convert to a tuple
+6.3.11      26-Aug-2026 Fix for bug 3507 (hopefully)... It's a Linux specific problem... it's also a fix for Wayland (successor to X11).  It's a somewhat fundamental change to how
+                            every window is created. Rather than using Alpha to hide a window while it's being created, this version withdraws the window and uses a call I didn't
+                            know about to get the size of the window before it's fully created. master.winfo_reqwidth() master.winfo_reqheight(). Alpha was needed before so
+                            the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
 """
  
 
@@ -18336,14 +18340,15 @@ def StartupTK(window):
 
     # If location is None, then there's no need to hide the window.  Let it build where it is going to end up being.
     if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True and window.Location is not None:
-        try:
-            if not running_mac() or \
-                    (running_mac() and not window.NoTitleBar) or \
-                    (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
-
-                root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-        except Exception as e:
-            print('*** Exception setting alpha channel to zero while creating window ***', e)
+        root.withdraw()
+    #     try:
+    #         if not running_mac() or \
+    #                 (running_mac() and not window.NoTitleBar) or \
+    #                 (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
+    #
+    #             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+    #     except Exception as e:
+    #         print('*** Exception setting alpha channel to zero while creating window ***', e)
 
     if window.BackgroundColor is not None and window.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=window.BackgroundColor)
@@ -18400,10 +18405,20 @@ def StartupTK(window):
     window.set_icon(window.WindowIcon)
     try:
         alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
-        root.attributes('-alpha', alpha_channel)  # Make window visible again
+        if root.state() == 'withdrawn':
+            if alpha_channel != 1:
+                root.attributes('-alpha', alpha_channel)  # wrapper already exists here, so this sticks on X11
+            root.deiconify()  # first and only map
+        else:
+            root.attributes('-alpha', alpha_channel)  # Make window visible again
     except Exception as e:
-        print('**** Error setting Alpha Channel to {} after window was created ****'.format(alpha_channel), e)
-        # pass
+        print('**** Error making window visible after it was created ****', e)
+    # try:
+    #     alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
+    #     root.attributes('-alpha', alpha_channel)  # Make window visible again
+    # except Exception as e:
+    #     print('**** Error setting Alpha Channel to {} after window was created ****'.format(alpha_channel), e)
+    #     # pass
 
     if window.ReturnKeyboardEvents and not window.NonBlocking:
         root.bind("<KeyRelease>", window._KeyboardCallback)
@@ -26601,8 +26616,14 @@ def _convert_window_to_tk(window):
                 location_anchor = WIN_ANCHOR_CENTER
 
         master.update_idletasks()               # don't forget to do updates or values are bad
-        win_width = master.winfo_width()
-        win_height = master.winfo_height()
+        if master.state() == 'withdrawn':       # withdrawn (never mapped) windows report winfo_width/height as 1
+            win_width = window._Size[0] if window._Size[0] is not None else master.winfo_reqwidth()
+            win_height = window._Size[1] if window._Size[1] is not None else master.winfo_reqheight()
+        else:
+            win_width = master.winfo_width()
+            win_height = master.winfo_height()
+        # win_width = master.winfo_width()
+        # win_height = master.winfo_height()
 
         xoff = yoff = 0
         if location_anchor == WIN_ANCHOR_CENTER:
