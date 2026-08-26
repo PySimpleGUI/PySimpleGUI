@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.9"
+version = "6.3.10"
 
 
 
@@ -82,8 +82,9 @@ Changelog since last major release
                         Added tooltip_text_color and tooltip_background_color to set_options so that they can be set on an application-wide basis
 6.3.9       24-Aug-2026 Added try around call to tkinter mainloop in read_all_windows.  It looks specifically for a KeyboardInterrupt.  If caught, it'll print a message
                             and call sys.exit to exit the application                
+6.3.10      26-Aug-2026 Fix for bug 6904. Was crashing when reading a location of [None, None] from settings file. Fix was to convert to a tuple
 """
-
+ 
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -10528,7 +10529,7 @@ class Window:
         self._last_location = (None, None)              # used by a property
         self.auto_save_location = auto_save_location
         if auto_save_location is True:
-            self.Location = user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location)
+            self.Location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
         self.scaling = scaling if scaling is not None else DEFAULT_SCALING
 
         if self.use_custom_titlebar:
