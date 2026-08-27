@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.11"
+version = "6.3.12"
 
 
 
@@ -87,6 +87,7 @@ Changelog since last major release
                             every window is created. Rather than using Alpha to hide a window while it's being created, this version withdraws the window and uses a call I didn't
                             know about to get the size of the window before it's fully created. master.winfo_reqwidth() master.winfo_reqheight(). Alpha was needed before so
                             the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
+6.3.12      27-Aug-2026 Another bite of the fix-auto-save-location bug fix apple                            
 """
  
 
@@ -10533,7 +10534,9 @@ class Window:
         self._last_location = (None, None)              # used by a property
         self.auto_save_location = auto_save_location
         if auto_save_location is True:
-            self.Location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
+            saved_location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
+            if saved_location != (None, None):
+                self.Location = saved_location
         self.scaling = scaling if scaling is not None else DEFAULT_SCALING
 
         if self.use_custom_titlebar:
