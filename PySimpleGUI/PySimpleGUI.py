@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.12"
+version = "6.3.11"
 
 
 
@@ -87,8 +87,6 @@ Changelog since last major release
                             every window is created. Rather than using Alpha to hide a window while it's being created, this version withdraws the window and uses a call I didn't
                             know about to get the size of the window before it's fully created. master.winfo_reqwidth() master.winfo_reqheight(). Alpha was needed before so
                             the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
-6.3.12      26-Aug-2026 Fix for bug in window location. Was using last window location from json file when auto_save_location=True creating Window rather than using the
-                                location set in the Window creation.                             
 """
  
 
@@ -10403,13 +10401,9 @@ class Window:
         self.Title = str(title)
         self.Rows = []  # a list of ELEMENTS for this row
         self.DefaultElementSize = default_element_size if default_element_size is not None else DEFAULT_ELEMENT_SIZE
-        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
-
-        self._last_location = (None, None)              # used by a property
-        self.auto_save_location = auto_save_location
-        if auto_save_location is True and location == (None, None):
-            self.Location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
-        elif DEFAULT_WINDOW_LOCATION != (None, None) and location == (None, None):
+        self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
+            None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
+        if DEFAULT_WINDOW_LOCATION != (None, None) and location == (None, None):
             self.Location = DEFAULT_WINDOW_LOCATION
         else:
             self.Location = location
@@ -10536,7 +10530,10 @@ class Window:
         self._has_custom_titlebar = use_custom_titlebar
         self._mousex = self._mousey = 0
         self._startx = self._starty = 0
-
+        self._last_location = (None, None)              # used by a property
+        self.auto_save_location = auto_save_location
+        if auto_save_location is True:
+            self.Location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
         self.scaling = scaling if scaling is not None else DEFAULT_SCALING
 
         if self.use_custom_titlebar:
