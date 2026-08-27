@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.13"
+version = "6.3.14"
 
 
 
@@ -86,10 +86,15 @@ Changelog since last major release
 6.3.11      26-Aug-2026 Fix for bug 3507 (hopefully)... It's a Linux specific problem... it's also a fix for Wayland (successor to X11).  It's a somewhat fundamental change to how
                             every window is created. Rather than using Alpha to hide a window while it's being created, this version withdraws the window and uses a call I didn't
                             know about to get the size of the window before it's fully created. master.winfo_reqwidth() master.winfo_reqheight(). Alpha was needed before so
-                            the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
 6.3.12      27-Aug-2026 Another bite of the fix-auto-save-location bug fix apple          
+                            the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
 6.3.13      27-Aug-2026 Fix for the fix made in 6.3.11 when creating windows.  Needed to add back the alpha method of hiding the window when the window has no titlebar. The
                                 withdraw method of hiding the window causes the titlebar to appear so can't use it for no titlebar windows                  
+6.3.14      27-Aug-2026 Changed windows that use custom titlebar to use withdraw to hide the window during creation. It's providing an icon on the taskbar that I've not been
+                            able to get using previous methods.  Still need to change the minimize window code for custom titlebar. Needed to change custom_titlebar_restore in 
+                            order to show an icon on the titlebar when the window has been restored after minimize.  It's Windows specific so need to test all this on Linux & Mac  
+                        Added function fname() to use as a debugging aid. When printed, it prints the function name of the function the print is inside of.  Usage:
+                            print(f'[{fname()}] starting...')        # → [my_func] starting...     
 """
  
 
@@ -361,6 +366,18 @@ def running_replit():
     if 'REPL_OWNER' in os.environ and sys.platform.startswith('linux'):
         return True
     return False
+
+
+def fname():
+    """
+    Returns a the name of the function that the code is running inside of.  Used when debugging.
+    Usage:
+        print(f'[{fname()}] starting...')        # → [my_func] starting...
+
+    :return:    The name of the function being executed
+    :rtype:     (str)
+    """
+    return sys._getframe(1).f_code.co_name   # 1 = caller's frame
 
 
 # Handy python statements to increment and decrement with wrapping that I don't want to forget
@@ -12894,18 +12911,20 @@ class Window:
 
     def _custom_titlebar_restore(self):
         if running_linux():
-            # if self._skip_first_restore_callback:
-            #     self._skip_first_restore_callback = False
-            #     return
             self.TKroot.unbind('<Button-1>')
             self.TKroot.deiconify()
 
-            # self.ParentForm.TKroot.wm_overrideredirect(True)
             self.TKroot.wm_attributes("-type", 'dock')
-
         else:
             self.TKroot.unbind('<Expose>')
-            self.TKroot.wm_overrideredirect(True)
+            if running_windows():
+                self.TKroot.withdraw()  # hide first: the wrapper Tk rebuilds on the next line is then created hidden
+                self.TKroot.wm_overrideredirect(True)  # Tk destroys/recreates the wrapper HWND, again with WS_EX_TOOLWINDOW (= no taskbar button)
+                self.TKroot.attributes('-alpha', 1 if self.AlphaChannel is None else self.AlphaChannel)  # Tk rewrites the ex-style with only its own bits -> TOOLWINDOW gone
+                self.TKroot.deiconify()  # hidden -> shown is when the shell re-reads the style. Same sequence that gives the icon at creation
+            else:
+                self.TKroot.wm_overrideredirect(True)
+
         if self.TKroot.state() == 'iconic':
             self.TKroot.deiconify()
         else:
@@ -12918,12 +12937,7 @@ class Window:
     def _custom_titlebar_minimize(self):
         if running_linux():
             self.TKroot.wm_attributes("-type", "normal")
-            # self.ParentForm.TKroot.state('icon')
-            # return
-            # self.ParentForm.maximize()
             self.TKroot.wm_overrideredirect(False)
-            # self.ParentForm.minimize()
-            # self.ParentForm.TKroot.wm_overrideredirect(False)
             self.TKroot.iconify()
             # self._skip_first_restore_callback = True
             self.TKroot.bind('<Button-1>', self._custom_titlebar_restore_callback)
@@ -18345,9 +18359,11 @@ def StartupTK(window):
 
     # If location is None, then there's no need to hide the window.  Let it build where it is going to end up being.
     if DEFAULT_HIDE_WINDOW_WHEN_CREATING is True and window.Location is not None:
-        if not window.NoTitleBar:
+        if not window.NoTitleBar or window._has_custom_titlebar:
+            # print(f'[{fname()}] Hiding window using withdraw')
             root.withdraw()
         else:
+            # print(f'[{fname()}] Hiding window using alpha')
             try:
                 if not running_mac() or \
                         (running_mac() and not window.NoTitleBar) or \
@@ -18410,7 +18426,8 @@ def StartupTK(window):
 
     window.set_icon(window.WindowIcon)
     alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
-    if window.NoTitleBar:
+    if window.NoTitleBar and not window._has_custom_titlebar:
+        # print(f'[{fname()}] Uhiding window using alpha')
         try:
             alpha_channel = 1 if window.AlphaChannel is None else window.AlphaChannel
             root.attributes('-alpha', alpha_channel)  # Make window visible again
@@ -18419,10 +18436,12 @@ def StartupTK(window):
     else:
         try:
             if root.state() == 'withdrawn':
-                if alpha_channel != 1:
+                if alpha_channel != 1 or window._has_custom_titlebar:
                     root.attributes('-alpha', alpha_channel)  # wrapper already exists here, so this sticks on X11
+                # print(f'[{fname()}] Uhiding window using deiconify')
                 root.deiconify()  # first and only map
             else:
+                # print(f'[{fname()}] Uhiding window using alpha')
                 root.attributes('-alpha', alpha_channel)  # Make window visible again
         except Exception as e:
             print('**** Error making window visible after it was created ****', e)
@@ -26627,9 +26646,11 @@ def _convert_window_to_tk(window):
 
         master.update_idletasks()               # don't forget to do updates or values are bad
         if master.state() == 'withdrawn':       # withdrawn (never mapped) windows report winfo_width/height as 1
+            # print(f'[{fname()}] Getting size of withdrawn window')
             win_width = window._Size[0] if window._Size[0] is not None else master.winfo_reqwidth()
             win_height = window._Size[1] if window._Size[1] is not None else master.winfo_reqheight()
         else:
+            # print(f'[{fname()}] Getting size of normal window')
             win_width = master.winfo_width()
             win_height = master.winfo_height()
         # win_width = master.winfo_width()
