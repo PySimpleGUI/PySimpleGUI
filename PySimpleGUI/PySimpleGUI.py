@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.14"
+version = "6.3.15"
 
 
 
@@ -94,7 +94,9 @@ Changelog since last major release
                             able to get using previous methods.  Still need to change the minimize window code for custom titlebar. Needed to change custom_titlebar_restore in 
                             order to show an icon on the titlebar when the window has been restored after minimize.  It's Windows specific so need to test all this on Linux & Mac  
                         Added function fname() to use as a debugging aid. When printed, it prints the function name of the function the print is inside of.  Usage:
-                            print(f'[{fname()}] starting...')        # → [my_func] starting...     
+                            print(f'[{fname()}] starting...')        # → [my_func] starting...  
+6.3.15      28-Aug-2026 Fix for bug in Linux and Mac when disable_minimize=True when creating window.  On Linux was crashing.  Not sure about Mac but have a new way to remove the
+                            minimize button                                
 """
  
 
@@ -18392,8 +18394,23 @@ def StartupTK(window):
     elif not window.Resizable:
         root.resizable(False, False)
 
+    # Can't use the old way because it crashes on Linux, likely always has
+    # if window.DisableMinimize:
+    #     root.attributes("-toolwindow", 1)
+
     if window.DisableMinimize:
-        root.attributes("-toolwindow", 1)
+        if running_windows():
+            root.attributes('-toolwindow', 1)
+        elif running_linux():
+            try:
+                root.attributes('-type', 'dialog')                          # X11 hint - most window managers remove the minimize button for dialog-type windows
+            except Exception:
+                pass
+        elif running_mac() and not window.NoTitleBar:                       # Skip Mac if no titlebar. Otherwise, list all the buttons to include, skipping collapseBox
+            try:
+                root.tk.call('::tk::unsupported::MacWindowStyle', 'style', root._w, 'document', 'closeBox resizable horizontalZoom verticalZoom fullZoom')
+            except Exception:
+                pass
 
     if window.KeepOnTop:
         root.wm_attributes("-topmost", 1)
