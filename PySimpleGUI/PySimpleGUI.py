@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.15"
+version = "6.3.16"
 
 
 
@@ -96,7 +96,8 @@ Changelog since last major release
                         Added function fname() to use as a debugging aid. When printed, it prints the function name of the function the print is inside of.  Usage:
                             print(f'[{fname()}] starting...')        # → [my_func] starting...  
 6.3.15      28-Aug-2026 Fix for bug in Linux and Mac when disable_minimize=True when creating window.  On Linux was crashing.  Not sure about Mac but have a new way to remove the
-                            minimize button                                
+                            minimize button     
+6.3.16      30-Aug-2026 Pane element enhancement.  Added parameters: sash_width, sash_cursor to Pane element.  These fill out the common parameters used with Panes                            
 """
  
 
@@ -8856,7 +8857,7 @@ class Pane(Element):
     """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, orientation='vertical',
-                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None, expand_x=None, expand_y=None, visible=True, metadata=None):
+                 show_handle=True, relief=RELIEF_RAISED, sash_cursor=None, sash_width=None, handle_size=None, border_width=None, key=None, k=None, expand_x=None, expand_y=None, visible=True, metadata=None):
         """
         :param pane_list:        Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
         :type pane_list:         List[Column] | Tuple[Column]
@@ -8876,6 +8877,10 @@ class Pane(Element):
         :type show_handle:       (bool)
         :param relief:           relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief:            (str)
+        :param sash_cursor:      Type of cursor to show when the mouse is over the sash. Any Tk cursor works. Best to use: sb_v_double_arrow, sb_h_double_arrow
+        :type sash_cursor:       (str)
+        :param sash_width:       Width of the sash in pixels
+        :type sash_width:        (int)
         :param handle_size:      Size of the handle in pixels
         :type handle_size:       (int)
         :param border_width:     width of border around element in pixels
@@ -8908,6 +8913,8 @@ class Pane(Element):
         self.ShowHandle = show_handle
         self.Relief = relief
         self.HandleSize = handle_size or 8
+        self.SashWidth = sash_width
+        self.SashCursor = sash_cursor
         self.BorderDepth = border_width
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
@@ -16422,6 +16429,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                                       borderwidth=bd,
                                                                       bd=bd,
                                                                       )
+                element.PanedWindow.configure(sashwidth=element.SashWidth, sashcursor=element.SashCursor)
+
                 if element.Relief is not None:
                     element.PanedWindow.configure(relief=element.Relief)
                 element.PanedWindow.configure(handlesize=element.HandleSize)
