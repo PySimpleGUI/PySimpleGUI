@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.17"
+version = "6.3.18"
 
 
 
@@ -111,6 +111,9 @@ Changelog since last major release
 6.3.17      28-Oct-2026 Claude: Fix for Windows leaving a menubar-height blank strip at the bottom of the window when Menu.update hides or changes the menubar.
                             Since the 6.3.11 withdraw-method window creation, removing the menubar makes Windows grow the client area by the bar's height instead
                             of shrinking the frame. Menu.update now measures the client size before changing the menubar and re-asserts it if the OS changed it.
+6.3.18      29-Oct-2026 Claude: Fixed mouse wheel not scrolling a scrollable Column when the pointer is over child widgets. Moving onto a child fires a <Leave>
+                            on the canvas (NotifyInferior crossing) which unbound the wheel. unhookMouseWheel now keeps the bindings hooked when the pointer
+                            is still inside the scrolled frame or any of its descendants.
 """
  
 
@@ -8549,6 +8552,17 @@ class TkScrollableFrame(tk.Frame):
     # Chr0nic
     def unhookMouseWheel(self, e):
         # print("leave")
+        # A <Leave> also fires when the pointer moves onto a CHILD widget inside the scrolled frame (NotifyInferior crossing).
+        # If the pointer is still inside this frame or any descendant, it is not a real leave - keep the wheel bindings hooked.
+        if e is not None:
+            try:
+                widget = self.winfo_containing(*self.winfo_pointerxy())
+            except Exception:
+                widget = None
+            while widget is not None:
+                if widget == self:
+                    return
+                widget = widget.master
         VarHolder.canvas_holder = None
         self.canvas.unbind_all('<4>')
         self.canvas.unbind_all('<5>')
