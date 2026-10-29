@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.16"
+version = "6.3.17"
 
 
 
@@ -98,6 +98,19 @@ Changelog since last major release
 6.3.15      28-Aug-2026 Fix for bug in Linux and Mac when disable_minimize=True when creating window.  On Linux was crashing.  Not sure about Mac but have a new way to remove the
                             minimize button     
 6.3.16      30-Aug-2026 Pane element enhancement.  Added parameters: sash_width, sash_cursor to Pane element.  These fill out the common parameters used with Panes                            
+6.3.17      5-Sept-2026 Claude: Fix for auto_save_location creeping on Linux. It saved winfo_x/y, which on X11 is the CLIENT corner (Windows: frame corner), and
+                            restored it as a frame position, so every run moved the window down by the titlebar height. Tk's geometry() read-back is no better on
+                            Cinnamon/Muffin (drifts once the window has been moved, invisible resize borders get included). Now the decoration size is measured once,
+                            from where the client area landed versus the position requested, and client corner minus decorations is saved. current_location(),
+                            size, move() unchanged. Added Window.frame_extents() -> (left, top, right, bottom) and Window.current_frame_location() -> value that
+                            round-trips through location= / move(). save_window_screenshot_to_disk titlebar height was 0 on Linux; now uses frame_extents().
+6.3.17      28-Oct-2026 Claude: Windows taskbar App ID is now derived from the main script's path (PySimpleGUI.App.<md5 of path>) instead of one hardcoded string
+                            shared by every PySimpleGUI program. Windows treated all PySimpleGUI apps as ONE application, so with several running the taskbar
+                            could show the wrong icon (e.g. the Tk feather) for some of them. Each app now has its own taskbar identity; two instances of the
+                            SAME script still combine. set_options(win_app_id=...) still overrides. Windows-only - no change on Linux/Mac.
+6.3.17      28-Oct-2026 Claude: Fix for Windows leaving a menubar-height blank strip at the bottom of the window when Menu.update hides or changes the menubar.
+                            Since the 6.3.11 withdraw-method window creation, removing the menubar makes Windows grow the client area by the bar's height instead
+                            of shrinking the frame. Menu.update now measures the client size before changing the menubar and re-asserts it if the OS changed it.
 """
  
 
@@ -9100,10 +9113,15 @@ class Menu(Element):
                 if len(menu_entry) > 1:
                     AddMenuItem(baritem, menu_entry[1], self)
 
+        root = self.ParentForm.TKroot
+        cur_w, cur_h = root.winfo_width(), root.winfo_height()                  # client size before the menubar change
         if visible is False:
-            self.ParentForm.TKroot.configure(menu=[])  # this will cause the menubar to disappear
+            root.configure(menu=[])  # this will cause the menubar to disappear
         elif self.TKMenu is not None:
-            self.ParentForm.TKroot.configure(menu=self.TKMenu)
+            root.configure(menu=self.TKMenu)
+        root.update_idletasks()
+        if (root.winfo_width(), root.winfo_height()) != (cur_w, cur_h):         # Windows grows the client by the menubar height when the bar is removed from a window created with the 6.3.11 withdraw method - snap it back
+            root.geometry('{}x{}'.format(cur_w, cur_h))
         if visible is not None:
             self._visible = visible
 
@@ -10560,6 +10578,7 @@ class Window:
         self._mousex = self._mousey = 0
         self._startx = self._starty = 0
         self._last_location = (None, None)              # used by a property
+        self._frame_extents = None                      # (left, top) size of OS titlebar/border, measured once the WM has framed the window
         self.auto_save_location = auto_save_location
         if auto_save_location is True:
             saved_location = tuple(user_settings_get_entry('-LAST WINDOW LOCATION-'+title, self.Location))
@@ -11120,6 +11139,7 @@ class Window:
             self._start_autoclose_timer()
             self.auto_close_timer_needs_starting = False
 
+        self._measure_frame_extents()                   # no-op once measured; ensures it happens even if no <Configure> arrives after the binding
         timeout = int(timeout) if timeout is not None else None
         if timeout == 0:  # timeout of zero runs the old readnonblocking
             event, values = self._ReadNonBlocking()
@@ -11868,9 +11888,12 @@ class Window:
         :type event:             Any
         """
         # do the location auto-save stuff. If the location changes, then the location is written to the settings file
+        self._measure_frame_extents()                   # learns titlebar/border size once the WM has framed the window (no-op after that)
         if self.auto_save_location:
             try:
-                cur_location = self.current_location()
+                # Save the FRAME corner - what location= / geometry("+x+y") restores.  winfo_x/y is the CLIENT corner on Linux/X11 (window crept
+                # down by the titlebar height each run) and Tk's geometry() read-back drifts under Cinnamon/Muffin once the window has been moved.
+                cur_location = self.current_frame_location()
                 old_location = self._last_location
                 if None not in cur_location:
                     self._last_location= cur_location
@@ -12089,6 +12112,14 @@ class Window:
         :return:
         """
         if self.auto_save_location:
+            try:                                        # take a fresh reading if the window is still alive - it may be better calibrated than the last <Configure> value
+                if self.TKroot.winfo_exists() and self.TKroot.state() == 'normal':
+                    self._measure_frame_extents()
+                    location = self.current_frame_location()
+                    if None not in location:
+                        self._last_location = location
+            except Exception:
+                pass
             user_settings_set_entry('-LAST WINDOW LOCATION-'+self.Title, self._last_location)
 
 
@@ -12290,6 +12321,9 @@ class Window:
         Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
         If without_titlebar is set then the location of the root x,y is used which should not include the titlebar but
             may be OS dependent.
+        NOTE: on Linux/X11 the default (winfo_x/y) returns the CLIENT corner (same as without_titlebar=True); on Windows it returns the FRAME corner.
+            more_accurate=True is Tk's idea of the frame corner; on Cinnamon/Muffin it drifts from the real one once the window has been moved.
+            To get a value that can be fed back into location= / move() use Window.current_frame_location().  See also Window.frame_extents().
 
         :param more_accurate:    If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account
         :type more_accurate:     (bool)
@@ -12347,6 +12381,66 @@ class Window:
             warnings.warn('Error in Window.current_size_accurate. Trouble getting x,y size\n{} {}'.format(geometry, geometry_tuple) + str(e), UserWarning)
             x, y = (None, None)
         return (x,y)
+
+    def _measure_frame_extents(self):
+        """
+        Learns the size of the OS decorations ONCE: client corner (winfo_rootx/rooty) minus the frame position PySimpleGUI asked for
+        (config_last_location).  Called from <Configure> events and read().  On Linux the first events arrive before the window manager has
+        framed the window (top measures 0) so it keeps trying until a titlebar is seen.  The requested position is used instead of Tk's
+        geometry() read-back because Cinnamon/Muffin includes its invisible resize borders in that once the window has been moved (off by ~10px).
+        """
+        if self._frame_extents is not None:
+            return
+        if self.NoTitleBar:
+            self._frame_extents = (0, 0)
+            return
+        try:
+            req_x, req_y = self.config_last_location
+            if req_x is None or req_y is None:
+                return
+            left, top = self.TKroot.winfo_rootx() - req_x, self.TKroot.winfo_rooty() - req_y
+            if top <= 0:                                        # WM has not framed the window yet - try again on the next <Configure> / read
+                return
+            if not (0 <= left <= 64 and top <= 128):            # WM ignored the requested position (tiling WM, forced placement) - use Tk's estimate
+                frame_x, frame_y = self.current_location(more_accurate=True)
+                left, top = max(self.TKroot.winfo_rootx() - frame_x, 0), max(self.TKroot.winfo_rooty() - frame_y, 0)
+            self._frame_extents = (left, top)
+        except Exception:
+            pass
+
+    def current_frame_location(self):
+        """
+        Location of the frame corner (titlebar included) = the value to give location= or move() to put the window back exactly here.
+        Client corner minus the measured decorations.  Falls back to Tk's geometry() read-back until the decorations have been measured.
+        current_location() is unchanged: on Windows it returns this same frame corner, on Linux/X11 it returns the client corner.
+
+        :return: (x, y) or (None, None)
+        :rtype:  Tuple[int, int] | Tuple[None, None]
+        """
+        if self._frame_extents is None:
+            return self.current_location(more_accurate=True)
+        try:
+            return (self.TKroot.winfo_rootx() - self._frame_extents[0], self.TKroot.winfo_rooty() - self._frame_extents[1])
+        except Exception:
+            return (None, None)
+
+    def frame_extents(self):
+        """
+        Size in pixels of the decorations the OS / window manager adds around the window (titlebar + borders).
+        Measured once, from the first <Configure> event or read() after the window manager has framed the window, as client corner
+        (winfo_rootx/rooty) minus the frame position that was requested.  tkinter cannot see the right/bottom edges, so they are assumed equal to left.
+        Before the window is framed, or for no_titlebar windows, (0, 0, 0, 0) is returned.  Works on Windows, Linux (X11 & XWayland) and macOS.
+
+        :return: (left, top, right, bottom).  top = titlebar height (+ top border)
+        :rtype:  Tuple[int, int, int, int]
+        """
+        if not self._is_window_created('tried Window.frame_extents') or self.NoTitleBar:
+            return (0, 0, 0, 0)
+        self._measure_frame_extents()
+        if self._frame_extents is None:
+            return (0, 0, 0, 0)
+        left, top = self._frame_extents
+        return (left, top, left, left)
 
     @property
     def size(self):
@@ -12806,14 +12900,14 @@ class Window:
                 return None
         try:
             # Get location of window to save
-            pos = self.current_location()
+            pos = self.current_frame_location()             # same as current_location() on Windows; on Linux current_location() is the client corner
             # Add a little to the X direction if window has a titlebar
             if not self.NoTitleBar:
                 pos = (pos[0] + 7, pos[1])
             # Get size of wiondow
             size = self.current_size_accurate()
             # Get size of the titlebar
-            titlebar_height = self.TKroot.winfo_rooty() - self.TKroot.winfo_y()
+            titlebar_height = self.frame_extents()[1]       # rooty - winfo_y is 0 on Linux/X11; frame_extents works everywhere
             # Add titlebar to size of window so that titlebar and window will be saved
             size = (size[0], size[1] + titlebar_height)
             if not self.NoTitleBar:
@@ -26787,7 +26881,10 @@ if tclversion_detailed.startswith('8.5'):
 # Enables the correct application icon to be shown on the Windows taskbar
 if running_windows():
     try:
-        myappid = 'mycompany.myproduct.subproduct.version'  # Add an app ID on Windows to control Windows taskbar icon combining
+        # Derived from the main script's path so each PySimpleGUI program is its own app on the taskbar (same script twice still combines).
+        # The old hardcoded 'mycompany.myproduct.subproduct.version' made ALL PySimpleGUI apps one app, so icons bled between programs.
+        _appid_main_file = getattr(sys.modules.get('__main__'), '__file__', '') or 'interactive'
+        myappid = 'PySimpleGUI.App.' + hashlib.md5(os.path.abspath(_appid_main_file).encode('utf-8')).hexdigest()    # Add an app ID on Windows to control Windows taskbar icon combining
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
     except Exception as e:
         print('Error setting App ID', e)
