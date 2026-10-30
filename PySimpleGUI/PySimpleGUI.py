@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.18"
+version = "6.3.19"
 
 
 
@@ -114,6 +114,8 @@ Changelog since last major release
 6.3.18      29-Oct-2026 Claude: Fixed mouse wheel not scrolling a scrollable Column when the pointer is over child widgets. Moving onto a child fires a <Leave>
                             on the canvas (NotifyInferior crossing) which unbound the wheel. unhookMouseWheel now keeps the bindings hooked when the pointer
                             is still inside the scrolled frame or any of its descendants.
+6.3.19      30-Oct-2026 mike & Claude: Fix for issue 6664. Call to self.TKRightClickMenu.grab_release in the _RightClickMenuCallback for Element and Window objects was causing
+                            the click away event to get discarded so taht the close menu close doesn't happen.  Only a problem on Linux.                                 
 """
  
 
@@ -1300,7 +1302,8 @@ class Element:
                 pass
             return
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
-        self.TKRightClickMenu.grab_release()
+        if not running_linux():
+            self.TKRightClickMenu.grab_release()
         if self.Type == ELEM_TYPE_GRAPH:
             self._update_position_for_returned_values(event)
         self.ParentForm._right_click_menu_element = self
@@ -12888,7 +12891,8 @@ class Window:
         if widget != self.TKroot:
             return
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
-        self.TKRightClickMenu.grab_release()
+        if not running_linux():
+            self.TKRightClickMenu.grab_release()
 
     def save_window_screenshot_to_disk(self, filename=None):
         """
