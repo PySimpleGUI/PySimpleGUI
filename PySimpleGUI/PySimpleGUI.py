@@ -54,7 +54,7 @@
 
 """
 
-version = "6.3.19"
+version = "6.4"
 
 
 
@@ -115,7 +115,8 @@ Changelog since last major release
                             on the canvas (NotifyInferior crossing) which unbound the wheel. unhookMouseWheel now keeps the bindings hooked when the pointer
                             is still inside the scrolled frame or any of its descendants.
 6.3.19      30-Oct-2026 mike & Claude: Fix for issue 6664. Call to self.TKRightClickMenu.grab_release in the _RightClickMenuCallback for Element and Window objects was causing
-                            the click away event to get discarded so taht the close menu close doesn't happen.  Only a problem on Linux.                                 
+                            the click away event to get discarded so taht the close menu close doesn't happen.  Only a problem on Linux.
+6.4         01-Nov-2026 Candidate for 6.4 release.                                                             
 """
  
 
