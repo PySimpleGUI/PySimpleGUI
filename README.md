@@ -77,6 +77,23 @@ PySimpleGUI has been a once-in-a-lifetime experience. It’s been amazing to see
 
 ---------------------------------
 
+# The PySimpleGUI Playground
+
+<p align="center"><img src="https://raw.githubusercontent.com/PySimpleGUI/psgplayground/main/screenshots/playground.png" width="800" alt="The Toybox - the Playground's program browser"></p>
+
+The [PySimpleGUI Playground](https://github.com/PySimpleGUI/psgplayground) is a collection of the programs I run on my own PCs every day - desktop widgets, tools, things I use to work on PySimpleGUI itself, and a set of piano practice programs for a MIDI keyboard. I wrote them with Claude over the past 10 weeks. Each one is a single file you can run, read and take apart.
+
+One pip command installs all of them, along with the Toybox, a program that shows you what's there and runs it:
+
+```bash
+python -m pip install --upgrade https://github.com/PySimpleGUI/psgplayground/zipball/main
+psgplayground
+```
+
+The repo also has a [prompts](https://github.com/PySimpleGUI/psgplayground/tree/main/prompts) folder - one page per trick (the frameless window, draggable panes, drag-to-reorder, dropping a file) with a prompt you can paste into any AI chatbot to get the same thing in your own program.
+
+---------------------------------
+
 
 # What is PySimpleGUI?
 
@@ -184,17 +201,18 @@ Version 6.1 is on PyPI (`python -m pip install --upgrade psgdnd`).  It works on 
 
 ![](https://PySimpleGUI.net/images/emojis/weary_56.png?raw=true&v=1)
 
-I've changed my mind. I now use Claude to help write code, PySimpleGUI included. Changes Claude made are marked "Claude:" in the changelog.
+It's been an exhausting process coming to terms with the changes in software over the past 4 years.  After spending a few months seeing for myself what it can do, and what I can do with it, I've concluded that I can do a better job developing software with AI than without.  It can also be fun and a learning experience too.
+
+I now use Claude to help write code, PySimpleGUI core code included. Changes Claude made are marked "Claude:" in the changelog.
 
 ### PySimpleGUI in the AI era
 
-A common question today is whether a GUI library still matters when an AI can write the code. I think PySimpleGUI may matter more.
+A common question today is whether a GUI library still matters when an AI can write the code. I think PySimpleGUI may matter more now than before.
 
 The idea came from Claude: a PySimpleGUI program is short and always follows the same pattern - a layout, a window, an event loop. The same window written directly in tkinter takes more lines and more decisions, and that's more for an AI to get wrong. Short code is also easier for a person to read and check.
 
-That's a hypothesis, not a result. Claude also proposed a test that has an AI write the same programs both ways and compares how often they work. I'm planning to run it and post what I find. Details may change.
+That's a hypothesis, not a result. Claude also proposed a test that has an AI write the same programs both ways and compares how often they work. I'm planning to run it and post what I find. Details may change.  I'm certainly aware that these LLMs are particularlyi skilled at making users feel right, smart, on the right track, when that may not match up with reality.  
 
-This potential new use for PySimpleGUI has given me a reason to continue to keep the project moving.  The way Claude has been using PySimpleGUI for the programs I'm writing with it has been much more advanced than I've seen before.  I've theorized in the past that PySimpleGUI is capable of creating very nice looking user interfaces.  Now I'm getting to see what's possible.
 
 ---------------------------
 
