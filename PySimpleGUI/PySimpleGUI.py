@@ -61,62 +61,7 @@ version = "6.4"
 """
 Changelog since last major release
 
-6.3          2-Aug-2026 Released to GitHub
-
-6.3.1        3-Aug-2026 Fixed a COLOR_SYSTEM_DEFAULT bug in Input.update
-6.3.2        3-Aug-2026 Changed editor format string for PyCharm to "<editor> <file> --line <line>".  The file should be before the line number parms
-6.3.3        8-Aug-2026 Changed a LOT of checks for valid colors when setting tkinter widget colors.... more to go
-             9-Aug-2026 More color check changes.  Added _is_valid_color that calls tkinter to check the color string when checking colors
-                        Removed _widget_set_fg_color and _widget_set_bg_color funcitons that used to check for valid colors
-                        Changed popup_error_with_traceback to now show the full traceback in a mulitiline in the error window
-                        Changed keyword paramters foreground to fg and background to bg for tkitner config calls
-                        Made a TON of changes, broke lots of things, reverted 1/2 a ton of changes.  
-                        Ran automated regressions on this release flush out problems in the Element creation paramters
-6.3.4       12-Aug-2026 Fixed bug when applying images in an element's update method. Was crashing when looking for widget.image. Needed to check attr exists first
-6.3.5       14-Aug-2026 New feature for window resizing.  Added ability to set resizable parameter when creating the window to the normal True/False as well as taking a tuple
-                            that indicates the directions the window can be resized (e.g. resizable=(False, True) means only allow resizing in the Y direction. 
-6.3.6       15-Aug-2026 Changed _error_popup_with_code to add the text at the top of the error window into the Multiline so that a user can copy the entire error using the Multiline                       
-6.3.7       18-Aug-2026 New debugging aid - "set tooltip to element's key" is enabled by calling set_options(set_tooltip_to_element_key=True)  
-6.3.8       21-Aug-2026 Added kwargs to set_options. Used to soak up options that are not recognized.  This keeps bad options from crashing the program.  It won't help the 
-                            older versions of PySimpleGUI that don't recognize a new option, but it will help from this version of PySimpleGUI onward  
-                        Added tooltip_text_color and tooltip_background_color to set_options so that they can be set on an application-wide basis
-6.3.9       24-Aug-2026 Added try around call to tkinter mainloop in read_all_windows.  It looks specifically for a KeyboardInterrupt.  If caught, it'll print a message
-                            and call sys.exit to exit the application                
-6.3.10      26-Aug-2026 Fix for bug 6904. Was crashing when reading a location of [None, None] from settings file. Fix was to convert to a tuple
-6.3.11      26-Aug-2026 Fix for bug 3507 (hopefully)... It's a Linux specific problem... it's also a fix for Wayland (successor to X11).  It's a somewhat fundamental change to how
-                            every window is created. Rather than using Alpha to hide a window while it's being created, this version withdraws the window and uses a call I didn't
-                            know about to get the size of the window before it's fully created. master.winfo_reqwidth() master.winfo_reqheight(). Alpha was needed before so
-6.3.12      27-Aug-2026 Another bite of the fix-auto-save-location bug fix apple          
-                            the window dimensions could be gathered to determine where to locate the window so it is centered on the screen.
-6.3.13      27-Aug-2026 Fix for the fix made in 6.3.11 when creating windows.  Needed to add back the alpha method of hiding the window when the window has no titlebar. The
-                                withdraw method of hiding the window causes the titlebar to appear so can't use it for no titlebar windows                  
-6.3.14      27-Aug-2026 Changed windows that use custom titlebar to use withdraw to hide the window during creation. It's providing an icon on the taskbar that I've not been
-                            able to get using previous methods.  Still need to change the minimize window code for custom titlebar. Needed to change custom_titlebar_restore in 
-                            order to show an icon on the titlebar when the window has been restored after minimize.  It's Windows specific so need to test all this on Linux & Mac  
-                        Added function fname() to use as a debugging aid. When printed, it prints the function name of the function the print is inside of.  Usage:
-                            print(f'[{fname()}] starting...')        # → [my_func] starting...  
-6.3.15      28-Aug-2026 Fix for bug in Linux and Mac when disable_minimize=True when creating window.  On Linux was crashing.  Not sure about Mac but have a new way to remove the
-                            minimize button     
-6.3.16      30-Aug-2026 Pane element enhancement.  Added parameters: sash_width, sash_cursor to Pane element.  These fill out the common parameters used with Panes                            
-6.3.17      5-Sept-2026 Claude: Fix for auto_save_location creeping on Linux. It saved winfo_x/y, which on X11 is the CLIENT corner (Windows: frame corner), and
-                            restored it as a frame position, so every run moved the window down by the titlebar height. Tk's geometry() read-back is no better on
-                            Cinnamon/Muffin (drifts once the window has been moved, invisible resize borders get included). Now the decoration size is measured once,
-                            from where the client area landed versus the position requested, and client corner minus decorations is saved. current_location(),
-                            size, move() unchanged. Added Window.frame_extents() -> (left, top, right, bottom) and Window.current_frame_location() -> value that
-                            round-trips through location= / move(). save_window_screenshot_to_disk titlebar height was 0 on Linux; now uses frame_extents().
-6.3.17      28-Oct-2026 Claude: Windows taskbar App ID is now derived from the main script's path (PySimpleGUI.App.<md5 of path>) instead of one hardcoded string
-                            shared by every PySimpleGUI program. Windows treated all PySimpleGUI apps as ONE application, so with several running the taskbar
-                            could show the wrong icon (e.g. the Tk feather) for some of them. Each app now has its own taskbar identity; two instances of the
-                            SAME script still combine. set_options(win_app_id=...) still overrides. Windows-only - no change on Linux/Mac.
-6.3.17      28-Oct-2026 Claude: Fix for Windows leaving a menubar-height blank strip at the bottom of the window when Menu.update hides or changes the menubar.
-                            Since the 6.3.11 withdraw-method window creation, removing the menubar makes Windows grow the client area by the bar's height instead
-                            of shrinking the frame. Menu.update now measures the client size before changing the menubar and re-asserts it if the OS changed it.
-6.3.18      29-Oct-2026 Claude: Fixed mouse wheel not scrolling a scrollable Column when the pointer is over child widgets. Moving onto a child fires a <Leave>
-                            on the canvas (NotifyInferior crossing) which unbound the wheel. unhookMouseWheel now keeps the bindings hooked when the pointer
-                            is still inside the scrolled frame or any of its descendants.
-6.3.19      30-Oct-2026 mike & Claude: Fix for issue 6664. Call to self.TKRightClickMenu.grab_release in the _RightClickMenuCallback for Element and Window objects was causing
-                            the click away event to get discarded so taht the close menu close doesn't happen.  Only a problem on Linux.
-6.4         01-Nov-2026 Candidate for 6.4 release.                                                             
+6.4         02-Nov-2026 Version 6.4 release.                                                             
 """
  
 
